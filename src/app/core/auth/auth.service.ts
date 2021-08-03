@@ -68,7 +68,7 @@ export class AuthService
      */
     signIn(credentials: { user: string; password: string, client_id: string, client_secret: string, grant_type: string }): Observable<any>
     {
-        // console.log(credentials);
+        console.log(credentials);
 
         const url = 'http://192.168.190.232:3000/oauth/token';
         // Throw error, if the user is already logged in
