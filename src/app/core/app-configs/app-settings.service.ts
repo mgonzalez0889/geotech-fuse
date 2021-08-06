@@ -8,7 +8,23 @@ export class AppSettingsService {
      */
     public auth = {
         url: {
-            base: EndPoints.uri('oauth/token'),
+            base: EndPoints.uriBase('oauth/token'),
+        }
+    };
+    /**
+     * @description: End-point usurious
+     */
+    public user = {
+        url: {
+            base: EndPoints.uri('client')
+        }
+    };
+    /**
+     * @description: End-point profiles
+     */
+    public profile = {
+        url: {
+            base: EndPoints.uri('user_profile')
         }
     };
 
