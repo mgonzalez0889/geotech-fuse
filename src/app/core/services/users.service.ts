@@ -34,5 +34,22 @@ export class UsersService {
         const params = {method: 'show_user'};
         return this._http.get(`${this._appSettings.user.url.base}/${id}`, {params});
     }
+    /**
+     * @description: Edita el usuario
+     */
+    public putUser(data: any): Observable<any> {
+        const params = {method: 'update_user'};
+        const id = data.id;
+        delete data.id;
+        return this._http.put(`${this._appSettings.user.url.base}/${id}`, data, {params});
+    }
+    /**
+     * @description: Elimina un usuario
+     */
+    public deleteUser(id: number): Observable<any> {
+        const params = {method: 'delete_user'};
+        return this._http.delete(`${this._appSettings.user.url.base}/${id}`, {params});
+    }
+
 
 }

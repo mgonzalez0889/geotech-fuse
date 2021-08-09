@@ -1,8 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {Observable, Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {UsersService} from "../../../../core/services/users.service";
 import {fuseAnimations} from "../../../../../@fuse/animations";
+import {debounceTime, switchMap, takeUntil} from "rxjs/operators";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {ConfirmDeleteComponent} from "../../../../shared/dialogs/confirm-delete/confirm-delete.component";
 
 @Component({
   selector: 'app-grid-user',
@@ -17,11 +20,15 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public show: boolean = false;
   public subscription$: Subscription;
   constructor(
-      private usersService: UsersService
+      private usersService: UsersService,
+      public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
       this.fetchUsers();
+      this.searchInputControl.valueChanges.subscribe(res => {
+          console.log(res);
+      })
   }
   /**
    * @description: Abre el formulario
@@ -39,6 +46,16 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public onEdit(id: number): void {
       this.show = true;
       this.getUser(id);
+  }
+  public onDelete(id: number): void {
+      const dialog = new MatDialogConfig();
+      dialog.data = id;
+      dialog.width = '30%';
+      dialog.maxWidth = '30%';
+
+      const dialogRef = this.dialog.open(ConfirmDeleteComponent, dialog);
+
+      dialogRef.afterClosed().toPromise().then(() => this.fetchUsers());
   }
   /**
    * @description:  Listado de todos los usuarios

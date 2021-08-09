@@ -18,6 +18,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import { SmartUserComponent } from './smart-user/smart-user.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         MatDividerModule,
         MatCheckboxModule,
         MatRadioModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatSnackBarModule
     ]
 })
 export class UsersModule { }

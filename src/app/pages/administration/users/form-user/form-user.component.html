@@ -1,6 +1,6 @@
 <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
     <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-        <div class="text-3xl font-extrabold tracking-tight">Nuevo usuario</div>
+        <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
     </div>
 </div>
 <!--Form-->
@@ -18,11 +18,12 @@
                             >
                     </mat-form-field>
 
-                    <mat-form-field class="w-full fuse-mat-dense">
-                        <mat-label>Confirmar contraseña</mat-label>
+                    <mat-form-field class="w-full fuse-mat-dense" *ngIf="fieldPassword || form.getRawValue().enable_pass">
+                        <mat-label>Contraseña</mat-label>
                         <input
-                            matInput
-                            >
+                            matInput type="password"
+                            formControlName="password_digest"
+                        >
                     </mat-form-field>
 
                     <mat-form-field class="w-full fuse-mat-dense">
@@ -44,13 +45,18 @@
                             >
                     </mat-form-field>
 
-                    <mat-form-field class="w-full fuse-mat-dense">
-                        <mat-label>Correo electronico</mat-label>
+                    <mat-form-field class="w-full fuse-mat-dense" *ngIf="fieldPassword || form.getRawValue().enable_pass">
+                        <mat-label>Confirmar contraseña</mat-label>
                         <input
                             matInput
-                            formControlName="email"
-                            >
+                            type="password"
+                            formControlName="confirm_password"
+                        >
+                        <mat-error *ngIf="form.get('confirm_password').hasError('mustMatch')">
+                            La contraseña no coincide
+                        </mat-error>
                     </mat-form-field>
+
                     <div class="flex flex-wrap items-center ">
                         <mat-form-field class="w-full fuse-mat-dense lg:w-4/5">
                             <mat-label>Perfil</mat-label>
@@ -77,12 +83,13 @@
                 </div>
 
                 <div class="flex flex-col w-full lg:w-1/3 sm:pl-4 sm:pr-2">
+
                     <mat-form-field class="w-full fuse-mat-dense">
-                        <mat-label>Contraseña</mat-label>
+                        <mat-label>Correo electronico</mat-label>
                         <input
-                            matInput type="password"
-                            formControlName="password_digest"
-                            >
+                            matInput
+                            formControlName="email"
+                        >
                     </mat-form-field>
 
                     <mat-form-field class="w-full fuse-mat-dense">
@@ -92,6 +99,15 @@
                             formControlName="address"
                         >
                     </mat-form-field>
+
+                    <ng-container *ngIf="editPassword">
+                        <span class="font-semibold mb-2">¿Cambiar contraseña?</span>
+                        <mat-slide-toggle
+                            formControlName="enable_pass"
+                            [color]="'primary'">
+                            <!--{{selectedProductForm.get('active').value === true ? 'Active' : 'Disabled'}}-->
+                        </mat-slide-toggle>
+                    </ng-container>
 
                 </div>
 

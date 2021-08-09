@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Confirmación</h1>
+<div mat-dialog-content>
+    <p>¿Estas seguro de eliminar el registro?</p>
+</div>
+<div mat-dialog-actions class="flex items-center justify-end">
+    <button
+        mat-raised-button
+        [color]="'primary'"
+        (click)="closeDialog()"
+    >
+        No
+    </button>
+    <button
+        mat-raised-button
+        [color]="'warn'"
+        (click)="delete()"
+    >
+        Eliminar
+    </button>
+
+</div>
