@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ProfilesService} from "../../../../core/services/profiles.service";
 import {Observable, Subscription} from "rxjs";
@@ -12,11 +12,8 @@ import {UsersService} from "../../../../core/services/users.service";
 export class FormUserComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public profile$: Observable<any>;
-  public subscription$: Subscription = this.userService.subjectUser$.subscribe(({type, isEdit}) => {
-      if (isEdit){
-          console.log('Entra');
-      }
-  });
+  public subscription$: Subscription;
+  @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(
       private fb: FormBuilder,
       private profileService: ProfilesService,
@@ -35,6 +32,10 @@ export class FormUserComponent implements OnInit, OnDestroy {
       this.newUser(data);
   }
 
+  public onClose(): void {
+      this.onShow.emit(false);
+  }
+
   private createForm(): void {
       this.form = this.fb.group({
           user_login: [''],
@@ -44,7 +45,9 @@ export class FormUserComponent implements OnInit, OnDestroy {
           status: [true],
           owner_id: ['1'],
           user_profile_id: [''],
-          email: ['']
+          email: [''],
+          phone: [''],
+          address: ['']
       });
   }
 
@@ -52,13 +55,30 @@ export class FormUserComponent implements OnInit, OnDestroy {
       this.profile$ = this.profileService.getProfiles();
   }
   private newUser(data: any): void {
-      this.userService.postUser(data).subscribe(res => {
-          console.log(res);
+      this.subscription$ = this.userService.postUser(data).subscribe(res => {
+          this.onShow.emit(false);
       });
   }
 
   private listenObservables(): void {
-
+      this.subscription$ = this.userService.behaviorSubjectUser$.subscribe(({type, isEdit, payload}) => {
+          if (isEdit && type == 'EDIT'){
+              this.form.patchValue(payload);
+          } else if (!isEdit && type == 'NEW') {
+              this.form.reset({
+                  user_login: [''],
+                  password_digest: [''],
+                  encrypted_password: [''],
+                  full_name: [''],
+                  status: [true],
+                  owner_id: ['1'],
+                  user_profile_id: [''],
+                  email: [''],
+                  phone: [''],
+                  address: ['']
+              });
+          }
+      });
   }
 
   ngOnDestroy(): void {

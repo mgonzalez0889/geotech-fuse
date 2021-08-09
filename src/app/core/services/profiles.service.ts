@@ -17,7 +17,8 @@ export class ProfilesService {
      * @description: Obtiene todos los perfiles
      */
     public getProfiles(): Observable<any> {
-        return this._http.get(this._appSettings.profile.url.base).pipe(
+        const params = {method: 'index_all_user_profile'};
+        return this._http.get(this._appSettings.profile.url.base, {params}).pipe(
             map((res: any) => {
                 return res.data;
             })

@@ -29,6 +29,7 @@
                         <mat-label>Teléfono</mat-label>
                         <input
                             matInput
+                            formControlName="phone"
                             >
                     </mat-form-field>
 
@@ -88,6 +89,7 @@
                         <mat-label>Dirección</mat-label>
                         <input
                             matInput
+                            formControlName="address"
                         >
                     </mat-form-field>
 
@@ -98,6 +100,7 @@
                         class="-ml-4"
                         mat-raised-button
                         [color]="'warn'"
+                        (click)="onClose()"
                         >
                         Cancelar
                     </button>

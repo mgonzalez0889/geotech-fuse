@@ -48,8 +48,8 @@ export class AuthSignInComponent implements OnInit
             user     : ['', [Validators.required]],
             password  : ['', Validators.required],
             rememberMe: [''],
-            client_id : '8JMRT68Wt4YnL6YPOfdgkwsnC7JHIj220ckKpW4yKrI',
-            client_secret : 'RSFbX8vwcNT4pQRtQymHk2d5q-9yK82PxMVMxWlIqOw',
+            client_id : '2kRiNFSuQu--YZzKAw__OpMJ16RJyxQOd9Q735JWVLA',
+            client_secret : 'XIOL8fmasMN6T4h4xPNEGtTZSx6mf_wWlqwSHzTuh7U',
             grant_type : 'password'
         });
     }

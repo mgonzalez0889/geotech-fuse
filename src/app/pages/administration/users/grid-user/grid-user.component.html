@@ -135,7 +135,7 @@
   </ng-container>
 
     <ng-container *ngSwitchCase="true">
-        <app-form-user></app-form-user>
+        <app-form-user (onShow)="closeForm($event)"></app-form-user>
     </ng-container>
 
 </div>
