@@ -14,6 +14,7 @@
                         <mat-label>Nombre completo</mat-label>
                         <input
                             matInput
+                            formControlName="full_name"
                             >
                     </mat-form-field>
 
@@ -38,6 +39,7 @@
                         <mat-label>Usuario</mat-label>
                         <input
                             matInput
+                            formControlName="user_login"
                             >
                     </mat-form-field>
 
@@ -45,12 +47,13 @@
                         <mat-label>Correo electronico</mat-label>
                         <input
                             matInput
+                            formControlName="email"
                             >
                     </mat-form-field>
                     <div class="flex flex-wrap items-center ">
                         <mat-form-field class="w-full fuse-mat-dense lg:w-4/5">
                             <mat-label>Perfil</mat-label>
-                            <mat-select>
+                            <mat-select formControlName="user_profile_id">
                                 <mat-option *ngFor="let item of profile$ | async"
                                             [value]="item.id"
                                 >
@@ -72,11 +75,12 @@
 
                 </div>
 
-                <div class="flex flex-col w-full lg:w-1/3 sm:pl-4">
+                <div class="flex flex-col w-full lg:w-1/3 sm:pl-4 sm:pr-2">
                     <mat-form-field class="w-full fuse-mat-dense">
                         <mat-label>Contraseña</mat-label>
                         <input
-                            matInput
+                            matInput type="password"
+                            formControlName="password_digest"
                             >
                     </mat-form-field>
 
@@ -101,6 +105,7 @@
                     <button
                         mat-flat-button
                         [color]="'primary'"
+                        (click)="onSave()"
                     >
                         Guardar
                     </button>

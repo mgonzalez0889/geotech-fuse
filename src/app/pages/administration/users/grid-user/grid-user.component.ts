@@ -27,9 +27,13 @@ export class GridUserComponent implements OnInit {
       this.show = true;
   }
 
+  public onEdit(id: number): void {
+      this.show = true;
+      this.usersService.subjectUser$.next({type: 'EDIT', id: id, isEdit: true});
+  }
+
   private fetchUsers(): void {
       this.users$ = this.usersService.getUsers();
-      // this.usersService.getUsers().subscribe(res => console.log(res), error => console.log(error));
   }
 
 }
