@@ -35,5 +35,13 @@ export class AppSettingsService {
             base: EndPoints.uri('option')
         }
     };
+    /**
+     * @description: End-point contact
+     */
+    public contact = {
+        url:{
+            base: EndPoints.uri('')
+        }
+    }
 
 }
