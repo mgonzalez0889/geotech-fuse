@@ -1,1 +1,52 @@
-<p>form-menu-options works!</p>
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <!-- CONTENT GOES HERE -->
+        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
+            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                <div class="text-3xl font-extrabold tracking-tight">{{'Nueva opcion'}}</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 mt-2 md:mt-4">
+            <form class="flex flex-col mt-4 bg-card shadow rounded overflow-hidden">
+                <div class="flex flex-col p-8">
+                    <mat-form-field class="fuse-mat-dense flex-auto">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput>
+                    </mat-form-field>
+                    <mat-form-field class="fuse-mat-dense flex-auto">
+                        <mat-label>Descripción</mat-label>
+                        <input matInput>
+                    </mat-form-field>
+                    <mat-form-field class="fuse-mat-dense flex-auto">
+                        <mat-label>Path</mat-label>
+                        <input matInput>
+                    </mat-form-field>
+
+                </div>
+
+                <div class="flex items-center justify-end border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                    <button mat-button>
+                        Cancel
+                    </button>
+                    <button
+                        class="px-6 ml-3"
+                        mat-flat-button
+                        [color]="'primary'">
+                        Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+</div>
