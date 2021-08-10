@@ -11,7 +11,7 @@ import {ProfilesService} from "../../../../core/services/profiles.service";
 export class GridProfileComponent implements OnInit {
   searchInputControl: FormControl = new FormControl();
   public profile$: Observable<any>;
-  public show: boolean;
+  public show: boolean = false;
   constructor(
       private profileService: ProfilesService
 

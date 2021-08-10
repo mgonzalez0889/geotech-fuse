@@ -27,5 +27,13 @@ export class AppSettingsService {
             base: EndPoints.uri('user_profile')
         }
     };
+    /**
+     * @description: End-point menu-option
+     */
+    public menuOptions = {
+        url: {
+            base: EndPoints.uri('option')
+        }
+    };
 
 }
