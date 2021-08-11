@@ -40,7 +40,7 @@ export class AppSettingsService {
      */
     public contact = {
         url:{
-            base: EndPoints.uri('')
+            base: EndPoints.uri('contact')
         }
     }
 

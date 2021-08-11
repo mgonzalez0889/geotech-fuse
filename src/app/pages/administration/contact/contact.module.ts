@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormContactComponent } from './form-contact/form-contact.component';
 import { GridContactComponent } from './grid-contact/grid-contact.component';
 import { ContactRoutingModule } from './contact-routing.module';
@@ -28,7 +29,6 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     ContactRoutingModule,
-    MatIconModule,
     MatFormFieldModule,
     MatIconModule,
     ReactiveFormsModule,
