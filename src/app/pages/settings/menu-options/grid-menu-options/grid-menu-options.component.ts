@@ -24,12 +24,14 @@ export class GridMenuOptionsComponent implements OnInit {
    */
   public openForm(): void {
       this.show = true;
+      this.menuOptionService.behaviorSubjectOption$.next({type: 'NEW', isEdit: false});
   }
   public closeForm(value: boolean): void {
       this.show = value;
   }
   public onEdit(id: number): void {
-
+      this.show = true;
+      this.getOption(id);
   }
   /**
    * @description: Elimina una opcion
@@ -42,6 +44,14 @@ export class GridMenuOptionsComponent implements OnInit {
    */
   public fetchMenuOption(): void {
       this.options$ = this.menuOptionService.getMenuOptions();
+  }
+  /**
+   * @description
+   */
+  private getOption(id: number): void {
+      this.menuOptionService.getMenuOption(id).subscribe(({data}) => {
+          this.menuOptionService.behaviorSubjectOption$.next({type: 'EDIT', id, isEdit: true, payload: data});
+      });
   }
 
 }
