@@ -9,6 +9,9 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -23,7 +26,10 @@ import {MatButtonModule} from "@angular/material/button";
         MatIconModule,
         MatInputModule,
         ReactiveFormsModule,
-        MatButtonModule
+        MatButtonModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatRadioModule
     ]
 })
 export class MenuOptionsModule { }

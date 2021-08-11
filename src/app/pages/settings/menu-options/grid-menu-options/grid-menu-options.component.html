@@ -70,9 +70,38 @@
 
                             </div>
                             <!--Rows-->
-                            <ng-container>
-                                <ng-container>
-                                    <div class="grid-user grid items-center gap-15 py-3 px-6 md:px-8 border-b">
+                            <ng-container *ngIf="options$ | async as options">
+                                <ng-container *ngFor="let option of options.data">
+                                    <div class="grid-menu-options grid items-center gap-15 py-3 px-6 md:px-8 border-b">
+                                        <!--Nombre-->
+                                        <div class="hidden md:block">
+                                            {{option.option_name}}
+                                        </div>
+                                        <!--Descripcion-->
+                                        <div class="hidden md:block">
+                                            {{option.option_description}}
+                                        </div>
+                                        <!--Ruta-->
+                                        <div class="hidden md:block">
+                                            {{option.option_ubication}}
+                                        </div>
+                                        <!--Path-->
+                                        <div class="hidden md:block">
+                                            {{option.option_view}}
+                                        </div>
+
+                                        <ng-container >
+                                            <button mat-icon-button color="primary"
+                                                    (click)="onEdit(option.id)"
+                                            >
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                            <button mat-icon-button color="warn"
+                                                    (click)="onDelete(option.id)"
+                                            >
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+                                        </ng-container>
 
                                     </div>
                                 </ng-container>
@@ -82,10 +111,16 @@
 
                     </ng-container>
                 </ng-container>
+                <ng-template #noOption>
+                    <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No existen opciones!</div>
+                </ng-template>
 
             </div>
         </div>
-
+    </ng-container>
+    <!--Formulario de opciones-->
+    <ng-container *ngSwitchCase="true">
+        <app-form-menu-options></app-form-menu-options>
     </ng-container>
 
 </div>
