@@ -12,12 +12,13 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
+import {CoreModule} from "../../../core/core.module";
 
 
 @NgModule({
   declarations: [
     FormMenuOptionsComponent,
-    GridMenuOptionsComponent
+    GridMenuOptionsComponent,
   ],
     imports: [
         CommonModule,
@@ -29,7 +30,7 @@ import {MatRadioModule} from "@angular/material/radio";
         MatButtonModule,
         MatSelectModule,
         MatCheckboxModule,
-        MatRadioModule
+        MatRadioModule,
     ]
 })
 export class MenuOptionsModule { }
