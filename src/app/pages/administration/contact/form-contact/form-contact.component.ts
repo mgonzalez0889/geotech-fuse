@@ -25,9 +25,8 @@ export class FormContactComponent implements OnInit {
     private createContactForm(): void {
         this.formContacts = this.fb.group({
             id: undefined,
-            name: ['', [Validators.required]],
-            last_name: ['', [Validators.required]],
-            identification_number:['',[Validators.required]],
+            full_name: ['', [Validators.required]],
+            identification:['',[Validators.required]],
             email: ['', [Validators.required]],
             cell_phone: ['', [Validators.required]],
             address:['',[Validators.required]]

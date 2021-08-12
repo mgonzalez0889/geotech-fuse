@@ -34,15 +34,62 @@
                                     Nombre
                                 </div>
                                 <div class="hidden md:block">
-                                    Correo electronico
+                                    Numero de identificación
+                                </div>
+                                <div class="hidden md:block">
+                                    Celular
                                 </div>
                                 <div class="hidden md:block">
                                     Dirección
                                 </div>
                                 <div class="hidden md:block">
-                                    Teléfono
+                                    Correo electrónico
+                                </div>
+                                <div class="hidden md:block">
+                                    Acciones
                                 </div>
                             </div>
+                            <!--Rows-->
+                            <ng-container>
+                                <ng-container *ngFor="let contact of contactData">
+                                    <div class="grid-contact grid items-center gap-15 py-3 px-6 md:px-8 border-b">
+                                        <!--Nombre-->
+                                        <div class="hidden md:block">
+                                            {{contact.email}}
+                                        </div>
+
+                                        <!--Numero de identificación-->
+                                        <div class="hidden md:block">
+                                            1143268948
+                                        </div>
+
+                                        <!--Celular-->
+                                        <div class="hidden md:block">
+                                            3008278519
+                                        </div>
+
+                                        <!--Dirección-->
+                                        <div class="hidden md:block ">
+                                            Cra 11 # 111B - 47
+                                        </div>
+
+                                        <!--Correo electrónico-->
+                                        <div class="hidden md:block ">
+                                            aavila@geotech.com.co
+                                        </div>
+
+                                        <ng-container>
+                                            <button mat-icon-button color="primary">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                            <button mat-icon-button color="warn">
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+                                        </ng-container>
+                                        
+                                    </div>
+                                </ng-container>
+                            </ng-container>
                         </div>
                     </ng-container>
                 </ng-container>

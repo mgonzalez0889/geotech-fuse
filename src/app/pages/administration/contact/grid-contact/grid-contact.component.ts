@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { contactData } from 'app/core/interfaces/contact';
+import { ContactService } from 'app/core/services/contact.service';
 
 @Component({
   selector: 'app-grid-contact',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GridContactComponent implements OnInit {
 
-  constructor() { }
+  contactData: contactData[] = [];
+
+  constructor(private _contactService: ContactService) { }
 
   ngOnInit(): void {
+    this.fetchContact();
+  }
+
+  fetchContact(){
+    this._contactService.getContact().subscribe((data:any) =>{
+      this.contactData = data.data;
+    })
   }
 
 }
