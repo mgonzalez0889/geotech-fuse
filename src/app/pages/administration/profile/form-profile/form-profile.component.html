@@ -20,19 +20,19 @@
                 >
                     <!--Home-->
                     <mat-tab label="Perfil">
-                        <form class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden">
+                        <form [formGroup]="form" class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden">
                             <div class="flex flex-col p-8 ">
                                 <mat-form-field class="fuse-mat-dense flex-auto">
                                     <mat-label>Nombre</mat-label>
                                     <input matInput
-
+                                           formControlName="name"
                                     >
                                 </mat-form-field>
                                 <mat-form-field class="fuse-mat-textarea flex-auto">
                                     <mat-label>Descripción</mat-label>
                                     <textarea
                                         matInput
-
+                                        formControlName="description"
                                         [rows]="3"></textarea>
                                 </mat-form-field>
                             </div>
@@ -46,21 +46,18 @@
                                     class="px-6 ml-3"
                                     mat-flat-button
                                     [color]="'primary'"
+                                    (click)="onSave()"
                                 >
                                     Guardar
                                 </button>
                             </div>
-
-
                         </form>
-
-
                     </mat-tab>
                     <mat-tab label="Opciones">
                         <app-grid-option-profile></app-grid-option-profile>
                     </mat-tab>
                     <mat-tab label="Moviles">
-                        ffff
+                        Seccion Moviles
                     </mat-tab>
 
                 </mat-tab-group>
