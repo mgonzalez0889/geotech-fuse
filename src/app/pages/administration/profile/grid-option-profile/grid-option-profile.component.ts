@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
+import {MenuOptionsService} from "../../../../core/services/menu-options.service";
+import {Subscription} from "rxjs";
 
 export interface PeriodicElement {
     name: string;
@@ -32,11 +34,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./grid-option-profile.component.scss']
 })
 export class GridOptionProfileComponent implements OnInit {
-
-   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'check1', 'check2', 'check3', 'check4'];
-   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+   public subscription$: Subscription;
+   displayedColumns: string[] = ['select', 'option_name', 'option_ubication', 'option_read', 'option_create', 'option_update', 'option_delete',];
+   dataSource: any;
    selection = new SelectionModel<PeriodicElement>(true, []);
 
+    constructor(
+        private menuOptionService: MenuOptionsService
+    ) { }
+    ngOnInit(): void {
+        this.getOptions();
+    }
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelected() {
         const numSelected = this.selection.selected.length;
@@ -51,9 +59,16 @@ export class GridOptionProfileComponent implements OnInit {
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));
     }
-    constructor() { }
 
-  ngOnInit(): void {
+
+
+  private getOptions(): void {
+        this.subscription$ = this.menuOptionService.getMenuOptions().subscribe(({data}) => {
+            this.dataSource = data;
+            console.log(this.dataSource);
+            this.dataSource = new MatTableDataSource<any>(data);
+            console.log(this.dataSource);
+        });
   }
 
 }
