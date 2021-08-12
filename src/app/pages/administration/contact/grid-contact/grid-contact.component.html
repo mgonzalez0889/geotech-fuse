@@ -60,33 +60,33 @@
 
                                         <!--Numero de identificación-->
                                         <div class="hidden md:block">
-                                            1143268948
+                                            {{contact.identification}}
                                         </div>
 
                                         <!--Celular-->
                                         <div class="hidden md:block">
-                                            3008278519
+                                            {{contact.cell_phone}}
                                         </div>
 
                                         <!--Dirección-->
                                         <div class="hidden md:block ">
-                                            Cra 11 # 111B - 47
+                                            {{contact.address}}
                                         </div>
 
                                         <!--Correo electrónico-->
                                         <div class="hidden md:block ">
-                                            aavila@geotech.com.co
+                                            {{contact.email}}
                                         </div>
 
                                         <ng-container>
-                                            <button mat-icon-button color="primary">
+                                            <button [routerLink]="['/formcontact',contact.id]" mat-icon-button color="primary">
                                                 <mat-icon>edit</mat-icon>
                                             </button>
-                                            <button mat-icon-button color="warn">
+                                            <button mat-icon-button color="warn"(click)="deleteContact(contact.id)">
                                                 <mat-icon>delete</mat-icon>
                                             </button>
                                         </ng-container>
-                                        
+
                                     </div>
                                 </ng-container>
                             </ng-container>

@@ -14,13 +14,28 @@ export class GridContactComponent implements OnInit {
   constructor(private _contactService: ContactService) { }
 
   ngOnInit(): void {
-    this.fetchContact();
+    this.showContact();
   }
+    /**
+     * @description: Mostrar todos los contactos
+     */
+    public showContact(): void{
+    this._contactService.getContacts().subscribe((res: any) =>{
+      this.contactData = res.data;
+      console.log(res.data);
+    });
+  }
+    /**
+     * @description: Eliminar un contacto
+     */
+    public deleteContact(id: string){
+        this._contactService.deleteContacts(id).subscribe(
+            res => this._contactService.getContacts().subscribe((data:any) =>{
+                this.contactData =data.data;
+                console.log('Elemento eliminado');
 
-  fetchContact(){
-    this._contactService.getContact().subscribe((data:any) =>{
-      this.contactData = data.data;
-    })
-  }
+            })
+        );
+    }
 
 }
