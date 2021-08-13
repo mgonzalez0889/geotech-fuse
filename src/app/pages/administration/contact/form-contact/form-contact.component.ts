@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ContactService} from "../../../../core/services/contact.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,6 +12,7 @@ export class FormContactComponent implements OnInit {
 
     public formContacts: FormGroup;
     id: string;
+    @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
     constructor(private fb: FormBuilder, private _contactService: ContactService, private router: Router, private aRoute: ActivatedRoute) {
@@ -19,7 +20,6 @@ export class FormContactComponent implements OnInit {
 
     ngOnInit(): void {
         this.createContactForm();
-        this.id = this.aRoute.snapshot.paramMap.get('id');
     }
 
     /***
@@ -36,20 +36,30 @@ export class FormContactComponent implements OnInit {
             }
         );
     }
+
     /**
-     * @description: Guardar o eliminar un nuevo contacto
+     * @description: Crear o editar un nuevo contacto
      */
-    public SaveOrEdit(): void {
-        if (!this.id) {
-            this.newContact();
+    public onSave(): void {
+        const data = this.formContacts.getRawValue();
+        if (!data.id) {
+            this.newContact(data);
         } else {
-            this.editContact(this.id);
+            this.editContact(data);
         }
     }
+
+    /**
+     * @description: Cierra formulario
+     */
+    public onClose(): void {
+        this.onShow.emit(false);
+    }
+
     /**
      * @description: Crear un nuevo contacto
      */
-    private newContact(): void {
+    private newContact(data: any): void {
         this._contactService.postContacts(this.formContacts.value).subscribe((res) => {
             console.log(res);
             this.router.navigate(['/default/administration/contacts']);
@@ -64,5 +74,6 @@ export class FormContactComponent implements OnInit {
             res => this.router.navigate(['/default/administration/contacts'])
         );
     }
+
 
 }

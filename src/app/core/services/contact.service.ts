@@ -2,12 +2,14 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {AppSettingsService} from '../app-configs/app-settings.service';
  import {contactData} from '../interfaces/contact';
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ContactService {
+    public behaviorSubjectContact$: BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
+
 
     constructor(
         private _http: HttpClient,
@@ -42,7 +44,7 @@ export class ContactService {
     /**
      * @description: Actualizar un contacto
      */
-    public putContacts(id: string,data: contactData): Observable<any>{
+    public putContacts(id: string, data: contactData): Observable<any>{
         const params = {method:'update_contact'};
         return this._http.put(this._appSettings.contact.url.base +'/'+ id,data,{params});
     }
@@ -50,8 +52,8 @@ export class ContactService {
     /**
      * @description: Traer un contacto
      */
-    public getContact(id: string): Observable<any>{
+    public getContact(id: number): Observable<any>{
         const params = {method:'show_contact'};
-        return this._http.get(this._appSettings.contact.url.base +'/'+id);
+        return this._http.get(this._appSettings.contact.url.base +'/'+id, {params});
     }
 }

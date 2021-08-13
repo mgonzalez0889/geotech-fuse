@@ -13,7 +13,7 @@ const routes: Routes = [
         component: FormContactComponent
     },
     {
-        path: 'formcontact/id',
+        path: 'editContact/:id',
         component: FormContactComponent
     }
 ];
