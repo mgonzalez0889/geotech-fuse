@@ -1,15 +1,14 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {AppSettingsService} from '../app-configs/app-settings.service';
- import {contactData} from '../interfaces/contact';
 import {BehaviorSubject, Observable} from "rxjs";
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class ContactService {
     public behaviorSubjectContact$: BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
-
 
     constructor(
         private _http: HttpClient,
@@ -28,7 +27,7 @@ export class ContactService {
     /**
      * @description: Crear un contacto
      */
-    public postContacts(data: contactData): Observable<any> {
+    public postContacts(data: any): Observable<any> {
         const params = {method: 'create_contact'};
         return this._http.post(this._appSettings.contact.url.base, data, {params});
     }
@@ -36,16 +35,18 @@ export class ContactService {
     /**
      * @description: Eliminar un contacto
      */
-    public deleteContacts(id: string): Observable<any>{
+    public deleteContacts(id: number): Observable<any>{
         const params = {method:'delete_contact'};
         return this._http.delete(this._appSettings.contact.url.base +'/'+id,{params});
     }
 
     /**
-     * @description: Actualizar un contacto
+     * @description: Editar un contacto
      */
-    public putContacts(id: string, data: contactData): Observable<any>{
+    public putContacts(data: any): Observable<any>{
         const params = {method:'update_contact'};
+        const id = data.id;
+        delete data.id;
         return this._http.put(this._appSettings.contact.url.base +'/'+ id,data,{params});
     }
 

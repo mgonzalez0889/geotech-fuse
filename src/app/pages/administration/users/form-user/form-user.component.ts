@@ -103,6 +103,7 @@ export class FormUserComponent implements OnInit, OnDestroy {
         this.subscription$ = this.userService.postUser(data).subscribe((res) => {
             this._snackBar.open('Se ha creado el nuevo usuario', 'CERRAR', {duration: 4000});
             this.onShow.emit(false);
+            console.log(res.data);
         });
     }
 
