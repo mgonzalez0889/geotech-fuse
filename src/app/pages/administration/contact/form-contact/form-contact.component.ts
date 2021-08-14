@@ -46,8 +46,10 @@ export class FormContactComponent implements OnInit, OnDestroy {
         const data = this.formContacts.getRawValue();
         if (!data.id) {
             this.newContact(data);
+            //alert('ola papu');
         } else {
             this.editContact(data);
+            //alert(data.id);
         }
     }
 
@@ -64,11 +66,11 @@ export class FormContactComponent implements OnInit, OnDestroy {
     private createContactForm(): void {
         this.formContacts = this.fb.group({
                 id: undefined,
-                full_name: ['', [Validators.required]],
-                identification: ['', [Validators.required]],
-                email: ['', [Validators.required]],
-                cell_phone: ['', [Validators.required]],
-                address: ['', [Validators.required]]
+                full_name: ['',[Validators.required]],
+                identification: ['',[Validators.required]],
+                email: ['', [Validators.email]],
+                phone: ['',[Validators.required]],
+                address: ['',[Validators.required]]
             }
         );
     }
@@ -104,12 +106,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
                 this.titleForm = 'Editar contacto';
             } else if (!isEdit && type == 'NEW') {
                 this.formContacts.reset({
-                    id: [''],
-                    full_name: [''],
-                    identification: [''],
-                    cell_phone: [''],
-                    email: [''],
-                    address: ['']
                 });
                 this.titleForm = 'Nuevo contacto';
 

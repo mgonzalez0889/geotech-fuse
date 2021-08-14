@@ -66,7 +66,7 @@
 
                                         <!--Celular-->
                                         <div class="hidden md:block">
-                                            {{contact.cell_phone}}
+                                            {{contact.phone}}
                                         </div>
 
                                         <!--Dirección-->
@@ -98,6 +98,7 @@
                         </div>
                     </ng-container>
                 </ng-container>
+
                 <ng-template #nocontacts>
                     <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No existen
                         contactos!
@@ -107,7 +108,6 @@
             </div>
         </div>
     </ng-container>
-
     <ng-container *ngSwitchCase="true">
         <app-form-contact (onShow)="closeForm($event)"></app-form-contact>
     </ng-container>
