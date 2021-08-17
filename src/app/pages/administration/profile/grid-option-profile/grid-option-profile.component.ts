@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
+import {MenuOptionsService} from "../../../../core/services/menu-options.service";
+import {Subscription} from "rxjs";
+import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 
 export interface PeriodicElement {
     name: string;
@@ -32,11 +35,20 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./grid-option-profile.component.scss']
 })
 export class GridOptionProfileComponent implements OnInit {
+   public subscription$: Subscription;
+   displayedColumns: string[] = ['select', 'option_name', 'option_ubication', 'option_read', 'option_create', 'option_update', 'option_delete',];
+   dataSource: any;
+   selection = new SelectionModel<any>(true, []);
+   public form: FormGroup;
 
-   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'check1', 'check2', 'check3', 'check4'];
-   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-   selection = new SelectionModel<PeriodicElement>(true, []);
-
+    constructor(
+        private menuOptionService: MenuOptionsService,
+        private fb: FormBuilder
+    ) { }
+    ngOnInit(): void {
+        this.getOptions();
+        this.createForm();
+    }
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelected() {
         const numSelected = this.selection.selected.length;
@@ -47,13 +59,37 @@ export class GridOptionProfileComponent implements OnInit {
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
         console.log(this.selection);
+        // this.data.push(this.selection.selected);
         this.isAllSelected() ?
             this.selection.clear() :
-            this.dataSource.data.forEach(row => this.selection.select(row));
+            this.dataSource.data.forEach((row) => {
+                this.selection.select(row);
+                // console.log(row);
+            }
+            );
+        console.log(this.selection.selected);
+        // this.data.push(this.selection.selected)
     }
-    constructor() { }
 
-  ngOnInit(): void {
+    private createForm(): void {
+        this.form = this.fb.group({
+            data: this.fb.array([])
+        });
+    }
+
+    get data() {
+        return this.form.controls['data'] as FormArray;
+    }
+
+
+  private getOptions(): void {
+        this.subscription$ = this.menuOptionService.getMenuOptions().subscribe(({data}) => {
+            this.dataSource = data;
+            // this.data
+            console.log(this.dataSource);
+            this.dataSource = new MatTableDataSource<any>(data);
+            // console.log(this.dataSource);
+        });
   }
 
 }
