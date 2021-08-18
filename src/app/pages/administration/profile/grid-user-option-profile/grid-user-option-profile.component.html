@@ -1,0 +1,77 @@
+<ng-container>
+    <ng-container>
+        <div class="grid">
+            <div
+                class="grid-user-option-profile z-10 sticky top-0 grid gap-2 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+            >
+                <div
+                    class="hidden md:block"
+                >
+                    Nombre
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Ver
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Crear
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Actualizar
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Eliminar
+                </div>
+
+            </div>
+            <!--Rows-->
+            <ng-container *ngIf="userProfileOp$ | async as items">
+                <ng-container *ngFor="let item of items.data">
+                    <div class="grid-user-option-profile grid items-center gap-5 py-3 px-6 md:px-8 border-b">
+                        <div class="hidden md:block">
+                            {{item.option_name}}
+                        </div>
+                        <div class="hidden md:block" *ngIf="item.option_read_validate !== 0">
+                            <mat-checkbox class="example-margin"
+                                          [checked]="item.option_read !== 0"
+
+                            >
+                            </mat-checkbox>
+                        </div>
+                        <div class="hidden md:block" *ngIf="item.option_create_validate !== 0">
+                            <mat-checkbox class="example-margin"
+
+                            >
+                            </mat-checkbox>
+                        </div>
+                        <div class="hidden md:block" *ngIf="item.option_update_validate !== 0">
+                            <mat-checkbox class="example-margin"
+
+                            >
+                            </mat-checkbox>
+                        </div>
+                        <div class="hidden md:block" *ngIf="item.option_delete_validate !== 0">
+                            <mat-checkbox class="example-margin"
+
+                            >
+                            </mat-checkbox>
+                        </div>
+
+                    </div>
+
+                </ng-container>
+
+            </ng-container>
+
+
+        </div>
+    </ng-container>
+
+</ng-container>

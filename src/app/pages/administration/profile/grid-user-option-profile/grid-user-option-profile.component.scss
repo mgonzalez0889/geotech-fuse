@@ -1,0 +1,15 @@
+.grid-user-option-profile {
+    grid-template-columns: 58px auto 40px;
+
+    @screen sm {
+        grid-template-columns: 146px auto 80px 120px;
+    }
+
+    @screen md {
+        grid-template-columns: 146px 80px  80px 120px auto;
+    }
+
+    @screen lg {
+        grid-template-columns: 146px 80px  80px  80px auto;
+    }
+}

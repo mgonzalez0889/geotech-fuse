@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {EndPoints} from './end-points';
+import { EndPoints } from './end-points';
 
 @Injectable()
 export class AppSettingsService {
@@ -39,9 +39,34 @@ export class AppSettingsService {
      * @description: End-point contact
      */
     public contact = {
-        url:{
+        url: {
             base: EndPoints.uri('contact')
         }
-    }
+    };
+    /**
+     * @description: End-point User Profile Options
+     */
+    public userProfileOption = {
+        url: {
+            base: EndPoints.uri('user_profile_option')
+        }
+    };
+    /**
+     * @description: End-point Owners
+     */
+    public owners = {
+        url: {
+            base: EndPoints.uri('owner')
+        }
+    };
+    /**
+     * @description: End-point projects
+     */
+    public projects = {
+        url: {
+            base: EndPoints.uri('project')
+        }
+    };
+>>>>>>> 45e94ac94abc2f357d2aa7ae612bbb5ec1ccf9ee
 
 }

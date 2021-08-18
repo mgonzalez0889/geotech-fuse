@@ -1,33 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
-import {MenuOptionsService} from "../../../../core/services/menu-options.service";
-import {Subscription} from "rxjs";
-import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
-
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    check1: string;
-    check2: boolean;
-    check3: boolean;
-    check4: boolean;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, check1: 'H', check2: false, check3: false, check4: false},
-    {position: 2, name: 'Helium', weight: 4.0026, check1: 'He', check2: false, check3: false, check4: false},
-    {position: 3, name: 'Lithium', weight: 6.941, check1: 'Li', check2: false, check3: false, check4: false},
-    {position: 4, name: 'Beryllium', weight: 9.0122, check1: 'Be', check2: false, check3: false, check4: false},
-    {position: 5, name: 'Boron', weight: 10.811, check1: 'B', check2: false, check3: false, check4: false},
-    {position: 6, name: 'Carbon', weight: 12.0107, check1: 'C', check2: false, check3: false, check4: false},
-    {position: 7, name: 'Nitrogen', weight: 14.0067, check1: 'N', check2: false, check3: false, check4: false},
-    {position: 8, name: 'Oxygen', weight: 15.9994, check1: 'O', check2: false, check3: false, check4: false},
-    {position: 9, name: 'Fluorine', weight: 18.9984, check1: 'F', check2: false, check3: false, check4: false},
-    {position: 10, name: 'Neon', weight: 20.1797, check1: 'Ne', check2: false, check3: false, check4: false},
-];
-
+import {MenuOptionsService} from '../../../../core/services/menu-options.service';
+import {Observable, Subscription} from 'rxjs';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {UserProfileOptionsService} from '../../../../core/services/user-profile-options.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {OwnersService} from '../../../../core/services/owners.service';
+import {ProjectsService} from "../../../../core/services/projects.service";
 
 @Component({
   selector: 'app-grid-option-profile',
@@ -35,61 +15,68 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./grid-option-profile.component.scss']
 })
 export class GridOptionProfileComponent implements OnInit {
-   public subscription$: Subscription;
-   displayedColumns: string[] = ['select', 'option_name', 'option_ubication', 'option_read', 'option_create', 'option_update', 'option_delete',];
-   dataSource: any;
-   selection = new SelectionModel<any>(true, []);
+   // public subscription$: Subscription;
+   // displayedColumns: string[] = ['select', 'option_name', 'option_ubication', 'option_read', 'option_create', 'option_update', 'option_delete',];
+   // dataSource: any;
+   // selection = new SelectionModel<any>(true, []);
    public form: FormGroup;
+   public optionsMenu$: Observable<any>;
+   public owners$: Observable<any>;
+   public projects$: Observable<any>;
 
     constructor(
         private menuOptionService: MenuOptionsService,
+        private userProfileOptionsService: UserProfileOptionsService,
+        private _snackBar: MatSnackBar,
+        private ownersService: OwnersService,
+        private projectsService: ProjectsService,
         private fb: FormBuilder
     ) { }
     ngOnInit(): void {
         this.getOptions();
+        this.getOwners();
+        this.getProjects();
         this.createForm();
     }
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
+    public onSave(data: any): void {
+        // const {}
+        if (data) {
+            // console.log(data);
+            this.saveOptionProfile(data);
+        }
     }
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-        console.log(this.selection);
-        // this.data.push(this.selection.selected);
-        this.isAllSelected() ?
-            this.selection.clear() :
-            this.dataSource.data.forEach((row) => {
-                this.selection.select(row);
-                // console.log(row);
-            }
-            );
-        console.log(this.selection.selected);
-        // this.data.push(this.selection.selected)
-    }
-
     private createForm(): void {
         this.form = this.fb.group({
-            data: this.fb.array([])
+            option_id: '',
+            owner_id: '',
+            project_id: '',
+            user_profile_id: '1'
         });
     }
-
-    get data() {
-        return this.form.controls['data'] as FormArray;
-    }
-
-
+  /**
+   * @description: Carga todas las opcionesdel menu
+   */
   private getOptions(): void {
-        this.subscription$ = this.menuOptionService.getMenuOptions().subscribe(({data}) => {
-            this.dataSource = data;
-            // this.data
-            console.log(this.dataSource);
-            this.dataSource = new MatTableDataSource<any>(data);
-            // console.log(this.dataSource);
-        });
+        this.optionsMenu$ = this.menuOptionService.getMenuOptions();
   }
+  private getOwners(): void {
+      this.owners$ = this.ownersService.getOwners();
+  }
+  private getProjects(): void {
+      this.projects$ = this.projectsService.getProjects();
+  }
+  /**
+   *
+   * @description: Guarda la opcion seleccionada
+   */
+  private saveOptionProfile(data: any): void {
+      this.userProfileOptionsService.postUserProfileOption(data).subscribe(({data, message}) => {
+          this._snackBar.open('Opcion agregada', 'CERRAR', {duration: 4000});
+          this.userProfileOptionsService.behaviorSubjectUserProfile$.next({isEdit: false});
+      });
+
+  }
+
+
 
 }
