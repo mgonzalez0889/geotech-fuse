@@ -1,0 +1,56 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
+    <!-- Main -->
+    <div class="flex-auto p-4 sm:p-4">
+        <div
+            class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
+            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
+            </div>
+        </div>
+        <div class="flex-auto mt-4 sm:mt-6">
+            <div class="w-full max-w-screen-xl mx-auto">
+                <!-- form  -->
+                <form [formGroup]="formContacts">
+                    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
+                        <div class="-mx-3 md:flex mb-6">
+                            <mat-form-field class="w-full px-3 fuse-mat-dense">
+                                <mat-label>Nombre Completo</mat-label>
+                                <input matInput type="text" placeholder="Nombre Completo" formControlName="full_name">
+                            </mat-form-field>
+                        </div>
+                        <div class="-mx-3 md:flex mb-6">
+                            <mat-form-field class="w-1/2 px-3 fuse-mat-dense">
+                                <mat-label>Numero de identificación</mat-label>
+                                <input matInput type="number" placeholder="Numero de identificación"
+                                    formControlName="identification">
+                            </mat-form-field>
+                            <mat-form-field class="w-1/2 px-3 fuse-mat-dense">
+                                <mat-label>Dirección</mat-label>
+                                <input matInput type="text" placeholder="Dirección" formControlName="address">
+                            </mat-form-field>
+                        </div>
+                        <div class="-mx-3 md:flex mb-6">
+                            <mat-form-field class="w-1/2 px-3 fuse-mat-dense">
+                                <mat-label>Correo electrónico</mat-label>
+                                <input matInput type="email" placeholder="Correo electrónico" formControlName="email">
+                            </mat-form-field>
+                            <mat-form-field class="w-1/2 px-3 fuse-mat-dense">
+                                <mat-label>Celular</mat-label>
+                                <input matInput type="number" placeholder="Celular" formControlName="phone">
+                            </mat-form-field>
+                        </div>
+                        <!-- Buttons -->
+                        <div class="flex items-center justify-between w-full border-t px-8 py-4">
+                            <button class="-ml-4" mat-raised-button [color]="'warn'" (click)="onClose()">Cancelar
+                            </button>
+                            <button type="submit" mat-flat-button [color]="'primary'" (click)="onSave()">Guardar
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

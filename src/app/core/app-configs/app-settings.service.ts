@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {EndPoints} from './end-points';
+import { EndPoints } from './end-points';
 
 @Injectable()
 export class AppSettingsService {
@@ -33,6 +33,14 @@ export class AppSettingsService {
     public menuOptions = {
         url: {
             base: EndPoints.uri('option')
+        }
+    };
+    /**
+     * @description: End-point contact
+     */
+    public contact = {
+        url: {
+            base: EndPoints.uri('contact')
         }
     };
     /**
