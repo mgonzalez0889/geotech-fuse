@@ -67,6 +67,5 @@ export class AppSettingsService {
             base: EndPoints.uri('project')
         }
     };
->>>>>>> 45e94ac94abc2f357d2aa7ae612bbb5ec1ccf9ee
 
 }
