@@ -18,7 +18,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
     public show: boolean = false;
     public contacts$: Observable<any>;
 
-
     constructor(
         private _contactService: ContactService,
         public dialog: MatDialog,
@@ -28,7 +27,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.showContact();
     }
-
     /**
      * @description: Abre/cierra el formulario
      */
@@ -36,11 +34,9 @@ export class GridContactComponent implements OnInit, OnDestroy {
         this.show = true;
         this._contactService.behaviorSubjectContact$.next({type: 'NEW', isEdit: false});
     }
-
     public closeForm(value): void {
         this.show = value;
     }
-
     /**
      * @description: Edita un contacto
      */
@@ -48,25 +44,12 @@ export class GridContactComponent implements OnInit, OnDestroy {
         this.show = true;
         this.getEditContct(id);
     }
-
-    /*    public onDelete(id: number): void {
-            const dialog = new MatDialogConfig();
-            dialog.data = id;
-            dialog.width = '30%';
-            dialog.maxWidth = '30%';
-
-            const dialogRef = this.dialog.open(ConfirmDeleteComponent, dialog);
-
-            dialogRef.afterClosed().toPromise().then(() => this.showContact());
-        }*/
-
     /**
      * @description: Mostrar todos los contactos
      */
     public showContact(): void {
         this.contacts$ = this._contactService.getContacts();
     }
-
     /**
      * @description: Mostrar informacion de un contacto
      */
@@ -86,7 +69,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
                 console.log('Elemento eliminado');
             });
     }
-
     ngOnDestroy(): void {
      }
 

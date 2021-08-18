@@ -1,10 +1,10 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ContactService} from "../../../../core/services/contact.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Subscription} from "rxjs";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ContactService } from "../../../../core/services/contact.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { fuseAnimations } from "../../../../../@fuse/animations";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'app-form-contact',
@@ -14,15 +14,12 @@ import {Subscription} from "rxjs";
     animations: fuseAnimations
 })
 export class FormContactComponent implements OnInit, OnDestroy {
-
+    
+    @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
     public formContacts: FormGroup;
     public subscription$: Subscription;
     public titleForm: string;
-
-
-    id: string;
-    @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
-
+    public id: string;
 
     constructor(
         private fb: FormBuilder,
@@ -36,7 +33,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.createContactForm();
         this.listenObservables();
-
     }
 
     /**
@@ -46,61 +42,54 @@ export class FormContactComponent implements OnInit, OnDestroy {
         const data = this.formContacts.getRawValue();
         if (!data.id) {
             this.newContact(data);
-            //alert('ola papu');
         } else {
             this.editContact(data);
-            //alert(data.id);
         }
     }
-
     /**
      * @description: Cierra formulario
      */
     public onClose(): void {
         this.onShow.emit(false);
     }
-
     /***
      * @description: Creacion de los datos del formulario de contactos
      */
     private createContactForm(): void {
         this.formContacts = this.fb.group({
-                id: undefined,
-                full_name: ['',[Validators.required]],
-                identification: ['',[Validators.required]],
-                email: ['', [Validators.email]],
-                phone: ['',[Validators.required]],
-                address: ['',[Validators.required]]
-            }
+            id: undefined,
+            full_name: ['', [Validators.required]],
+            identification: ['', [Validators.required]],
+            email: ['', [Validators.email]],
+            phone: ['', [Validators.required]],
+            address: ['', [Validators.required]]
+        }
         );
     }
-
     /**
      * @description: Crear un nuevo contacto
      */
     private newContact(data: any): void {
         this.subscription$ = this._contactService.postContacts(data).subscribe((res) => {
-            this._snackBar.open('Se ha creado el nuevo contacto', 'CERRAR', {duration: 4000});
+            this._snackBar.open('Se ha creado el nuevo contacto', 'CERRAR', { duration: 4000 });
             this.onShow.emit(false);
         });
     }
-
     /**
      * @description: Editar contacto
      */
     private editContact(data: any): void {
         this.subscription$ = this._contactService.putContacts(data).subscribe((res) => {
-                this._snackBar.open('Contacto actualizado con exito', 'CERRAR', {duration: 4000});
-                this.onShow.emit(false);
-            }
+            this._snackBar.open('Contacto actualizado con exito', 'CERRAR', { duration: 4000 });
+            this.onShow.emit(false);
+        }
         );
     }
-
     /**
      * @description: Escucha el observable behavior
      */
     private listenObservables(): void {
-        this.subscription$ = this._contactService.behaviorSubjectContact$.subscribe(({type, isEdit, payload}) => {
+        this.subscription$ = this._contactService.behaviorSubjectContact$.subscribe(({ type, isEdit, payload }) => {
             if (isEdit && type == 'EDIT') {
                 this.formContacts.patchValue(payload);
                 this.titleForm = 'Editar contacto';
@@ -108,11 +97,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                 this.formContacts.reset({
                 });
                 this.titleForm = 'Nuevo contacto';
-
             }
         });
     }
-
     /**
      * @description: Destruye las subscripciones
      */
