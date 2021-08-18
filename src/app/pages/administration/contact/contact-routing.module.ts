@@ -7,14 +7,6 @@ const routes: Routes = [
     {
         path: '',
         component: GridContactComponent
-    },
-    {
-        path: 'formcontact',
-        component: FormContactComponent
-    },
-    {
-        path: 'editContact/:id',
-        component: FormContactComponent
     }
 ];
 
