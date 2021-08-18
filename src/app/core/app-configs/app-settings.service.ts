@@ -35,5 +35,29 @@ export class AppSettingsService {
             base: EndPoints.uri('option')
         }
     };
+    /**
+     * @description: End-point User Profile Options
+     */
+    public userProfileOption = {
+        url: {
+            base: EndPoints.uri('user_profile_option')
+        }
+    };
+    /**
+     * @description: End-point Owners
+     */
+    public owners = {
+        url: {
+            base: EndPoints.uri('owner')
+        }
+    };
+    /**
+     * @description: End-point projects
+     */
+    public projects = {
+        url: {
+            base: EndPoints.uri('project')
+        }
+    };
 
 }
