@@ -81,10 +81,12 @@
 
                                         <ng-container>
                                             <button mat-icon-button color="primary"
+                                                    (click)="onEdit(profile.id)"
                                             >
                                                 <mat-icon>edit</mat-icon>
                                             </button>
                                             <button mat-icon-button color="warn"
+                                                    (click)="onDelete(profile.id)"
                                             >
                                                 <mat-icon>delete</mat-icon>
                                             </button>
@@ -106,6 +108,6 @@
     </ng-container>
         <!--Formulario de perfiles-->
         <ng-container *ngSwitchCase="true">
-            <app-form-profile></app-form-profile>
+            <app-form-profile (onShow)="closeForm($event)"></app-form-profile>
         </ng-container>
 </div>

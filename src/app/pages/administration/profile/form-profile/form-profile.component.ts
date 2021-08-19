@@ -1,8 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {ProfilesService} from "../../../../core/services/profiles.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatTabChangeEvent} from "@angular/material/tabs";
 
 @Component({
   selector: 'app-form-profile',
@@ -12,6 +13,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class FormProfileComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public subscription$: Subscription;
+  @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public tabOptionOne;
+  public tabOptionTwo = false;
+  public tabSelected: number;
+  public titleForm: string;
   constructor(
       private fb: FormBuilder,
       private profileService: ProfilesService,
@@ -19,13 +25,16 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   ) { }
 
     ngOnDestroy(): void {
-        throw new Error('Method not implemented.');
+        // this.subscription$.unsubscribe();
     }
 
   ngOnInit(): void {
       this.createForm();
+      this.listenObservables();
   }
-
+  /**
+   * @description: Metodo para guardar o editar informacion
+   */
   public onSave(): void {
       const data = this.form.getRawValue();
       if (!data.id) {
@@ -35,6 +44,18 @@ export class FormProfileComponent implements OnInit, OnDestroy {
       }
   }
   /**
+   * @description: Cierra el formulario
+   */
+  public onClose(): void {
+      this.onShow.emit(false);
+  }
+  /**
+   * @description: Metodo para cambio de tab
+   */
+  public onChangeTabs(event: MatTabChangeEvent): void {
+      this.tabSelected = event.index;
+  }
+  /**
    * @description: Creacion de formulario
    */
   private createForm(): void {
@@ -42,7 +63,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
           id: undefined,
           name: [''],
           description: [''],
-          status: ['']
+          status: [true]
       });
   }
   /**
@@ -50,7 +71,9 @@ export class FormProfileComponent implements OnInit, OnDestroy {
    */
   private createProfile(data: any): void {
       this.subscription$ = this.profileService.postProfile(data).subscribe(() => {
-          this._snackBar.open('Perfil creado con exito', 'CERRAR', {duration: 4000});
+          this._snackBar.open('Perfil creado con exito', '', {duration: 4000});
+          this.tabOptionOne = true;
+          this.tabSelected = 1;
       });
   }
   /**
@@ -58,7 +81,24 @@ export class FormProfileComponent implements OnInit, OnDestroy {
    */
   private editProfile(data: any): void {
       this.subscription$ = this.profileService.putProfile(data).subscribe(() => {
-          this._snackBar.open('Perfil creado con exito', 'CERRAR', {duration: 4000});
+          this._snackBar.open('Perfil actualizado con exito', '', {duration: 4000});
+      });
+  }
+  /**
+   * @description: Escucha el observable behavior
+   */
+  private listenObservables(): void {
+      this.subscription$ = this.profileService.behaviorSubjectProfile$.subscribe(({type, isEdit, payload}) => {
+          if (isEdit && type == 'EDIT') {
+              this.form.patchValue(payload);
+              this.tabOptionOne = isEdit;
+              this.titleForm = 'Editar perfil';
+          }else if (!isEdit && type == 'NEW') {
+              this.form.reset({
+                  status: [true]
+              });
+              this.titleForm = 'Nuevo perfil';
+          }
       });
   }
 

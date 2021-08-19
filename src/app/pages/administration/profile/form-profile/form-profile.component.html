@@ -5,14 +5,14 @@
         <div
             class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
             <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                <div class="text-3xl font-extrabold tracking-tight">{{'Nuevo perfil'}}</div>
+                <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
             </div>
         </div>
 
         <!--Main-->
         <div class="flex-auto mt-4 sm:mt-6">
             <div class="w-full max-w-screen-xl mx-auto">
-                <mat-tab-group class="sm:px-2" [animationDuration]="'0'">
+                <mat-tab-group class="sm:px-2" [animationDuration]="'0'" (selectedTabChange)="onChangeTabs($event)" [selectedIndex]="tabSelected">
                     <!--Home-->
                     <mat-tab label="Perfil">
                         <form [formGroup]="form" class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden">
@@ -28,19 +28,23 @@
                             </div>
                             <div
                                 class="flex items-center justify-between border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
-                                <button mat-flat-button [color]="'warn'">
-                                    Cancelar
+                                <button mat-flat-button [color]="'warn'"
+                                        (click)="onClose()"
+                                >
+                                    Cerrar
                                 </button>
-                                <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="onSave()">
+                                <button class="px-6 ml-3"
+                                        mat-flat-button [color]="'primary'"
+                                        (click)="onSave()">
                                     Guardar
                                 </button>
                             </div>
                         </form>
                     </mat-tab>
-                    <mat-tab label="Asignar opciones">
-                        <app-grid-option-profile></app-grid-option-profile>
+                    <mat-tab label="Asignar opciones" [disabled]="!tabOptionOne">
+                            <app-grid-option-profile></app-grid-option-profile>
                     </mat-tab>
-                    <mat-tab label="Opciones asignadas">
+                    <mat-tab label="Opciones asignadas" [disabled]="!tabOptionOne">
                         <app-grid-user-option-profile></app-grid-user-option-profile>
                     </mat-tab>
 
