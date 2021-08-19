@@ -6,7 +6,7 @@ import { GridProfileComponent } from './grid-profile/grid-profile.component';
 import { FormProfileComponent } from './form-profile/form-profile.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {CdkScrollableModule} from "@angular/cdk/scrolling";
@@ -38,7 +38,8 @@ import {MatSelectModule} from "@angular/material/select";
         MatTabsModule,
         MatTableModule,
         MatCheckboxModule,
-        MatSelectModule
+        MatSelectModule,
+        FormsModule
     ]
 })
 export class ProfileModule { }

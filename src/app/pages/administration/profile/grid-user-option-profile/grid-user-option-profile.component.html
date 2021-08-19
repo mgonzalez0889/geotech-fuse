@@ -1,4 +1,19 @@
 <ng-container>
+    <div class="text-2xl font-extrabold tracking-tight mb-4">Asignación de opciones</div>
+    <div class="flex flex-col sm:flex-row items-center justify-end w-full max-w-xs sm:max-w-none">
+        <mat-form-field
+            class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-0 sm:mb-4"
+            [floatLabel]="'always'">
+            <mat-icon
+                matPrefix
+                class="icon-size-5"
+                [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input
+                placeholder="Buscar opcion"
+                matInput
+                #query>
+        </mat-form-field>
+    </div>
     <ng-container>
         <div class="grid">
             <div
@@ -8,6 +23,21 @@
                     class="hidden md:block"
                 >
                     Nombre
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Perfil
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Proyecto
+                </div>
+                <div
+                    class="hidden md:block"
+                >
+                    Owner
                 </div>
                 <div
                     class="hidden md:block"
@@ -32,46 +62,59 @@
 
             </div>
             <!--Rows-->
-            <ng-container *ngIf="userProfileOp$ | async as items">
+            <ng-container *ngIf="userProfileOp$ | async as items; else noOption">
                 <ng-container *ngFor="let item of items.data">
                     <div class="grid-user-option-profile grid items-center gap-5 py-3 px-6 md:px-8 border-b">
                         <div class="hidden md:block">
                             {{item.option_name}}
                         </div>
-                        <div class="hidden md:block" *ngIf="item.option_read_validate !== 0">
+                        <div class="hidden md:block">
+                            {{item.user_profile_name}}
+                        </div>
+                        <div class="hidden md:block">
+                            {{item.project_name}}
+                        </div>
+                        <div class="hidden md:block">
+                            {{item.owner_name}}
+                        </div>
+                        <div class="hidden md:block">
                             <mat-checkbox class="example-margin"
                                           [checked]="item.option_read !== 0"
-
+                                          [disabled]="item.option_read_validate === 0"
+                                          (change)="onSaveRead($event, item)"
                             >
                             </mat-checkbox>
                         </div>
-                        <div class="hidden md:block" *ngIf="item.option_create_validate !== 0">
+                        <div class="hidden md:block">
                             <mat-checkbox class="example-margin"
-
+                                          [checked]="item.option_create !== 0"
+                                          [disabled]="item.option_create_validate === 0"
+                                          (change)="onSaveCreate($event, item)"
                             >
                             </mat-checkbox>
                         </div>
-                        <div class="hidden md:block" *ngIf="item.option_update_validate !== 0">
+                        <div class="hidden md:block">
                             <mat-checkbox class="example-margin"
-
+                                          [checked]="item.option_update !== 0"
+                                          [disabled]="item.option_update_validate === 0"
+                                          (change)="onSaveUpdate($event, item)"
                             >
                             </mat-checkbox>
                         </div>
-                        <div class="hidden md:block" *ngIf="item.option_delete_validate !== 0">
+                        <div class="hidden md:block">
                             <mat-checkbox class="example-margin"
-
+                                          [checked]="item.option_delete !== 0"
+                                          [disabled]="item.option_delete_validate === 0"
+                                          (change)="onSaveDelete($event, item)"
                             >
                             </mat-checkbox>
                         </div>
-
                     </div>
-
                 </ng-container>
-
             </ng-container>
-
-
+            <ng-template #noOption>
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No existen opciones asignadas!</div>
+            </ng-template>
         </div>
     </ng-container>
-
 </ng-container>
