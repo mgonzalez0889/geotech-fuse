@@ -23,7 +23,6 @@ export class ContactService {
         const params = {method: 'index_all_contact'};
         return this._http.get(this._appSettings.contact.url.base, {params});
     }
-
     /**
      * @description: Crear un contacto
      */
@@ -31,7 +30,6 @@ export class ContactService {
         const params = {method: 'create_contact'};
         return this._http.post(this._appSettings.contact.url.base, data, {params});
     }
-
     /**
      * @description: Eliminar un contacto
      */
@@ -39,7 +37,6 @@ export class ContactService {
         const params = {method:'delete_contact'};
         return this._http.delete(this._appSettings.contact.url.base +'/'+id,{params});
     }
-
     /**
      * @description: Editar un contacto
      */
@@ -49,7 +46,6 @@ export class ContactService {
         delete data.id;
         return this._http.put(this._appSettings.contact.url.base +'/'+ id,data,{params});
     }
-
     /**
      * @description: Traer un contacto
      */

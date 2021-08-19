@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ContactService } from "../../../../core/services/contact.service";
-import { ActivatedRoute, Router } from "@angular/router";
 import { fuseAnimations } from "../../../../../@fuse/animations";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
@@ -14,7 +13,7 @@ import { Subscription } from "rxjs";
     animations: fuseAnimations
 })
 export class FormContactComponent implements OnInit, OnDestroy {
-    
+
     @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
     public formContacts: FormGroup;
     public subscription$: Subscription;
@@ -24,8 +23,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
     constructor(
         private fb: FormBuilder,
         private _contactService: ContactService,
-        private router: Router,
-        private aRoute: ActivatedRoute,
         private _snackBar: MatSnackBar,
     ) {
     }
@@ -52,7 +49,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
     public onClose(): void {
         this.onShow.emit(false);
     }
-    /***
+    /**
      * @description: Creacion de los datos del formulario de contactos
      */
     private createContactForm(): void {
@@ -70,7 +67,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Crear un nuevo contacto
      */
     private newContact(data: any): void {
-        this.subscription$ = this._contactService.postContacts(data).subscribe((res) => {
+        this.subscription$ = this._contactService.postContacts(data).subscribe(() => {
             this._snackBar.open('Se ha creado el nuevo contacto', 'CERRAR', { duration: 4000 });
             this.onShow.emit(false);
         });
@@ -79,7 +76,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Editar contacto
      */
     private editContact(data: any): void {
-        this.subscription$ = this._contactService.putContacts(data).subscribe((res) => {
+        this.subscription$ = this._contactService.putContacts(data).subscribe(() => {
             this._snackBar.open('Contacto actualizado con exito', 'CERRAR', { duration: 4000 });
             this.onShow.emit(false);
         }

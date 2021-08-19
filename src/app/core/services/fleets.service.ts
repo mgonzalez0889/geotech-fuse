@@ -1,9 +1,53 @@
 import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {AppSettingsService} from "../app-configs/app-settings.service";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FleetsService {
+    public behaviorSubjectContact$: BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
 
-  constructor() { }
+    constructor(
+      private _http: HttpClient,
+      private _appSettings: AppSettingsService
+  ) { }
+    /**
+     * @description: Ver todos las flotas
+     */
+    public getFleets(): Observable<any> {
+        const params = { method: 'index_all_fleet'};
+        return  this._http.get(this._appSettings.fleets.url.base,{params});
+    }
+    /**
+     * @description: Crear una flota
+     */
+    public postFleets(data: any): Observable<any> {
+        const params = { method: 'create_fleet'};
+        return this._http.post(this._appSettings.fleets.url.base,data,{params});
+    }
+    /**
+     * @description: Eliminar una flota
+     */
+    public deleteFleets(id: number): Observable<any> {
+        const params = { method: 'delete_fleet'};
+        return this._http.delete(this._appSettings.fleets.url.base + '/' + id,{params});
+    }
+    /**
+     * @description: Editar una flota
+     */
+    public putFleets(data: any): Observable<any> {
+        const params = { method: 'update_fleet'};
+        const id = data.id;
+        delete data.id;
+        return this._http.put(this._appSettings.fleets.url.base + '/' + id,data,{params});
+    }
+    /**
+     * @description: Traer una sola flota
+     */
+    public getFleet(id: number): Observable<any> {
+        const params = { method:'show_fleet'};
+        return this._http.get(this._appSettings.fleets.url.base + '/' + id ,{params});
+    }
 }

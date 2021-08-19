@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FormFleetComponent } from './fleets/form-fleet/form-fleet.component';
 
 const routes: Routes = [
     {
+
         path: '',
         children: [
             {
@@ -18,15 +20,19 @@ const routes: Routes = [
                 loadChildren: () => import('./contact/contact.module').then(m => m.ContactModule)
             },
             {
-                path:'fleets',
-                loadChildren:() => import('./fleets/fleets.module').then(m => m.FleetsModule)
+                path: 'fleets',
+                loadChildren: () => import('./fleets/fleets.module').then(m => m.FleetsModule)
+            },
+            {
+                path: 'formfleet', component: FormFleetComponent
             }
         ]
+
     }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
 export class AdministrationRoutingModule { }
