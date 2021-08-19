@@ -9,7 +9,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {OwnersService} from '../../../../core/services/owners.service';
 import {ProjectsService} from "../../../../core/services/projects.service";
 import {MatSelectChange} from "@angular/material/select";
-import {OptionProfileInterface} from "../../../../core/interfaces/option-profile.interface";
+import {OptionCreateInterface, OptionProfileInterface} from "../../../../core/interfaces/option-profile.interface";
+import {ProfilesService} from "../../../../core/services/profiles.service";
 
 @Component({
   selector: 'app-grid-option-profile',
@@ -27,6 +28,8 @@ export class GridOptionProfileComponent implements OnInit {
    public projects$: Observable<any>;
    public idProject: number;
    public idOwner: number;
+   public profile$: Observable<any>;
+   public idProfile: number;
 
     constructor(
         private menuOptionService: MenuOptionsService,
@@ -34,26 +37,29 @@ export class GridOptionProfileComponent implements OnInit {
         private _snackBar: MatSnackBar,
         private ownersService: OwnersService,
         private projectsService: ProjectsService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private profileService: ProfilesService
     ) { }
     ngOnInit(): void {
         this.getOptions();
         this.getOwners();
         this.getProjects();
         this.createForm();
+        this.fetchProfile();
     }
     public onSave(data: OptionProfileInterface): void {
         // const {}
         const {id} = data;
-        const values: OptionProfileInterface = {
-            id: id,
+        const values: OptionCreateInterface = {
+            option_id: id,
             project_id: this.idProject,
-            owner_id: this.idOwner
+            owner_id: this.idOwner,
+            user_profile_id: this.idProfile
         };
         console.log(values);
         //if (data) {
           //  console.log(data);
-           // this.saveOptionProfile(values);
+           this.saveOptionProfile(values);
         //}
     }
     public selectedChangeProject(value: MatSelectChange): void {
@@ -63,6 +69,10 @@ export class GridOptionProfileComponent implements OnInit {
     public selectedChangeOwner(value: MatSelectChange): void {
         console.log(value.value);
         this.idOwner = value.value;
+    }
+    public selectedChangeProfile(value: MatSelectChange): void {
+        console.log(value.value);
+        this.idProfile = value.value;
     }
     private createForm(): void {
         this.form = this.fb.group({
@@ -83,6 +93,12 @@ export class GridOptionProfileComponent implements OnInit {
   }
   private getProjects(): void {
       this.projects$ = this.projectsService.getProjects();
+  }
+  /**
+   * @description: Listado de perfiles
+   */
+  private fetchProfile(): void {
+      this.profile$ = this.profileService.getProfiles();
   }
   /**
    *

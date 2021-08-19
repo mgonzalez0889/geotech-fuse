@@ -1,5 +1,11 @@
+export interface OptionCreateInterface {
+    option_id: number;
+    project_id: number;
+    owner_id: number;
+    user_profile_id: number;
+}
 export interface OptionProfileInterface {
-    id: number;
+    id?: number;
     icon?: string;
     id_father?: null;
     option_create?: number;
@@ -12,6 +18,4 @@ export interface OptionProfileInterface {
     option_view?: number;
     created_at?: Date;
     updated_at?: Date;
-    project_id?: number;
-    owner_id?: number;
 }
