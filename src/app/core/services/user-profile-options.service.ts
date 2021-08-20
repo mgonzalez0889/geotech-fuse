@@ -42,4 +42,11 @@ export class UserProfileOptionsService {
         const params = {method: 'create_user_profile_option'};
         return this._http.delete(`${this._appSettings.userProfileOption.url.base}/${id}`, {params})
     }
+    /**
+     * @description
+     */
+    public getUserProfileOption(id: number): Observable<any> {
+        const params = {method: 'show_user_profile_option_assigned'};
+        return this._http.get(`${this._appSettings.userProfileOption.url.base}/${id}`, {params});
+    }
 }

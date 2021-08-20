@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ProfilesService} from "../../../../core/services/profiles.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MenuOptionsService} from "../../../../core/services/menu-options.service";
 
 @Component({
   selector: 'app-grid-profile',
@@ -12,11 +13,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class GridProfileComponent implements OnInit {
   searchInputControl: FormControl = new FormControl();
   public profile$: Observable<any>;
-  public show: boolean = false;
+  public show: string = 'PROFILES';
   constructor(
       private profileService: ProfilesService,
-      private _snackBar: MatSnackBar
-
+      private _snackBar: MatSnackBar,
+      private menuOptionService: MenuOptionsService
   ) { }
 
   ngOnInit(): void {
@@ -26,7 +27,7 @@ export class GridProfileComponent implements OnInit {
    * @description: Abre el formulario perfil
    */
   public openForm(): void {
-      this.show = true;
+      this.show = 'FORM';
       this.profileService.behaviorSubjectProfile$.next({type: 'NEW', isEdit: false});
   }
   /**
@@ -39,8 +40,15 @@ export class GridProfileComponent implements OnInit {
    * @description: Edita un perfil
    */
   public onEdit(id: number): void {
-      this.show = true;
+      this.show = 'FORM';
       this.getProfile(id);
+  }
+  /**
+   * @description:
+   */
+  public onOptionProfile(id: number): void {
+      this.show = 'OPTIONS';
+      this.menuOptionService.behaviorSelectedMenuOption$.next({id});
   }
   public onDelete(id: number): void {
       this.deleteProfile(id);

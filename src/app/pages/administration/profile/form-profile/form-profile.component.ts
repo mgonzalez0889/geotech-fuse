@@ -13,7 +13,7 @@ import {MatTabChangeEvent} from "@angular/material/tabs";
 export class FormProfileComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public subscription$: Subscription;
-  @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
   public tabOptionOne;
   public tabOptionTwo = false;
   public tabSelected: number;
@@ -47,7 +47,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
    * @description: Cierra el formulario
    */
   public onClose(): void {
-      this.onShow.emit(false);
+      this.onShow.emit('PROFILES');
   }
   /**
    * @description: Metodo para cambio de tab
@@ -74,6 +74,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
           this._snackBar.open('Perfil creado con exito', '', {duration: 4000});
           this.tabOptionOne = true;
           this.tabSelected = 1;
+          this.onShow.emit('PROFILES');
       });
   }
   /**
@@ -82,6 +83,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   private editProfile(data: any): void {
       this.subscription$ = this.profileService.putProfile(data).subscribe(() => {
           this._snackBar.open('Perfil actualizado con exito', '', {duration: 4000});
+          this.onShow.emit('PROFILES');
       });
   }
   /**

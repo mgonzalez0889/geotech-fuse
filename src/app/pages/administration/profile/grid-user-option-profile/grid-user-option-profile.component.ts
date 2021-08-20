@@ -3,6 +3,7 @@ import {UserProfileOptionsService} from '../../../../core/services/user-profile-
 import {Observable, Subscription} from 'rxjs';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {OptionProfileInterface} from '../../../../core/interfaces/option-profile.interface';
+import {MenuOptionsService} from "../../../../core/services/menu-options.service";
 
 @Component({
   selector: 'app-grid-user-option-profile',
@@ -14,6 +15,7 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
   public subscription: Subscription;
   constructor(
       private userProfileOptionsService: UserProfileOptionsService,
+      private menuOptionService: MenuOptionsService
   ) { }
 
   ngOnInit(): void {
@@ -110,6 +112,9 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
    * @description: Escucha el observable Behavior para
    */
   private listenObservable(): void {
+      this.subscription = this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id}) => {
+          console.log(id);
+      })
       this.subscription = this.userProfileOptionsService.behaviorSubjectUserProfile$.subscribe(({isEdit,}) => {
           switch (isEdit) {
               case false :

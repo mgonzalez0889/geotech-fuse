@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AppSettingsService} from "../app-configs/app-settings.service";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuOptionsService {
   public behaviorSubjectOption$: BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
+  public behaviorSelectedMenuOption$: BehaviorSubject<{id?: number; payload?: any}> = new BehaviorSubject<{id?: number; payload?: any}>({id: 0, payload: ''});
   constructor(
       private _http: HttpClient,
       private _appSettings: AppSettingsService

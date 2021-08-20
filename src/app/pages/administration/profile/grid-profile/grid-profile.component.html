@@ -1,5 +1,5 @@
 <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent" [ngSwitch]="show">
-    <ng-container *ngSwitchCase="false">
+    <ng-container *ngSwitchCase="'PROFILES'">
         <!--Header-->
         <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-6 px-6 md:px-8 border-b">
             <!--Title-->
@@ -80,6 +80,11 @@
                                         </div>
 
                                         <ng-container>
+                                            <button mat-icon-button color="accent"
+                                                    (click)="onOptionProfile(profile.id)"
+                                            >
+                                                <mat-icon svgIcon="heroicons_solid:user-add"></mat-icon>
+                                            </button>
                                             <button mat-icon-button color="primary"
                                                     (click)="onEdit(profile.id)"
                                             >
@@ -107,7 +112,11 @@
         </div>
     </ng-container>
         <!--Formulario de perfiles-->
-        <ng-container *ngSwitchCase="true">
+        <ng-container *ngSwitchCase="'FORM'">
             <app-form-profile (onShow)="closeForm($event)"></app-form-profile>
+        </ng-container>
+        <!--Opciones de perfil-->
+        <ng-container *ngSwitchCase="'OPTIONS'">
+            <app-grid-option-profile></app-grid-option-profile>
         </ng-container>
 </div>

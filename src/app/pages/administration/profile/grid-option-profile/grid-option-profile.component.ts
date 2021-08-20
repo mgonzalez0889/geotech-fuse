@@ -26,10 +26,10 @@ export class GridOptionProfileComponent implements OnInit {
    public optionsMenu$: Observable<any>;
    public owners$: Observable<any>;
    public projects$: Observable<any>;
-   public idProject: number;
-   public idOwner: number;
+   // public idProject: number;
+   // public idOwner: number;
    public profile$: Observable<any>;
-   public idProfile: number;
+   // public idProfile: number;
 
     constructor(
         private menuOptionService: MenuOptionsService,
@@ -45,41 +45,25 @@ export class GridOptionProfileComponent implements OnInit {
         this.getOwners();
         this.getProjects();
         this.createForm();
-        this.fetchProfile();
+        this.listenObservables();
     }
     public onSave(data: OptionProfileInterface): void {
-        // const {}
-        const {id} = data;
-        const values: OptionCreateInterface = {
-            option_id: id,
-            project_id: this.idProject,
-            owner_id: this.idOwner,
-            user_profile_id: this.idProfile
-        };
-        console.log(values);
-        //if (data) {
-          //  console.log(data);
-           this.saveOptionProfile(values);
-        //}
+        this.form.controls.option_id.setValue(data.id);
+        const values: OptionCreateInterface  = this.form.getRawValue();
+        if (values) {
+            // console.log(values);
+            this.saveOptionProfile(values);
+        }
     }
-    public selectedChangeProject(value: MatSelectChange): void {
-        console.log(value.value);
-        this.idProject = value.value;
-    }
-    public selectedChangeOwner(value: MatSelectChange): void {
-        console.log(value.value);
-        this.idOwner = value.value;
-    }
-    public selectedChangeProfile(value: MatSelectChange): void {
-        console.log(value.value);
-        this.idProfile = value.value;
-    }
+    /**
+     * @description: Crea el formulario
+     */
     private createForm(): void {
         this.form = this.fb.group({
             option_id: '',
             owner_id: '',
             project_id: '',
-            user_profile_id: '1'
+            user_profile_id: ''
         });
     }
   /**
@@ -97,8 +81,8 @@ export class GridOptionProfileComponent implements OnInit {
   /**
    * @description: Listado de perfiles
    */
-  private fetchProfile(): void {
-      this.profile$ = this.profileService.getProfiles();
+  private fetchProfile(id: number): void {
+      this.profile$ = this.profileService.getProfile(id);
   }
   /**
    *
@@ -109,9 +93,14 @@ export class GridOptionProfileComponent implements OnInit {
           this._snackBar.open('Opcion agregada', 'CERRAR', {duration: 4000});
           this.userProfileOptionsService.behaviorSubjectUserProfile$.next({isEdit: false});
       });
-
   }
-
-
-
+  /**
+   * @description: Escucha el observable behavior seleccio
+   */
+  private listenObservables(): void {
+      this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id}) => {
+          // this.fetchProfile(id);
+          this.form.controls.user_profile_id.setValue(id);
+      });
+  }
 }

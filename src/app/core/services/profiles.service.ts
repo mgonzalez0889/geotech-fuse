@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AppSettingsService} from '../app-configs/app-settings.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 @Injectable({
@@ -9,6 +9,7 @@ import {map} from 'rxjs/operators';
 })
 export class ProfilesService {
   public behaviorSubjectProfile$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
+
   constructor(
       private _http: HttpClient,
       private _appSettings: AppSettingsService
