@@ -78,7 +78,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
      * @description: Escucha el observable behavior
      */
     private listenObservables(): void {
-        this.subscription$ = this._fleetService.behaviorSubjectContact$.subscribe(({ type, isEdit, payload }) => {
+        this.subscription$ = this._fleetService.behaviorSubjectFleet$.subscribe(({ type, isEdit, payload }) => {
             if (isEdit && type == 'EDIT') {
                 this.formFleets.patchValue(payload);
                 this.titleForm = 'Editar flota';

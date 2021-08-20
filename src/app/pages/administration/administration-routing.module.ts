@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FormFleetComponent } from './fleets/form-fleet/form-fleet.component';
 
 const routes: Routes = [
     {
@@ -23,9 +22,6 @@ const routes: Routes = [
                 path: 'fleets',
                 loadChildren: () => import('./fleets/fleets.module').then(m => m.FleetsModule)
             },
-            {
-                path: 'formfleet', component: FormFleetComponent
-            }
         ]
 
     }

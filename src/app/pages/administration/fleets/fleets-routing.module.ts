@@ -6,7 +6,7 @@ import { GridFleetComponent } from './grid-fleet/grid-fleet.component';
 const routes: Routes = [
   {
     path: '',
-    component: GridFleetComponent 
+    component: GridFleetComponent
   }
 ];
 

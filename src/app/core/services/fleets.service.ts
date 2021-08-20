@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from "rxjs";
     providedIn: 'root'
 })
 export class FleetsService {
-    public behaviorSubjectContact$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }>({ type: '', isEdit: false, id: 0 });
+    public behaviorSubjectFleet$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }>({ type: '', isEdit: false, id: 0 });
 
     constructor(
         private _http: HttpClient,

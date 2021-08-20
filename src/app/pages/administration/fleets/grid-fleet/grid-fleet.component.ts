@@ -29,7 +29,7 @@ export class GridFleetComponent implements OnInit {
      */
     public openForm(): void {
         this.show = true;
-        this._fleetService.behaviorSubjectContact$.next({type: 'NEW', isEdit: false});
+        this._fleetService.behaviorSubjectFleet$.next({type: 'NEW', isEdit: false});
     }
     public closeForm(value): void {
         this.show = value;
@@ -55,17 +55,17 @@ export class GridFleetComponent implements OnInit {
      */
     private getEditFleet(id: number): void {
         this._fleetService.getFleet(id).subscribe(({data}) => {
-            this._fleetService.behaviorSubjectContact$.next({type: 'EDIT', id, isEdit: true, payload: data});
+            this._fleetService.behaviorSubjectFleet$.next({type: 'EDIT', id, isEdit: true, payload: data});
         });
     }
     /**
      * @description: Eliminar una flota
      */
-    public deleteFleets(id: number):void {
+    private deleteFleets(id: number): void {
         this._fleetService.deleteFleets(id).subscribe(
             ()=>{
             this.fleet$ = this._fleetService.getFleets();
-            this._snackBar.open('Se ha eliminado la flota','CERRAR',{duration: 4000})
+            this._snackBar.open('Se ha eliminado la flota','CERRAR',{duration: 4000});
             console.log('Elemento eliminado');
         });
     }
