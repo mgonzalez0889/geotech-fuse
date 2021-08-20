@@ -10,39 +10,29 @@
         <!--Main-->
         <div class="flex-auto mt-4 sm:mt-6">
             <div class="w-full max-w-screen-xl mx-auto">
-                <mat-tab-group class="sm:px-2" [animationDuration]="'0'">
                     <!--Home-->
-                    <mat-tab label="Flota">
-                        <form [formGroup]="formFleets"
-                              class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden">
-                            <div class="flex flex-col p-8 ">
-                                <mat-form-field class="fuse-mat-dense flex-auto">
-                                    <mat-label>Nombre</mat-label>
-                                    <input matInput type="text" formControlName="name">
-                                </mat-form-field>
-                                <mat-form-field class="fuse-mat-textarea flex-auto">
-                                    <mat-label>Descripción</mat-label>
-                                    <textarea formControlName="description" matInput [rows]="2"></textarea>
-                                </mat-form-field>
-                            </div>
-                            <div
-                                class="flex items-center justify-between border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
-                                <button mat-flat-button [color]="'warn'" (click)="onClose()">
-                                    Cancelar
-                                </button>
-                                <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="onSave()">
-                                    Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </mat-tab>
-                    <mat-tab label="Asignar moviles">
-                        <!-- <app-grid-option-profile></app-grid-option-profile> -->
-                    </mat-tab>
-                    <mat-tab label="Asignar contactos">
-                        <!-- <app-grid-user-option-profile></app-grid-user-option-profile> -->
-                    </mat-tab>
-                </mat-tab-group>
+                    <form [formGroup]="formFleets"
+                          class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden">
+                        <div class="flex flex-col p-8 ">
+                            <mat-form-field class="fuse-mat-dense flex-auto">
+                                <mat-label>Nombre</mat-label>
+                                <input matInput type="text" formControlName="name">
+                            </mat-form-field>
+                            <mat-form-field class="fuse-mat-textarea flex-auto">
+                                <mat-label>Descripción</mat-label>
+                                <textarea formControlName="description" matInput [rows]="2"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div
+                            class="flex items-center justify-between border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                            <button mat-flat-button [color]="'warn'" (click)="onClose()">
+                                Cerrar
+                            </button>
+                            <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="onSave()">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
             </div>
         </div>
     </div>

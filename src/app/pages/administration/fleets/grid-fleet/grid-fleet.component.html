@@ -1,6 +1,6 @@
 <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
      [ngSwitch]="show">
-    <ng-container *ngSwitchCase="false">
+    <ng-container *ngSwitchCase="'FLEET'">
         <!-- Header -->
         <div
             class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-6 px-6 md:px-8 border-b">
@@ -35,9 +35,6 @@
                             Descripcion
                         </div>
                         <div class="hidden md:block">
-                            Color
-                        </div>
-                        <div class="hidden md:block">
                             Acciones
                         </div>
                     </div>
@@ -54,10 +51,14 @@
                                     {{fleet.description}}
                                 </div>
                                 <!--Color-->
-                                <div class="hidden md:block">
-
-                                </div>
                                 <ng-container>
+                                    <button
+                                        mat-icon-button
+                                        [color]="'accent'"
+                                        (click)="onOptionFleet(fleet.id)"
+                                    >
+                                        <mat-icon svgIcon="heroicons_solid:at-symbol"></mat-icon>
+                                    </button>
                                     <button (click)="onEdit(fleet.id)" mat-icon-button color="primary">
                                         <mat-icon>edit</mat-icon>
                                     </button>
@@ -77,8 +78,12 @@
             </div>
         </div>
     </ng-container>
-
-    <ng-container *ngSwitchCase="true">
+    <!--Formulario de flotas-->
+    <ng-container *ngSwitchCase="'FORM'">
         <app-form-fleet (onShow)="closeForm($event)"></app-form-fleet>
+    </ng-container>
+    <!--Opciones de flotas-->
+    <ng-container *ngSwitchCase="'OPTIONS'">
+        <app-grid-mobile-fleet></app-grid-mobile-fleet>
     </ng-container>
 </div>

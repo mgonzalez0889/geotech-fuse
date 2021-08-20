@@ -12,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class GridFleetComponent implements OnInit {
 
     public fleet$: Observable<any>;
-    public show: boolean = false;
+    public show: string = 'FLEET';
 
     constructor(
         private _fleetService: FleetsService,
@@ -28,10 +28,10 @@ export class GridFleetComponent implements OnInit {
      * @description: Abre/cierra el formulario flota
      */
     public openForm(): void {
-        this.show = true;
+        this.show = 'FORM';
         this._fleetService.behaviorSubjectFleet$.next({type: 'NEW', isEdit: false});
     }
-    public closeForm(value): void {
+    public closeForm(value: string): void {
         this.show = value;
     }
 
@@ -39,8 +39,15 @@ export class GridFleetComponent implements OnInit {
      * @description: Edita un contacto
      */
     public onEdit(id: number): void {
-        this.show = true;
+        this.show = 'FORM';
         this.getEditFleet(id);
+    }
+
+    /**
+     * @description: Abre la grilla opciones de flotas
+     */
+    public onOptionFleet(id: number): void {
+        this.show = 'OPTIONS';
     }
 
     /**
