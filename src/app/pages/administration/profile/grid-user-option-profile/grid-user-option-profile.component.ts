@@ -4,6 +4,7 @@ import {Observable, Subscription} from 'rxjs';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {OptionProfileInterface} from '../../../../core/interfaces/option-profile.interface';
 import {MenuOptionsService} from "../../../../core/services/menu-options.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-grid-user-option-profile',
@@ -15,11 +16,12 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
   public subscription: Subscription;
   constructor(
       private userProfileOptionsService: UserProfileOptionsService,
-      private menuOptionService: MenuOptionsService
+      private menuOptionService: MenuOptionsService,
+      private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-      this.getUserProfileOption();
+      // this.getUserProfileOption();
       this.listenObservable();
   }
   /**
@@ -73,14 +75,15 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
   /**
    * @description: Trae todos los perfiles de usuario
    */
-  private getUserProfileOption(): void {
-      this.userProfileOp$ = this.userProfileOptionsService.getUserOptionProfile();
+  private getUserProfileOption(id: number): void {
+      this.userProfileOp$ = this.userProfileOptionsService.getUserProfileOption(id);
   }
   /**
    * @description: Guarda la opcion ver
    */
   private saveOptionRead(data): void {
       this.userProfileOptionsService.putUserProfileOption(data).subscribe((res) => {
+          this._snackBar.open('Registro guardado con exito', '', {duration: 4000});
           this.userProfileOptionsService.behaviorSubjectUserProfile$.next({isEdit: true});
       });
   }
@@ -89,6 +92,7 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
    */
   private saveOptionCreate(data): void {
       this.userProfileOptionsService.putUserProfileOption(data).subscribe((res) => {
+          this._snackBar.open('Registro guardado con exito', '', {duration: 4000});
           this.userProfileOptionsService.behaviorSubjectUserProfile$.next({isEdit: true});
       });
   }
@@ -97,6 +101,7 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
    */
   private saveOptionUpdate(data): void {
       this.userProfileOptionsService.putUserProfileOption(data).subscribe((res) => {
+          this._snackBar.open('Registro guardado con exito', '', {duration: 4000});
           this.userProfileOptionsService.behaviorSubjectUserProfile$.next({isEdit: true});
       });
   }
@@ -105,6 +110,7 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
    */
   private saveOptionDelete(data): void {
       this.userProfileOptionsService.putUserProfileOption(data).subscribe((res) => {
+          this._snackBar.open('Registro guardado con exito', '', {duration: 4000});
           this.userProfileOptionsService.behaviorSubjectUserProfile$.next({isEdit: true});
       });
   }
@@ -112,16 +118,18 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
    * @description: Escucha el observable Behavior para
    */
   private listenObservable(): void {
+      let idProfile: number;
       this.subscription = this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id}) => {
-          console.log(id);
-      })
+          idProfile = id;
+          this.getUserProfileOption(id);
+      });
       this.subscription = this.userProfileOptionsService.behaviorSubjectUserProfile$.subscribe(({isEdit,}) => {
           switch (isEdit) {
               case false :
-                  this.getUserProfileOption();
+                  this.getUserProfileOption(idProfile);
                   break;
               case true :
-                  this.getUserProfileOption();
+                  this.getUserProfileOption(idProfile);
                   break;
           }
       });

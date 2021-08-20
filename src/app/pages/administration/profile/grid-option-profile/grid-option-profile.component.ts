@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MenuOptionsService} from '../../../../core/services/menu-options.service';
@@ -22,6 +22,7 @@ export class GridOptionProfileComponent implements OnInit {
    // displayedColumns: string[] = ['select', 'option_name', 'option_ubication', 'option_read', 'option_create', 'option_update', 'option_delete',];
    // dataSource: any;
    // selection = new SelectionModel<any>(true, []);
+   @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
    public form: FormGroup;
    public optionsMenu$: Observable<any>;
    public owners$: Observable<any>;
@@ -54,6 +55,12 @@ export class GridOptionProfileComponent implements OnInit {
             // console.log(values);
             this.saveOptionProfile(values);
         }
+    }
+    /**
+     * @description: Cierra el formulario
+     */
+    public onClose(): void {
+        this.onShow.emit('PROFILES');
     }
     /**
      * @description: Crea el formulario
