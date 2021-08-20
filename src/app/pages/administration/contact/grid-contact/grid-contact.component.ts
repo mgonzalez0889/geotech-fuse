@@ -1,7 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ContactService} from 'app/core/services/contact.service';
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {ConfirmDeleteComponent} from "../../../../shared/dialogs/confirm-delete/confirm-delete.component";
 import {fuseAnimations} from "../../../../../@fuse/animations";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Observable} from "rxjs";
@@ -11,8 +9,7 @@ import {Observable} from "rxjs";
     templateUrl: './grid-contact.component.html',
     styleUrls: ['./grid-contact.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
-})
+ })
 export class GridContactComponent implements OnInit, OnDestroy {
 
     public show: boolean = false;
@@ -20,7 +17,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
 
     constructor(
         private _contactService: ContactService,
-        public dialog: MatDialog,
         private _snackBar: MatSnackBar) {
     }
 
@@ -42,7 +38,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
      */
     public onEdit(id: number): void {
         this.show = true;
-        this.getEditContct(id);
+        this.getEditContact(id);
     }
     /**
      * @description: Mostrar todos los contactos
@@ -53,7 +49,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
     /**
      * @description: Mostrar informacion de un contacto
      */
-    private getEditContct(id: number): void {
+    private getEditContact(id: number): void {
         this._contactService.getContact(id).subscribe(({data}) => {
             this._contactService.behaviorSubjectContact$.next({type: 'EDIT', id, isEdit: true, payload: data});
         });
@@ -63,7 +59,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
      */
     public deleteContact(id: number): void {
         this._contactService.deleteContacts(id).subscribe(
-            (res) => {
+            () => {
                 this.contacts$ = this._contactService.getContacts();
                 this._snackBar.open('Se ha eliminado el contacto', 'CERRAR', {duration: 4000});
                 console.log('Elemento eliminado');
