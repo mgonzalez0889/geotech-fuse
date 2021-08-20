@@ -7,7 +7,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     selector: 'app-grid-fleet',
     templateUrl: './grid-fleet.component.html',
     styleUrls: ['./grid-fleet.component.scss'],
-    encapsulation: ViewEncapsulation.None,
 
 })
 export class GridFleetComponent implements OnInit {
@@ -63,7 +62,8 @@ export class GridFleetComponent implements OnInit {
      * @description: Eliminar una flota
      */
     public deleteFleets(id: number):void {
-        this._fleetService.deleteFleets(id).subscribe(()=>{
+        this._fleetService.deleteFleets(id).subscribe(
+            ()=>{
             this.fleet$ = this._fleetService.getFleets();
             this._snackBar.open('Se ha eliminado la flota','CERRAR',{duration: 4000})
             console.log('Elemento eliminado');
