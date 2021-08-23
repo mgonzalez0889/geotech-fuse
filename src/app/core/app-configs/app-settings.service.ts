@@ -75,5 +75,13 @@ export class AppSettingsService {
             base: EndPoints.uri('fleet')
         }
     };
+    /**
+     * @description: End-point mobiles
+     */
+    public mobile = {
+        url: {
+            base: EndPoints.uri('mobile')
+        }
+    };
 
 }

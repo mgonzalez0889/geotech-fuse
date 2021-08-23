@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
+import {Observable, Subscription} from "rxjs";
+import {MobileService} from "../../../../core/services/mobile.service";
+import {FormControl} from "@angular/forms";
 
 export interface PeriodicElement {
     name: string;
@@ -31,12 +34,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./grid-mobile-fleet.component.scss']
 })
 export class GridMobileFleetComponent implements OnInit {
-
-    displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'check1', 'check2', 'check3', 'check4'];
-    dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+    searchInputControl: FormControl = new FormControl();
+    displayedColumns: string[] = ['select', 'position', 'name'];
+    dataSource: any = [];
+    mobiles$: Observable<any>;
+    // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
     selection = new SelectionModel<PeriodicElement>(true, []);
+    public subscription: Subscription;
 
-    constructor() { }
+    constructor(
+        private mobileService: MobileService,
+    ) { }
 
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelected() {
@@ -55,6 +63,16 @@ export class GridMobileFleetComponent implements OnInit {
 
 
     ngOnInit(): void {
-  }
+        this.getMobiles();
+    }
+    /**
+     * @description: Trae todos los mobiles
+     */
+    private getMobiles(): void {
+       this.subscription = this.mobileService.getMobiles().subscribe(({data}) => {
+           console.log(data);
+           this.dataSource = new MatTableDataSource(data);
+       });
+    }
 
 }
