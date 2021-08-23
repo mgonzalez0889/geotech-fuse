@@ -83,5 +83,13 @@ export class AppSettingsService {
             base: EndPoints.uri('mobile')
         }
     };
+    /**
+     * @description: End-point Plate options
+     */
+    public plateOptions = {
+        url: {
+            base: EndPoints.uri('user_profile_plate')
+        }
+    };
 
 }
