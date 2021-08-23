@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { AppSettingsService } from "../app-configs/app-settings.service";
-import { BehaviorSubject, Observable } from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { AppSettingsService } from '../app-configs/app-settings.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FleetsService {
     public behaviorSubjectFleet$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }>({ type: '', isEdit: false, id: 0 });
+    public behaviorSelectedFleet$: BehaviorSubject<{id?: number; payload?: any}> = new BehaviorSubject<{id?: number; payload?: any}>({id: 0, payload: ''});
 
     constructor(
         private _http: HttpClient,
@@ -49,5 +50,12 @@ export class FleetsService {
     public getFleet(id: number): Observable<any> {
         const params = { method: 'show_fleet' };
         return this._http.get(this._appSettings.fleets.url.base + '/' + id, { params });
+    }
+    /**
+     * @description: Obtiene las flotas por Id
+     */
+    public getFleetsCurrents(id): Observable<any> {
+        const params = { method: 'show_fleet' };
+        return;
     }
 }

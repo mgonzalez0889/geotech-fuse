@@ -10,7 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     styleUrls: ['./form-fleet.component.scss']
 })
 export class FormFleetComponent implements OnInit, OnDestroy {
-    @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
     public formFleets: FormGroup;
     public subscription$: Subscription;
     public titleForm: string;
@@ -43,7 +43,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
      * @description: Cierra formulario
      */
     public onClose(): void {
-        this.onShow.emit(false);
+        this.onShow.emit('FLEET');
     }
 
     /***
@@ -62,7 +62,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     private newFleet(data: any): void {
         this.subscription$ = this._fleetService.postFleets(data).subscribe(() => {
             this._snackBar.open('La flota ha sido creada con exito', 'CERRAR', {duration: 4000});
-            this.onShow.emit(false);
+            this.onShow.emit('FLEET');
         });
     }
     /***
@@ -71,7 +71,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     private editFleet(data: any): void{
         this.subscription$ = this._fleetService.putFleets(data).subscribe(()=>{
             this._snackBar.open('La flota ha sido actualizada', 'CERRAR', {duration: 4000});
-            this.onShow.emit(false);
+            this.onShow.emit('FLEET');
         });
     }
     /**
