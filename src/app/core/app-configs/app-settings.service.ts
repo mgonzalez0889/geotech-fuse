@@ -88,7 +88,7 @@ export class AppSettingsService {
      */
     public plateOptions = {
         url: {
-            base: EndPoints.uri('user_profile_plate')
+            base: EndPoints.uri('owner_plate')
         }
     };
 

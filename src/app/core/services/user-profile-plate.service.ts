@@ -17,7 +17,7 @@ export class UserProfilePlateService {
    * @description: Obtiene todos los user profile plate
    */
   public getUserProfilePlate(): Observable<any> {
-      const params = {method: 'index_all_user_profile'};
+      const params = {method: 'index_all_owner_plate'};
       return this._http.get(this._appSettings.plateOptions.url.base, {params});
   }
   /**

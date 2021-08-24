@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {GridPlateOptionComponent} from './grid-plate-option/grid-plate-option.component';
+import {GridPlateOptionComponent} from '../../administration/profile/grid-plate-option/grid-plate-option.component';
 
 const routes: Routes = [
     {

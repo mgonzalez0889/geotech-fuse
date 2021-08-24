@@ -85,6 +85,11 @@
                                             >
                                                 <mat-icon svgIcon="heroicons_solid:user-add"></mat-icon>
                                             </button>
+                                            <button mat-icon-button color="accent"
+                                                    (click)="onFormPlate(profile.id)"
+                                            >
+                                                <mat-icon svgIcon="heroicons_solid:device-mobile"></mat-icon>
+                                            </button>
                                             <button mat-icon-button color="primary"
                                                     (click)="onEdit(profile.id)"
                                             >
@@ -118,5 +123,10 @@
         <!--Opciones de perfil-->
         <ng-container *ngSwitchCase="'OPTIONS'">
             <app-grid-option-profile (onShow)="closeForm($event)"></app-grid-option-profile>
+        </ng-container>
+        <!--Formulario de placas-->
+        <ng-container *ngSwitchCase="'FORM-PLATE'">
+            <app-form-plate-option></app-form-plate-option>
+
         </ng-container>
 </div>
