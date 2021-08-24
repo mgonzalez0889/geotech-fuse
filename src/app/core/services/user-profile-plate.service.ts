@@ -17,23 +17,21 @@ export class UserProfilePlateService {
    * @description: Obtiene todos los user profile plate
    */
   public getUserProfilePlate(): Observable<any> {
-      const params = {method: 'index_all_owner_plate'};
-      return this._http.get(this._appSettings.plateOptions.url.base, {params});
+      const params = {method: 'index_all_user_profile_plate'};
+      return this._http.get(this._appSettings.profile.url.profilePlate, {params});
   }
   /**
    * @description: Guarda un nuevo user profile plate
    */
   public postUserProfilePlate(data: any): Observable<any> {
-      const params = {method: 'index_all_user_profile'};
-      return this._http.post(this._appSettings.plateOptions.url.base, data, {params});
+      const params = {method: 'create_user_profile_plate'};
+      return this._http.post(this._appSettings.profile.url.profilePlate, data, {params});
   }
   /**
-   * @description: Actualiza el user profile plate
+   * @description: Elimina un plate del perfil de usuario
    */
-  public putUserProfilePlate(data: any): Observable<any> {
-      const params = {method: 'index_all_user_profile'};
-      const id = data.id;
-      delete data.id;
-      return this._http.put(`${this._appSettings.plateOptions.url.base}/${id}`, data, {params});
+  public deleteUserProfilePlate(id: number): Observable<any> {
+      const params = {method: 'delete_user_profile_plate'};
+      return this._http.delete(`${this._appSettings.profile.url.profilePlate}/${id}`, {params});
   }
 }

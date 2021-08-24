@@ -18,6 +18,7 @@ import { GridUserOptionProfileComponent } from './grid-user-option-profile/grid-
 import {MatSelectModule} from "@angular/material/select";
 import {GridPlateOptionComponent} from "./grid-plate-option/grid-plate-option.component";
 import {FormPlateOptionComponent} from "./form-plate-option/form-plate-option.component";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import {FormPlateOptionComponent} from "./form-plate-option/form-plate-option.co
         MatTableModule,
         MatCheckboxModule,
         MatSelectModule,
-        FormsModule
+        FormsModule,
+        MatPaginatorModule
     ]
 })
 export class ProfileModule { }

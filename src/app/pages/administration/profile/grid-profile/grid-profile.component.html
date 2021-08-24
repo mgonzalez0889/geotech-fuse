@@ -126,7 +126,6 @@
         </ng-container>
         <!--Formulario de placas-->
         <ng-container *ngSwitchCase="'FORM-PLATE'">
-            <app-form-plate-option></app-form-plate-option>
-
+            <app-form-plate-option (onShow)="closeForm($event)"></app-form-plate-option>
         </ng-container>
 </div>
