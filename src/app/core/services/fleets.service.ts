@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class FleetsService {
     public behaviorSubjectFleet$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }>({ type: '', isEdit: false, id: 0 });
+    public behaviorSubjectUserOwnerPlateFleet$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
     public behaviorSelectedFleet$: BehaviorSubject<{id?: number; payload?: any}> = new BehaviorSubject<{id?: number; payload?: any}>({id: 0, payload: ''});
 
     constructor(

@@ -15,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -22,20 +23,21 @@ import { MatTabsModule } from '@angular/material/tabs';
     GridFleetComponent,
     GridMobileFleetComponent
   ],
-  imports: [
-    CommonModule,
-    FleetsRoutingModule,
-    MatFormFieldModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatInputModule,
-    CdkScrollableModule,
-    MatTabsModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    FormsModule,
-  ]
+    imports: [
+        CommonModule,
+        FleetsRoutingModule,
+        MatFormFieldModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatInputModule,
+        CdkScrollableModule,
+        MatTabsModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatSelectModule,
+        FormsModule,
+        MatPaginatorModule,
+    ]
 })
 export class FleetsModule { }

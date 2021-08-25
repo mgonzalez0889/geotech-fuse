@@ -23,7 +23,6 @@ export class GridFleetComponent implements OnInit {
     ngOnInit(): void {
         this.showFleets();
     }
-
     /**
      * @description: Abre/cierra el formulario flota
      */
@@ -34,7 +33,6 @@ export class GridFleetComponent implements OnInit {
     public closeForm(value: string): void {
         this.show = value;
     }
-
     /**
      * @description: Edita un contacto
      */
@@ -48,15 +46,14 @@ export class GridFleetComponent implements OnInit {
      */
     public onOptionFleet(id: number): void {
         this.show = 'OPTIONS';
+        this._fleetService.behaviorSubjectUserOwnerPlateFleet$.next({id});
     }
-
     /**
      * @description: Mostrar todas las flotas
      */
     private showFleets(): void {
         this.fleet$ = this._fleetService.getFleets();
     }
-
     /**
      * @description: Mostrar informacion de una sola flota
      */

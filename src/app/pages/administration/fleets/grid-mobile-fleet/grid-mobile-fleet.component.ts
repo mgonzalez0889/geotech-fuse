@@ -1,78 +1,72 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {Observable, Subscription} from "rxjs";
 import {MobileService} from "../../../../core/services/mobile.service";
 import {FormControl} from "@angular/forms";
-
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    check1: string;
-    check2: boolean;
-    check3: boolean;
-    check4: boolean;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, check1: 'H', check2: false, check3: false, check4: false},
-    {position: 2, name: 'Helium', weight: 4.0026, check1: 'He', check2: false, check3: false, check4: false},
-    {position: 3, name: 'Lithium', weight: 6.941, check1: 'Li', check2: false, check3: false, check4: false},
-    {position: 4, name: 'Beryllium', weight: 9.0122, check1: 'Be', check2: false, check3: false, check4: false},
-    {position: 5, name: 'Boron', weight: 10.811, check1: 'B', check2: false, check3: false, check4: false},
-    {position: 6, name: 'Carbon', weight: 12.0107, check1: 'C', check2: false, check3: false, check4: false},
-    {position: 7, name: 'Nitrogen', weight: 14.0067, check1: 'N', check2: false, check3: false, check4: false},
-    {position: 8, name: 'Oxygen', weight: 15.9994, check1: 'O', check2: false, check3: false, check4: false},
-    {position: 9, name: 'Fluorine', weight: 18.9984, check1: 'F', check2: false, check3: false, check4: false},
-    {position: 10, name: 'Neon', weight: 20.1797, check1: 'Ne', check2: false, check3: false, check4: false},
-];
+import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
+import {MatPaginator} from "@angular/material/paginator";
+import {FleetsService} from "../../../../core/services/fleets.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-grid-mobile-fleet',
   templateUrl: './grid-mobile-fleet.component.html',
   styleUrls: ['./grid-mobile-fleet.component.scss']
 })
-export class GridMobileFleetComponent implements OnInit {
-    searchInputControl: FormControl = new FormControl();
-    displayedColumns: string[] = ['select', 'position', 'name'];
-    dataSource: any = [];
-    mobiles$: Observable<any>;
-    // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-    selection = new SelectionModel<PeriodicElement>(true, []);
+export class GridMobileFleetComponent implements OnInit, OnDestroy {
+    public searchInputControl: FormControl = new FormControl();
+    public displayedColumns: string[] = ['select', 'plate', 'label'];
+    public dataSource: any = [];
+    public selection = new SelectionModel<any>(true, []);
     public subscription: Subscription;
+    public arrayLength: number = 0;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    public idFleet: number = this.fleetService.behaviorSubjectUserOwnerPlateFleet$.value.id;
 
     constructor(
-        private mobileService: MobileService,
+        private ownerPlateService: OwnerPlateService,
+        private fleetService: FleetsService,
+        private _snackBar: MatSnackBar
     ) { }
 
     /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
+    public isAllSelected(): boolean {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
         return numSelected === numRows;
     }
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
+    public masterToggle(): void {
         console.log(this.selection);
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));
     }
 
-
     ngOnInit(): void {
-        this.getMobiles();
+        this.getOwnerPlates(this.idFleet);
     }
     /**
      * @description: Trae todos los mobiles
      */
-    private getMobiles(): void {
-       this.subscription = this.mobileService.getMobiles().subscribe(({data}) => {
-           console.log(data);
+    private getOwnerPlates(id: number): void {
+       this.subscription = this.ownerPlateService.getOwnerPlatesFleet(id).subscribe(({data}) => {
            this.dataSource = new MatTableDataSource(data);
+           this.dataSource.paginator = this.paginator;
+           this.arrayLength = data.length;
        });
+    }
+
+    private saveFleePlate(data: any): void {
+        this.subscription = this.fleetService.postFleets(data).subscribe(res => {
+            this._snackBar.open('Registro creado con exito', '', {duration: 4000});
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
 }
