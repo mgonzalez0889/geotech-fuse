@@ -24,7 +24,8 @@ export class AppSettingsService {
      */
     public profile = {
         url: {
-            base: EndPoints.uri('user_profile')
+            base: EndPoints.uri('user_profile'),
+            profilePlate: EndPoints.uri('user_profile_plate')
         }
     };
     /**

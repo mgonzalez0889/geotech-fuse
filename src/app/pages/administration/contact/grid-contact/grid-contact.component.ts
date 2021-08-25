@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ContactService} from 'app/core/services/contact.service';
-import {fuseAnimations} from "../../../../../@fuse/animations";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Observable} from "rxjs";
 
