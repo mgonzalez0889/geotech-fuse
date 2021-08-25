@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {UserProfilePlateService} from "../../../../core/services/user-profile-plate.service";
@@ -12,7 +12,7 @@ import {MatPaginator} from "@angular/material/paginator";
   templateUrl: './grid-plate-option.component.html',
   styleUrls: ['./grid-plate-option.component.scss']
 })
-export class GridPlateOptionComponent implements OnInit {
+export class GridPlateOptionComponent implements OnInit, OnDestroy {
   searchInputControl: FormControl = new FormControl();
   public displayedColumns: string[] = ['select', 'plate', 'name'];
   public dataSource: any = [];
@@ -28,6 +28,7 @@ export class GridPlateOptionComponent implements OnInit {
 
   ngOnInit(): void {
       this.getUserProfilePlate();
+      this.listenObservables();
   }
 
     /** Whether the number of selected elements matches the total number of rows. */
@@ -82,7 +83,27 @@ export class GridPlateOptionComponent implements OnInit {
   private deleteUserProfilePlate(id: number): void {
       this.subscription = this.userProfilePlateService.deleteUserProfilePlate(id).subscribe(res => {
           this._snackBar.open('Registro eliminado con exito', '', {duration: 4000});
+          this.userProfilePlateService.behaviorSubjectUserProfilePlate$.next({isEdit: false});
       });
   }
+   /**
+    * @description: Escucha el observables
+    */
+  private listenObservables(): void {
+      this.subscription = this.userProfilePlateService.behaviorSubjectUserProfilePlate$.subscribe(({isEdit}) => {
+          switch (isEdit) {
+              case false:
+                  this.getUserProfilePlate();
+                  break;
+              case true:
+                  this.getUserProfilePlate();
+                  break;
+          }
+      });
+  }
+
+    ngOnDestroy(): void {
+      // this.subscription.unsubscribe();
+    }
 
 }

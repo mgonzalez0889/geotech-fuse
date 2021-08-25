@@ -1,4 +1,12 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {ProfilesService} from "../../../../core/services/profiles.service";
 import {Observable, Subscription} from "rxjs";
 import {FormControl} from "@angular/forms";
@@ -8,21 +16,21 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatPaginator} from "@angular/material/paginator";
-import {tap} from "rxjs/operators";
+import {delay, tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-form-plate-option',
   templateUrl: './form-plate-option.component.html',
-  styleUrls: ['./form-plate-option.component.scss']
+  styleUrls: ['./form-plate-option.component.scss'],
 })
-export class FormPlateOptionComponent implements OnInit, AfterViewInit {
+export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestroy {
   public profile$: Observable<any>;
   public searchInputControl: FormControl = new FormControl();
   public displayedColumns: string[] = ['select', 'plate', 'label'];
   public dataSource: any = [];
   public subscription: Subscription;
   public selection = new SelectionModel<any>(true, []);
-  public userProfileId: number;
+  public userProfileId: number = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.id;
   public arrayLength: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
@@ -90,8 +98,14 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit {
    * @description: Escucha el observable de ownerPlate behavior
    */
   private listenObservables(): void {
-      this.subscription = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.subscribe(({id}) => {
-          this.userProfileId = id;
+      this.subscription = this.ownerPlateService.behaviorSubjectUserOwnerPlate$
+      .pipe(delay(1000))
+      .subscribe(({isEdit}) => {
+          switch (isEdit) {
+              case false :
+                  this.getPlates();
+                  break;
+          }
       });
   }
   /**
@@ -110,6 +124,12 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit {
   private savePlates(data: any): void {
       this.subscription = this.userProfilePlateService.postUserProfilePlate(data).subscribe(res => {
           this._snackBar.open('Registro creado con exito', '', {duration: 4000});
+          this.userProfilePlateService.behaviorSubjectUserProfilePlate$.next({isEdit: false});
+          this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({isEdit: false});
       });
   }
+
+    ngOnDestroy(): void {
+      // this.subscription.unsubscribe();
+    }
 }

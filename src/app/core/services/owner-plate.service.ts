@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AppSettingsService} from '../app-configs/app-settings.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OwnerPlateService {
   public behaviorSubjectUserOwnerPlate$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
+  public subjectUserOwnerPlate$: Subject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new Subject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>();
   constructor(
       private _http: HttpClient,
       private _appSettings: AppSettingsService
