@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventsService} from "../../../../core/services/events.service";
 import {EventsInterface} from "../../../../core/interfaces/events-interface";
 import {MatTableDataSource} from "@angular/material/table";
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-grid-events',
@@ -9,9 +10,14 @@ import {MatTableDataSource} from "@angular/material/table";
     styleUrls: ['./grid-events.component.scss']
 })
 export class GridEventsComponent implements OnInit {
-    public data: EventsInterface[];
-    displayedColumns: string[] = ['name', 'description', 'color'];
-    public dataSource: MatTableDataSource<EventsInterface>;
+
+
+    public displayedColumns: string[] = ['name', 'description', 'color','actions_events'];
+     public dataSource: MatTableDataSource<any>;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
+
     public columnas=[
         {titulo:'Nombre', name:'name'},
         {titulo:'Descripcion', name:'description'},
@@ -22,6 +28,7 @@ export class GridEventsComponent implements OnInit {
         private _eventService: EventsService
     ) {
     }
+    
 
     ngOnInit(): void {
         this.showEvents();
@@ -31,9 +38,10 @@ export class GridEventsComponent implements OnInit {
      */
     public showEvents(): void {
         this._eventService.getEvents().subscribe((res) => {
-            this.data = res;
-            this.dataSource = new MatTableDataSource<EventsInterface>(this.data);
+            this.dataSource = new MatTableDataSource<any>(res.data);
+            this.dataSource.paginator = this.paginator;
         });
     }
+
 
 }

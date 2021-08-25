@@ -20,6 +20,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {MatTableModule} from "@angular/material/table";
         MatRadioModule,
         MatTooltipModule,
         MatSnackBarModule,
-        MatTableModule
+        MatTableModule,
+        MatPaginatorModule
     ]
 })
 export class EventsModule {
