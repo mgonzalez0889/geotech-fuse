@@ -6,6 +6,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatPaginator} from "@angular/material/paginator";
+import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
 
 @Component({
   selector: 'app-grid-plate-option',
@@ -21,13 +22,15 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
   public selection = new SelectionModel<any>(true, []);
   public arrayLength: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  public userProfileId: number = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.id;
   constructor(
       private userProfilePlateService: UserProfilePlateService,
-      private _snackBar: MatSnackBar
+      private _snackBar: MatSnackBar,
+      private ownerPlateService: OwnerPlateService
   ) { }
 
   ngOnInit(): void {
-      this.getUserProfilePlate();
+      this.getUserProfilePlate(this.userProfileId);
       this.listenObservables();
   }
 
@@ -70,11 +73,11 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
   /**
    * @description: Carga todos los plates asignados
    */
-  private getUserProfilePlate(): void {
-      this.subscription = this.userProfilePlateService.getUserProfilePlate().subscribe(({data}) => {
+  private getUserProfilePlate(id: number): void {
+      this.subscription = this.userProfilePlateService.getUserProfilePlate(id).subscribe(({data}) => {
           this.dataSource = new MatTableDataSource(data);
           this.dataSource.paginator = this.paginator;
-          this.arrayLength = data.length;
+          this.arrayLength = data?.length;
       });
   }
   /**
@@ -93,17 +96,17 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
       this.subscription = this.userProfilePlateService.behaviorSubjectUserProfilePlate$.subscribe(({isEdit}) => {
           switch (isEdit) {
               case false:
-                  this.getUserProfilePlate();
+                  this.getUserProfilePlate(this.userProfileId);
                   break;
               case true:
-                  this.getUserProfilePlate();
+                  this.getUserProfilePlate(this.userProfileId);
                   break;
           }
       });
   }
 
     ngOnDestroy(): void {
-      // this.subscription.unsubscribe();
+      this.subscription.unsubscribe();
     }
 
 }

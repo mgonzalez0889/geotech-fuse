@@ -130,6 +130,6 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
   }
 
     ngOnDestroy(): void {
-      // this.subscription.unsubscribe();
+      this.subscription.unsubscribe();
     }
 }
