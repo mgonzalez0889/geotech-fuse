@@ -4,6 +4,8 @@ import {Observable} from "rxjs";
 import {ProfilesService} from "../../../../core/services/profiles.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MenuOptionsService} from "../../../../core/services/menu-options.service";
+import {UserProfilePlateService} from "../../../../core/services/user-profile-plate.service";
+import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
 
 @Component({
   selector: 'app-grid-profile',
@@ -17,7 +19,9 @@ export class GridProfileComponent implements OnInit {
   constructor(
       private profileService: ProfilesService,
       private _snackBar: MatSnackBar,
-      private menuOptionService: MenuOptionsService
+      private menuOptionService: MenuOptionsService,
+      private userProfilePlate: UserProfilePlateService,
+      private ownerPlateService: OwnerPlateService
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +53,13 @@ export class GridProfileComponent implements OnInit {
   public onOptionProfile(id: number): void {
       this.show = 'OPTIONS';
       this.menuOptionService.behaviorSelectedMenuOption$.next({id});
+  }
+  /**
+   * @description: Abre el formulario de plate
+   */
+  public onFormPlate(id: number): void {
+      this.show = 'FORM-PLATE';
+      this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({id});
   }
   public onDelete(id: number): void {
       this.deleteProfile(id);

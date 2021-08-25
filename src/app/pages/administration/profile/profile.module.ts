@@ -16,6 +16,9 @@ import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { GridUserOptionProfileComponent } from './grid-user-option-profile/grid-user-option-profile.component';
 import {MatSelectModule} from "@angular/material/select";
+import {GridPlateOptionComponent} from "./grid-plate-option/grid-plate-option.component";
+import {FormPlateOptionComponent} from "./form-plate-option/form-plate-option.component";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -24,7 +27,9 @@ import {MatSelectModule} from "@angular/material/select";
     GridProfileComponent,
        FormProfileComponent,
        GridOptionProfileComponent,
-       GridUserOptionProfileComponent
+       GridUserOptionProfileComponent,
+       GridPlateOptionComponent,
+       FormPlateOptionComponent
   ],
     imports: [
         CommonModule,
@@ -39,7 +44,8 @@ import {MatSelectModule} from "@angular/material/select";
         MatTableModule,
         MatCheckboxModule,
         MatSelectModule,
-        FormsModule
+        FormsModule,
+        MatPaginatorModule
     ]
 })
 export class ProfileModule { }

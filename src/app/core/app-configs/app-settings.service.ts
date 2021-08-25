@@ -84,11 +84,11 @@ export class AppSettingsService {
         }
     };
     /**
-     * @description: End-point Plate options
+     * @description: End-point owner plates
      */
-    public plateOptions = {
+    public ownerPlate = {
         url: {
-            base: EndPoints.uri('user_profile_plate')
+            base: EndPoints.uri('owner_plate')
         }
     };
     /**
