@@ -38,7 +38,7 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
       private profileService: ProfilesService,
       private userProfilePlateService: UserProfilePlateService,
       private ownerPlateService: OwnerPlateService,
-      private _snackBar: MatSnackBar
+      private _snackBar: MatSnackBar,
   ) { }
 
     ngAfterViewInit(): void {

@@ -6,6 +6,7 @@ import { ConfirmDeleteComponent } from './dialogs/confirm-delete/confirm-delete.
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         ReactiveFormsModule,
         MatDialogModule,
         MatButtonModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatIconModule,
     ],
     exports: [
         CommonModule,
