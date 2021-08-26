@@ -55,8 +55,22 @@ export class FleetsService {
     /**
      * @description: Obtiene las flotas por Id
      */
-    public getFleetsCurrents(id): Observable<any> {
-        const params = { method: 'show_fleet' };
-        return;
+    public getFleetsPlatesAssigned(id): Observable<any> {
+        const params = { method: 'index_all_fleet_plate', fleet_id: id };
+        return this._http.get(this._appSettings.fleets.url.fleePlate, {params});
+    }
+    /**
+     * @description: Crear una flota
+     */
+    public postFleetsPlate(data: any): Observable<any> {
+        const params = { method: 'create_fleet_plate' };
+        return this._http.post(this._appSettings.fleets.url.fleePlate, data, { params });
+    }
+    /**
+     * @description: Elimina una placa de la flota
+     */
+    public deleteFleetsPlate(id: number): Observable<any> {
+        const params = { method: 'delete_fleet_plate' };
+        return this._http.delete(`${this._appSettings.fleets.url.fleePlate}/${id}`, {params});
     }
 }

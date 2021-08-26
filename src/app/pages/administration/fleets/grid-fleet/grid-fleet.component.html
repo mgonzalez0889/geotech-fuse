@@ -62,7 +62,7 @@
                                     <button (click)="onEdit(fleet.id)" mat-icon-button color="primary">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="deleteFleets(fleet.id)" mat-icon-button color="warn">
+                                    <button (click)="onDelete(fleet.id)" mat-icon-button color="warn">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </ng-container>
@@ -84,6 +84,6 @@
     </ng-container>
     <!--Opciones de flotas-->
     <ng-container *ngSwitchCase="'OPTIONS'">
-        <app-grid-mobile-fleet></app-grid-mobile-fleet>
+        <app-grid-mobile-fleet (onShow)="closeForm($event)"></app-grid-mobile-fleet>
     </ng-container>
 </div>

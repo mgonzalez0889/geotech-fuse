@@ -16,12 +16,14 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { GridMobileFleetAssinedComponent } from './grid-mobile-fleet-assined/grid-mobile-fleet-assined.component';
 
 @NgModule({
   declarations: [
     FormFleetComponent,
     GridFleetComponent,
-    GridMobileFleetComponent
+    GridMobileFleetComponent,
+    GridMobileFleetAssinedComponent
   ],
     imports: [
         CommonModule,

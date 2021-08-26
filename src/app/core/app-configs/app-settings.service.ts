@@ -73,7 +73,8 @@ export class AppSettingsService {
      */
     public fleets = {
         url: {
-            base: EndPoints.uri('fleet')
+            base: EndPoints.uri('fleet'),
+            fleePlate: EndPoints.uri('fleet_plate')
         }
     };
     /**
