@@ -11,6 +11,8 @@ import {ProjectsService} from "../../../../core/services/projects.service";
 import {MatSelectChange} from "@angular/material/select";
 import {OptionCreateInterface, OptionProfileInterface} from "../../../../core/interfaces/option-profile.interface";
 import {ProfilesService} from "../../../../core/services/profiles.service";
+import {HelperService} from "../../../../core/services/helper.service";
+import {DialogAlertEnum} from "../../../../core/interfaces/fuse-confirmation-config";
 
 @Component({
   selector: 'app-grid-option-profile',
@@ -39,7 +41,8 @@ export class GridOptionProfileComponent implements OnInit {
         private ownersService: OwnersService,
         private projectsService: ProjectsService,
         private fb: FormBuilder,
-        private profileService: ProfilesService
+        private profileService: ProfilesService,
+        private helperService: HelperService
     ) { }
     ngOnInit(): void {
         this.getOptions();
@@ -52,8 +55,20 @@ export class GridOptionProfileComponent implements OnInit {
         this.form.controls.option_id.setValue(data.id);
         const values: OptionCreateInterface  = this.form.getRawValue();
         if (values) {
-            // console.log(values);
-            this.saveOptionProfile(values);
+            this.helperService.showDialogAlertOption({
+                title: 'Guardar registro',
+                text: '¿Desea guardar la opcion?',
+                type: DialogAlertEnum.question,
+                showCancelButton: true,
+                textCancelButton: 'No',
+                textConfirButton: 'Si'
+            }).then(
+                (result) => {
+                    if (result.value) {
+                        this.saveOptionProfile(values);
+                    }
+                }
+            );
         }
     }
     /**

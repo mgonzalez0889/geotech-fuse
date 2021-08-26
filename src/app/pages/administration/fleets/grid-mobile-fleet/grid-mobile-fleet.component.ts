@@ -54,26 +54,11 @@ export class GridMobileFleetComponent implements OnInit, OnDestroy {
     public selectionToggle(event, row): void {
         const {id} = row;
         if (event.checked) {
-            this._helperService.showDialogAlertOption({
-                title: 'Guardar datos',
-                text: '¿Desea asignar esta placa?',
-                type: DialogAlertEnum.question,
-                showCancelButton: true,
-                textCancelButton: 'No',
-                textConfirButton: 'Si'
-            }).then(
-                (result) => {
-                    if (result.value) {
-                        const selectedValue = {
-                            owner_plate_id: id,
-                            fleet_id: this.idFleet
-                        };
-                        this.saveFleePlate(selectedValue);
-                    }else {
-                        // this.getOwnerPlates(this.idFleet);
-                    }
-                }
-            );
+            const selectedValue = {
+                owner_plate_id: id,
+                fleet_id: this.idFleet
+            };
+            this.saveFleePlate(selectedValue);
         }
     }
 

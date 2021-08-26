@@ -22,6 +22,13 @@ export class OwnerPlateService {
       return this._http.get(this._appSettings.ownerPlate.url.base, {params});
   }
   /**
+   * @description: Obtiene todos los owner plate por profile
+   */
+  public getOwnerPlatesUserProfile(id: number): Observable<any> {
+      const params = {method: 'index_all_owner_plate_user_profile', user_profile_id: id};
+      return this._http.get(this._appSettings.ownerPlate.url.base, {params});
+  }
+  /**
    * @description: Obtiene todas
    */
   public getOwnerPlatesFleet(id: number): Observable<any> {

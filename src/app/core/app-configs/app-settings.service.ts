@@ -33,7 +33,8 @@ export class AppSettingsService {
      */
     public menuOptions = {
         url: {
-            base: EndPoints.uri('option')
+            base: EndPoints.uri('option'),
+            optionsFather: EndPoints.uri('user_profile_option')
         }
     };
     /**
