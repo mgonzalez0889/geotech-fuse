@@ -10,7 +10,7 @@
         <div class="flex-auto mt-4 sm:mt-6">
             <div class="w-full max-w-screen-xl mx-auto">
                 <!-- form  -->
-                <form>
+                <form [formGroup]="formEvents">
                     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
                         <div class="-mx-3 md:flex mb-6">
                             <mat-form-field class="w-3/4 px-3 fuse-mat-dense">
@@ -30,30 +30,15 @@
                             </mat-form-field>
                         </div>
                         <div class="-mx-3 md:flex mb-6">
-                            <mat-slide-toggle class="w-1/2 px-3 fuse-mat-dense" id="check">Notificacion por correo
+                            <mat-slide-toggle formControlName="checkNotificationEmail" class="w-1/2 px-3 fuse-mat-dense" id="check">Notificacion por correo
                             </mat-slide-toggle>
 
-                            <mat-form-field appearance="fill">
-                                <mat-label>Toppings</mat-label>
-                                <mat-select [formControl]="toppings" multiple>
-                                  <mat-select-trigger>
-                                    {{toppings.value ? toppings.value[0] : ''}}
-                                    <span *ngIf="toppings.value?.length > 1" class="example-additional-selection">
-                                      (+{{toppings.value.length - 1}} {{toppings.value?.length === 2 ? 'other' : 'others'}})
-                                    </span>
-                                  </mat-select-trigger>
-                                  <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                              
-
                         </div>
-
-
                         <!-- Buttons -->
                         <div class="flex items-center justify-between w-full border-t px-8 py-4">
-                            <button class="-ml-4" mat-raised-button [color]="'warn'">Cerrar</button>
-                            <button type="submit" mat-flat-button [color]="'primary'">Guardar</button>
+                            <button class="-ml-4" mat-raised-button [color]="'warn'" (click)="onClose()">Cerrar</button>
+                            <button type="submit" mat-flat-button [color]="'primary'" (click)="editEvent()">Guardar
+                            </button>
                         </div>
                     </div>
                 </form>

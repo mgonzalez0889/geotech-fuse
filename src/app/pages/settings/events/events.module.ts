@@ -21,12 +21,14 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { GridContacsEventsComponent } from './grid-contacs-events/grid-contacs-events.component';
 
 
 @NgModule({
     declarations: [
         FormEventsComponent,
-        GridEventsComponent
+        GridEventsComponent,
+        GridContacsEventsComponent
     ],
     imports: [
         CommonModule,

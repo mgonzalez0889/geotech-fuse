@@ -64,6 +64,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
                 console.log('Elemento eliminado');
             });
     }
+
     ngOnDestroy(): void {
      }
 
