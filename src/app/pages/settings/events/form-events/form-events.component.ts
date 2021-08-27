@@ -14,7 +14,9 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
     public formEvents: FormGroup;
     public subscription$: Subscription;
+    public contacs: boolean = false;
 
+ 
     constructor(
         private fb: FormBuilder,
         private _eventsServices: EventsService,
