@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import { Navigation } from 'app/core/navigation/navigation.types';
+import {AppSettingsService} from "../app-configs/app-settings.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,10 @@ export class NavigationService
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient)
+    constructor(
+        private _httpClient: HttpClient,
+        private _appSettings: AppSettingsService
+    )
     {
     }
 
@@ -37,12 +41,24 @@ export class NavigationService
     /**
      * Get all navigation data
      */
-    get(): Observable<Navigation>
+   /* get(): Observable<Navigation>
     {
         return this._httpClient.get<Navigation>('api/common/navigation').pipe(
             tap((navigation) => {
+                console.log('MENUUUU');
+                console.log(navigation);
                 this._navigation.next(navigation);
             })
+        );
+    }*/
+    get(): Observable<any>
+    {
+        const params = {method: 'show_menu_user'};
+        return this._httpClient.get<Navigation>(this._appSettings.menuOptions.url.optionsFather, {params}).pipe(
+            tap((navigation) => {
+                // console.log(navigation)
+                this._navigation.next(navigation);
+            }),
         );
     }
 }

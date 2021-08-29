@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash-es';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from 'app/mock-api/common/navigation/data';
+import {AppSettingsService} from "../../../core/app-configs/app-settings.service";
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class NavigationMockApi
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(private _fuseMockApiService: FuseMockApiService,  private _appSettings: AppSettingsService )
     {
         // Register Mock API handlers
         this.registerHandlers();

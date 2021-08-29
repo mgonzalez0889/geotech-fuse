@@ -99,6 +99,7 @@ export class FuseNavigationService
      */
     getFlatNavigation(navigation: FuseNavigationItem[], flatNavigation: FuseNavigationItem[] = []): FuseNavigationItem[]
     {
+        console.log(navigation);
         for ( const item of navigation )
         {
             if ( item.type === 'basic' )
@@ -128,6 +129,7 @@ export class FuseNavigationService
      */
     getItem(id: string, navigation: FuseNavigationItem[]): FuseNavigationItem | null
     {
+        console.log(navigation);
         for ( const item of navigation )
         {
             if ( item.id === id )
