@@ -29,17 +29,17 @@
                                 <textarea matInput placeholder="Descripción" formControlName="description"></textarea>
                             </mat-form-field>
                         </div>
-                        <div class="-mx-3 md:flex mb-6" >
-                            
-                            <mat-slide-toggle  formControlName="checkNotificationEmail" class="w-1/2 px-3 fuse-mat-dense"
-                                id="check">Notificacion por correo
-                            </mat-slide-toggle>                        
-                            
-                            <ng-container *ngIf="formEvents.controls.checkNotificationEmail.value">
+                        <div class="-mx-3 md:flex mb-6">
+                            <mat-slide-toggle formControlName="checkNotificationEmail" class="w-1/2 px-3 fuse-mat-dense"
+                                              id="check">Notificacion por correo
+                            </mat-slide-toggle>
+                        </div>
+                        <div >
+                            <ng-container class="  fuse-mat-dense" *ngIf="formEvents.controls.checkNotificationEmail.value">
                                 <app-grid-contacs-events></app-grid-contacs-events>
                             </ng-container>
-                            
                         </div>
+
                         <!-- Buttons -->
                         <div class="flex items-center justify-between w-full border-t px-8 py-4">
                             <button class="-ml-4" mat-raised-button [color]="'warn'" (click)="onClose()">Cerrar</button>
