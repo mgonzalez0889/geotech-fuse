@@ -38,18 +38,18 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
       private profileService: ProfilesService,
       private userProfilePlateService: UserProfilePlateService,
       private ownerPlateService: OwnerPlateService,
-      private _snackBar: MatSnackBar
+      private _snackBar: MatSnackBar,
   ) { }
 
     ngAfterViewInit(): void {
         this.paginator.page.pipe(
-            tap(() => this.getPlates())
+            tap(() => this.getPlates(this.userProfileId))
         ).subscribe();
     }
 
   ngOnInit(): void {
       this.getProfiles();
-      this.getPlates();
+      this.getPlates(this.userProfileId);
       this.listenObservables();
   }
 
@@ -71,8 +71,6 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
      * @description: Selecciona un registro de la grid
      */
     public selectionToggle(event, row): void {
-        console.log(event);
-        console.log(row);
         const {id} = row;
         if (event.checked) {
             const selectedValue = {
@@ -103,7 +101,7 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
       .subscribe(({isEdit}) => {
           switch (isEdit) {
               case false :
-                  this.getPlates();
+                  this.getPlates(this.userProfileId);
                   break;
           }
       });
@@ -111,8 +109,8 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
   /**
    * @description: Carga todas las placas
    */
-  private getPlates(): void {
-      this.subscription = this.ownerPlateService.getOwnerPlates().subscribe(({data}) => {
+  private getPlates(id: number): void {
+      this.subscription = this.ownerPlateService.getOwnerPlatesUserProfile(id).subscribe(({data}) => {
           this.dataSource = new MatTableDataSource(data);
           this.dataSource.paginator = this.paginator;
           this.arrayLength = data.length;

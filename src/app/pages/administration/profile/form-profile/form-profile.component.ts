@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {HelperService} from "../../../../core/services/helper.service";
+import {DialogAlertEnum} from "../../../../core/interfaces/fuse-confirmation-config";
 
 @Component({
   selector: 'app-form-profile',
@@ -21,7 +23,8 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   constructor(
       private fb: FormBuilder,
       private profileService: ProfilesService,
-      private _snackBar: MatSnackBar
+      private _snackBar: MatSnackBar,
+      private _helperService: HelperService
   ) { }
 
     ngOnDestroy(): void {
@@ -37,10 +40,35 @@ export class FormProfileComponent implements OnInit, OnDestroy {
    */
   public onSave(): void {
       const data = this.form.getRawValue();
+
       if (!data.id) {
-          this.createProfile(data);
+          this._helperService.showDialogAlertOption({
+              title: 'Guardar datos',
+              text: '¿Desea crear un nuevo perfil?',
+              type: DialogAlertEnum.question,
+              showCancelButton: true,
+              textCancelButton: 'No',
+              textConfirButton: 'Si'
+          }).then(
+              (result) => {
+                  if (result.value) {
+                      this.createProfile(data);
+                  }
+              }
+          );
       }else {
-          this.editProfile(data);
+          this._helperService.showDialogAlertOption({
+              title: 'Guardar datos',
+              text: '¿Desea editar el perfil?',
+              type: DialogAlertEnum.question,
+              showCancelButton: true,
+              textCancelButton: 'No',
+              textConfirButton: 'Si'
+          }).then(
+              (result) => {
+                  this.editProfile(data);
+              }
+          );
       }
   }
   /**

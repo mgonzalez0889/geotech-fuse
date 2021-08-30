@@ -15,7 +15,7 @@
                 <mat-form-field class="fuse-mat-dense flex-auto">
                     <mat-label>Nombre</mat-label>
                     <input matInput
-                           formControlName="option_name"
+                           formControlName="title"
                     >
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-textarea flex-auto">
@@ -38,6 +38,21 @@
                            formControlName="icon"
                     >
                 </mat-form-field>
+                <ng-container *ngIf="menuOptions$ | async as options">
+                    <mat-form-field class="fuse-mat-dense flex-auto">
+                        <mat-label>Opciones de menu</mat-label>
+                        <mat-select formControlName="id_father"
+                        >
+                            <mat-option [value]="0">Padre</mat-option>
+                            <mat-option
+                                [value]="option.id"
+                                *ngFor="let option of options.data"
+                            >
+                                {{option.option_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
                 <span class="font-semibold mb-2 gt-xs:text-right gt-xs:min-w-32 gt-xs:mr-4 gt-xs:mb-0">Opciones</span>
                 <div class="flex flex-row">
                     <mat-checkbox

@@ -33,7 +33,8 @@ export class AppSettingsService {
      */
     public menuOptions = {
         url: {
-            base: EndPoints.uri('option')
+            base: EndPoints.uri('option'),
+            optionsFather: EndPoints.uri('user_profile_option')
         }
     };
     /**
@@ -73,7 +74,8 @@ export class AppSettingsService {
      */
     public fleets = {
         url: {
-            base: EndPoints.uri('fleet')
+            base: EndPoints.uri('fleet'),
+            fleePlate: EndPoints.uri('fleet_plate')
         }
     };
     /**

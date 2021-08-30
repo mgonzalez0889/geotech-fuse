@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {MenuOptionsService} from "../../../../core/services/menu-options.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -14,6 +14,7 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
   public subscription$: Subscription;
   @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
   public titleForm: string;
+  public menuOptions$: Observable<any>;
   constructor(
       private fb: FormBuilder,
       private optionServices: MenuOptionsService,
@@ -23,6 +24,7 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
       this.createForm();
       this.listenObservables();
+      this.getMenuOptionsFather();
   }
   /**
    * @description: Metodo para guardar y editar opciones
@@ -47,14 +49,15 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
   private createForm(): void {
       this.form = this.fb.group({
           id: undefined,
-          option_name: [''],
+          title: [''],
           option_description: [''],
           icon: [''],
           option_ubication: [''],
           option_read: [''],
           option_create: [''],
           option_update: [''],
-          option_delete: ['']
+          option_delete: [''],
+          id_father: ['']
       });
   }
   /**
@@ -89,6 +92,12 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
             });
         }
       });
+  }
+  /**
+   * @description: Obtiene todos los menu options
+   */
+  private getMenuOptionsFather(): void {
+      this.menuOptions$ = this.optionServices.getMenuOptions();
   }
     /**
      * @description: Elimina los observables

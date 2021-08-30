@@ -7,6 +7,8 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatPaginator} from "@angular/material/paginator";
 import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
+import {HelperService} from "../../../../core/services/helper.service";
+import {DialogAlertEnum} from "../../../../core/interfaces/fuse-confirmation-config";
 
 @Component({
   selector: 'app-grid-plate-option',
@@ -26,7 +28,8 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
   constructor(
       private userProfilePlateService: UserProfilePlateService,
       private _snackBar: MatSnackBar,
-      private ownerPlateService: OwnerPlateService
+      private ownerPlateService: OwnerPlateService,
+      private helperService: HelperService
   ) { }
 
   ngOnInit(): void {
@@ -54,7 +57,20 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
   public selectionToggle(event, row): void {
       const {id} = row;
       if (event.checked) {
-          this.deleteUserProfilePlate(id);
+          this.helperService.showDialogAlertOption({
+              title: 'Eliminar registro',
+              text: '¿Desea eliminar la placa?',
+              type: DialogAlertEnum.question,
+              showCancelButton: true,
+              textCancelButton: 'No',
+              textConfirButton: 'Si'
+          }).then(
+              (result) => {
+                  if (result.value) {
+                      this.deleteUserProfilePlate(id);
+                  }
+              }
+          );
       }
   }
   /**
@@ -87,6 +103,7 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
       this.subscription = this.userProfilePlateService.deleteUserProfilePlate(id).subscribe(res => {
           this._snackBar.open('Registro eliminado con exito', '', {duration: 4000});
           this.userProfilePlateService.behaviorSubjectUserProfilePlate$.next({isEdit: false});
+          this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({isEdit: false});
       });
   }
    /**

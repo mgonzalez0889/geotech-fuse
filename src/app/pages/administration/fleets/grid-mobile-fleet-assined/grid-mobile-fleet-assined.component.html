@@ -1,0 +1,60 @@
+<div class="flex flex-shrink-0 items-center justify-end mt-6 sm:mt-0 sm:ml-4 sm:mb-4">
+    <!-- Search -->
+    <mat-form-field  class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4">
+        <mat-icon
+            matPrefix
+            [svgIcon]="'heroicons_outline:search'"></mat-icon>
+        <input
+            matInput
+            [formControl]="searchInputControl"
+            [autocomplete]="'off'"
+            [placeholder]="'Buscar placas'">
+    </mat-form-field>
+</div>
+<!--Main table-->
+<div>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 w-full">
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()">Seleccionar todo
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row" class="w-50">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selectionToggle($event, row) : null"
+                              [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+        <!---->
+        <ng-container matColumnDef="plate">
+            <th mat-header-cell *matHeaderCellDef> Placa </th>
+            <td mat-cell *matCellDef="let element" class="w-50"> {{element.plate}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Perfil </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        >
+        </tr>
+    </table>
+    <mat-paginator
+        [length]="arrayLength"
+        [pageSizeOptions]="[5, 25, 100, 150]" showFirstLastButtons
+    >
+    </mat-paginator>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between w-full sm:mt-4 max-w-xs sm:max-w-none">
+    <button class="px-6 ml-3"
+            mat-flat-button [color]="'warn'"
+    >
+        Cerrar
+    </button>
+</div>
