@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {EventsService} from "../../../../core/services/events.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ContactService} from "../../../../core/services/contact.service";
 
 @Component({
     selector: 'app-form-events',
@@ -15,18 +16,23 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     public formEvents: FormGroup;
     public subscription$: Subscription;
     public contacs: boolean = false;
+    dropdownList = [];
+    dropdownSettings = {};
 
- 
+
     constructor(
         private fb: FormBuilder,
         private _eventsServices: EventsService,
-        private _snackBar: MatSnackBar
+        private _snackBar: MatSnackBar,
+        private _contacsService: ContactService
     ) {
     }
 
     ngOnInit(): void {
         this.listenObservables();
         this.createEventsForm();
+        this.contacsList();
+        this.dataCotact();
     }
 
     /**
@@ -35,16 +41,18 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     public onClose(): void {
         this.onShow.emit(false);
     }
+
     /**
      * @description: Formulario de modulo eventos
      */
     private createEventsForm(): void {
         this.formEvents = this.fb.group({
             id: undefined,
-            name: ['',[Validators.required]],
-            color: ['',[Validators.required]],
-            description: ['',[Validators.required]],
+            name: ['', [Validators.required]],
+            color: ['', [Validators.required]],
+            description: ['', [Validators.required]],
             checkNotificationEmail: [''],
+            contacDate: ['']
         });
     }
 
@@ -69,6 +77,35 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             }
         });
     }
+    /**
+     * @description: Lista desplegable de contactos
+     */
+    private contacsList(): void {
+        this.dropdownSettings = {
+            singleSelection: false,
+            idField: 'item_id',
+            textField: 'item_text',
+            selectAllText: 'Seleccionar todo',
+            unSelectAllText: 'Desmarcar seleccion',
+            itemsShowLimit: 3,
+            allowSearchFilter: true,
+            searchPlaceholderText:'Buscar contacto'
+        };
+    }
+    /**
+     * @description: Lista desplegable de contactos
+     */
+
+    private dataCotact(): void {
+        const tmp = [];
+        this._contacsService.getContacts().subscribe((data) => {
+            for (let i = 0; i < data.data.length; i++) {
+                tmp.push({item_id: i, item_text: data.data[i].full_name});
+            }
+            return this.dropdownList = tmp;
+        });
+    }
+
     /**
      * @description: Destruye las subscripciones
      */

@@ -33,12 +33,17 @@
                             <mat-slide-toggle formControlName="checkNotificationEmail" class="w-1/2 px-3 fuse-mat-dense"
                                               id="check">Notificacion por correo
                             </mat-slide-toggle>
-                        </div>
-                        <div >
-                            <ng-container class="  fuse-mat-dense" *ngIf="formEvents.controls.checkNotificationEmail.value">
-                                <app-grid-contacs-events></app-grid-contacs-events>
+                        </div >
+
+                            <ng-container class="-mx-3 fuse-mat-dense"
+                                          *ngIf="formEvents.controls.checkNotificationEmail.value">
+                                <ng-multiselect-dropdown class="w-full px-3 fuse-mat-dense" formControlName="contacDate"
+                                                         [placeholder]="'Seleccione los contactos'"
+                                                         [settings]="dropdownSettings"
+                                                         [data]="dropdownList"
+                                >
+                                </ng-multiselect-dropdown>
                             </ng-container>
-                        </div>
 
                         <!-- Buttons -->
                         <div class="flex items-center justify-between w-full border-t px-8 py-4">
