@@ -52,7 +52,7 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
           title: [''],
           option_description: [''],
           icon: [''],
-          option_ubication: [''],
+          link: [''],
           option_read: [''],
           option_create: [''],
           option_update: [''],
@@ -85,8 +85,9 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
       this.subscription$ = this.optionServices.behaviorSubjectOption$.subscribe(({type, isEdit, payload}) => {
         if (isEdit && type == 'EDIT') {
             this.form.patchValue(payload);
-            this.titleForm = 'Editar opción';
+            this.titleForm = `Editar opción ${payload.title}`;
         }else if (!isEdit && type == 'NEW'){
+            this.titleForm = 'Nueva opción';
             this.form.reset({
                 id: undefined,
             });

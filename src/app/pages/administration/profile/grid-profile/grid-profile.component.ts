@@ -53,16 +53,16 @@ export class GridProfileComponent implements OnInit {
   /**
    * @description:
    */
-  public onOptionProfile(id: number): void {
+  public onOptionProfile(profile: any): void {
       this.show = 'OPTIONS';
-      this.menuOptionService.behaviorSelectedMenuOption$.next({id});
+      this.menuOptionService.behaviorSelectedMenuOption$.next({id: profile.id, payload: profile});
   }
   /**
    * @description: Abre el formulario de plate
    */
-  public onFormPlate(id: number): void {
+  public onFormPlate(profile: any): void {
       this.show = 'FORM-PLATE';
-      this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({id});
+      this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({id: profile.id, payload: profile});
   }
   public onDelete(id: number): void {
       this.helperService.showDialogAlertOption({

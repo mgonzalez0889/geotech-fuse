@@ -81,7 +81,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
         this.subscription$ = this._fleetService.behaviorSubjectFleet$.subscribe(({ type, isEdit, payload }) => {
             if (isEdit && type == 'EDIT') {
                 this.formFleets.patchValue(payload);
-                this.titleForm = 'Editar flota';
+                this.titleForm = `Editar flota ${payload.name}`;
             } else if (!isEdit && type == 'NEW') {
                 this.formFleets.reset({
                 });

@@ -26,6 +26,7 @@ export class GridMobileFleetComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public idFleet: number = this.fleetService.behaviorSubjectUserOwnerPlateFleet$.value.id;
     @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
+    public title: string = this.fleetService.behaviorSubjectUserOwnerPlateFleet$.value.payload.name;
 
     constructor(
         private ownerPlateService: OwnerPlateService,

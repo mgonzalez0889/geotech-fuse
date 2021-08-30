@@ -65,9 +65,9 @@ export class GridFleetComponent implements OnInit {
     /**
      * @description: Abre la grilla opciones de flotas
      */
-    public onOptionFleet(id: number): void {
+    public onOptionFleet(fleet: any): void {
         this.show = 'OPTIONS';
-        this._fleetService.behaviorSubjectUserOwnerPlateFleet$.next({id});
+        this._fleetService.behaviorSubjectUserOwnerPlateFleet$.next({id: fleet.id, payload: fleet});
     }
     /**
      * @description: Mostrar todas las flotas

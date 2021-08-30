@@ -89,7 +89,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
         this.subscription$ = this._contactService.behaviorSubjectContact$.subscribe(({ type, isEdit, payload }) => {
             if (isEdit && type == 'EDIT') {
                 this.formContacts.patchValue(payload);
-                this.titleForm = 'Editar contacto';
+                this.titleForm = `Editar contacto ${payload.full_name}`;
             } else if (!isEdit && type == 'NEW') {
                 this.formContacts.reset({
                 });

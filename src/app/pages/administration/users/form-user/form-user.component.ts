@@ -124,7 +124,7 @@ export class FormUserComponent implements OnInit, OnDestroy {
         this.subscription$ = this.userService.behaviorSubjectUser$.subscribe(({type, isEdit, payload}) => {
             if (isEdit && type == 'EDIT') {
                 this.form.patchValue(payload);
-                this.titleForm = 'Editar usuario';
+                this.titleForm = `Editar usuario ${payload.user_login}`;
                 this.editPassword = true;
                 this.fieldPassword = false;
             } else if (!isEdit && type == 'NEW') {

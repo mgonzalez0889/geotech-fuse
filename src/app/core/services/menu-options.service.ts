@@ -17,7 +17,7 @@ export class MenuOptionsService {
      * @description: Todas las opciones de menu
      */
     public getMenuOptions(): Observable<any> {
-        const params = {method: 'index_all_option'};
+        const params = {method: 'index_all_option_sons'};
         return this._http.get(this._appSettings.menuOptions.url.base, {params});
     }
     /**
