@@ -21,6 +21,7 @@ export class GridEventsComponent implements OnInit {
         {titulo: 'Descripcion', name: 'description'},
         {titulo: 'Color', name: 'color'},
     ];
+
     constructor(
         private _eventService: EventsService
     ) {
@@ -29,12 +30,14 @@ export class GridEventsComponent implements OnInit {
     ngOnInit(): void {
         this.showEvents();
     }
+
     /**
      * @description: cierra el formulario
      */
     public closeForm(value): void {
         this.show = value;
     }
+
     /**
      * @description: Edita un contacto
      */
@@ -42,17 +45,19 @@ export class GridEventsComponent implements OnInit {
         this.show = true;
         this.getEditContact(id);
     }
+
     /**
      * @description: Mostrar todos los eventos
      */
     public showEvents(): void {
-         this._eventService.getEvents().subscribe((res) => {
+        this._eventService.getEvents().subscribe((res) => {
             this.dataSource = new MatTableDataSource(res.data);
             this.dataSource.paginator = this.paginator;
         });
     }
+
     /**
-     * @description: Mostrar informacion de un contacto
+     * @description: Mostrar informacion de un evento
      */
     private getEditContact(id: number): void {
         this._eventService.getEvent(id).subscribe(({data}) => {

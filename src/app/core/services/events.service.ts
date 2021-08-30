@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
     providedIn: 'root'
 })
 export class EventsService {
-    public behaviorSubjectEvents$: BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
+    public behaviorSubjectEvents$: BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: any}> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
 
 
     constructor(
