@@ -41,7 +41,7 @@ export class NavigationService
     /**
      * Get all navigation data
      */
-   /* get(): Observable<Navigation>
+  /*  get(): Observable<Navigation>
     {
         return this._httpClient.get<Navigation>('api/common/navigation').pipe(
             tap((navigation) => {
@@ -51,13 +51,26 @@ export class NavigationService
             })
         );
     }*/
-    get(): Observable<any>
+    get(): Observable<Navigation>
     {
         const params = {method: 'show_menu_user'};
+        let navigations: any = {
+            compact: [],
+            default: [],
+            futuristic: [],
+            horizontal: []
+        };
         return this._httpClient.get<Navigation>(this._appSettings.menuOptions.url.optionsFather, {params}).pipe(
             tap((navigation) => {
                 // console.log(navigation)
-                this._navigation.next(navigation);
+                navigations = {
+                    default: navigation,
+                    compact: navigation,
+                    futuristic: navigation,
+                    horizontal: navigation
+                };
+                console.log(navigations);
+                this._navigation.next(navigations);
             }),
         );
     }

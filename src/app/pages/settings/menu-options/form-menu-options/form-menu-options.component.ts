@@ -49,7 +49,7 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
   private createForm(): void {
       this.form = this.fb.group({
           id: undefined,
-          option_name: [''],
+          title: [''],
           option_description: [''],
           icon: [''],
           option_ubication: [''],
