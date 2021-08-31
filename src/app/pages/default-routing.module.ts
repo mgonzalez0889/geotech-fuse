@@ -12,6 +12,10 @@ const routes: Routes = [
             {
                 path: 'settings',
                 loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+            },
+            {
+                path: 'tracking',
+                loadChildren: () => import('./tracking/tracking.module').then(m => m.TrackingModule)
             }
         ]
     }
