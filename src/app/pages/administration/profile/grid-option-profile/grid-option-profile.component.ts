@@ -93,7 +93,7 @@ export class GridOptionProfileComponent implements OnInit {
    * @description: Carga todas las opcionesdel menu
    */
   private getOptions(): void {
-        this.optionsMenu$ = this.menuOptionService.getMenuOptions();
+        this.optionsMenu$ = this.menuOptionService.getMenuOptionsSons();
   }
   private getOwners(): void {
       this.owners$ = this.ownersService.getOwners();
