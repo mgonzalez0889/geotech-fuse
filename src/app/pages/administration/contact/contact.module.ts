@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormContactComponent } from './form-contact/form-contact.component';
 import { GridContactComponent } from './grid-contact/grid-contact.component';
 import { ContactRoutingModule } from './contact-routing.module';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';

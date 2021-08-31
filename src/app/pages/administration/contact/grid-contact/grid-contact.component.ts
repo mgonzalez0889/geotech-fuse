@@ -66,12 +66,9 @@ export class GridContactComponent implements OnInit, OnDestroy {
                 console.log('Elemento eliminado');
             });
     }
-    /**
-     * @description: Metodo que destruye las subscripciones
-     */
+
     ngOnDestroy(): void {
-        // this.subscription$.unsubscribe();
-    }
+     }
 
 
 }

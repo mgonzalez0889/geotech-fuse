@@ -94,4 +94,13 @@ export class AppSettingsService {
             base: EndPoints.uri('owner_plate')
         }
     };
+    /**
+     * @description: End-point events
+     */
+    public events = {
+        url: {
+            base: EndPoints.uri('event')
+        }
+    };
+
 }
