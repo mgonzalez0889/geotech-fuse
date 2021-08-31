@@ -13,6 +13,8 @@ export class GridEventsComponent implements OnInit {
     public show: boolean = false;
     public displayedColumns: string[] = ['name', 'description', 'color', 'actions_events'];
     public dataSource: MatTableDataSource<any>;
+    public arrayLength: number = 0;
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
@@ -53,6 +55,8 @@ export class GridEventsComponent implements OnInit {
         this._eventService.getEvents().subscribe((res) => {
             this.dataSource = new MatTableDataSource(res.data);
             this.dataSource.paginator = this.paginator;
+            this.arrayLength = res.data.length;
+
         });
     }
 
@@ -61,7 +65,7 @@ export class GridEventsComponent implements OnInit {
      */
     private getEditContact(id: number): void {
         this._eventService.getEvent(id).subscribe(({data}) => {
-            this._eventService.behaviorSubjectEvents$.next({type: 'EDIT', id, isEdit: true, payload: data});
+            this._eventService.behaviorSubjectEvents$.next({id, isEdit: true, payload: data});
         });
     }
 }

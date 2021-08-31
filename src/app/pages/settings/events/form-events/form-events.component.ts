@@ -16,8 +16,8 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     public formEvents: FormGroup;
     public subscription$: Subscription;
     public contacs: boolean = false;
-    dropdownList = [];
-    dropdownSettings = {};
+    public dropdownList = [];
+    public dropdownSettings = {};
 
 
     constructor(
@@ -26,11 +26,11 @@ export class FormEventsComponent implements OnInit, OnDestroy {
         private _snackBar: MatSnackBar,
         private _contacsService: ContactService
     ) {
+        this.createEventsForm();
     }
 
     ngOnInit(): void {
         this.listenObservables();
-        this.createEventsForm();
         this.contacsList();
         this.dataCotact();
     }
@@ -52,7 +52,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             color: ['', [Validators.required]],
             description: ['', [Validators.required]],
             checkNotificationEmail: [''],
-            contacDate: ['']
+            //contacDate: ['']
         });
     }
 
@@ -71,12 +71,13 @@ export class FormEventsComponent implements OnInit, OnDestroy {
      * @description: Escucha el observable behavior
      */
     private listenObservables(): void {
-        this.subscription$ = this._eventsServices.behaviorSubjectEvents$.subscribe(({type, isEdit, payload}) => {
-            if (isEdit && type == 'EDIT') {
+        this.subscription$ = this._eventsServices.behaviorSubjectEvents$.subscribe(({isEdit, payload}) => {
+            if (isEdit) {
                 this.formEvents.patchValue(payload);
             }
         });
     }
+
     /**
      * @description: Lista desplegable de contactos
      */
@@ -89,16 +90,17 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             unSelectAllText: 'Desmarcar seleccion',
             itemsShowLimit: 3,
             allowSearchFilter: true,
-            searchPlaceholderText:'Buscar contacto'
+            searchPlaceholderText: 'Buscar contacto'
         };
     }
+
     /**
      * @description: Lista desplegable de contactos
      */
 
     private dataCotact(): void {
         const tmp = [];
-        this._contacsService.getContacts().subscribe((data) => {
+        this.subscription$ = this._contacsService.getContacts().subscribe((data) => {
             for (let i = 0; i < data.data.length; i++) {
                 tmp.push({item_id: i, item_text: data.data[i].full_name});
             }
