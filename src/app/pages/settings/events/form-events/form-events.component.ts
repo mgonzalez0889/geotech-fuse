@@ -13,7 +13,7 @@ import {ContactService} from "../../../../core/services/contact.service";
 export class FormEventsComponent implements OnInit, OnDestroy {
 
     @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
-    public formEvents: FormGroup;
+    public form: FormGroup;
     public subscription$: Subscription;
     public contacs: boolean = false;
     public dropdownList = [];
@@ -46,7 +46,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
      * @description: Formulario de modulo eventos
      */
     private createEventsForm(): void {
-        this.formEvents = this.fb.group({
+        this.form = this.fb.group({
             id: undefined,
             name: ['', [Validators.required]],
             color: ['', [Validators.required]],
@@ -60,7 +60,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
      * @description: Editar un evento
      */
     public editEvent(): void {
-        const data = this.formEvents.getRawValue();
+        const data = this.form.getRawValue();
         this.subscription$ = this._eventsServices.putEvents(data).subscribe(() => {
             this._snackBar.open('Evento actualizado con exito', 'CERRAR', {duration: 4000});
             this.onShow.emit(false);
@@ -73,7 +73,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     private listenObservables(): void {
         this.subscription$ = this._eventsServices.behaviorSubjectEvents$.subscribe(({isEdit, payload}) => {
             if (isEdit) {
-                this.formEvents.patchValue(payload);
+                this.form.patchValue(payload);
             }
         });
     }

@@ -10,7 +10,7 @@
         <div class="flex-auto mt-4 sm:mt-6">
             <div class="w-full max-w-screen-xl mx-auto">
                 <!-- form  -->
-                <form [formGroup]="formEvents">
+                <form [formGroup]="form">
                     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
                         <div class="-mx-3 md:flex mb-6">
                             <mat-form-field class="w-3/4 px-3 fuse-mat-dense">
@@ -36,7 +36,7 @@
                         </div>
 
                         <ng-container class="-mx-3 fuse-mat-dense"
-                                      *ngIf="formEvents.controls.checkNotificationEmail.value">
+                                      *ngIf="form.controls.checkNotificationEmail.value">
                             <ng-multiselect-dropdown class="w-full px-3 fuse-mat-dense"
                                                      [placeholder]="'Seleccione los contactos'"
                                                      [settings]="dropdownSettings"
