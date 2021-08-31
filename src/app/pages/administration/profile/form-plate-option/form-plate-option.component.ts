@@ -34,6 +34,7 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
   public arrayLength: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
+  public profile: string = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.payload.name;
   constructor(
       private profileService: ProfilesService,
       private userProfilePlateService: UserProfilePlateService,

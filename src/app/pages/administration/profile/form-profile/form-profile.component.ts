@@ -122,7 +122,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
           if (isEdit && type == 'EDIT') {
               this.form.patchValue(payload);
               this.tabOptionOne = isEdit;
-              this.titleForm = 'Editar perfil';
+              this.titleForm = `Editar perfil ${payload.name}` ;
           }else if (!isEdit && type == 'NEW') {
               this.form.reset({
                   status: [true]

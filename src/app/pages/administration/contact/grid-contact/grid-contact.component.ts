@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ContactService} from 'app/core/services/contact.service';
+import {fuseAnimations} from "../../../../../@fuse/animations";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
     selector: 'app-grid-contact',
@@ -13,6 +14,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
 
     public show: boolean = false;
     public contacts$: Observable<any>;
+    public subscription$: Subscription;
 
     constructor(
         private _contactService: ContactService,
@@ -49,7 +51,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
      * @description: Mostrar informacion de un contacto
      */
     private getEditContact(id: number): void {
-        this._contactService.getContact(id).subscribe(({data}) => {
+        this.subscription$ = this._contactService.getContact(id).subscribe(({data}) => {
             this._contactService.behaviorSubjectContact$.next({type: 'EDIT', id, isEdit: true, payload: data});
         });
     }
@@ -57,7 +59,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
      * @description: Eliminar un contacto
      */
     public deleteContact(id: number): void {
-        this._contactService.deleteContacts(id).subscribe(
+        this.subscription$ = this._contactService.deleteContacts(id).subscribe(
             () => {
                 this.contacts$ = this._contactService.getContacts();
                 this._snackBar.open('Se ha eliminado el contacto', 'CERRAR', {duration: 4000});

@@ -6,7 +6,7 @@
         <!-- CONTENT GOES HERE -->
         <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
             <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                <div class="text-3xl font-extrabold tracking-tight">{{'Nueva opcion'}}</div>
+                <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
                 <mat-form-field class="fuse-mat-dense flex-auto">
                     <mat-label>Ruta</mat-label>
                     <input matInput
-                           formControlName="option_ubication"
+                           formControlName="link"
                     >
                     <span matPrefix>/administration/users</span>
                 </mat-form-field>
@@ -48,7 +48,7 @@
                                 [value]="option.id"
                                 *ngFor="let option of options.data"
                             >
-                                {{option.option_name}}
+                                {{option.title}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
