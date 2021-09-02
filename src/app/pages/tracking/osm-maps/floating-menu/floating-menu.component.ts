@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {SelectionModel} from "@angular/cdk/collections";
 import {MobileService} from "../../../../core/services/mobile.service";
 import {Subscription} from "rxjs";
@@ -15,6 +15,7 @@ import {fuseAnimations} from "../../../../../@fuse/animations";
 })
 export class FloatingMenuComponent implements OnInit {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
+  @Output() sendDataDevice: EventEmitter<any> = new EventEmitter<any>();
   public displayedColumns: string[] = ['select', 'name', 'lat'];
   public dataSource: any = [];
   public items: any = [];
@@ -102,6 +103,7 @@ export class FloatingMenuComponent implements OnInit {
                 x['individual'] = false;
                 return x;
             });
+            // this.sendDataDevice.emit(this.items);
       });
   }
 

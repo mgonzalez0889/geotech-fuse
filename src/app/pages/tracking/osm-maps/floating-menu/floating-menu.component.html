@@ -1,8 +1,9 @@
-<div class="fixed z-99999 ml-2.5 top-40">
-    <div class="bg-white sm:p-1">
+<div class="fixed z-99999 ml-2.5 top-40 shadow-md rounded-lg">
+    <div class="bg-white">
         <div class="flex flex-wrap items-center justify-between">
             <button
                 mat-icon-button
+                class="ml-3"
                 (click)="showMenu = !showMenu"
             >
                 <mat-icon svgIcon="heroicons_solid:menu-alt-1"></mat-icon>
@@ -18,7 +19,7 @@
         </div>
     </div>
     <div *ngIf="showMenu" [@fadeOutLeft]="{state: 'void',transition: 'expanded', params: {timings: '20ms'}}">
-        <table mat-table [dataSource]="items" class="w-full animated-box"  >
+        <table mat-table [dataSource]="items" class="w-full animated-box mat-elevation-z3"  >
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? masterToggle() : null"

@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import {Observable, Subscriber, Subscription} from "rxjs";
+import {MobileService} from "../../../../core/services/mobile.service";
 
 @Component({
   selector: 'app-maps',
@@ -10,17 +11,20 @@ import {Observable, Subscriber, Subscription} from "rxjs";
 export class MapsComponent implements OnInit, AfterViewInit {
   private map: L.Map;
   @ViewChild('map') divMaps: ElementRef;
-  private centroid: L.LatLngExpression = [42.3601, -71.0589];
   public subscription: Subscription;
-
+  public devices: any = [];
 
   constructor(
-
+      private mobilesService: MobileService
   ) { }
 
   ngOnInit(): void {
-
+      this.getDevices();
   }
+
+ /* public onDataDevice(data: []): void {
+      this.devices = data;
+  }*/
 
   public onValue(value): void {
       console.log(value);
@@ -36,27 +40,26 @@ export class MapsComponent implements OnInit, AfterViewInit {
       const tiles = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
           attribution: 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://cloudmade.com">CloudMade</a>',
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-      }).addTo(this.map);
+      });
+      tiles.addTo(this.map);
+
+
 
     /*  const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
           minZoom: 10,
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       });*/
-      tiles.addTo(this.map);
+      //tiles.addTo(this.map);
       // L.marker([4.658383846282959, -74.09394073486328]).addTo(this.map);
       this.getCurrentPosition().subscribe((position: any) => {
           this.map.flyTo([position.latitude, position.longitude], 13);
 
-          const icon = L.icon({
-              iconUrl: 'assets/icons/marker-icon.png',
-              shadowUrl: 'assets/icons/marker-shadow.png',
-              popupAnchor: [13, 0],
-          });
-
-          const marker = L.marker([position.latitude, position.longitude], { icon }).bindPopup('Angular Leaflet');
-          marker.addTo(this.map);
+          /*const marker = L.marker([position.latitude, position.longitude],  ).bindPopup('Angular Leaflet');
+          marker.addTo(this.map);*/
       });
+
+
   }
   /**
    * @description: Metodo que identifica la posicion actual
@@ -76,10 +79,39 @@ export class MapsComponent implements OnInit, AfterViewInit {
           }
       });
   }
+  /**
+   * @description: Obtiene todos los dispositivos
+   */
+  private getDevices(): void {
+      this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
+          // console.log(data);
+          this.setMarkers(data);
+      });
+  }
+  /**
+   * @description: Muestra los marcadores en el mapa
+   */
+  private setMarkers(markers) {
+      if (markers) {
+          let myLatLng: any = {lat: '', lng: ''};
+          let title: string;
+          let mark: L.Marker;
+          markers.forEach(m => {
+              myLatLng = {
+                  lat: Number(m.y),
+                  lng: Number(m.x)
+              };
+              title = m.plate;
+              mark = L.marker([myLatLng.lat, myLatLng.lng]);
+              //mark.bi
+              mark.addTo(this.map);
+
+          });
+      }
+  }
 
   ngAfterViewInit(): void {
       this.initMap();
   }
-
 
 }
