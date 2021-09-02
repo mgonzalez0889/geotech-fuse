@@ -1,0 +1,55 @@
+<div class="fixed z-99999 ml-2.5 top-40">
+    <div class="bg-white sm:p-1">
+        <div class="flex flex-wrap items-center justify-between">
+            <button
+                mat-icon-button
+                (click)="showMenu = !showMenu"
+            >
+                <mat-icon svgIcon="heroicons_solid:menu-alt-1"></mat-icon>
+            </button>
+            <ng-container *ngIf="showMenu">
+                <button
+                    mat-icon-button
+                    [disabled]="showReport"
+                >
+                    <mat-icon svgIcon="heroicons_solid:document-report"></mat-icon>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+    <div *ngIf="showMenu" [@fadeOutLeft]="{state: 'void',transition: 'expanded', params: {timings: '20ms'}}">
+        <table mat-table [dataSource]="items" class="w-full animated-box"  >
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()">Todos
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row; let i=index;" class="w-24">
+                    <mat-checkbox #checkbox (click)="individual(!checkbox.checked, row)"
+                                  (change)="$event ? selection.toggle(row) : null"
+                                  [checked]="selection.isSelected(row)"
+                    >
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element" class="w-24"> {{element.plate}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="lat">
+                <th mat-header-cell *matHeaderCellDef> Latitude </th>
+                <td mat-cell *matCellDef="let element" class="w-24"> {{element.y}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            >
+            </tr>
+        </table>
+    </div>
+</div>
