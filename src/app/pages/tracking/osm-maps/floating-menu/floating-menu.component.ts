@@ -4,6 +4,7 @@ import {MobileService} from "../../../../core/services/mobile.service";
 import {Subscription} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {fuseAnimations} from "../../../../../@fuse/animations";
+import {HelperService} from "../../../../core/services/helper.service";
 
 @Component({
   selector: 'app-floating-menu',
@@ -24,7 +25,8 @@ export class FloatingMenuComponent implements OnInit {
   public showMenu: boolean = true;
   public showReport: boolean = true;
   constructor(
-      private mobilesService: MobileService
+      private mobilesService: MobileService,
+      private _helperService: HelperService
   ) { }
 
   ngOnInit(): void {
@@ -34,6 +36,19 @@ export class FloatingMenuComponent implements OnInit {
   public onShowMenu(): void {
       this.showMenu = !this.showMenu;
   }
+
+    public onFormModal(): void {
+        const data: any = [];
+        this._helperService.showDialogSelectHistorial({
+            data
+        }).then(
+            (result) => {
+                if (result.value) {
+
+                }
+            }
+        )
+    }
 
     /** Whether the number of selected elements matches the total number of rows. */
     public isAllSelected(): boolean {

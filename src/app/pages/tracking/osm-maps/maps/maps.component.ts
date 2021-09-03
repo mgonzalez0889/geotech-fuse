@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 import * as L from 'leaflet';
 import {Observable, Subscriber, Subscription} from "rxjs";
 import {MobileService} from "../../../../core/services/mobile.service";
+import {HelperService} from "../../../../core/services/helper.service";
 
 @Component({
   selector: 'app-maps',
@@ -15,7 +16,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
   public devices: any = [];
 
   constructor(
-      private mobilesService: MobileService
+      private mobilesService: MobileService,
   ) { }
 
   ngOnInit(): void {
@@ -29,7 +30,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
   public onValue(value): void {
       console.log(value);
   }
-
   private initMap(): void {
       const myLatLng: L.LatLngExpression = [4.658383846282959, -74.09394073486328];
       this.map = L.map(this.divMaps.nativeElement, {

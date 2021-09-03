@@ -11,7 +11,9 @@ export class FuseConfirmationService {
   constructor(
       public _dialog: MatDialog,
   ) { }
-
+  /**
+   * @description: Cuadro de dialogo para confirmacion
+   */
   public openDialog(data: FuseConfirmationConfig): Promise<FuseConfirmationConfig> {
       return this._dialog.open(MessageDialogComponent , {
           data,
