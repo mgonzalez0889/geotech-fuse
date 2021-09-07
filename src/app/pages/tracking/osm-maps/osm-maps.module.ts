@@ -13,7 +13,7 @@ import { FormDialogSelectHistorialComponent } from './form-dialog-select-histori
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDividerModule} from "@angular/material/divider";
 import {FuseDateRangeModule} from "../../../../@fuse/components/date-range";
-
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -32,6 +32,7 @@ import {FuseDateRangeModule} from "../../../../@fuse/components/date-range";
         MatDialogModule,
         MatDividerModule,
         FuseDateRangeModule,
+        ReactiveFormsModule,
 
     ]
 })
