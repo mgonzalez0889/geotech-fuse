@@ -99,7 +99,7 @@ export class AppSettingsService {
      */
     public events = {
         url: {
-            base: EndPoints.uri('event')
+            base: EndPoints.uri('owner_event')
         }
     };
 

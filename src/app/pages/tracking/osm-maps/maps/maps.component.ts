@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import {Observable, Subscriber, Subscription} from "rxjs";
 import {MobileService} from "../../../../core/services/mobile.service";
 import {HelperService} from "../../../../core/services/helper.service";
+import {HistoriesService} from "../../../../core/services/histories.service";
 
 @Component({
   selector: 'app-maps',
@@ -20,6 +21,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
   constructor(
       private mobilesService: MobileService,
+      private historyService: HistoriesService
   ) { }
 
   ngOnInit(): void {
@@ -83,6 +85,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
               }
           });
           console.log(this.markers);
+          this.historyService.subjectHistories.next({payload: this.markers});
           this.setMarkers(this.markers);
       }
       if(!this.markers.length) {

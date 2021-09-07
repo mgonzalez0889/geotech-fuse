@@ -14,6 +14,9 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatDividerModule} from "@angular/material/divider";
 import {FuseDateRangeModule} from "../../../../@fuse/components/date-range";
 import {ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -33,6 +36,9 @@ import {ReactiveFormsModule} from "@angular/forms";
         MatDividerModule,
         FuseDateRangeModule,
         ReactiveFormsModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatSelectModule,
 
     ]
 })

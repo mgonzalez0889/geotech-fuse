@@ -20,7 +20,7 @@ export class EventsService {
      * @description: Ver todos los eventos
      */
     public getEvents(): Observable<any> {
-        const params = {method: 'index_all_event'};
+        const params = {method: 'index_all_owner_event'};
         return this._http.get(this._appSettings.events.url.base, {params});
     }
     /**

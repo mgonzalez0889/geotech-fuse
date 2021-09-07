@@ -34,7 +34,7 @@ export class HelperService {
         return this._matDialog.open(FormDialogSelectHistorialComponent, {
             panelClass: 'form-dialog-event',
             data,
-            minWidth: '580px',
+            minWidth: '680px',
             minHeight: '420px',
             disableClose: data.disableClose ? true : false
         }).afterClosed().toPromise<IDialogAlertResult>();
