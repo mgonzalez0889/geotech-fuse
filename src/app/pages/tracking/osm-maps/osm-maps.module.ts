@@ -12,6 +12,7 @@ import {FuseCardModule} from "../../../../@fuse/components/card";
 import { FormDialogSelectHistorialComponent } from './form-dialog-select-historial/form-dialog-select-historial.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDividerModule} from "@angular/material/divider";
+import {FuseDateRangeModule} from "../../../../@fuse/components/date-range";
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import {MatDividerModule} from "@angular/material/divider";
         FuseCardModule,
         MatDialogModule,
         MatDividerModule,
+        FuseDateRangeModule,
 
     ]
 })

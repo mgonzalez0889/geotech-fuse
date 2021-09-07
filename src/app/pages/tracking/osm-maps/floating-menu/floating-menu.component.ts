@@ -75,9 +75,7 @@ export class FloatingMenuComponent implements OnInit {
                 return x;
             });
         }
-
         this.sendMarker.emit(this.items);
-
     }
 
     public individual(event, value): void {
@@ -95,7 +93,6 @@ export class FloatingMenuComponent implements OnInit {
         const dataDeselect = [];
 
         if (value.selected) {
-
             dataSelected.push(value);
             console.log(dataSelected);
             this.sendMarker.emit(dataSelected);

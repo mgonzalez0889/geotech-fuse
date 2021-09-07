@@ -14,6 +14,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
   @ViewChild('map') divMaps: ElementRef;
   public subscription: Subscription;
   public devices: any = [];
+  public markers: any = [];
+  public markersInit: any = [];
+  public markersAll: any = [];
 
   constructor(
       private mobilesService: MobileService,
@@ -28,7 +31,8 @@ export class MapsComponent implements OnInit, AfterViewInit {
   }*/
 
   public onValue(value): void {
-      console.log(value);
+      // console.log(value);
+      this.addMarker(value);
   }
   private initMap(): void {
       const myLatLng: L.LatLngExpression = [4.658383846282959, -74.09394073486328];
@@ -43,8 +47,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
       });
       tiles.addTo(this.map);
 
-
-
     /*  const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
           minZoom: 10,
@@ -58,8 +60,37 @@ export class MapsComponent implements OnInit, AfterViewInit {
           /*const marker = L.marker([position.latitude, position.longitude],  ).bindPopup('Angular Leaflet');
           marker.addTo(this.map);*/
       });
+  }
 
-
+  public addMarker(markers): void {
+      if (markers.length) {
+          let myLatLng: any = {lat: '', lng: ''};
+          let title: string;
+          let mark: L.Marker;
+          this.markersAll.forEach(t => {
+              t.remove();
+          });
+          markers.forEach(m => {
+              if (m.selected) {
+                  console.log(m.selected);
+                  this.markers.push(m);
+                  const value = this.markersAll.hasOwnProperty(m.id);
+                  console.log(m);
+                  console.log(value);
+              }else {
+                  const index = this.markers.indexOf(m);
+                  console.log(index);
+                  if (index > -1) {
+                      this.markers.splice(index, 1);
+                  }
+              }
+          });
+          console.log(this.markers);
+          this.setMarkers(this.markers);
+      }
+      if(!this.markers.length) {
+          this.getDevices();
+      }
   }
   /**
    * @description: Metodo que identifica la posicion actual
@@ -84,12 +115,12 @@ export class MapsComponent implements OnInit, AfterViewInit {
    */
   private getDevices(): void {
       this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
-          // console.log(data);
+          console.log(data);
           this.setMarkers(data);
       });
   }
   /**
-   * @description: Muestra los marcadores en el mapa
+   * @description: Muestra los marcadores en el mapa desde el inicio
    */
   private setMarkers(markers) {
       if (markers) {
@@ -102,11 +133,10 @@ export class MapsComponent implements OnInit, AfterViewInit {
                   lng: Number(m.x)
               };
               title = m.plate;
-              mark = L.marker([myLatLng.lat, myLatLng.lng]);
-              //mark.bi
-              mark.addTo(this.map);
-
+              this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
+              // this.markersInit.push(mark);
           });
+          console.log(this.markersAll);
       }
   }
 
