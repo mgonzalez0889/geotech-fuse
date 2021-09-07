@@ -72,11 +72,8 @@ export class MapsComponent implements OnInit, AfterViewInit {
           });
           markers.forEach(m => {
               if (m.selected) {
-                  console.log(m.selected);
                   this.markers.push(m);
-                  const value = this.markersAll.hasOwnProperty(m.id);
-                  console.log(m);
-                  console.log(value);
+                  // const value = this.markersAll.hasOwnProperty(m.id);
               }else {
                   const index = this.markers.indexOf(m);
                   console.log(index);
