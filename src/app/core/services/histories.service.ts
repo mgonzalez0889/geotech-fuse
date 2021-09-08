@@ -16,7 +16,7 @@ export class HistoriesService {
      * @description: Obtiene el listado de historico
      */
     public getHistories(data: any): Observable<any> {
-        const params = {method: 'index_all_owner_event', data};
-        return this._http.get(this._appSettings.events.url.base, {params});
+        const params = {method: 'create_historic'};
+        return this._http.post(this._appSettings.histories.url.base, data, {params});
     }
 }

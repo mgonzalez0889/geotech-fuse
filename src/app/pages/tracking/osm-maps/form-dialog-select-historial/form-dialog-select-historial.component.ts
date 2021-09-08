@@ -19,7 +19,6 @@ export interface CalendarSettings
 export class FormDialogSelectHistorialComponent implements OnInit {
   public form: FormGroup;
   public settings: CalendarSettings;
-  eventTimeFormat: any;
   public events$: Observable<any>;
   public plates: any = this.historyService.subjectHistories.value.payload;
   constructor(
@@ -37,18 +36,32 @@ export class FormDialogSelectHistorialComponent implements OnInit {
           }),
           owner_event_id: ['']
       });
-      // this.form.controls.plate.value()
-      console.log(this.plates);
+      let plate = [];
+      this.plates.forEach(m => {
+          console.log(m.plate);
+          plate.push(m.plate);
+      });
+      this.form.controls.plate.setValue(plate);
   }
 
   ngOnInit(): void {
       this.getEvents();
+  }
+  public onSelect(): void {
+      const data = this.form.getRawValue();
+      this.getHistories(data);
   }
   /**
    * @description: Obtiene los eventos
    */
   private getEvents(): void {
       this.events$ = this.eventsService.getEvents();
+  }
+  /**
+   * @description: Obtiene el historico de los moviles
+  */
+  private getHistories(data: any): void {
+      this.historyService.getHistories(data).subscribe(res => console.log(res));
   }
 
 }

@@ -35,9 +35,6 @@
             </div>
          </div>
     </div>
-    <pre>
-        {{form.getRawValue() | json}}
-    </pre>
 </mat-dialog-content>
 <mat-dialog-actions>
     <div class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
@@ -52,6 +49,7 @@
             class="w-1/5"
             mat-raised-button
             color="primary"
+            (click)="onSelect()"
             >Seleccionar
         </button>
     </div>

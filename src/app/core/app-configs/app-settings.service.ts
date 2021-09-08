@@ -102,5 +102,13 @@ export class AppSettingsService {
             base: EndPoints.uri('owner_event')
         }
     };
+    /**
+     *@description: End-point histories
+     */
+    public histories = {
+        url: {
+            base: EndPoints.uri('historic')
+        }
+    };
 
 }
