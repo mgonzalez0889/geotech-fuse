@@ -17,7 +17,7 @@ import {HelperService} from "../../../../core/services/helper.service";
 export class FloatingMenuComponent implements OnInit {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
   @Output() sendDataDevice: EventEmitter<any> = new EventEmitter<any>();
-  public displayedColumns: string[] = ['select', 'name', 'lat'];
+  public displayedColumns: string[] = ['select', 'name'];
   public dataSource: any = [];
   public items: any = [];
   public selection = new SelectionModel<any>(true, []);
@@ -80,8 +80,7 @@ export class FloatingMenuComponent implements OnInit {
 
     public individual(event, value): void {
         console.log(this.selection);
-        console.log(event);
-        console.log(value);
+        console.log(this.selection.selected);
         this.items.map(function(x){
             if (x.id == value.id){
                 x.selected = event;

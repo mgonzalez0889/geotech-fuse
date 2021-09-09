@@ -18,6 +18,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
   public markers: any = [];
   public markersInit: any = [];
   public markersAll: any = [];
+  public showHistory: boolean;
 
   constructor(
       private mobilesService: MobileService,
@@ -26,6 +27,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
       this.getDevices();
+      this.listenObservables();
   }
 
  /* public onDataDevice(data: []): void {
@@ -138,6 +140,18 @@ export class MapsComponent implements OnInit, AfterViewInit {
           });
           console.log(this.markersAll);
       }
+  }
+
+  private listenObservables(): void {
+      this.subscription = this.historyService.subjectDataHistories.subscribe(({show}) => {
+          if (show) {
+              this.showHistory = show;
+          }
+      });
+
+      this.subscription = this.historyService.subjectDataSelected.subscribe(({payload}) => {
+          console.log(payload);
+      });
   }
 
   ngAfterViewInit(): void {

@@ -2,6 +2,10 @@
     (sendMarker)="onValue($event)"
 >
 </app-floating-menu>
+<ng-container *ngIf="showHistory">
+    <app-form-assign-mark>
+    </app-form-assign-mark>
+</ng-container>
 <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
     <div class="container mx-auto">
          <div #map

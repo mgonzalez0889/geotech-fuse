@@ -58,19 +58,19 @@
         </div>
     </div>
 </fuse-card>-->
-<div class="fixed z-999 ml-2.5 top-40 shadow-md rounded-lg">
-    <div class="bg-white">
+<div class="fixed z-999 ml-2.5 top-40 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded overflow-hidden">
+    <div class="">
         <div class="flex flex-wrap items-center justify-between">
             <button
                 mat-icon-button
-                class="ml-3"
                 (click)="showMenu = !showMenu"
             >
                 <mat-icon svgIcon="heroicons_solid:menu-alt-1"></mat-icon>
             </button>
-            <ng-container *ngIf="showMenu">
+            <ng-container *ngIf="selection.selected.length > 0">
                 <button
                     mat-icon-button
+                    [disabled]="selection.selected.length > 4"
                     (click)="onFormModal()"
                 >
                     <mat-icon svgIcon="heroicons_solid:document-report"></mat-icon>
@@ -79,7 +79,7 @@
         </div>
     </div>
     <div *ngIf="showMenu" [@fadeOutLeft]="{state: 'void',transition: 'expanded', params: {timings: '20ms'}}">
-        <table mat-table [dataSource]="items" class="w-full animated-box mat-elevation-z3"  >
+        <table mat-table [dataSource]="items" class="w-full animated-box "  >
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -102,7 +102,7 @@
             </ng-container>
 
             <!-- Weight Column -->
-            <ng-container matColumnDef="lat">
+            <ng-container matColumnDef="lat" *ngIf="false">
                 <th mat-header-cell *matHeaderCellDef> Latitude </th>
                 <td mat-cell *matCellDef="let element" class="w-24"> {{element.y}} </td>
             </ng-container>

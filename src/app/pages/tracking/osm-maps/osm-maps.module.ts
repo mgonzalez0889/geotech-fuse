@@ -17,12 +17,16 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatSelectModule} from "@angular/material/select";
+import { FormAssignMarkComponent } from './form-assign-mark/form-assign-mark.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
     MapsComponent,
     FloatingMenuComponent,
-    FormDialogSelectHistorialComponent
+    FormDialogSelectHistorialComponent,
+    FormAssignMarkComponent
   ],
     imports: [
         CommonModule,
@@ -39,6 +43,8 @@ import {MatSelectModule} from "@angular/material/select";
         MatFormFieldModule,
         MatDatepickerModule,
         MatSelectModule,
+        MatTabsModule,
+        MatButtonToggleModule,
 
     ]
 })

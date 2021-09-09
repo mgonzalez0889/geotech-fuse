@@ -8,6 +8,8 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 })
 export class HistoriesService {
   public subjectHistories: BehaviorSubject<{payload: any}> = new BehaviorSubject({payload: ''});
+  public subjectDataHistories: BehaviorSubject<{payload: any; show: boolean}> = new BehaviorSubject<any>({payload: '', show: false});
+  public subjectDataSelected: BehaviorSubject<{payload: any}> = new BehaviorSubject<{payload: any}>({payload: ''});
   constructor(
       private _http: HttpClient,
       private _appSettings: AppSettingsService

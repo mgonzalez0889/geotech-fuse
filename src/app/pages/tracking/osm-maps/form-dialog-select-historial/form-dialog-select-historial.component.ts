@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {EventsService} from "../../../../core/services/events.service";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {HistoriesService} from "../../../../core/services/histories.service";
 export interface CalendarSettings
 {
@@ -21,6 +21,7 @@ export class FormDialogSelectHistorialComponent implements OnInit {
   public settings: CalendarSettings;
   public events$: Observable<any>;
   public plates: any = this.historyService.subjectHistories.value.payload;
+  public subscription: Subscription;
   constructor(
       private _dialog: MatDialogRef<FormDialogSelectHistorialComponent>,
       @Inject(MAT_DIALOG_DATA) private _data: any,
@@ -61,7 +62,10 @@ export class FormDialogSelectHistorialComponent implements OnInit {
    * @description: Obtiene el historico de los moviles
   */
   private getHistories(data: any): void {
-      this.historyService.getHistories(data).subscribe(res => console.log(res));
+      this.subscription = this.historyService.getHistories(data).subscribe(res => {
+          // console.log(res);
+          this.historyService.subjectDataHistories.next({payload: res, show: true});
+      });
   }
 
 }

@@ -41,6 +41,7 @@
         <button
             class="w-1/4"
             mat-raised-button
+            matDialogClose="close"
             >
 <!--            {{dataView?.textCancelButton ? dataView?.textCancelButton : 'Cancelar'}}-->
             Cancelar
@@ -49,6 +50,7 @@
             class="w-1/5"
             mat-raised-button
             color="primary"
+            matDialogClose="close"
             (click)="onSelect()"
             >Seleccionar
         </button>
