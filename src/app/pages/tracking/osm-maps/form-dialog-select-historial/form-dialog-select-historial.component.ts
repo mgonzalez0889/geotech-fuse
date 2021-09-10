@@ -37,9 +37,8 @@ export class FormDialogSelectHistorialComponent implements OnInit {
           }),
           owner_event_id: ['']
       });
-      let plate = [];
+      const plate: string[] = [];
       this.plates.forEach(m => {
-          console.log(m.plate);
           plate.push(m.plate);
       });
       this.form.controls.plate.setValue(plate);

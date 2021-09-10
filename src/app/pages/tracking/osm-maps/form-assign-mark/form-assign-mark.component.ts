@@ -23,8 +23,8 @@ export class FormAssignMarkComponent implements OnInit {
    */
   public onSelected(event ,data: any): void {
       console.log(event);
-      console.log(data);
-      this.historyService.subjectDataSelected.next(data);
+      // console.log(data);
+      this.historyService.subjectDataSelected.next({payload: data, select: event });
   }
 
   private listenObservable(): void {
