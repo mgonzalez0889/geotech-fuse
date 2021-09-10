@@ -1,0 +1,50 @@
+<mat-dialog-content>
+    <div class="flex flex-col sm:flex-row flex-auto items-center sm:items-start p-8 pb-6 sm:pb-8">
+        <div class="flex flex-0 items-center justify-center w-10 h-10 sm:mr-4 rounded-full text-green-500 ng-star-inserted">
+            <mat-icon [inline]="true" [ngStyle]="{'color': colorIcon, 'font-size': '45px'}" class="mr-4">
+                {{viewIcon}}
+            </mat-icon>
+        </div>
+        <div class="flex flex-col items-center sm:items-start mt-4 sm:mt-0 sm:pr-8 space-y-1 text-center sm:text-left ng-star-inserted">
+            <div class="text-xl leading-6 font-medium ng-star-inserted">
+                {{dataView.title}}
+            </div>
+            <div class="text-secondary" *ngIf="dataView?.text">
+                {{dataView.text}}
+            </div>
+            <div class="" *ngIf="dataView?.html">
+                <div [innerHTML]="dataView.html"></div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions >
+    <div class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
+        <button
+            *ngIf="dataView?.showCancelButton"
+            class="w-1/4"
+            mat-raised-button
+            color="warn"
+            (click)="closeDialog({cancel: true})">
+            {{dataView?.textCancelButton ? dataView?.textCancelButton : 'Cancelar'}}
+        </button>
+        <button
+            *ngIf="!dataView?.showConfirButton"
+            class="w-1/4"
+            mat-raised-button
+            color="primary"
+            (click)="closeDialog({value: true})">
+            {{dataView?.textConfirButton ? dataView?.textConfirButton : 'Ok'}}
+        </button>
+        <button
+            *ngIf="dataView?.showOtherButton"
+            class="w-1/4"
+            mat-raised-button
+            (click)="closeDialog({other: true})">
+            {{dataView?.textOtherButton ? dataView?.textOtherButton : 'Otro'}}
+        </button>
+    </div>
+</mat-dialog-actions>
+
+
+

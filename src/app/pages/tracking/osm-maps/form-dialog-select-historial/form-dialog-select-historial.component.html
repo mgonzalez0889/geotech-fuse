@@ -1,0 +1,58 @@
+<mat-dialog-content>
+    <div class="flex flex-col sm:flex-row flex-auto items-center sm:items-start p-8 pb-6 sm:pb-8">
+        <div class="flex-auto mt-4 sm:mt-6 ">
+            <div class="w-full max-w-screen-xl mx-auto">
+                <form [formGroup]="form" >
+                    <div class="flex flex-col p-8">
+                        <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
+                            <mat-label>Rango de fechas</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate placeholder="Desde" formControlName="date_init">
+                                <input matEndDate placeholder="Hasta" formControlName="date_end">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                        </mat-form-field>
+                        <ng-container *ngIf="events$ | async as events">
+                            <mat-label>Eventos</mat-label>
+                            <mat-form-field class="fuse-mat-dense flex-auto">
+                                <mat-select
+                                    multiple
+                                    formControlName="owner_event_id"
+                                >
+                                    <mat-option disabled [value]="'seleccione'">Seleccione evento</mat-option>
+                                    <mat-option
+                                        [value]="event.id"
+                                        *ngFor="let event of events.data"
+                                    >
+                                        {{event.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </ng-container>
+                    </div>
+                </form>
+            </div>
+         </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
+        <button
+            class="w-1/4"
+            mat-raised-button
+            matDialogClose="close"
+            >
+<!--            {{dataView?.textCancelButton ? dataView?.textCancelButton : 'Cancelar'}}-->
+            Cancelar
+        </button>
+        <button
+            class="w-1/5"
+            mat-raised-button
+            color="primary"
+            matDialogClose="close"
+            (click)="onSelect()"
+            >Seleccionar
+        </button>
+    </div>
+</mat-dialog-actions>

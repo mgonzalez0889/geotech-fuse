@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import {AppSettingsService} from "../app-configs/app-settings.service";
 
 @Injectable()
 export class AuthService
@@ -15,7 +16,8 @@ export class AuthService
      */
     constructor(
         private _httpClient: HttpClient,
-        private _userService: UserService
+        private _userService: UserService,
+        private _appSettings: AppSettingsService
     )
     {
     }
@@ -66,19 +68,19 @@ export class AuthService
      *
      * @param credentials
      */
-    signIn(credentials: { email: string; password: string }): Observable<any>
+    signIn(credentials: { user: string; password: string, client_id: string, client_secret: string, grant_type: string }): Observable<any>
     {
+        console.log(credentials);
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        return this._httpClient.post(this._appSettings.auth.url.base, credentials).pipe(
             switchMap((response: any) => {
-
                 // Store the access token in the local storage
-                this.accessToken = response.accessToken;
+                this.accessToken = response.access_token;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
