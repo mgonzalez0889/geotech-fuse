@@ -2,7 +2,18 @@
     <div class="flex flex-col sm:flex-row flex-auto items-center sm:items-start p-8 pb-6 sm:pb-8">
         <div class="flex-auto mt-4 sm:mt-6 ">
             <div class="w-full max-w-screen-xl mx-auto">
-                <form>
+                <form [formGroup]="form">
+                    <div class="flex flex-col p-8">
+                        <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
+                            <mat-label>Rango de fechas</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate placeholder="Desde" formControlName="date_init">
+                                <input matEndDate placeholder="Hasta" formControlName="date_end">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                        </mat-form-field>
+                    </div>
                 </form>
             </div>
         </div>
