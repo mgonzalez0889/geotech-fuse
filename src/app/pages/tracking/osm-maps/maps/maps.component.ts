@@ -19,6 +19,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
   public markersInit: any = [];
   public markersAll: any = [];
   public showHistory: boolean;
+  // public markTo = this.historyService.subjectDataSelected.value;
 
   constructor(
       private mobilesService: MobileService,
@@ -28,6 +29,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
       this.getDevices();
       this.listenObservables();
+      this.listenDataObservable();
   }
 
  /* public onDataDevice(data: []): void {
@@ -148,9 +150,38 @@ export class MapsComponent implements OnInit, AfterViewInit {
               this.showHistory = show;
           }
       });
-
-      this.subscription = this.historyService.subjectDataSelected.subscribe(({payload}) => {
-          console.log(payload);
+  }
+  /**
+   * @description: Escucha el observable data para marcador
+   */
+  private listenDataObservable(): void {
+      this.subscription = this.historyService.subjectDataSelected.subscribe(({payload, select}) => {
+          if (select) {
+            console.log(payload.time_line);
+              // this.markAndPolyline(payload);
+              let myLatLng: any = [];
+              payload.time_line.forEach((m) => {
+                  /*console.log(m.y);
+                  console.log(m.x);*/
+                  myLatLng.push([Number.parseFloat(m.y), Number.parseFloat(m.x)]);
+              });
+              console.log(myLatLng);
+              /*let latlngs: [number, number][] = [
+                  [45.51, -122.68],
+                  [37.77, -122.43],
+                  [34.04, -118.2]
+              ];*/
+              L.polyline(myLatLng, {color: 'red'}).addTo(this.map);
+          }
+      });
+  }
+  /**
+   * @description: Metodo que marca y traza una polilinea
+   */
+  private markAndPolyline(mark): void {
+      console.log(mark);
+      mark.time_line.forEach(m => {
+          L.marker(m.x, m.y).addTo(this.map);
       });
   }
 
