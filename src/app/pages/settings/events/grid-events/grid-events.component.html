@@ -19,7 +19,6 @@
             <!-- Data filas y columnas -->
             <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}">
                 <th mat-header-cell *matHeaderCellDef>{{columna.titulo}}</th>
-                columna | JSON
                 <td mat-cell *matCellDef="let element" class="w-50"> {{element[columna.name]}}</td>
             </ng-container>
             <!-- Columna acciones -->

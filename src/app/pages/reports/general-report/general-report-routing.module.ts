@@ -6,7 +6,7 @@ import {FormReportComponent} from "./form-report/form-report.component";
 const routes: Routes = [
     {
         path: '',
-        component:FormReportComponent
+        component:GridReportComponent
     }
 ];
 
