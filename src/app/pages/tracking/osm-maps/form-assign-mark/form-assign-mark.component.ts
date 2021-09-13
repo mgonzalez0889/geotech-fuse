@@ -38,7 +38,6 @@ export class FormAssignMarkComponent implements OnInit {
   private listenObservable(): void {
       this.subscription = this.historyService.subjectDataHistories.subscribe(({payload, show}) => {
           if (show) {
-              console.log(payload);
               this.histories = payload;
               // this.historyService.subjectDataSelected.next(this.histories);
           }

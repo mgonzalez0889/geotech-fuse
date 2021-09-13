@@ -162,20 +162,35 @@ export class MapsComponent implements OnInit, AfterViewInit {
       this.subscription = this.historyService.subjectDataSelected.subscribe(({payload, select}) => {
           if (select) {
             console.log(payload.time_line);
+            const {color_line} = payload;
               // this.markAndPolyline(payload);
               let myLatLng: any = [];
+              let marker: any = {lat: '', lng: ''};
+              let bindTooltip: string;
               payload.time_line.forEach((m) => {
-                  /*console.log(m.y);
-                  console.log(m.x);*/
-                  myLatLng.push([Number.parseFloat(m.y), Number.parseFloat(m.x)]);
+                  myLatLng.push([Number.parseFloat(m.x), Number.parseFloat(m.y)]);
+                  marker = {
+                      lat: Number(m.x),
+                      lng: Number(m.y)
+                  };
+                  bindTooltip = `
+                    <h2 class="'semibold'">${payload.plate}</h2>
+                    <P class="'extralight'">
+                        Dirección: ${m.address}
+                    </P>
+                    <P class="'extralight'">
+                        Evento: ${m.event_name}
+                    </P>
+                    <P class="'extralight'">
+                        Fecha de Evento: ${m.date_event}
+                    </P>
+
+                    `;
+                  L.marker([marker.lat, marker.lng]).bindTooltip(bindTooltip).addTo(this.map);
               });
               console.log(myLatLng);
-              /*let latlngs: [number, number][] = [
-                  [45.51, -122.68],
-                  [37.77, -122.43],
-                  [34.04, -118.2]
-              ];*/
-              L.polyline(myLatLng, {color: 'red'}).addTo(this.map);
+              L.polyline(myLatLng, {color: color_line, weight: 5}).addTo(this.map);
+              // L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
           }
       });
   }

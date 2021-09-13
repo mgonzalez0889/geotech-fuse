@@ -20,6 +20,8 @@ import {MatSelectModule} from "@angular/material/select";
 import { FormAssignMarkComponent } from './form-assign-mark/form-assign-mark.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {FuseDrawerModule} from "../../../../@fuse/components/drawer";
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
         MatSelectModule,
         MatTabsModule,
         MatButtonToggleModule,
+        MatTooltipModule,
+        FuseDrawerModule,
 
     ]
 })
