@@ -60,7 +60,7 @@
 </fuse-card>-->
 <div class="fixed z-999 ml-2.5 top-40 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded overflow-hidden">
     <div class="">
-        <div class="flex flex-wrap items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between sm:-mt-4">
             <button
                 mat-icon-button
                 (click)="showMenu = !showMenu"
@@ -79,7 +79,7 @@
         </div>
     </div>
     <div *ngIf="showMenu" [@fadeOutLeft]="{state: 'void',transition: 'expanded', params: {timings: '20ms'}}">
-        <table mat-table [dataSource]="items" class="w-full animated-box "  >
+        <table mat-table [dataSource]="items" class="w-full animated-box -ml-3.5"  >
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -87,7 +87,7 @@
                                   [indeterminate]="selection.hasValue() && !isAllSelected()">Todos
                     </mat-checkbox>
                 </th>
-                <td mat-cell *matCellDef="let row; let i=index;" class="w-24">
+                <td mat-cell *matCellDef="let row; let i=index;" class="w-5">
                     <mat-checkbox #checkbox (click)="individual(!checkbox.checked, row)"
                                   (change)="$event ? selection.toggle(row) : null"
                                   [checked]="selection.isSelected(row)"
@@ -97,8 +97,8 @@
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                <td mat-cell *matCellDef="let element" class="w-24"> {{element.plate}} </td>
+                <th mat-header-cell *matHeaderCellDef>  </th>
+                <td mat-cell *matCellDef="let element" class="w-5 text-sm truncate leading-none"> {{element.plate}} </td>
             </ng-container>
 
             <!-- Weight Column -->

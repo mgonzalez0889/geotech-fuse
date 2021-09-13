@@ -32,6 +32,10 @@ export class MapsComponent implements OnInit, AfterViewInit {
       this.listenDataObservable();
   }
 
+  public onCloseMenu(event): void {
+      this.showHistory = event;
+  }
+
  /* public onDataDevice(data: []): void {
       this.devices = data;
   }*/
