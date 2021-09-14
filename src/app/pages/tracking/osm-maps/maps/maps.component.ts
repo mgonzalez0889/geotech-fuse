@@ -49,13 +49,17 @@ export class MapsComponent implements OnInit, AfterViewInit {
       this.map = L.map(this.divMaps.nativeElement, {
           center: myLatLng,
           zoom: 15,
+          // zoomControl: false
       });
+      this.map.zoomControl.setPosition('bottomright');
 
       const tiles = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
           attribution: 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://cloudmade.com">CloudMade</a>',
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       });
       tiles.addTo(this.map);
+
+
 
     /*  const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
@@ -70,6 +74,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
           /*const marker = L.marker([position.latitude, position.longitude],  ).bindPopup('Angular Leaflet');
           marker.addTo(this.map);*/
       });
+
   }
 
   public addMarker(markers): void {
@@ -186,7 +191,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
                     </P>
 
                     `;
-                  L.marker([marker.lat, marker.lng]).bindTooltip(bindTooltip).addTo(this.map);
+                  L.marker([marker.lat, marker.lng]).bindTooltip(bindTooltip, {direction: 'auto'}).addTo(this.map);
               });
               console.log(myLatLng);
               L.polyline(myLatLng, {color: color_line, weight: 5}).addTo(this.map);
