@@ -1,16 +1,18 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import {Observable, Subscriber, Subscription} from "rxjs";
 import {MobileService} from "../../../../core/services/mobile.service";
 import {HelperService} from "../../../../core/services/helper.service";
 import {HistoriesService} from "../../../../core/services/histories.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.scss']
+  styleUrls: ['./maps.component.scss'],
+  providers: [DatePipe]
 })
-export class MapsComponent implements OnInit, AfterViewInit {
+export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   private map: L.Map;
   @ViewChild('map') divMaps: ElementRef;
   public subscription: Subscription;
@@ -23,8 +25,13 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
   constructor(
       private mobilesService: MobileService,
-      private historyService: HistoriesService
+      private historyService: HistoriesService,
+      private datePipe: DatePipe
   ) { }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
 
   ngOnInit(): void {
       this.getDevices();
@@ -174,10 +181,12 @@ export class MapsComponent implements OnInit, AfterViewInit {
               let bindTooltip: string;
               payload.time_line.forEach((m) => {
                   myLatLng.push([Number.parseFloat(m.x), Number.parseFloat(m.y)]);
+                  // console.log({m.x, m.y})
                   marker = {
                       lat: Number(m.x),
                       lng: Number(m.y)
                   };
+                  console.log(marker);
                   bindTooltip = `
                     <h2 class="'semibold'">${payload.plate}</h2>
                     <P class="'extralight'">
@@ -187,7 +196,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
                         Evento: ${m.event_name}
                     </P>
                     <P class="'extralight'">
-                        Fecha de Evento: ${m.date_event}
+                        Fecha de Evento: ${this.datePipe.transform(m.date_event, 'medium')}
                     </P>
 
                     `;
