@@ -21,6 +21,9 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public markersInit: any = [];
   public markersAll: any = [];
   public showHistory: boolean;
+  public markersHistory: any = [];
+  public layerGroup: L.LayerGroup = new L.LayerGroup();
+  public idLayer: L.LayerGroup = new L.LayerGroup();
   // public markTo = this.historyService.subjectDataSelected.value;
 
   constructor(
@@ -179,9 +182,17 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               let myLatLng: any = [];
               let marker: any = {lat: '', lng: ''};
               let bindTooltip: string;
+              let mark: L.Marker;
+              const customIcon = new L.Icon({
+                  iconUrl: '/assets/icons/markerblue.svg',
+                  iconSize: [45, 61],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41],
+              });
               payload.time_line.forEach((m) => {
                   myLatLng.push([Number.parseFloat(m.x), Number.parseFloat(m.y)]);
-                  // console.log({m.x, m.y})
+                  console.log(m.x, m.y);
                   marker = {
                       lat: Number(m.x),
                       lng: Number(m.y)
@@ -198,13 +209,36 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                     <P class="'extralight'">
                         Fecha de Evento: ${this.datePipe.transform(m.date_event, 'medium')}
                     </P>
-
                     `;
-                  L.marker([marker.lat, marker.lng]).bindTooltip(bindTooltip, {direction: 'auto'}).addTo(this.map);
+                  mark = L.marker([marker.lat, marker.lng],
+                      {icon: customIcon, title: m.id})
+                      .bindTooltip(bindTooltip, {direction: 'auto'})
+                  // mark.set
+                  // this.markersHistory.push(mark);
+                  // this.idLayer = mark.get
+                  this.idLayer = L.layerGroup([mark]).addTo(this.map);
+                  console.log(this.idLayer);
+                  //const id = mark.
+                  //
               });
               console.log(myLatLng);
-              L.polyline(myLatLng, {color: color_line, weight: 5}).addTo(this.map);
+              const polyline: L.Polyline =  L.polyline(myLatLng, {color: color_line, weight: 5});
+              this.layerGroup = L.layerGroup([polyline]).addTo(this.map);
+              console.log(this.layerGroup);
+              // this.idLayer = this.layerGroup.getLayers();
               // L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
+              // return this.layerGroup;
+          }else {
+              console.log(payload);
+              console.log(this.layerGroup);
+              // this.layerGroup.remove();
+              this.layerGroup.remove();
+              this.idLayer.eachLayer((layer) => {
+                  console.log(layer);
+                  layer.remove();
+              });
+              console.log(this.layerGroup);
+              // this.markersHistory.
           }
       });
   }
