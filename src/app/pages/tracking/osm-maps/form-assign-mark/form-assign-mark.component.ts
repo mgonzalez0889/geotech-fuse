@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {HistoriesService} from "../../../../core/services/histories.service";
 import {Observable, Subscription} from "rxjs";
 
@@ -11,6 +11,7 @@ export class FormAssignMarkComponent implements OnInit {
   public subscription: Subscription;
   public histories$: Observable<any>;
   public histories: any = [];
+  @Output() closeMenu: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(
       private historyService: HistoriesService
   ) { }
@@ -18,6 +19,13 @@ export class FormAssignMarkComponent implements OnInit {
   ngOnInit(): void {
       this.listenObservable();
   }
+  /**
+   * @description: Cierra el menu de moviles
+   */
+  public onShow(): void {
+      this.closeMenu.emit(false);
+  }
+
   /**
    * @description: Selected lista
    */
