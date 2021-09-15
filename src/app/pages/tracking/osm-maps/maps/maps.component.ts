@@ -192,12 +192,12 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               });
               payload.time_line.forEach((m) => {
                   myLatLng.push([Number.parseFloat(m.x), Number.parseFloat(m.y)]);
-                  console.log(m.x, m.y);
+                  // console.log(m.x, m.y);
                   marker = {
                       lat: Number(m.x),
                       lng: Number(m.y)
                   };
-                  console.log(marker);
+                  // console.log(marker);
                   bindTooltip = `
                     <h2 class="'semibold'">${payload.plate}</h2>
                     <P class="'extralight'">
@@ -212,18 +212,20 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                     `;
                   mark = L.marker([marker.lat, marker.lng],
                       {icon: customIcon, title: m.id})
-                      .bindTooltip(bindTooltip, {direction: 'auto'})
+                      .bindTooltip(bindTooltip, {direction: 'auto'}).addTo(this.map);
                   // mark.set
                   // this.markersHistory.push(mark);
                   // this.idLayer = mark.get
-                  this.idLayer = L.layerGroup([mark]).addTo(this.map);
-                  console.log(this.idLayer);
+                  this.layerGroup.addLayer(mark).addTo(this.map);
+                  console.log(this.layerGroup);
                   //const id = mark.
                   //
+                  // this.markersHistory.push(mark);
               });
+              console.log('POLYLINE');
               console.log(myLatLng);
               const polyline: L.Polyline =  L.polyline(myLatLng, {color: color_line, weight: 5});
-              this.layerGroup = L.layerGroup([polyline]).addTo(this.map);
+              this.layerGroup.addLayer(polyline).addTo(this.map);
               console.log(this.layerGroup);
               // this.idLayer = this.layerGroup.getLayers();
               // L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
@@ -232,12 +234,22 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               console.log(payload);
               console.log(this.layerGroup);
               // this.layerGroup.remove();
-              this.layerGroup.remove();
-              this.idLayer.eachLayer((layer) => {
+              // this.layerGroup
+              this.layerGroup.clearLayers();
+              /*this.layerGroup.eachLayer(m => {
+                  console.log(m);
+                  // console.log(m.getAttribution());
+
+              })*/
+              // this.layerGroup.remove();
+             /* this.layerGroup.eachLayer(layer => {
+                  layer.remove();
+              })*/
+              /*this.idLayer.eachLayer((layer) => {
                   console.log(layer);
                   layer.remove();
-              });
-              console.log(this.layerGroup);
+              });*/
+              // console.log(this.layerGroup);
               // this.markersHistory.
           }
       });

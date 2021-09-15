@@ -12,24 +12,25 @@
     </div>
     <div class="flex flex-col sm:flex-row items-start mt-5 justify-between">
         <div class="mt-3 sm:mt-0 sm:ml-2">
-            <ng-container *ngFor="let item of histories">
-                <div class="flex flex-col flex-auto p-6 bg-gray-50 sm:mb-4 shadow rounded overflow-hidden ">
+            <ng-container *ngFor="let item of histories; let i = index">
+                <div class="flex flex-col flex-auto p-6 bg-gray-50 sm:mb-4 shadow rounded overflow-hidden">
                     <div class="flex items-center justify-between">
                         <div class="text-1xl font-semibold leading-tight">{{item.plate}}</div>
                     </div>
                     <div class="flex flex-col mt-5">
                         <div class="flex">
                             <mat-checkbox #checkbox
-                                (change)="$event ? $event: null"
                                 (click)="onSelected(!checkbox.checked, item)"
+                                [checked]="checkModel"
                                 >
-
-                            </mat-checkbox>
-                            <mat-icon
+                                <mat-icon
                                 class="icon-size-5 mt-0.5 mr-2"
                                 [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                            </mat-checkbox>
+
                             <!--<div><b>20% OFF</b> in your favorite hats shop.</div>-->
                         </div>
+                        <code><pre>{{checkForm.value}}</pre></code>
                     </div>
                 </div>
             </ng-container>

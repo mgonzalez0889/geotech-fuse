@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {HistoriesService} from "../../../../core/services/histories.service";
 import {Observable, Subscription} from "rxjs";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-form-assign-mark',
@@ -12,6 +13,8 @@ export class FormAssignMarkComponent implements OnInit {
   public histories$: Observable<any>;
   public histories: any = [];
   @Output() closeMenu: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public checkForm: FormControl = new FormControl();
+  public checkModel: boolean = false;
   constructor(
       private historyService: HistoriesService
   ) { }
@@ -32,7 +35,15 @@ export class FormAssignMarkComponent implements OnInit {
   public onSelected(event ,data: any): void {
       console.log(event);
       // console.log(data);
-      this.historyService.subjectDataSelected.next({payload: data, select: event });
+      if (event) {
+        console.log(data);
+        this.historyService.subjectDataSelected.next({payload: data, select: event });
+      }else {
+        this.checkModel = event;
+        console.log(this.checkModel);
+        console.log(data);
+        this.historyService.subjectDataSelected.next({payload: data, select: event });
+      }
   }
 
   private listenObservable(): void {
