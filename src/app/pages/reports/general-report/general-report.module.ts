@@ -12,7 +12,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {NgxDaterangepickerMd} from "ngx-daterangepicker-material";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
@@ -32,7 +32,8 @@ import {MatCardModule} from "@angular/material/card";
         MatDatepickerModule,
         NgxDaterangepickerMd.forRoot(),
         FormsModule,
-        MatCardModule
+        MatCardModule,
+        ReactiveFormsModule
 
     ]
 })
