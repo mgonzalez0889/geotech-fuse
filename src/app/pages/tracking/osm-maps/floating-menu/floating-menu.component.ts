@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {fuseAnimations} from "../../../../../@fuse/animations";
 import {HelperService} from "../../../../core/services/helper.service";
+import {AnimationsService} from "../../../../core/services/animations.service";
 
 @Component({
   selector: 'app-floating-menu',
@@ -17,17 +18,102 @@ import {HelperService} from "../../../../core/services/helper.service";
 export class FloatingMenuComponent implements OnInit {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
   @Output() sendDataDevice: EventEmitter<any> = new EventEmitter<any>();
-  public displayedColumns: string[] = ['select', 'name'];
+  public displayedColumns: string[] = ['select'];
   public dataSource: any = [];
   public items: any = [];
   public selection = new SelectionModel<any>(true, []);
   public subscription: Subscription;
   public showMenu: boolean = true;
   public showReport: boolean = true;
+  public animationStates: any;
+  public visibilityStates: any;
   constructor(
       private mobilesService: MobileService,
-      private _helperService: HelperService
-  ) { }
+      private _helperService: HelperService,
+  ) {
+      this.animationStates = {
+          expandCollapse: 'expanded',
+          fadeIn        : {
+              direction: 'in',
+              in       : '*',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          fadeOut       : {
+              direction: 'out',
+              out      : '*',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          shake         : {
+              shake: true
+          },
+          slideIn       : {
+              direction: 'top',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          slideOut      : {
+              direction: 'top',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          zoomIn        : {
+              in: '*'
+          },
+          zoomOut       : {
+              out: '*'
+          }
+      };
+
+      this.visibilityStates = {
+          expandCollapse: true,
+          fadeIn        : {
+              in    : true,
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          fadeOut       : {
+              out   : true,
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          shake         : {
+              shake: true
+          },
+          slideIn       : {
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          slideOut      : {
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          zoomIn        : {
+              in: true
+          },
+          zoomOut       : {
+              out: true
+          }
+      };
+
+  }
 
   ngOnInit(): void {
       this.getMobiles();
@@ -95,8 +181,6 @@ export class FloatingMenuComponent implements OnInit {
             dataSelected.push(value);
             console.log(dataSelected);
             this.sendMarker.emit(dataSelected);
-            // const seleccionados = this.items.filter(x => x.selected);
-            // console.log(seleccionados);
         }else {
             dataDeselect.push(value);
             console.log(dataDeselect);
@@ -108,7 +192,6 @@ export class FloatingMenuComponent implements OnInit {
       this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
             this.items = data;
             this.dataSource = new MatTableDataSource(data);
-            console.log(data);
             this.items.map(x => {
                 x['selected'] = false;
                 x['individual'] = false;

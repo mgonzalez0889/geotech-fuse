@@ -1,10 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
-import {Observable, Subscriber, Subscription} from "rxjs";
-import {MobileService} from "../../../../core/services/mobile.service";
-import {HelperService} from "../../../../core/services/helper.service";
-import {HistoriesService} from "../../../../core/services/histories.service";
-import {DatePipe} from "@angular/common";
+import {Observable, Subscriber, Subscription} from 'rxjs';
+import {MobileService} from '../../../../core/services/mobile.service';
+import {HistoriesService} from '../../../../core/services/histories.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-maps',
@@ -16,15 +15,10 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   private map: L.Map;
   @ViewChild('map') divMaps: ElementRef;
   public subscription: Subscription;
-  public devices: any = [];
   public markers: any = [];
-  public markersInit: any = [];
   public markersAll: any = [];
   public showHistory: boolean;
-  public markersHistory: any = [];
-  public layerGroup: L.LayerGroup = new L.LayerGroup();
-  public idLayer: L.LayerGroup = new L.LayerGroup();
-  // public markTo = this.historyService.subjectDataSelected.value;
+  public layerGroup: any = [];
 
   constructor(
       private mobilesService: MobileService,
@@ -51,7 +45,6 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   }*/
 
   public onValue(value): void {
-      // console.log(value);
       this.addMarker(value);
   }
   private initMap(): void {
@@ -86,12 +79,11 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
   }
-
+  /**
+   * @description: Adiciona marcadores al inicio
+   */
   public addMarker(markers): void {
       if (markers.length) {
-          let myLatLng: any = {lat: '', lng: ''};
-          let title: string;
-          let mark: L.Marker;
           this.markersAll.forEach(t => {
               t.remove();
           });
@@ -138,7 +130,6 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private getDevices(): void {
       this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
-          console.log(data);
           this.setMarkers(data);
       });
   }
@@ -149,7 +140,6 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       if (markers) {
           let myLatLng: any = {lat: '', lng: ''};
           let title: string;
-          let mark: L.Marker;
           markers.forEach(m => {
               myLatLng = {
                   lat: Number(m.y),
@@ -159,7 +149,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
               // this.markersInit.push(mark);
           });
-          console.log(this.markersAll);
+          // console.log(this.markersAll);
       }
   }
 
@@ -176,13 +166,13 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   private listenDataObservable(): void {
       this.subscription = this.historyService.subjectDataSelected.subscribe(({payload, select}) => {
           if (select) {
-            console.log(payload.time_line);
             const {color_line} = payload;
               // this.markAndPolyline(payload);
               let myLatLng: any = [];
               let marker: any = {lat: '', lng: ''};
               let bindTooltip: string;
               let mark: L.Marker;
+              let layerGroup: L.LayerGroup = new L.LayerGroup();
               const customIcon = new L.Icon({
                   iconUrl: '/assets/icons/markerblue.svg',
                   iconSize: [45, 61],
@@ -211,46 +201,23 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                     </P>
                     `;
                   mark = L.marker([marker.lat, marker.lng],
-                      {icon: customIcon, title: m.id})
+                      {icon: customIcon})
                       .bindTooltip(bindTooltip, {direction: 'auto'}).addTo(this.map);
-                  // mark.set
-                  // this.markersHistory.push(mark);
-                  // this.idLayer = mark.get
-                  this.layerGroup.addLayer(mark).addTo(this.map);
-                  console.log(this.layerGroup);
-                  //const id = mark.
-                  //
-                  // this.markersHistory.push(mark);
+                  layerGroup.addLayer(mark).addTo(this.map);
+                  // console.log(layerGroup);
               });
-              console.log('POLYLINE');
-              console.log(myLatLng);
+              // console.log('POLYLINE');
+              // console.log(myLatLng);
               const polyline: L.Polyline =  L.polyline(myLatLng, {color: color_line, weight: 5});
-              this.layerGroup.addLayer(polyline).addTo(this.map);
-              console.log(this.layerGroup);
-              // this.idLayer = this.layerGroup.getLayers();
-              // L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
-              // return this.layerGroup;
-          }else {
-              console.log(payload);
-              console.log(this.layerGroup);
-              // this.layerGroup.remove();
-              // this.layerGroup
-              this.layerGroup.clearLayers();
-              /*this.layerGroup.eachLayer(m => {
-                  console.log(m);
-                  // console.log(m.getAttribution());
-
-              })*/
-              // this.layerGroup.remove();
-             /* this.layerGroup.eachLayer(layer => {
-                  layer.remove();
-              })*/
-              /*this.idLayer.eachLayer((layer) => {
-                  console.log(layer);
-                  layer.remove();
-              });*/
+              layerGroup.addLayer(polyline).addTo(this.map);
+              this.layerGroup.push({id: payload.plate, layerGroup});
               // console.log(this.layerGroup);
-              // this.markersHistory.
+          }else {
+              const layer = this.layerGroup.find(t => t.id == payload.plate);
+              const index = this.layerGroup.indexOf( layer );
+              this.layerGroup.splice( index, 1 );
+              // console.log(layer?.layerGroup);
+              layer?.layerGroup.clearLayers();
           }
       });
   }
