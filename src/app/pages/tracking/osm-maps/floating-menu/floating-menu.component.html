@@ -97,7 +97,7 @@
             </div>
         </div>
         <div [@fadeInLeft]="animationStates.fadeOut.left">
-            <table mat-table [dataSource]="items" class="w-full animated-box -ml-3.5"  >
+            <table mat-table [dataSource]="items" class="w-full -ml-3.5"  >
                 <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>
                         <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -106,11 +106,15 @@
                         >Todos
                         </mat-checkbox>
                     </th>
-                    <td mat-cell *matCellDef="let row; let i=index;" class="w-5">
+                    <td mat-cell *matCellDef="let row; let i=index;" class="w-3">
                         <mat-checkbox #checkbox (click)="individual(!checkbox.checked, row)"
                                       (change)="$event ? selection.toggle(row) : null"
                                       [checked]="selection.isSelected(row)"
-                        > {{row.plate}}
+                        >
+                            <span class="pr-6 whitespace-nowrap"
+                            >
+                                {{row.plate}}
+                            </span>
                         </mat-checkbox>
                     </td>
                 </ng-container>
