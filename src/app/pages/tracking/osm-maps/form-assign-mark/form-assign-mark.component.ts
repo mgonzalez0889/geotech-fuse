@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {HistoriesService} from "../../../../core/services/histories.service";
-import {Observable, Subscription} from "rxjs";
+import {HistoriesService} from '../../../../core/services/histories.service';
+import {Observable, Subscription} from 'rxjs';
+import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-form-assign-mark',
@@ -12,6 +13,7 @@ export class FormAssignMarkComponent implements OnInit {
   public histories$: Observable<any>;
   public histories: any = [];
   @Output() closeMenu: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public checkModel: boolean = false;
   constructor(
       private historyService: HistoriesService
   ) { }
@@ -25,24 +27,26 @@ export class FormAssignMarkComponent implements OnInit {
   public onShow(): void {
       this.closeMenu.emit(false);
   }
-
   /**
    * @description: Selected lista
    */
-  public onSelected(event ,data: any): void {
-      console.log(event);
-      // console.log(data);
-      this.historyService.subjectDataSelected.next({payload: data, select: event });
+  public onSelected(event: MatCheckbox, data: any): void {
+      if (event.checked) {
+        this.historyService.subjectDataSelected.next({payload: data, select: event.checked });
+      }else {
+        this.checkModel = event.checked;
+        this.historyService.subjectDataSelected.next({payload: data, select: event.checked });
+      }
   }
-
+  /**
+  * @description: Escucha el observable subject
+  */
   private listenObservable(): void {
       this.subscription = this.historyService.subjectDataHistories.subscribe(({payload, show}) => {
           if (show) {
               this.histories = payload;
-              // this.historyService.subjectDataSelected.next(this.histories);
           }
       });
-
   }
 
 }
