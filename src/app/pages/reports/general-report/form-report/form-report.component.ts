@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {EventsService} from "../../../../core/services/events.service";
 import {DaterangepickerDirective} from "ngx-daterangepicker-material";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {HistoriesService} from "../../../../core/services/histories.service";
 
 
 @Component({
@@ -21,6 +22,7 @@ export class FormReportComponent implements OnInit {
     public subscription$: Subscription;
     public selected: any;
     public form: FormGroup;
+    public subscription: Subscription;
 
     @ViewChild(DaterangepickerDirective, {static: false}) pickerDirective: DaterangepickerDirective;
 
@@ -30,13 +32,15 @@ export class FormReportComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public message: any,
         private _mobileService: MobileService,
         private _eventsService: EventsService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private _historicService: HistoriesService
     ) {
     }
 
     ngOnInit(): void {
         this.mobileList();
         this.eventsList();
+        this.createReportForm();
     }
 
     /**
@@ -105,13 +109,22 @@ export class FormReportComponent implements OnInit {
      */
     private createReportForm(): void {
         this.form = this.fb.group({
-                id: undefined,
-                full_name: ['', [Validators.required]],
                 owner_event_id: [''],
                 date_init: [''],
                 date_end: [''],
                 plate: ['']
             }
         );
+    }
+
+    public onSelect(): void {
+        const data = this.form.getRawValue();
+        this.getHistoric(data);
+    }
+
+    private getHistoric(data: any): void {
+        this.subscription = this._historicService.getHistories(data).subscribe((res) => {
+            this._historicService.subjectDataHistories.next({payload: res, show: true});
+        });
     }
 }

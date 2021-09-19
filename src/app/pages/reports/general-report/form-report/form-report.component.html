@@ -1,12 +1,10 @@
-<h1 mat-dialog-title class=" text-4xl pt-6 font-extrabold text-center">Reporte general</h1>
+<h1 mat-dialog-title class=" text-3xl pt-5 font-extrabold text-center">Historico y eventos</h1>
 <mat-dialog-content>
     <div class="flex flex-col sm:flex-row flex-auto items-center sm:items-start p-8 pb-6 sm:pb-8">
         <div class="flex-auto mt-4 sm:mt-6 ">
             <div class="w-full max-w-screen-xl mx-auto">
                 <form [formGroup]="form">
                     <div class="flex flex-col p-8">
-                        <h1 mat-dialog-title>Seleccione el tipo de reporte</h1>
-
                         <h1 mat-dialog-title>Seleccione el rango de fechas</h1>
                         <input type="text"
                                ngxDaterangepickerMd
@@ -14,7 +12,7 @@
                                [closeOnAutoApply]="true"
                                [autoApply]="true"
                                [timePickerSeconds]="true"
-                               [timePickerIncrement]="15"
+                               [timePickerIncrement]="1"
                                [timePicker24Hour]="true"
                                [locale]="{format: 'DD/MM/YYYY HH:mm:ss', firstDay: 1}"
                                [(ngModel)]="selected"
@@ -26,11 +24,18 @@
                             [placeholder]="'Seleccione los moviles'"
                             [settings]="dropdownSettingsMobile"
                             [data]="dropdownListMobile"
+                            formControlName="plate"
+                            [(ngModel)]="selected"
                         >
                         </ng-multiselect-dropdown>
 
+                        {{selected | json}}
+
+
+
                         <h1 mat-dialog-title>Seleccione los eventos</h1>
                         <ng-multiselect-dropdown
+                            formControlName="owner_event_id"
                             [placeholder]="'Seleccione los eventos'"
                             [settings]="dropdownSettingsEvent"
                             [data]="dropdownListEvent"
@@ -59,6 +64,7 @@
             class="w-1/5"
             [color]="'primary'"
             matDialogClose="close"
+            (click)="onSelect()"
         >
             Generar
         </button>

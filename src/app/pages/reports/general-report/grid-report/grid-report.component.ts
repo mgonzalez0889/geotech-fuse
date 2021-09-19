@@ -10,26 +10,27 @@ import {FormReportComponent} from "../form-report/form-report.component";
 })
 export class GridReportComponent implements OnInit {
 
-    public displayedColumns: string[] = ['plate','internal_code', 'date', 'event', 'address', 'latitude', 'length', 'speed'];
+    public displayedColumns: string[] = ['plate','internal_code', 'date_event', 'event_name', 'address', 'x', 'y', 'speed'];
     public dataSource: MatTableDataSource<any>;
 
     public columnas = [
         {titulo: 'Placa', name: 'plate'},
         {titulo: 'Código interno', name: 'internal_code'},
-        {titulo: 'Fecha', name: 'date'},
-        {titulo: 'Evento', name: 'event'},
+        {titulo: 'Fecha', name: 'date_event'},
+        {titulo: 'Evento', name: 'event_name'},
         {titulo: 'Dirección', name: 'address'},
-        {titulo: 'Latitud', name: 'latitude'},
-        {titulo: 'Longitud', name: 'length'},
+        {titulo: 'Latitud', name: 'x'},
+        {titulo: 'Longitud', name: 'y'},
         {titulo: 'Velocidad', name: 'speed'}
     ];
 
     constructor(
-        public dialog: MatDialog
+        public dialog: MatDialog,
     ) {
     }
     ngOnInit(): void {
     }
+
     public generateReport(): void{
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
