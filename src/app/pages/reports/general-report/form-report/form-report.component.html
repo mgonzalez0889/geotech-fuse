@@ -1,51 +1,53 @@
-<h1 mat-dialog-title class=" text-3xl pt-5 font-extrabold text-center">Historico y eventos</h1>
 <mat-dialog-content>
-    <div class="flex flex-col sm:flex-row flex-auto items-center sm:items-start p-8 pb-6 sm:pb-8">
-        <div class="flex-auto mt-4 sm:mt-6 ">
-            <div class="w-full max-w-screen-xl mx-auto">
-                <form [formGroup]="form">
-                    <div class="flex flex-col p-8">
-                        <h1 mat-dialog-title>Seleccione el rango de fechas</h1>
-                        <input type="text"
-                               ngxDaterangepickerMd
-                               [timePicker]="true"
-                               [closeOnAutoApply]="true"
-                               [autoApply]="true"
-                               [timePickerSeconds]="true"
-                               [timePickerIncrement]="1"
-                               [timePicker24Hour]="true"
-                               [locale]="{format: 'DD/MM/YYYY HH:mm:ss', firstDay: 1}"
-                               [(ngModel)]="selected"
-                               [linkedCalendars]="true"
-                               class="datepicker-calendar-icon">
-                        <mat-icon class="ngx-daterangepicker-action" (click)="openDatepicker()" aria-hidden="false">edit_calendar</mat-icon>
-                        <h1 mat-dialog-title>Seleccione los moviles</h1>
-                        <ng-multiselect-dropdown
-                            [placeholder]="'Seleccione los moviles'"
-                            [settings]="dropdownSettingsMobile"
-                            [data]="dropdownListMobile"
-                            formControlName="plate"
-                            [(ngModel)]="selected"
-                        >
-                        </ng-multiselect-dropdown>
+    <form [formGroup]="form">
+        <div class="flex flex-col p-8 ">
+            <mat-label mat-dialog-title class=" text-3xl py-3 font-extrabold text-center">HISTORICO Y EVENTOS
+            </mat-label>
+<div>
+                <mat-label mat-dialog-title>Seleccione el rango de fechas</mat-label>
 
-                        {{selected | json}}
+                <mat-icon class="ngx-daterangepicker-action" (click)="openDatepicker()" aria-hidden="false">
+                    edit_calendar
+                </mat-icon>
+                <input type="text"
+                       ngxDaterangepickerMd
+                       [timePicker]="true"
+                       [closeOnAutoApply]="true"
+                       [autoApply]="true"
+                       [timePickerSeconds]="true"
+                       [timePickerIncrement]="1"
+                       [timePicker24Hour]="true"
+                       [locale]="{format: 'DD/MM/YYYY HH:mm:ss', firstDay: 1}"
+                       [linkedCalendars]="true"
+                       startKey="date_init"
+                       endKey="date_end"
+                       formControlName="date"
+                       class="datepicker-calendar-icon">
+</div>
 
-
-
-                        <h1 mat-dialog-title>Seleccione los eventos</h1>
-                        <ng-multiselect-dropdown
-                            formControlName="owner_event_id"
-                            [placeholder]="'Seleccione los eventos'"
-                            [settings]="dropdownSettingsEvent"
-                            [data]="dropdownListEvent"
-                        >
-                        </ng-multiselect-dropdown>
-                    </div>
-                </form>
+            <div class="py-5">
+                <mat-label mat-dialog-title>Seleccione los moviles</mat-label>
+                <ng-multiselect-dropdown
+                    [placeholder]="'Seleccione los moviles'"
+                    [settings]="dropdownSettingsMobile"
+                    [data]="dropdownListMobile"
+                    formControlName="plate"
+                >
+                </ng-multiselect-dropdown>
             </div>
+
+            <mat-label mat-dialog-title>Seleccione los eventos</mat-label>
+            <ng-multiselect-dropdown
+                formControlName="owner_event_id"
+                [placeholder]="'Seleccione los eventos'"
+                [settings]="dropdownSettingsEvent"
+                [data]="dropdownListEvent"
+            >
+            </ng-multiselect-dropdown>
         </div>
-    </div>
+
+    </form>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>

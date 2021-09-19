@@ -4,7 +4,7 @@ import {MobileService} from "../../../../core/services/mobile.service";
 import {Subscription} from "rxjs";
 import {EventsService} from "../../../../core/services/events.service";
 import {DaterangepickerDirective} from "ngx-daterangepicker-material";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {HistoriesService} from "../../../../core/services/histories.service";
 
 
@@ -70,7 +70,6 @@ export class FormReportComponent implements OnInit {
         const tmp = [];
         this.subscription$ = this._mobileService.getMobiles().subscribe((data) => {
             for (let i = 0; i < data.data.length; i++) {
-                console.log(data.data);
                 tmp.push({item_id: i, item_text: data.data[i].plate});
             }
             return this.dropdownListMobile = tmp;
@@ -97,7 +96,6 @@ export class FormReportComponent implements OnInit {
         const tmp = [];
         this.subscription$ = this._eventsService.getEvents().subscribe((data) => {
             for (let i = 0; i < data.data.length; i++) {
-                console.log(data.data);
                 tmp.push({item_id: i, item_text: data.data[i].name});
             }
             return this.dropdownListEvent = tmp;
@@ -110,9 +108,11 @@ export class FormReportComponent implements OnInit {
     private createReportForm(): void {
         this.form = this.fb.group({
                 owner_event_id: [''],
-                date_init: [''],
-                date_end: [''],
-                plate: ['']
+                plate: [''],
+            date: this.fb.group({
+                date_init:'',
+                date_end:''
+            })
             }
         );
     }

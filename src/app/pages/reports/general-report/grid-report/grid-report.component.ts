@@ -35,8 +35,8 @@ export class GridReportComponent implements OnInit {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.height= '650px';
-        dialogConfig.width= '600px';
+        dialogConfig.height= '600px';
+        dialogConfig.width= '460px';
 
         const dialogRef = this.dialog.open(FormReportComponent, dialogConfig);
         dialogRef.afterClosed().subscribe((res)=>{
