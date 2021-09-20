@@ -136,7 +136,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * @description: Muestra los marcadores en el mapa desde el inicio
    */
-  private setMarkers(markers) {
+  private setMarkers(markers): void {
       if (markers) {
           let myLatLng: any = {lat: '', lng: ''};
           let title: string;
@@ -229,6 +229,12 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       mark.time_line.forEach(m => {
           L.marker(m.x, m.y).addTo(this.map);
       });
+  }
+
+  private addIcon(engine, orientation) {
+      let icon: L.Icon;
+
+
   }
 
   ngAfterViewInit(): void {
