@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {SelectionModel} from "@angular/cdk/collections";
-import {MobileService} from "../../../../core/services/mobile.service";
-import {Subscription} from "rxjs";
-import {MatTableDataSource} from "@angular/material/table";
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {HelperService} from "../../../../core/services/helper.service";
-import {AnimationsService} from "../../../../core/services/animations.service";
+import {SelectionModel} from '@angular/cdk/collections';
+import {MobileService} from '../../../../core/services/mobile.service';
+import {Subscription} from 'rxjs';
+import {MatTableDataSource} from '@angular/material/table';
+import {fuseAnimations} from '../../../../../@fuse/animations';
+import {HelperService} from '../../../../core/services/helper.service';
+import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
+import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-floating-menu',
@@ -17,11 +18,10 @@ import {AnimationsService} from "../../../../core/services/animations.service";
 })
 export class FloatingMenuComponent implements OnInit {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
-  @Output() sendDataDevice: EventEmitter<any> = new EventEmitter<any>();
   public displayedColumns: string[] = ['select'];
   public dataSource: any = [];
-  public items: any = [];
-  public selection = new SelectionModel<any>(true, []);
+  public items: MobilesInterface[] = [];
+  public selection = new SelectionModel<MobilesInterface>(true, []);
   public subscription: Subscription;
   public showMenu: boolean = true;
   public showReport: boolean = true;
@@ -118,7 +118,9 @@ export class FloatingMenuComponent implements OnInit {
   ngOnInit(): void {
       this.getMobiles();
   }
-
+  /**
+   * @description: Cierra la ventana de opciones
+   */
   public onShowMenu(): void {
       this.showMenu = !this.showMenu;
   }
@@ -133,7 +135,7 @@ export class FloatingMenuComponent implements OnInit {
 
                 }
             }
-        )
+        );
     }
 
     /** Whether the number of selected elements matches the total number of rows. */
@@ -146,60 +148,59 @@ export class FloatingMenuComponent implements OnInit {
     public masterToggle(): void {
         console.log(this.selection);
         this.isAllSelected() ? this.selection.clear() :
-            this.dataSource.data.forEach(row => {
+            this.dataSource.data.forEach((row) => {
                 this.selection.select(row);
             });
 
         if (this.selection.selected.length){
-            this.items.map(x => {
+            this.items.map((x) => {
                 x['selected'] = true;
                 return x;
             });
         }else {
-            this.items.map(x => {
+            this.items.map((x) => {
                 x['selected'] = false;
                 return x;
             });
         }
         this.sendMarker.emit(this.items);
     }
-
-    public individual(event, value): void {
-        console.log(this.selection);
-        console.log(this.selection.selected);
-        this.items.map(function(x){
+    /**
+     * @description: Selecciona un mobile individual
+     */
+    public individual(event, value: MobilesInterface): void {
+        // console.log(this.selection);
+        // console.log(this.selection.selected);
+        this.items.map((x) =>{
             if (x.id == value.id){
                 x.selected = event;
             }
             return x;
         });
-
-        const dataSelected = [];
-        const dataDeselect = [];
-
+        const dataSelected: MobilesInterface[] = [];
+        const dataDeselect: MobilesInterface[] = [];
         if (value.selected) {
             dataSelected.push(value);
-            console.log(dataSelected);
+            // console.log(dataSelected);
             this.sendMarker.emit(dataSelected);
         }else {
             dataDeselect.push(value);
-            console.log(dataDeselect);
+            // console.log(dataDeselect);
             this.sendMarker.emit(dataDeselect);
         }
   }
-
+  /**
+   * @description: Carga los mobiles desde el inicio
+   */
   private getMobiles(): void {
       this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
             this.items = data;
             this.dataSource = new MatTableDataSource(data);
-            this.items.map(x => {
+            this.items.map((x) => {
                 x['selected'] = false;
-                x['individual'] = false;
                 return x;
             });
             // this.sendDataDevice.emit(this.items);
       });
   }
-
-
 }

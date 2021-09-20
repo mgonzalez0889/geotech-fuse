@@ -4,6 +4,7 @@ import {Observable, Subscriber, Subscription} from 'rxjs';
 import {MobileService} from '../../../../core/services/mobile.service';
 import {HistoriesService} from '../../../../core/services/histories.service';
 import {DatePipe} from '@angular/common';
+import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
 
 @Component({
   selector: 'app-maps',
@@ -15,8 +16,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   private map: L.Map;
   @ViewChild('map') divMaps: ElementRef;
   public subscription: Subscription;
-  public markers: any = [];
-  public markersAll: any = [];
+  public markers: MobilesInterface[] = [];
+  public markersAll: L.Marker[] = [];
   public showHistory: boolean;
   public layerGroup: any = [];
 
@@ -39,14 +40,15 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public onCloseMenu(event): void {
       this.showHistory = event;
   }
-
- /* public onDataDevice(data: []): void {
-      this.devices = data;
-  }*/
-
-  public onValue(value): void {
+  /**
+   * @description: Recibe data y envia al metodo addMarker
+   */
+  public onValue(value: MobilesInterface[]): void {
       this.addMarker(value);
   }
+  /**
+   * @description: Inicializacion del mapa
+  */
   private initMap(): void {
       const myLatLng: L.LatLngExpression = [4.658383846282959, -74.09394073486328];
       this.map = L.map(this.divMaps.nativeElement, {
@@ -82,24 +84,24 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * @description: Adiciona marcadores al inicio
    */
-  public addMarker(markers): void {
+  public addMarker(markers: MobilesInterface[]): void {
       if (markers.length) {
-          this.markersAll.forEach(t => {
+          this.markersAll.forEach((t) => {
               t.remove();
           });
-          markers.forEach(m => {
+          markers.forEach((m) => {
               if (m.selected) {
                   this.markers.push(m);
                   // const value = this.markersAll.hasOwnProperty(m.id);
               }else {
                   const index = this.markers.indexOf(m);
-                  console.log(index);
+                  // console.log(index);
                   if (index > -1) {
                       this.markers.splice(index, 1);
                   }
               }
           });
-          console.log(this.markers);
+          // console.log(this.markers);
           this.historyService.subjectHistories.next({payload: this.markers});
           this.setMarkers(this.markers);
       }
@@ -136,11 +138,11 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * @description: Muestra los marcadores en el mapa desde el inicio
    */
-  private setMarkers(markers): void {
+  private setMarkers(markers: MobilesInterface[]): void {
       if (markers) {
           let myLatLng: any = {lat: '', lng: ''};
           let title: string;
-          markers.forEach(m => {
+          markers.forEach((m) => {
               myLatLng = {
                   lat: Number(m.y),
                   lng: Number(m.x)
@@ -152,7 +154,9 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
           // console.log(this.markersAll);
       }
   }
-
+  /**
+   * @description: Escucha el observable
+   */
   private listenObservables(): void {
       this.subscription = this.historyService.subjectDataHistories.subscribe(({show}) => {
           if (show) {

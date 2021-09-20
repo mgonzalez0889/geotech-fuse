@@ -12,4 +12,5 @@ export interface MobilesInterface {
     imei:           string;
     device:         number;
     battery:        null;
+    selected?:       boolean;
 }
