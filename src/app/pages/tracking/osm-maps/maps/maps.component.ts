@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
+import * as R from 'leaflet-marker-rotation';
 import {Observable, Subscriber, Subscription} from 'rxjs';
 import {MobileService} from '../../../../core/services/mobile.service';
 import {HistoriesService} from '../../../../core/services/histories.service';
@@ -142,13 +143,25 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       if (markers) {
           let myLatLng: any = {lat: '', lng: ''};
           let title: string;
+          const customIcon = new L.Icon({
+              iconUrl: '/assets/icons/arrow-01.svg',
+              iconSize: [55, 71],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41],
+          });
           markers.forEach((m) => {
               myLatLng = {
                   lat: Number(m.y),
                   lng: Number(m.x)
               };
               title = m.plate;
-              this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
+              this.markersAll[m.id] = new R.RotatedMarker([myLatLng.lat, myLatLng.lng],
+                  {rotationAngle: Number(m.heading),
+                           rotationOrigin: 'bottom center',
+                           icon: customIcon })
+                  .addTo(this.map);
+              // this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
               // this.markersInit.push(mark);
           });
           // console.log(this.markersAll);
