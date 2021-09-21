@@ -26,6 +26,7 @@ export class FormAssignMarkComponent implements OnInit {
    */
   public onShow(): void {
       this.closeMenu.emit(false);
+      this.historyService.eventShowModal$.next({show: true});
   }
   /**
    * @description: Selected lista

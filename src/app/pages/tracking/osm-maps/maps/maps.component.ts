@@ -28,14 +28,11 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       private datePipe: DatePipe
   ) { }
 
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
-
   ngOnInit(): void {
       this.getDevices();
       this.listenObservables();
       this.listenDataObservable();
+      this.listenObservableCloseModal();
   }
 
   public onCloseMenu(event): void {
@@ -150,6 +147,13 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               popupAnchor: [1, -34],
               shadowSize: [41, 41],
           });
+          const iconStop = new L.Icon({
+              iconUrl: '/assets/icons/punt-01.svg',
+              iconSize: [55, 71],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41],
+          });
           markers.forEach((m) => {
               myLatLng = {
                   lat: Number(m.y),
@@ -161,6 +165,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                            rotationOrigin: 'bottom center',
                            icon: customIcon })
                   .addTo(this.map);
+
               // this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
               // this.markersInit.push(mark);
           });
@@ -253,9 +258,26 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
+  /**
+   * @description: Escucha el observable Event de Histories
+   */
+  private listenObservableCloseModal(): void {
+      this.subscription = this.historyService.eventShowModal$.subscribe(({show}) => {
+          if (show) {
+              this.layerGroup.forEach((t) => {
+                  t.layerGroup.clearLayers();
+              });
+              this.layerGroup = [];
+          }
+      });
+  }
 
   ngAfterViewInit(): void {
       this.initMap();
+  }
+
+  ngOnDestroy(): void {
+     this.subscription.unsubscribe();
   }
 
 }

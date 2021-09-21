@@ -62,7 +62,7 @@ export class FormDialogSelectHistorialComponent implements OnInit {
   */
   private getHistories(data: any): void {
       this.subscription = this.historyService.getHistories(data).subscribe(res => {
-          // console.log(res);
+          console.log(res);
           this.historyService.subjectDataHistories.next({payload: res, show: true});
       });
   }
