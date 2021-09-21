@@ -3,53 +3,44 @@
         <div class="flex flex-col p-8 ">
             <mat-label mat-dialog-title class=" text-3xl py-3 font-extrabold text-center">HISTORICO Y EVENTOS
             </mat-label>
-<div>
-                <mat-label mat-dialog-title>Seleccione el rango de fechas</mat-label>
+            <mat-label mat-dialog-title>Seleccione el rango de fechas</mat-label>
+            <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
+                <mat-label>Rango de fechas</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Desde" formControlName="date_init">
+                    <input matEndDate placeholder="Hasta" formControlName="date_end">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
 
-                <mat-icon class="ngx-daterangepicker-action" (click)="openDatepicker()" aria-hidden="false">
-                    edit_calendar
-                </mat-icon>
-                <input type="text"
-                       ngxDaterangepickerMd
-                       [timePicker]="true"
-                       [closeOnAutoApply]="true"
-                       [autoApply]="true"
-                       [timePickerSeconds]="true"
-                       [timePickerIncrement]="1"
-                       [timePicker24Hour]="true"
-                       [locale]="{format: 'DD/MM/YYYY HH:mm:ss', firstDay: 1}"
-                       [linkedCalendars]="true"
-                       startKey="date_init"
-                       endKey="date_end"
-                       formControlName="date"
-                       class="datepicker-calendar-icon">
-</div>
-
-            <div class="py-5">
                 <mat-label mat-dialog-title>Seleccione los moviles</mat-label>
-                <ng-multiselect-dropdown
-                    [placeholder]="'Seleccione los moviles'"
-                    [settings]="dropdownSettingsMobile"
-                    [data]="dropdownListMobile"
-                    formControlName="plate"
-                >
-                </ng-multiselect-dropdown>
-            </div>
+                <ng-container *ngIf="mobiles$ | async as mobiles">
+                    <mat-form-field appearance="fill">
+                        <mat-select multiple formControlName="plate"
+                        >
+                            <mat-option [value]="mobile.plate"
+                                        *ngFor="let mobile of mobiles.data">
+                                {{mobile.plate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+
 
             <mat-label mat-dialog-title>Seleccione los eventos</mat-label>
-            <ng-multiselect-dropdown
-                formControlName="owner_event_id"
-                [placeholder]="'Seleccione los eventos'"
-                [settings]="dropdownSettingsEvent"
-                [data]="dropdownListEvent"
-            >
-            </ng-multiselect-dropdown>
+            <ng-container *ngIf="events$ | async as events">
+                <mat-form-field appearance="fill">
+                    <mat-select multiple formControlName="owner_event_id"
+                    >
+                        <mat-option [value]="event.id"
+                                    *ngFor="let event of events.data">
+                            {{event.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
         </div>
-
     </form>
-
 </mat-dialog-content>
-
 <mat-dialog-actions>
     <div
         class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
