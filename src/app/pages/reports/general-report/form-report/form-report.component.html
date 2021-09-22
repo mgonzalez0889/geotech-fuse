@@ -5,7 +5,6 @@
             </mat-label>
             <mat-label mat-dialog-title>Seleccione el rango de fechas</mat-label>
             <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
-                <mat-label>Rango de fechas</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
                     <input matStartDate placeholder="Desde" formControlName="date_init">
                     <input matEndDate placeholder="Hasta" formControlName="date_end">
@@ -13,20 +12,17 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
-
-                <mat-label mat-dialog-title>Seleccione los moviles</mat-label>
-                <ng-container *ngIf="mobiles$ | async as mobiles">
-                    <mat-form-field appearance="fill">
-                        <mat-select multiple formControlName="plate"
-                        >
-                            <mat-option [value]="mobile.plate"
-                                        *ngFor="let mobile of mobiles.data">
-                                {{mobile.plate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </ng-container>
-
-
+            <mat-label mat-dialog-title>Seleccione los moviles</mat-label>
+            <ng-container *ngIf="mobiles$ | async as mobiles">
+                <mat-form-field appearance="fill">
+                    <mat-select multiple formControlName="plate"
+                    >
+                        <mat-option [value]="mobile.plate"
+                                    *ngFor="let mobile of mobiles.data">
+                            {{mobile.plate}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
             <mat-label mat-dialog-title>Seleccione los eventos</mat-label>
             <ng-container *ngIf="events$ | async as events">
                 <mat-form-field appearance="fill">

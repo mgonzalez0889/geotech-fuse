@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {FormReportComponent} from "../form-report/form-report.component";
+import {HistoriesService} from "../../../../core/services/histories.service";
 
 @Component({
     selector: 'app-grid-report',
@@ -24,6 +25,7 @@ export class GridReportComponent implements OnInit {
     ];
     constructor(
         public dialog: MatDialog,
+        private _historicService: HistoriesService,
     ) {
     }
     ngOnInit(): void {
@@ -39,4 +41,22 @@ export class GridReportComponent implements OnInit {
             console.log(res);
         });
     }
+    /**
+     * @description: Escucha el observable behavior
+     */
+    /*
+    private listenObservables(): void {
+        this.subscription$ = this._contactService.behaviorSubjectContact$.subscribe(({ type, isEdit, payload }) => {
+            if (isEdit && type == 'EDIT') {
+                this.formContacts.patchValue(payload);
+                this.titleForm = `Editar contacto ${payload.full_name}`;
+            } else if (!isEdit && type == 'NEW') {
+                this.formContacts.reset({
+                });
+                this.titleForm = 'Nuevo contacto';
+            }
+        });
+    }
+*/
+
 }
