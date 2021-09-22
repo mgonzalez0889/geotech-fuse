@@ -7,8 +7,8 @@
                         <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
                             <mat-label>Rango de fechas</mat-label>
                             <mat-date-range-input [rangePicker]="picker">
-                                <input matStartDate placeholder="Desde" formControlName="date_init">
-                                <input matEndDate placeholder="Hasta" formControlName="date_end">
+                                <input matStartDate placeholder="Desde" formControlName="date_init" required>
+                                <input matEndDate placeholder="Hasta" formControlName="date_end" required>
                             </mat-date-range-input>
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-date-range-picker #picker></mat-date-range-picker>
@@ -19,6 +19,7 @@
                                 <mat-select
                                     multiple
                                     formControlName="owner_event_id"
+                                    required
                                 >
                                     <mat-option disabled [value]="'seleccione'">Seleccione evento</mat-option>
                                     <mat-option
@@ -28,6 +29,7 @@
                                         {{event.name}}
                                     </mat-option>
                                 </mat-select>
+                                <mat-error *ngIf="fieldIsValid('owner_event_id')">Los eventos son requeridos!</mat-error>
                             </mat-form-field>
                         </ng-container>
                     </div>
@@ -49,6 +51,7 @@
             mat-raised-button
             color="primary"
             matDialogClose="close"
+            [disabled]="form.invalid"
             (click)="onSelect()"
             >Seleccionar
         </button>

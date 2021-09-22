@@ -11,6 +11,7 @@ export class HistoriesService {
   public subjectDataHistories: BehaviorSubject<{payload: any; show: boolean}> = new BehaviorSubject<any>({payload: '', show: false});
   public subjectDataSelected: BehaviorSubject<{payload: any; select: boolean}> = new BehaviorSubject<{payload: any; select: boolean}>({payload: '', select: false});
   public eventShowModal$ = new EventEmitter<any>();
+  public modalShowSelected$ = new EventEmitter<any>();
   constructor(
       private _http: HttpClient,
       private _appSettings: AppSettingsService

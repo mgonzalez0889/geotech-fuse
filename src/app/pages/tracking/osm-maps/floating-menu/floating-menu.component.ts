@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MobileService} from '../../../../core/services/mobile.service';
 import {Subscription} from 'rxjs';
@@ -7,6 +7,7 @@ import {fuseAnimations} from '../../../../../@fuse/animations';
 import {HelperService} from '../../../../core/services/helper.service';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {HistoriesService} from '../../../../core/services/histories.service';
 
 @Component({
   selector: 'app-floating-menu',
@@ -16,7 +17,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
   animations:   fuseAnimations
 
 })
-export class FloatingMenuComponent implements OnInit {
+export class FloatingMenuComponent implements OnInit, OnDestroy {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
   public displayedColumns: string[] = ['select'];
   public dataSource: any = [];
@@ -30,6 +31,7 @@ export class FloatingMenuComponent implements OnInit {
   constructor(
       private mobilesService: MobileService,
       private _helperService: HelperService,
+      private historiesService: HistoriesService
   ) {
       this.animationStates = {
           expandCollapse: 'expanded',
@@ -115,8 +117,11 @@ export class FloatingMenuComponent implements OnInit {
 
   }
 
+
+
   ngOnInit(): void {
       this.getMobiles();
+      this.listenObservableShow();
   }
   /**
    * @description: Cierra la ventana de opciones
@@ -202,5 +207,23 @@ export class FloatingMenuComponent implements OnInit {
             });
             // this.sendDataDevice.emit(this.items);
       });
+  }
+  /**
+   * @description: Escucha los observables
+   */
+  private listenObservableShow(): void {
+      this.subscription = this.historiesService.modalShowSelected$.subscribe(({show}) => {
+          if (!show) {
+            this.showReport = show;
+          }else {
+              this.showReport = show;
+          }
+      });
+  }
+  /**
+   * @description: Elimina las subcripciones
+   */
+  ngOnDestroy(): void {
+      this.subscription.unsubscribe();
   }
 }

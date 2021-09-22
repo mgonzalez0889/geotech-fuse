@@ -1,9 +1,9 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {EventsService} from "../../../../core/services/events.service";
-import {Observable, Subscription} from "rxjs";
-import {HistoriesService} from "../../../../core/services/histories.service";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EventsService} from '../../../../core/services/events.service';
+import {Observable, Subscription} from 'rxjs';
+import {HistoriesService} from '../../../../core/services/histories.service';
 export interface CalendarSettings
 {
     dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD' | 'll';
@@ -16,7 +16,7 @@ export interface CalendarSettings
   templateUrl: './form-dialog-select-historial.component.html',
   styleUrls: ['./form-dialog-select-historial.component.scss']
 })
-export class FormDialogSelectHistorialComponent implements OnInit {
+export class FormDialogSelectHistorialComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public settings: CalendarSettings;
   public events$: Observable<any>;
@@ -32,17 +32,19 @@ export class FormDialogSelectHistorialComponent implements OnInit {
       this.form = this.fb.group({
           plate: [''],
           date: this.fb.group({
-              date_init: '',
-              date_end: ''
+              date_init: ['', [Validators.required]],
+              date_end: ['', [Validators.required]]
           }),
-          owner_event_id: ['']
+          owner_event_id: ['', [Validators.required]]
       });
       const plate: string[] = [];
-      this.plates.forEach(m => {
+      this.plates.forEach((m) => {
           plate.push(m.plate);
       });
       this.form.controls.plate.setValue(plate);
   }
+
+
 
   ngOnInit(): void {
       this.getEvents();
@@ -59,12 +61,27 @@ export class FormDialogSelectHistorialComponent implements OnInit {
   }
   /**
    * @description: Obtiene el historico de los moviles
-  */
+   */
   private getHistories(data: any): void {
-      this.subscription = this.historyService.getHistories(data).subscribe(res => {
-          console.log(res);
-          this.historyService.subjectDataHistories.next({payload: res, show: true});
+      this.subscription = this.historyService.getHistories(data).subscribe((res) => {
+          if (res) {
+            this.historyService.subjectDataHistories.next({payload: res, show: true});
+            this.historyService.modalShowSelected$.next({show: false});
+          }
       });
   }
+  /**
+   * @description: Validacion de campos de formulario
+   */
+    public fieldIsValid(field: string) {
+        return this.form.controls[field].errors
+            && this.form.controls[field].touched;
+    }
+    /**
+     * @description: Elimina las subcripciones
+     */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
 
 }

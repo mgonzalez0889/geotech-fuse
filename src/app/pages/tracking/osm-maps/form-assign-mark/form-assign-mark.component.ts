@@ -1,12 +1,15 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {HistoriesService} from '../../../../core/services/histories.service';
 import {Observable, Subscription} from 'rxjs';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {fuseAnimations} from "../../../../../@fuse/animations";
 
 @Component({
   selector: 'app-form-assign-mark',
   templateUrl: './form-assign-mark.component.html',
-  styleUrls: ['./form-assign-mark.component.scss']
+  styleUrls: ['./form-assign-mark.component.scss'],
+  encapsulation  : ViewEncapsulation.None,
+  animations:   fuseAnimations
 })
 export class FormAssignMarkComponent implements OnInit {
   public subscription: Subscription;
@@ -14,9 +17,93 @@ export class FormAssignMarkComponent implements OnInit {
   public histories: any = [];
   @Output() closeMenu: EventEmitter<boolean> = new EventEmitter<boolean>();
   public checkModel: boolean = false;
+  public animationStates: any;
+  public visibilityStates: any;
   constructor(
       private historyService: HistoriesService
-  ) { }
+  ) {
+      this.animationStates = {
+          expandCollapse: 'expanded',
+          fadeIn        : {
+              direction: 'in',
+              in       : '*',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          fadeOut       : {
+              direction: 'out',
+              out      : '*',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          shake         : {
+              shake: true
+          },
+          slideIn       : {
+              direction: 'top',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          slideOut      : {
+              direction: 'top',
+              top      : '*',
+              bottom   : '*',
+              left     : '*',
+              right    : '*'
+          },
+          zoomIn        : {
+              in: '*'
+          },
+          zoomOut       : {
+              out: '*'
+          }
+      };
+
+      this.visibilityStates = {
+          expandCollapse: true,
+          fadeIn        : {
+              in    : true,
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          fadeOut       : {
+              out   : true,
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          shake         : {
+              shake: true
+          },
+          slideIn       : {
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          slideOut      : {
+              top   : true,
+              bottom: true,
+              left  : true,
+              right : true
+          },
+          zoomIn        : {
+              in: true
+          },
+          zoomOut       : {
+              out: true
+          }
+      };
+  }
 
   ngOnInit(): void {
       this.listenObservable();
@@ -27,6 +114,7 @@ export class FormAssignMarkComponent implements OnInit {
   public onShow(): void {
       this.closeMenu.emit(false);
       this.historyService.eventShowModal$.next({show: true});
+      this.historyService.modalShowSelected$.next({show: true});
   }
   /**
    * @description: Selected lista
