@@ -22,6 +22,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {FuseDrawerModule} from "../../../../@fuse/components/drawer";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import {FuseDrawerModule} from "../../../../@fuse/components/drawer";
         MatTooltipModule,
         FuseDrawerModule,
         FormsModule,
+        MatInputModule,
 
     ]
 })

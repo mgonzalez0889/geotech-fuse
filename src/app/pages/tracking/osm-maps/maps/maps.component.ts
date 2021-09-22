@@ -140,13 +140,6 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       if (markers) {
           let myLatLng: any = {lat: '', lng: ''};
           let title: string;
-          const customIcon = new L.Icon({
-              iconUrl: '/assets/icons/arrow-01.svg',
-              iconSize: [55, 71],
-              iconAnchor: [12, 41],
-              popupAnchor: [1, -34],
-              shadowSize: [41, 41],
-          });
           const iconStop = new L.Icon({
               iconUrl: '/assets/icons/punt-01.svg',
               iconSize: [55, 71],
@@ -154,12 +147,38 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               popupAnchor: [1, -34],
               shadowSize: [41, 41],
           });
+          // const iconStop: any = '/assets/icons/arrow-01.svg';
+          let iconArrow: string = '/assets/icons/arrow-01.svg';
+          let customIcon: L.Icon;
           markers.forEach((m) => {
               myLatLng = {
                   lat: Number(m.y),
                   lng: Number(m.x)
               };
               title = m.plate;
+              // eslint-disable-next-line max-len
+              console.log(customIcon);
+              iconArrow =
+                  'data:image/svg+xml;utf-8,' + encodeURIComponent('<?xml version="1.0" encoding="utf-8"?>\n' +
+                  '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
+                  '\t viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">\n' +
+                  '<style type="text/css">\n' +
+                  '\t.st0{fill:'+ m.color +';}\n' +
+                  '\t.st1{fill:'+ m.color +';}\n' +
+                  '</style>\n' +
+                  '<g>\n' +
+                  '\t<polygon class="st0" points="100,141.1 63.4,153.7 100.4,46 \t"/>\n' +
+                  '\t<polygon class="st1" points="100,141.1 136.6,154 100.4,46 \t"/>\n' +
+                  '</g>\n' +
+                  '</svg>\n ');
+              customIcon = new L.Icon({
+                  iconUrl: iconArrow,
+                  iconSize: [55, 71],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41],
+              });
+              // console.log(iconArrow);
               this.markersAll[m.id] = new R.RotatedMarker([myLatLng.lat, myLatLng.lng],
                   {rotationAngle: Number(m.heading),
                            rotationOrigin: 'bottom center',

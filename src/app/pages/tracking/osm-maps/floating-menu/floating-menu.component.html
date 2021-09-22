@@ -73,6 +73,7 @@
             </div>
         </div>
     </ng-container>
+    <!--Options menu-->
     <ng-container *ngIf="showMenu">
         <div class="fixed z-999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow rounded overflow-hidden"
              [@fadeInLeft]="animationStates.fadeOut.left"
@@ -97,8 +98,49 @@
                     </ng-container>
                 </div>
             </div>
-            <div [@fadeInLeft]="animationStates.fadeOut.left">
-                <table mat-table [dataSource]="items" class="w-full -ml-3.5"  >
+            <!--Options group-->
+            <ng-container *ngIf="showMenuGroup">
+                <div class="flex flex-wrap items-center " [@slideOutTop]="animationStates.slideIn.top">
+                    <button
+                        mat-icon-button
+                        matTooltip="Agrupar"
+                    >
+                        <mat-icon svgIcon="mat_outline:format_list_bulleted"></mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        matTooltip="Agrupar por objetos"
+                    >
+                        <mat-icon svgIcon="mat_outline:format_list_bulleted"></mat-icon>
+                    </button>
+
+                </div>
+            </ng-container>
+            <!--Search mobiles-->
+            <div class="flex flex-wrap">
+                <mat-form-field class="fuse-mat-dense">
+                    <mat-icon
+                        matPrefix
+                        [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                    <input matInput
+                           [autocomplete]="'off'"
+                           [placeholder]="'Buscar mobile'"
+                           (keyup)="applyFilter($event)"
+                    >
+                </mat-form-field>
+                <ng-container>
+                    <button
+                        mat-icon-button
+                        matTooltip="Ajustes"
+                        (click)="onShowMenuGroup()"
+                    >
+                        <mat-icon  svgIcon="mat_outline:settings"></mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+            <!--Table list Mobiles-->
+            <div [@fadeInLeft]="animationStates.fadeOut.left" class="overflow-auto">
+                <table mat-table [dataSource]="dataSource" class="w-full -ml-3.5"  >
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
                             <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -131,6 +173,7 @@
                     </tr>
                 </table>
             </div>
+            <!--End list mobiles-->
         </div>
     </ng-container>
 </ng-container>

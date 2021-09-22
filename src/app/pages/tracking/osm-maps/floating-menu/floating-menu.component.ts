@@ -6,7 +6,6 @@ import {MatTableDataSource} from '@angular/material/table';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {HelperService} from '../../../../core/services/helper.service';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
-import {MatCheckbox} from '@angular/material/checkbox';
 import {HistoriesService} from '../../../../core/services/histories.service';
 
 @Component({
@@ -28,6 +27,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
   public showReport: boolean = true;
   public animationStates: any;
   public visibilityStates: any;
+  public showMenuGroup: boolean = false;
   constructor(
       private mobilesService: MobileService,
       private _helperService: HelperService,
@@ -114,10 +114,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
               out: true
           }
       };
-
   }
-
-
 
   ngOnInit(): void {
       this.getMobiles();
@@ -128,6 +125,10 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
    */
   public onShowMenu(): void {
       this.showMenu = !this.showMenu;
+  }
+
+  public onShowMenuGroup(): void {
+      this.showMenuGroup = ! this.showMenuGroup;
   }
 
     public onFormModal(): void {
@@ -151,7 +152,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     }
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     public masterToggle(): void {
-        console.log(this.selection);
+        // console.log(this.selection);
         this.isAllSelected() ? this.selection.clear() :
             this.dataSource.data.forEach((row) => {
                 this.selection.select(row);
@@ -219,6 +220,13 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
               this.showReport = show;
           }
       });
+  }
+  /**
+   * @description: Filtra registros de la grid
+  */
+  public applyFilter(event: Event): void {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   /**
    * @description: Elimina las subcripciones
