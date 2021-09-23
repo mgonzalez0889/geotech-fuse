@@ -203,7 +203,6 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                   shadowSize: [41, 41],
               });
               payload.time_line.forEach((m) => {
-                  myLatLng.push([Number.parseFloat(m.x), Number.parseFloat(m.y)]);
                   // console.log(m.x, m.y);
                   marker = {
                       lat: Number(m.x),

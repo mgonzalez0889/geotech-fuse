@@ -4,6 +4,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {FormReportComponent} from "../form-report/form-report.component";
 import {HistoriesService} from "../../../../core/services/histories.service";
 import {Subscription} from "rxjs";
+import {variable} from "@angular/compiler/src/output/output_ast";
 
 @Component({
     selector: 'app-grid-report',
@@ -12,19 +13,9 @@ import {Subscription} from "rxjs";
 })
 export class GridReportComponent implements OnInit {
 
-    public displayedColumns: string[] = ['plate', 'internal_code', 'date_event', 'event_name', 'address', 'x', 'y', 'speed'];
+    public displayedColumns: string[] = ['plate', 'date_event','event_name','address','x','y','speed','battery','vew_map'];
     public subscription$: Subscription;
     public dataSource: MatTableDataSource<any>;
-    public columnas = [
-        {titulo: 'Placa', name: 'plate'},
-        {titulo: 'Código interno', name: 'internal_code'},
-        {titulo: 'Fecha', name: 'date_event'},
-        {titulo: 'Evento', name: 'event_name'},
-        {titulo: 'Dirección', name: 'address'},
-        {titulo: 'Latitud', name: 'x'},
-        {titulo: 'Longitud', name: 'y'},
-        {titulo: 'Velocidad', name: 'speed'}
-    ];
 
     constructor(
         public dialog: MatDialog,
@@ -53,8 +44,33 @@ export class GridReportComponent implements OnInit {
      */
     private listenObservables(): void {
         this.subscription$ = this._historicService.subjectDataHistories.subscribe(({payload}) => {
-            console.log(payload.);
-            this.dataSource = new MatTableDataSource(payload);
+            // console.log(payload);
+            if (payload.length) {
+                //console.log(payload);
+                let plate: string = '';
+
+                for (let data of payload) {
+                    plate = data.plate;
+                    let variable = data.time_line;
+                    //console.log('imprimer el tipo data line ',typeof data.time_line);
+                    // console.log('imprimer el tipo data line ',data.time_line);
+                    //console.log('imprimer el tipo data line ', variable);
+                    if (data.time_line.length) {
+                        console.log('ENTRAAAA');
+                        data.time_line.map(x => {
+                            x['plate'] = plate;
+                            return x;
+                        });
+                    }
+                    console.log('imprimer variable  ',variable);
+                    this.dataSource = new MatTableDataSource(variable
+                    );
+
+                }
+               // console.log('imprimir el payload transformado', payload);
+
+
+            }
         });
     }
 }
