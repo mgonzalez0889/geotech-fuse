@@ -13,7 +13,7 @@ import {variable} from "@angular/compiler/src/output/output_ast";
 })
 export class GridReportComponent implements OnInit {
 
-    public displayedColumns: string[] = ['plate', 'date_event','event_name','address','x','y','speed','battery','vew_map'];
+    public displayedColumns: string[] = ['plate', 'date_event', 'event_name', 'address', 'x', 'y', 'speed', 'battery', 'vew_map'];
     public subscription$: Subscription;
     public dataSource: MatTableDataSource<any>;
 
@@ -48,26 +48,34 @@ export class GridReportComponent implements OnInit {
             if (payload.length) {
                 //console.log(payload);
                 let plate: string = '';
-
+                let variable = [];
                 for (let data of payload) {
+
                     plate = data.plate;
-                    let variable = data.time_line;
+                     variable = data.time_line;
+                    data.time_line.forEach(m => console.log(m))
                     //console.log('imprimer el tipo data line ',typeof data.time_line);
                     // console.log('imprimer el tipo data line ',data.time_line);
                     //console.log('imprimer el tipo data line ', variable);
                     if (data.time_line.length) {
-                        console.log('ENTRAAAA');
+                        //console.log('ENTRAAAA');
                         data.time_line.map(x => {
                             x['plate'] = plate;
                             return x;
                         });
+                       // console.log('imprimer variable', variable);
+
                     }
-                    console.log('imprimer variable  ',variable);
-                    this.dataSource = new MatTableDataSource(variable
-                    );
+
+
 
                 }
-               // console.log('imprimir el payload transformado', payload);
+
+
+                //let variable2 = payload.time_line;
+
+                //console.log('imprimir el payload transformado', variable2);
+               // this.dataSource = new MatTableDataSource(variable2);
 
 
             }
