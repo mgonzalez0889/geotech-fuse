@@ -22,6 +22,7 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
   public selection = new SelectionModel<any>(true, []);
   public showMenuGroup: boolean = false;
   public showReport: boolean = true;
+  public showMenu: boolean = true;
   constructor(
       private fleetServices: FleetsService,
       private historiesService: HistoriesService,
@@ -126,6 +127,8 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
   }
 
   public selectOne(event, value): void {
+      console.log(event);
+      console.log(value);
 
   }
 
@@ -134,6 +137,11 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
      */
   private getFleets(): void {
       this.subscription = this.fleetServices.getFleets().subscribe(({data}) => {
+          data.map((x) => {
+              x['selected'] = false;
+              return x;
+          });
+          console.log(data);
           this.dataSource = new MatTableDataSource(data);
       });
 

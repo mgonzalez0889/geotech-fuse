@@ -302,6 +302,9 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
           if (show) {
               this.showMenuFleet = show;
               this.showMenuMobiles = !show;
+              this.markersAll.forEach((t) => {
+                  t.remove();
+              });
           }
       });
   }
@@ -313,6 +316,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
           if (show) {
               this.showMenuMobiles = show;
               this.showMenuFleet = !show;
+              this.getDevices();
           }
       });
   }
