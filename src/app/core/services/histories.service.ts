@@ -22,4 +22,11 @@ export class HistoriesService {
         const params = {method: 'create_historic'};
         return this._http.post(this._appSettings.histories.url.base, data, {params});
     }
+    /**
+     * @description: Obtiene el listado de historico con paginacion
+     */
+    public historicPages(data: any): Observable<any> {
+        const params = {method: 'create_report_historic'};
+        return this._http.post(this._appSettings.histories.url.base,data,{params});
+    }
 }

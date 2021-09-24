@@ -80,7 +80,7 @@ export class FormReportComponent implements OnInit {
      * @description: Obtiene los datos de la api reporte
      */
     private getHistoric(data: any): void {
-        this.subscription$ = this._historicService.getHistories(data).subscribe((res) => {
+        this.subscription$ = this._historicService.historicPages(data).subscribe((res) => {
             this._historicService.subjectDataHistories.next({payload: res, show: true});
         });
     }

@@ -4,7 +4,7 @@
             <mat-label mat-dialog-title class=" text-3xl py-3 font-extrabold text-center">HISTORICO Y EVENTOS
             </mat-label>
             <mat-label mat-dialog-title>Seleccione el rango de fechas</mat-label>
-            <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
+            <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date" >
                 <mat-date-range-input [rangePicker]="picker">
                     <input matStartDate placeholder="Desde" formControlName="date_init">
                     <input matEndDate placeholder="Hasta" formControlName="date_end">
