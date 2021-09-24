@@ -21,6 +21,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public markersAll: L.Marker[] = [];
   public showHistory: boolean;
   public layerGroup: any = [];
+  public showMenuFleet: boolean = false;
+  public showMenuMobiles: boolean = true;
 
   constructor(
       private mobilesService: MobileService,
@@ -33,6 +35,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.listenObservables();
       this.listenDataObservable();
       this.listenObservableCloseModal();
+      this.listenObservableMenuFleet();
+      this.listenObservableMenuMobile();
   }
 
   public onCloseMenu(event): void {
@@ -290,6 +294,29 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
           }
       });
   }
+  /**
+   * @description: Escucha el observable Menu FLoating Fleet
+   */
+  private listenObservableMenuFleet(): void {
+      this.subscription = this.historyService.floatingMenuFleet$.subscribe((show) => {
+          if (show) {
+              this.showMenuFleet = show;
+              this.showMenuMobiles = !show;
+          }
+      });
+  }
+  /**
+   * @description: Escucha el observable Menu Floating Mobiles
+   */
+  private listenObservableMenuMobile(): void {
+      this.subscription = this.historyService.floatingMenuMobile$.subscribe((show) => {
+          if (show) {
+              this.showMenuMobiles = show;
+              this.showMenuFleet = !show;
+          }
+      });
+  }
+
 
   ngAfterViewInit(): void {
       this.initMap();

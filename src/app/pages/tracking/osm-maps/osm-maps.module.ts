@@ -23,13 +23,15 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {FuseDrawerModule} from "../../../../@fuse/components/drawer";
 import {MatInputModule} from "@angular/material/input";
+import { FloatingMenuFleetComponent } from './floating-menu-fleet/floating-menu-fleet.component';
 
 @NgModule({
   declarations: [
     MapsComponent,
     FloatingMenuComponent,
     FormDialogSelectHistorialComponent,
-    FormAssignMarkComponent
+    FormAssignMarkComponent,
+    FloatingMenuFleetComponent
   ],
     imports: [
         CommonModule,

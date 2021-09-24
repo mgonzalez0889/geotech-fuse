@@ -1,7 +1,14 @@
-<app-floating-menu
-    (sendMarker)="onValue($event)"
->
-</app-floating-menu>
+<ng-container *ngIf="showMenuMobiles">
+    <app-floating-menu
+        (sendMarker)="onValue($event)"
+    >
+    </app-floating-menu>
+</ng-container>
+<ng-container *ngIf="showMenuFleet">
+    <app-floating-menu-fleet
+    >
+    </app-floating-menu-fleet>
+</ng-container>
 <ng-container *ngIf="showHistory">
     <app-form-assign-mark
         (closeMenu)="onCloseMenu($event)">

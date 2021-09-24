@@ -31,7 +31,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
   constructor(
       private mobilesService: MobileService,
       private _helperService: HelperService,
-      private historiesService: HistoriesService
+      private historiesService: HistoriesService,
   ) {
       this.animationStates = {
           expandCollapse: 'expanded',
@@ -126,11 +126,18 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
   public onShowMenu(): void {
       this.showMenu = !this.showMenu;
   }
-
+  /**
+   * @description: Submenu de opciones
+   */
   public onShowMenuGroup(): void {
       this.showMenuGroup = ! this.showMenuGroup;
   }
-
+  /**
+   * @description: Opcion agrupar, mostrar flotas
+   */
+  public onShowMenuFleet(): void {
+      this.historiesService.floatingMenuFleet$.next({show: true});
+  }
     public onFormModal(): void {
         const data: any = [];
         this._helperService.showDialogSelectHistorial({
@@ -209,6 +216,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
             // this.sendDataDevice.emit(this.items);
       });
   }
+
   /**
    * @description: Escucha los observables
    */
