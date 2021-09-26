@@ -15,6 +15,8 @@ import {NgxDaterangepickerMd} from "ngx-daterangepicker-material";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCardModule} from "@angular/material/card";
 import {MatSelectModule} from "@angular/material/select";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatDividerModule} from "@angular/material/divider";
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {MatSelectModule} from "@angular/material/select";
         FormsModule,
         MatCardModule,
         ReactiveFormsModule,
-        MatSelectModule
+        MatSelectModule,
+        MatRadioModule,
+        MatDividerModule
 
     ]
 })

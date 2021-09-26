@@ -17,6 +17,8 @@ export class GridReportComponent implements OnInit {
     public displayedColumns: string[] = ['plate', 'date_event', 'event_name', 'address', 'x', 'y', 'speed', 'battery', 'vew_map'];
     public subscription$: Subscription;
     public dataSource: MatTableDataSource<any>;
+    public messageExceedTime: boolean = true;
+    public messageNoReport: boolean = false;
 
     constructor(
         public dialog: MatDialog,
@@ -26,6 +28,7 @@ export class GridReportComponent implements OnInit {
 
     ngOnInit(): void {
         this.listenObservables();
+        this.messageExceedTime = true;
     }
 
     public generateReport(): void {
@@ -39,20 +42,38 @@ export class GridReportComponent implements OnInit {
             console.log(res);
         });
     }
+
     /**
      * @description: Escucha el observable behavior
      */
     private listenObservables(): void {
         this.subscription$ = this._historicService.subjectDataHistories.subscribe(({payload, show}) => {
-            let myArray = [];
-            if (show) {
-                console.log(show);
-                const myArray = [];
-                Object.assign(myArray, payload.historic_report);
-                console.log(myArray);
-
+            if (!show) {
+                this.messageExceedTime = false;
+            } else {
+                if (payload.length) {
+                    this.messageNoReport = true;
+                    let variable: any = [];
+                    let plate: string = '';
+                    for (let data of payload) {
+                        if (data.length) {
+                            plate = data.plate;
+                            variable = data.historic_report;
+                            if (data.historic_report.length) {
+                                data.historic_report.map(x => {
+                                    x['plate'] = plate;
+                                    return x;
+                                });
+                            }
+                        } else {
+                            this.messageExceedTime = true;
+                            this.messageNoReport = false;
+                            console.log('no se encontraron registros');
+                        }
+                    }
+                    this.dataSource = new MatTableDataSource(variable);
+                }
             }
-
         });
     }
 }

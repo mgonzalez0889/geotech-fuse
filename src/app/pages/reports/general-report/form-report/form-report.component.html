@@ -4,24 +4,43 @@
             <mat-label mat-dialog-title class=" text-3xl py-3 font-extrabold text-center">HISTORICO Y EVENTOS
             </mat-label>
             <mat-label mat-dialog-title>Seleccione el rango de fechas</mat-label>
-            <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date" >
+            <mat-form-field class="fuse-mat-dense flex-auto" formGroupName="date">
                 <mat-date-range-input [rangePicker]="picker">
-                    <input matStartDate placeholder="Desde" formControlName="date_init">
-                    <input matEndDate placeholder="Hasta" formControlName="date_end">
+                    <input matStartDate placeholder="Desde" [(ngModel)]="date_init" formControlName="date_init">
+                    <input matEndDate placeholder="Hasta" [(ngModel)]="date_end" formControlName="date_end">
                 </mat-date-range-input>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
-            <mat-label mat-dialog-title>Seleccione los moviles</mat-label>
-            <ng-container *ngIf="mobiles$ | async as mobiles">
-                <mat-form-field appearance="fill">
-                    <mat-select multiple formControlName="plate"
-                    >
-                        <mat-option [value]="mobile.plate"
-                                    *ngFor="let mobile of mobiles.data">
-                            {{mobile.plate}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <mat-radio-group>
+                <mat-label mat-dialog-title>Buscar por:
+                <mat-radio-button class="mr-3" checked (change)= onchange($event) value="1">Moviles</mat-radio-button>
+                <mat-radio-button (change)= onchange($event) value="2">Flota</mat-radio-button>
+                </mat-label>
+            </mat-radio-group>
+            <ng-container *ngIf="!select">
+                <ng-container *ngIf="mobiles$ | async as mobiles">
+                    <mat-form-field appearance="fill">
+                        <mat-select multiple formControlName="plate"
+                        >
+                            <mat-option [value]="mobile.plate"
+                                        *ngFor="let mobile of mobiles.data">
+                                {{mobile.plate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="select">
+                <ng-container *ngIf="fleets$ | async as fleets">
+                    <mat-form-field appearance="fill">
+                        <mat-select multiple formControlName="fleet"
+                        >
+                            <mat-option [value]="fleet.name"
+                                        *ngFor="let fleet of fleets.data">
+                                {{fleet.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
             </ng-container>
             <mat-label mat-dialog-title>Seleccione los eventos</mat-label>
             <ng-container *ngIf="events$ | async as events">
@@ -36,6 +55,7 @@
             </ng-container>
         </div>
     </form>
+
 </mat-dialog-content>
 <mat-dialog-actions>
     <div
