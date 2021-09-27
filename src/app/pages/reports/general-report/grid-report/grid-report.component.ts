@@ -19,6 +19,7 @@ export class GridReportComponent implements OnInit {
     public dataSource: MatTableDataSource<any>;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
+    //public historic: any = [];
 
     constructor(
         public dialog: MatDialog,
@@ -55,23 +56,29 @@ export class GridReportComponent implements OnInit {
                     this.messageNoReport = true;
                     let variable: any = [];
                     let plate: string = '';
+                    let o1 = {};
+                    let historic: any = [];
                     for (let data of payload) {
                         if (data.length) {
                             plate = data.plate;
-                            variable = data.historic_report;
                             if (data.historic_report.length) {
                                 data.historic_report.map(x => {
                                     x['plate'] = plate;
                                     return x;
                                 });
                             }
+                            data.historic_report.forEach((m) => {
+                                historic.push(m);
+                            });
+
                         } else {
                             this.messageExceedTime = true;
                             this.messageNoReport = false;
                             console.log('no se encontraron registros');
                         }
                     }
-                    this.dataSource = new MatTableDataSource(variable);
+                    console.log('sssss', historic);
+                    this.dataSource = new MatTableDataSource(historic);
                 }
             }
         });

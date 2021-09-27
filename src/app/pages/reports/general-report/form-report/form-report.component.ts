@@ -91,12 +91,6 @@ export class FormReportComponent implements OnInit {
     public onSelect(): void {
         const data = this.form.getRawValue();
         this.getHistoric(data);
-/*        let diaEnMils = 1000 * 60 * 60 * 24;
-        let var1 = this.form.controls.date_init.value;
-        let var2 = this.form.controls.date_end.value;
-        let diff = var2.getTime() - var1.getTime() + diaEnMils;
-        let fin = diff / diaEnMils;
-        console.log('esta es la diff', fin);*/
     }
 
     /**
