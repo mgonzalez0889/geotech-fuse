@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../app-configs/app-settings.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class FleetsService {
     public behaviorSubjectFleet$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }>({ type: '', isEdit: false, id: 0 });
     public behaviorSubjectUserOwnerPlateFleet$: BehaviorSubject<{ type?: string; isEdit?: boolean; payload?: any; id?: number }> = new BehaviorSubject<{type?: string; isEdit?: boolean; payload?: any; id?: number}>({type: '', isEdit: false, id: 0});
-    public behaviorSelectedFleet$: BehaviorSubject<{id?: number; payload?: any}> = new BehaviorSubject<{id?: number; payload?: any}>({id: 0, payload: ''});
+    public behaviorSelectedFleetPlate$: Subject<{id?: number; payload?: any; selected?: boolean}> = new Subject<{id?: number; payload?: any; selected?: boolean}>();
 
     constructor(
         private _http: HttpClient,
@@ -55,8 +55,15 @@ export class FleetsService {
     /**
      * @description: Obtiene las flotas por Id
      */
-    public getFleetsPlatesAssigned(id): Observable<any> {
+    public getFleetsPlatesAssigned(id: number): Observable<any> {
         const params = { method: 'index_all_fleet_plate', fleet_id: id };
+        return this._http.get(this._appSettings.fleets.url.fleePlate, {params});
+    }
+    /**
+     * @description:
+     */
+    public getFleetsPlateAssignedMap(id: number): Observable<any> {
+        const params = { method: 'index_all_fleet_plate_map', fleet_id: id };
         return this._http.get(this._appSettings.fleets.url.fleePlate, {params});
     }
     /**

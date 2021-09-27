@@ -5,6 +5,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {HistoriesService} from "../../../../core/services/histories.service";
 import {fuseAnimations} from "../../../../../@fuse/animations";
+import {FleetInterface} from "../../../../core/interfaces/fleets.interface";
 
 @Component({
   selector: 'app-floating-menu-fleet',
@@ -125,10 +126,20 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
   public onShowMenuMobile(): void {
       this.historiesService.floatingMenuMobile$.next({show: true});
   }
+  /**
+   * @description: Selecciona un elemento de la grid
+   */
+  public selectOne(event, value: FleetInterface): void {
+      if (event) {
+          value.selected = event;
+          console.log(value);
+          const id: number = value.id;
+          this.getMobilesFleet(id);
+      }else {
+          value.selected = event;
+          console.log(value);
+      }
 
-  public selectOne(event, value): void {
-      console.log(event);
-      console.log(value);
 
   }
 
@@ -137,14 +148,15 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
      */
   private getFleets(): void {
       this.subscription = this.fleetServices.getFleets().subscribe(({data}) => {
-          data.map((x) => {
-              x['selected'] = false;
-              return x;
-          });
-          console.log(data);
           this.dataSource = new MatTableDataSource(data);
       });
 
+  }
+
+  private getMobilesFleet(id: number): void {
+      this.subscription = this.fleetServices.getFleetsPlateAssignedMap(id).subscribe(({data})=> {
+          this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: true});
+      });
   }
 
     ngOnDestroy(): void {

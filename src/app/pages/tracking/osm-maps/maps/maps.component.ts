@@ -6,6 +6,7 @@ import {MobileService} from '../../../../core/services/mobile.service';
 import {HistoriesService} from '../../../../core/services/histories.service';
 import {DatePipe} from '@angular/common';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
+import {FleetsService} from "../../../../core/services/fleets.service";
 
 @Component({
   selector: 'app-maps',
@@ -27,7 +28,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
       private mobilesService: MobileService,
       private historyService: HistoriesService,
-      private datePipe: DatePipe
+      private datePipe: DatePipe,
+      private fleetService: FleetsService
   ) { }
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.listenObservableCloseModal();
       this.listenObservableMenuFleet();
       this.listenObservableMenuMobile();
+      this.listenObservableFleetPlate();
   }
 
   public onCloseMenu(event): void {
@@ -266,6 +269,29 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
           }
       });
   }
+  /**
+   * @description: Escucha el observable fleet plate
+   */
+  private listenObservableFleetPlate(): void {
+      this.subscription = this.fleetService.behaviorSelectedFleetPlate$.subscribe(({payload, selected}) => {
+          if (selected) {
+            console.log(payload);
+            let mark: L.Marker;
+            let myLatLng: any = {lat: '', lng: ''};
+            payload.forEach((m) => {
+                myLatLng = {
+                    lat: Number(m.x),
+                    lng: Number(m.y)
+                };
+                mark = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
+            });
+          }else {
+              console.log('Seleccione');
+          }
+      });
+
+  }
+
   /**
    * @description: Metodo que marca y traza una polilinea
    */
