@@ -134,9 +134,11 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
           value.selected = event;
           console.log(value);
           const id: number = value.id;
-          this.getMobilesFleet(id);
+          this.getMobilesFleet(id, event);
       }else {
           value.selected = event;
+          const id: number = value.id;
+          this.getMobilesFleet(id, event);
           console.log(value);
       }
 
@@ -153,9 +155,9 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
 
   }
 
-  private getMobilesFleet(id: number): void {
+  private getMobilesFleet(id: number, event: boolean): void {
       this.subscription = this.fleetServices.getFleetsPlateAssignedMap(id).subscribe(({data})=> {
-          this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: true});
+          this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: event});
       });
   }
 

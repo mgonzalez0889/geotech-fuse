@@ -7,6 +7,7 @@ import {HistoriesService} from '../../../../core/services/histories.service';
 import {DatePipe} from '@angular/common';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
 import {FleetsService} from "../../../../core/services/fleets.service";
+import {FleetInterface} from "../../../../core/interfaces/fleets.interface";
 
 @Component({
   selector: 'app-maps',
@@ -24,6 +25,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public layerGroup: any = [];
   public showMenuFleet: boolean = false;
   public showMenuMobiles: boolean = true;
+  public markersFleet: L.Marker[] = [];
 
   constructor(
       private mobilesService: MobileService,
@@ -284,6 +286,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                     lng: Number(m.y)
                 };
                 mark = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
+
             });
           }else {
               console.log('Seleccione');
