@@ -23,6 +23,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public markersAll: L.Marker[] = [];
   public showHistory: boolean;
   public layerGroup: any = [];
+  public layerGorupFleet: any = [];
   public showMenuFleet: boolean = false;
   public showMenuMobiles: boolean = true;
   public markersFleet: L.Marker[] = [];
@@ -275,21 +276,28 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
    * @description: Escucha el observable fleet plate
    */
   private listenObservableFleetPlate(): void {
-      this.subscription = this.fleetService.behaviorSelectedFleetPlate$.subscribe(({payload, selected}) => {
+      this.subscription = this.fleetService.behaviorSelectedFleetPlate$.subscribe(({payload, selected, id}) => {
           if (selected) {
             console.log(payload);
             let mark: L.Marker;
             let myLatLng: any = {lat: '', lng: ''};
+            let layerGroup: L.LayerGroup = new L.LayerGroup();
             payload.forEach((m) => {
                 myLatLng = {
                     lat: Number(m.x),
                     lng: Number(m.y)
                 };
-                mark = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
-
+                mark = L.marker([myLatLng.lat, myLatLng.lng])
+                layerGroup.addLayer(mark).addTo(this.map);
             });
+            console.log(layerGroup);
+            this.layerGorupFleet.push({id, layerGroup});
+            console.log(this.layerGorupFleet);
           }else {
-              console.log('Seleccione');
+              const layer = this.layerGorupFleet.find(t => t.id == id);
+              const index = this.layerGorupFleet.indexOf( layer );
+              this.layerGorupFleet.splice( index, 1 );
+              layer?.layerGroup.clearLayers();
           }
       });
 
@@ -346,6 +354,10 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               this.showMenuMobiles = show;
               this.showMenuFleet = !show;
               this.getDevices();
+              this.layerGorupFleet.forEach((t) => {
+                  t.layerGroup.clearLayers();
+              });
+              this.layerGorupFleet = [];
           }
       });
   }

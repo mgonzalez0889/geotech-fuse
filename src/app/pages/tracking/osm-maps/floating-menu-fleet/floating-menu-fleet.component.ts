@@ -132,17 +132,13 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
   public selectOne(event, value: FleetInterface): void {
       if (event) {
           value.selected = event;
-          console.log(value);
           const id: number = value.id;
           this.getMobilesFleet(id, event);
       }else {
           value.selected = event;
           const id: number = value.id;
           this.getMobilesFleet(id, event);
-          console.log(value);
       }
-
-
   }
 
     /**
@@ -152,12 +148,18 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
       this.subscription = this.fleetServices.getFleets().subscribe(({data}) => {
           this.dataSource = new MatTableDataSource(data);
       });
-
+  }
+  /**
+   * @description: Filtra registros de la grid
+   */
+  public applyFilter(event: Event): void {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   private getMobilesFleet(id: number, event: boolean): void {
       this.subscription = this.fleetServices.getFleetsPlateAssignedMap(id).subscribe(({data})=> {
-          this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: event});
+          this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: event, id});
       });
   }
 

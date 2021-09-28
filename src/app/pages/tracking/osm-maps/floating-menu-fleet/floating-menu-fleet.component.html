@@ -55,6 +55,7 @@
                     <input matInput
                            [autocomplete]="'off'"
                            [placeholder]="'Buscar flota'"
+                           (keyup)="applyFilter($event)"
                     >
                 </mat-form-field>
                 <ng-container>
