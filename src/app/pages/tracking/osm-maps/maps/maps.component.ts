@@ -204,6 +204,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                      console.log(e);
                      this.showDetailMobile = !this.showDetailMobile;
                      this.historyService.subjectDataSelectedDetail.next({payload: m, select: true});
+                     this.historyService.modalShowSelected$.next({show: false});
                   });
 
               // this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
