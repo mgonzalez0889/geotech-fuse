@@ -14,6 +14,11 @@
         (closeMenu)="onCloseMenu($event)">
     </app-form-assign-mark>
 </ng-container>
+<ng-container *ngIf="showDetailMobile">
+    <app-form-detail-mobile
+        (closeMenu)="onCloseDetailMenu($event)"
+    ></app-form-detail-mobile>
+</ng-container>
 <div #map
      class="w-full sm:w-screen sm:h-full h-auto"
 >

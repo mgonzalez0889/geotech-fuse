@@ -24,6 +24,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {FuseDrawerModule} from "../../../../@fuse/components/drawer";
 import {MatInputModule} from "@angular/material/input";
 import { FloatingMenuFleetComponent } from './floating-menu-fleet/floating-menu-fleet.component';
+import { FormDetailMobileComponent } from './form-detail-mobile/form-detail-mobile.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { FloatingMenuFleetComponent } from './floating-menu-fleet/floating-menu-
     FloatingMenuComponent,
     FormDialogSelectHistorialComponent,
     FormAssignMarkComponent,
-    FloatingMenuFleetComponent
+    FloatingMenuFleetComponent,
+    FormDetailMobileComponent
   ],
     imports: [
         CommonModule,

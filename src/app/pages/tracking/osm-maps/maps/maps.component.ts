@@ -29,6 +29,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public showMenuMobiles: boolean = true;
   public markersFleet: L.Marker[] = [];
   private unsubscribe$: Subject<any> = new Subject<any>();
+  public showDetailMobile: boolean = false;
 
   constructor(
       private mobilesService: MobileService,
@@ -49,6 +50,9 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public onCloseMenu(event): void {
       this.showHistory = event;
+  }
+  public onCloseDetailMenu(event): void {
+      this.showDetailMobile = event;
   }
   /**
    * @description: Recibe data y envia al metodo addMarker
@@ -195,7 +199,12 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                   {rotationAngle: Number(m.heading),
                            rotationOrigin: 'bottom center',
                            icon: customIcon })
-                  .addTo(this.map);
+                  .addTo(this.map).on('click', (e) => {
+                     console.log(m);
+                     console.log(e);
+                     this.showDetailMobile = !this.showDetailMobile;
+                     this.historyService.subjectDataSelectedDetail.next({payload: m, select: true});
+                  });
 
               // this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
               // this.markersInit.push(mark);

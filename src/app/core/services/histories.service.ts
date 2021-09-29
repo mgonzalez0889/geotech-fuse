@@ -10,6 +10,7 @@ export class HistoriesService {
   public subjectHistories: BehaviorSubject<{payload: any}> = new BehaviorSubject({payload: ''});
   public subjectDataHistories: BehaviorSubject<{payload: any; show: boolean}> = new BehaviorSubject<any>({payload: '', show: false});
   public subjectDataSelected: BehaviorSubject<{payload: any; select: boolean}> = new BehaviorSubject<{payload: any; select: boolean}>({payload: '', select: false});
+  public subjectDataSelectedDetail: BehaviorSubject<{payload: any; select: boolean}> = new BehaviorSubject<{payload: any; select: boolean}>({payload: '', select: false});
   public eventShowModal$ = new EventEmitter<any>();
   public modalShowSelected$ = new EventEmitter<any>();
   public floatingMenuFleet$ = new EventEmitter<any>();
@@ -33,11 +34,15 @@ export class HistoriesService {
         }
         this.subjectDataHistories.next({payload, show});
     }
-
+    /**
+     * @description: Establece por defecto el observable behaviorSubject
+     */
     public resetValuesDataHistories(): void {
         this.subjectDataHistories.next({payload: '', show: false});
     }
-
+    /**
+     * @description: Establece por defecto el observable behaviorSubject
+     */
     public resetDataSelected(): void {
         this.subjectDataSelected.next({payload: '', select: false});
     }
