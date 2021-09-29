@@ -2,8 +2,9 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventsService} from '../../../../core/services/events.service';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {HistoriesService} from '../../../../core/services/histories.service';
+import {takeUntil} from 'rxjs/operators';
 export interface CalendarSettings
 {
     dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD' | 'll';
@@ -22,6 +23,7 @@ export class FormDialogSelectHistorialComponent implements OnInit, OnDestroy {
   public events$: Observable<any>;
   public plates: any = this.historyService.subjectHistories.value.payload;
   public subscription: Subscription;
+  public unsubscribe$: Subject<any> = new Subject<any>();
   constructor(
       private _dialog: MatDialogRef<FormDialogSelectHistorialComponent>,
       @Inject(MAT_DIALOG_DATA) private _data: any,
@@ -63,7 +65,9 @@ export class FormDialogSelectHistorialComponent implements OnInit, OnDestroy {
    * @description: Obtiene el historico de los moviles
    */
   private getHistories(data: any): void {
-      this.subscription = this.historyService.getHistories(data).subscribe((res) => {
+      this.historyService.getHistories(data)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe((res) => {
           if (res) {
             this.historyService.subjectDataHistories.next({payload: res, show: true});
             this.historyService.modalShowSelected$.next({show: false});
@@ -81,7 +85,7 @@ export class FormDialogSelectHistorialComponent implements OnInit, OnDestroy {
      * @description: Elimina las subcripciones
      */
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.unsubscribe$.unsubscribe();
     }
 
 }
