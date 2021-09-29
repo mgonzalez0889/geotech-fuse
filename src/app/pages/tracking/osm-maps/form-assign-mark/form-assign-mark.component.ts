@@ -1,8 +1,9 @@
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {HistoriesService} from '../../../../core/services/histories.service';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {fuseAnimations} from "../../../../../@fuse/animations";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-form-assign-mark',
@@ -11,8 +12,9 @@ import {fuseAnimations} from "../../../../../@fuse/animations";
   encapsulation  : ViewEncapsulation.None,
   animations:   fuseAnimations
 })
-export class FormAssignMarkComponent implements OnInit {
+export class FormAssignMarkComponent implements OnInit, OnDestroy {
   public subscription: Subscription;
+  private unsubscribe$: Subject<any> = new Subject<any>();
   public histories$: Observable<any>;
   public histories: any = [];
   @Output() closeMenu: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -105,6 +107,8 @@ export class FormAssignMarkComponent implements OnInit {
       };
   }
 
+
+
   ngOnInit(): void {
       this.listenObservable();
   }
@@ -137,5 +141,10 @@ export class FormAssignMarkComponent implements OnInit {
           }
       });
   }
+
+    ngOnDestroy(): void {
+      this.subscription.unsubscribe();
+      this.historyService.resetValuesDataHistories();
+    }
 
 }

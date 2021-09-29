@@ -1,13 +1,14 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import * as R from 'leaflet-marker-rotation';
-import {Observable, Subscriber, Subscription} from 'rxjs';
+import {Observable, Subject, Subscriber, Subscription} from 'rxjs';
 import {MobileService} from '../../../../core/services/mobile.service';
 import {HistoriesService} from '../../../../core/services/histories.service';
 import {DatePipe} from '@angular/common';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
 import {FleetsService} from "../../../../core/services/fleets.service";
 import {FleetInterface} from "../../../../core/interfaces/fleets.interface";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-maps',
@@ -21,12 +22,13 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   public subscription: Subscription;
   public markers: MobilesInterface[] = [];
   public markersAll: L.Marker[] = [];
-  public showHistory: boolean;
+  public showHistory: boolean = false;
   public layerGroup: any = [];
   public layerGorupFleet: any = [];
   public showMenuFleet: boolean = false;
   public showMenuMobiles: boolean = true;
   public markersFleet: L.Marker[] = [];
+  private unsubscribe$: Subject<any> = new Subject<any>();
 
   constructor(
       private mobilesService: MobileService,
@@ -253,7 +255,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                     `;
                   mark = L.marker([marker.lat, marker.lng],
                       {icon: customIcon})
-                      .bindTooltip(bindTooltip, {direction: 'auto'}).addTo(this.map);
+                      .bindTooltip(bindTooltip, {direction: 'auto'})
                   layerGroup.addLayer(mark).addTo(this.map);
                   // console.log(layerGroup);
               });
@@ -369,6 +371,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
      this.subscription.unsubscribe();
+     this.historyService.resetValuesDataHistories();
+     this.historyService.resetDataSelected();
   }
 
 }
