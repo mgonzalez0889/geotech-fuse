@@ -200,7 +200,6 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                            rotationOrigin: 'bottom center',
                            icon: customIcon })
                   .addTo(this.map).on('click', (e) => {
-                     console.log(m);
                      console.log(e);
                      this.showDetailMobile = !this.showDetailMobile;
                      this.historyService.subjectDataSelectedDetail.next({payload: m, select: true});
