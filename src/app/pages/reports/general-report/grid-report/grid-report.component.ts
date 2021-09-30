@@ -18,6 +18,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
     public dataSource: MatTableDataSource<any>;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
+    public dataHistoric: any;
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
     constructor(
@@ -36,8 +37,8 @@ export class GridReportComponent implements OnInit, OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.height = '600px';
-        dialogConfig.width = '460px';
+        /*      dialogConfig.height = '600px';
+                dialogConfig.width = '460px';*/
         const dialogRef = this.dialog.open(FormReportComponent, dialogConfig);
         dialogRef.afterClosed().subscribe((res) => {
             console.log(res);
@@ -49,57 +50,74 @@ export class GridReportComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-                let diaEnMils = 86400000;
-                let diff = payload.date?.date_end.getTime() - payload.date?.date_init.getTime();
-                let days = diff / diaEnMils;
-                console.log('days', days);
-                if (days < 91) {
-                    console.log('tiene menos de 3 meses');
-                    this.subscription$ = this._historicService.historicPages(payload).subscribe((res) => {
-                        if (res.length) {
-                            this.messageExceedTime = true;
-                            let plate: string = '';
-                            let historic: any = [];
-                            for (let data of res) {
-                                if (data.length) {
-                                    plate = data.plate;
-                                    if (data.historic_report.length) {
-                                        data.historic_report.map(x => {
-                                            x['plate'] = plate;
-                                            return x;
-                                        });
-                                    }
-                                    data.historic_report.forEach((m) => {
-                                        historic.push(m);
-                                    });
-
-                                } else {
-                                    this.messageExceedTime = true;
-                                    this.messageNoReport = false;
-                                }
+            console.log('esto es pay', payload.radioButton)
+            let diaEnMils = 86400000;
+            let diff = payload.date?.date_end.getTime() - payload.date?.date_init.getTime();
+            let days = diff / diaEnMils;
+            console.log('days', days);
+            if (days < 91) {
+                this.messageExceedTime = true;
+                console.log('tiene menos de 3 meses');
+                if (payload.radioButton == 1) {
+                    console.log('entro en 1')
+                    this.subscription$ = this._historicService.getHistoricPlate(payload).subscribe((res) => {
+                        let plate: string = '';
+                        let historic: any = [];
+                        for (let data of res) {
+                            plate = data.plate;
+                            if (data.historic_report.length) {
+                                this.messageNoReport = true;
+                                data.historic_report.map(x => {
+                                    x['plate'] = plate;
+                                    return x;
+                                });
+                            } else {
+                                this.messageNoReport = false;
                             }
-                            this.dataSource = new MatTableDataSource(historic);
-                            this.dataSource.paginator = this.paginator;
+                            data.historic_report.forEach((m) => {
+                                historic.push(m);
+                            });
                         }
+                        this.dataSource = new MatTableDataSource(historic);
+                        this.dataSource.paginator = this.paginator;
                     });
                 } else {
-                    this.messageExceedTime = false;
-                    this.messageNoReport = true;
-                    console.log('tiene mas de 3 meses');
+                    console.log('entro en 2')
+                    this.subscription$ = this._historicService.getGistoricFleet(payload).subscribe((res) => {
+                        let plate: string = '';
+                        let historic: any = [];
+                        for (let data of res) {
+                            plate = data.plate;
+                            if (data.historic_report.length) {
+                                this.messageNoReport = true;
+                                data.historic_report.map(x => {
+                                    x['plate'] = plate;
+                                    return x;
+                                });
+                            } else {
+                                this.messageNoReport = false;
+                            }
+                            data.historic_report.forEach((m) => {
+                                historic.push(m);
+                            });
+                        }
+                        this.dataSource = new MatTableDataSource(historic);
+                        this.dataSource.paginator = this.paginator;
+                    });
                 }
+            } else {
+                this.messageExceedTime = false;
+                this.messageNoReport = true;
+                console.log('tiene mas de 3 meses');
             }
-        )
-        ;
+        });
     }
 
     /**
      * @description: Destruye las subscripciones
      */
 
-    ngOnDestroy()
-        :
-        void {
-        console.log('se destruye la sub');
+    ngOnDestroy(): void {
         this.subscription$.unsubscribe();
     }
 }

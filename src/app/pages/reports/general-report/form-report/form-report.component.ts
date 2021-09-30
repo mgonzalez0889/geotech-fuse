@@ -25,9 +25,6 @@ export class FormReportComponent implements OnInit {
     public fleets$: Observable<any>;
     public events$: Observable<any>;
     public mobiles$: Observable<any>;
-    public settings: CalendarSettings;
-    public date_init;
-    public date_end;
 
     constructor(
         public dialogRef: MatDialogRef<FormReportComponent>,
@@ -43,8 +40,6 @@ export class FormReportComponent implements OnInit {
     ngOnInit(): void {
         this.createReportForm();
         this.getEvents();
-        this.getMobiles();
-        this.getFleet();
     }
 
     /**
@@ -54,7 +49,8 @@ export class FormReportComponent implements OnInit {
         this.form = this.fb.group({
                 owner_event_id: [''],
                 plate: [''],
-                fleet: [''],
+                fleet_id: [''],
+                radioButton: [''],
                 date: this.fb.group({
                     date_init: [''],
                     date_end: ['']
@@ -71,20 +67,6 @@ export class FormReportComponent implements OnInit {
     }
 
     /**
-     * @description: Obtiene los moviles
-     */
-    private getMobiles(): void {
-        this.mobiles$ = this._mobileService.getMobiles();
-    }
-
-    /**
-     * @description: Obtiene los flotas
-     */
-    private getFleet(): void {
-        this.fleets$ = this._fleetsServices.getFleets();
-    }
-
-    /**
      * @description: Genera el reporte
      */
     public onSelect(): void {
@@ -97,11 +79,13 @@ export class FormReportComponent implements OnInit {
      */
     public onchange(event: MatRadioChange): void {
         if (event.value == 1) {
-            this.select = false;
-            this.form.controls.plate.reset();
-        } else {
-            this.form.controls.fleet.reset();
             this.select = true;
+            this.mobiles$ = this._mobileService.getMobiles();
+            this.form.controls.fleet_id.reset();
+        } else {
+            this.select = false;
+            this.fleets$ = this._fleetsServices.getFleets();
+            this.form.controls.plate.reset();
         }
     }
 }

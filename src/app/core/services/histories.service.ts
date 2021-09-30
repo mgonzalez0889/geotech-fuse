@@ -24,10 +24,17 @@ export class HistoriesService {
         return this._http.post(this._appSettings.histories.url.base, data, {params});
     }
     /**
-     * @description: Obtiene el listado de historico con paginacion
+     * @description: Obtiene el historico por vehiculo con paginacion
      */
-    public historicPages(data: any): Observable<any> {
+    public getHistoricPlate(data: any): Observable<any> {
         const params = {method: 'create_report_historic'};
+        return this._http.post(this._appSettings.histories.url.base,data,{params});
+    }
+    /**
+     * @description: Obtiene el historico por flota con paginacion
+     */
+    public getGistoricFleet(data: any): Observable<any> {
+        const params = {method: 'create_report_historic_fleet'};
         return this._http.post(this._appSettings.histories.url.base,data,{params});
     }
 }

@@ -48,7 +48,7 @@
         <!-- Velocidad Column -->
         <ng-container matColumnDef="speed">
             <th mat-header-cell *matHeaderCellDef> Velocidad</th>
-            <td mat-cell *matCellDef="let element"> {{element.speed}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.speed}} Km/h</td>
         </ng-container>
         <!-- Batería Column -->
         <ng-container matColumnDef="battery">
@@ -57,12 +57,11 @@
         </ng-container>
         <!-- Ver en mapa Column -->
         <ng-container matColumnDef="vew_map">
-            <th mat-header-cell *matHeaderCellDef> Ver en mapa</th>
+            <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
                 <a target="_blank" href="https://maps.google.com/?q={{element.x}},{{element.y}}"> Ver en el mapa</a>
             </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
@@ -72,8 +71,9 @@
         <mat-card-content>
             <p>El reporte solicitado cubre un rango de fecha de más de 90 días; en ese caso puede solicitarlo a
                 través de nuestros canales de atención al cliente.</p>
-            <p>Telefono +57 386 0000 Carrera 55 #100-51 Centro Empresarial Blue Gardens, Barranquilla, Atlántico</p>
-            <p>Servicioalcliente@geotech.com.co</p>
+            <p>Telefono: +57 386 0000 </p>
+            <p> Direccion: Carrera 55 #100-51 Centro Empresarial Blue Gardens, Barranquilla, Atlántico</p>
+            <p>Correo: Servicioalcliente@geotech.com.co</p>
         </mat-card-content>
     </mat-card>
     <!-- Mensaje cuando no se encuentran dantos en la api de reporte -->
