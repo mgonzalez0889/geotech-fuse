@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MobileService} from "../../../../core/services/mobile.service";
 import {Observable, Subscription} from "rxjs";
@@ -20,7 +20,6 @@ export interface CalendarSettings {
     styleUrls: ['./form-report.component.scss'],
 })
 export class FormReportComponent implements OnInit {
-    public subscription$: Subscription;
     public form: FormGroup;
     public select: boolean;
     public fleets$: Observable<any>;
@@ -90,13 +89,13 @@ export class FormReportComponent implements OnInit {
      */
     public onSelect(): void {
         const data = this.form.getRawValue();
-        this.getHistoric(data);
+        this._historicService.subjectDataForms.next({payload: data});
     }
 
     /**
      * @description: Manejador de estados Moviles / Flotas
      */
-    public onchange(event: MatRadioChange) {
+    public onchange(event: MatRadioChange): void {
         if (event.value == 1) {
             this.select = false;
             this.form.controls.plate.reset();
@@ -105,23 +104,4 @@ export class FormReportComponent implements OnInit {
             this.select = true;
         }
     }
-
-    /**
-     * @description: Obtiene los datos de la api reporte
-     */
-    private getHistoric(data: any): void {
-        let diaEnMils = 1000 * 60 * 60 * 24;
-        let diff = this.date_end.getTime() - this.date_init.getTime() + diaEnMils;
-        let days = diff / diaEnMils;
-        if (days < 91){
-            console.log('tiene menos de 3 meses');
-            this.subscription$ = this._historicService.historicPages(data).subscribe((res) => {
-            this._historicService.subjectDataHistories.next({payload: res, show: true});
-        });
-    }else {
-            console.log('tiene mas de 3 meses');
-            this._historicService.subjectDataHistories.next({show: false});
-        }
-    }
-
 }

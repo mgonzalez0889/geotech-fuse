@@ -17,6 +17,8 @@ import {MatCardModule} from "@angular/material/card";
 import {MatSelectModule} from "@angular/material/select";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatDividerModule} from "@angular/material/divider";
+import {NgxPaginationModule} from "ngx-pagination";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import {MatDividerModule} from "@angular/material/divider";
         ReactiveFormsModule,
         MatSelectModule,
         MatRadioModule,
-        MatDividerModule
+        MatDividerModule,
+        NgxPaginationModule,
+        MatPaginatorModule
 
     ]
 })
