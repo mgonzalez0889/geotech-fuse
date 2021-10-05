@@ -235,6 +235,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
               let bindTooltip: string;
               let mark: L.Marker;
               let layerGroup: L.LayerGroup = new L.LayerGroup();
+              let polyline: L.Polyline;
+              let colorPolyline: string;
               const customIcon = new L.Icon({
                   iconUrl: '/assets/icons/markerblue.svg',
                   iconSize: [45, 61],
@@ -243,7 +245,8 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                   shadowSize: [41, 41],
               });
               payload.time_line.forEach((m) => {
-                  myLatLng.push([Number.parseFloat(m.x), Number.parseFloat(m.y)]);
+                  myLatLng= [Number.parseFloat(m.x), Number.parseFloat(m.y)];
+                  colorPolyline = m.event_color;
                   // console.log(m.x, m.y);
                   marker = {
                       lat: Number(m.x),
@@ -266,13 +269,19 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
                       {icon: customIcon})
                       .bindTooltip(bindTooltip, {direction: 'auto'})
                   layerGroup.addLayer(mark).addTo(this.map);
+                  console.log('POLYLINE');
+                  console.log(myLatLng);
+                  console.log('COLOR');
+                  console.log(colorPolyline);
+                  polyline = L.polyline([myLatLng], {color: colorPolyline, weight: 5});
+                  console.log('LISTA');
+                  console.log(polyline);
+                  layerGroup.addLayer(polyline).addTo(this.map);
                   // console.log(layerGroup);
               });
               // console.log('POLYLINE');
-              // console.log(myLatLng);
-              const polyline: L.Polyline =  L.polyline(myLatLng, {color: color_line, weight: 5});
-              layerGroup.addLayer(polyline).addTo(this.map);
               this.layerGroup.push({id: payload.plate, layerGroup});
+              // console.log(myLatLng);
               // console.log(this.layerGroup);
           }else {
               const layer = this.layerGroup.find(t => t.id == payload.plate);
