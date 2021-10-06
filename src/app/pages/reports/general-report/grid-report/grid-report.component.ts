@@ -50,7 +50,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-            console.log('esto es pay', payload.radioButton)
             let diaEnMils = 86400000;
             let diff = payload.date?.date_end.getTime() - payload.date?.date_init.getTime();
             let days = diff / diaEnMils;
@@ -59,7 +58,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 this.messageExceedTime = true;
                 console.log('tiene menos de 3 meses');
                 if (payload.radioButton == 1) {
-                    console.log('entro en 1')
+                    console.log('entro en 1');
                     this.subscription$ = this._historicService.getHistoricPlate(payload).subscribe((res) => {
                         let plate: string = '';
                         let historic: any = [];
@@ -82,7 +81,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                         this.dataSource.paginator = this.paginator;
                     });
                 } else {
-                    console.log('entro en 2')
+                    console.log('entro en 2');
                     this.subscription$ = this._historicService.getGistoricFleet(payload).subscribe((res) => {
                         let plate: string = '';
                         let historic: any = [];
@@ -116,7 +115,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     /**
      * @description: Destruye las subscripciones
      */
-
     ngOnDestroy(): void {
         this.subscription$.unsubscribe();
     }

@@ -51,6 +51,7 @@ export class FormReportComponent implements OnInit {
                 plate: [''],
                 fleet_id: [''],
                 radioButton: [''],
+            page :[0],
                 date: this.fb.group({
                     date_init: [''],
                     date_end: ['']
