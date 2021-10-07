@@ -6,6 +6,9 @@
             <div class="text-3xl font-extrabold tracking-tight">Historico y eventos</div>
             <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
                 <!-- Boton generar reporte -->
+                <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="downloadReport()">
+                    <mat-icon>sim_card_download</mat-icon>
+                </button>
                 <button class="ml-4" mat-flat-button [color]="'primary'" (click)="generateReport()">
                     <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                     <span class="ml-2 mr-1">Generar reporte</span>
@@ -83,5 +86,5 @@
             <p>Lo sentimos, no se encontraron datos</p>
         </mat-card-content>
     </mat-card>
-    <mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+    <mat-paginator (page)="pageChange($event)" [pageSizeOptions]="[2, 10, 15]" showFirstLastButtons></mat-paginator>
 </div>

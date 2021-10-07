@@ -37,4 +37,11 @@ export class HistoriesService {
         const params = {method: 'create_report_historic_fleet'};
         return this._http.post(this._appSettings.histories.url.base,data,{params});
     }
+    /**
+     * @description: Genera el reporte en .CSV
+     */
+    public getHistoricExport(data: any): Observable<any>{
+        const params ={ method: 'create_report_historic_export'};
+        return this._http.post(this._appSettings.historiesExport.url.base,data,{params});
+    }
 }

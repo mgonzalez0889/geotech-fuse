@@ -4,7 +4,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {FormReportComponent} from "../form-report/form-report.component";
 import {HistoriesService} from "../../../../core/services/histories.service";
 import {Subscription} from "rxjs";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 
 @Component({
     selector: 'app-grid-report',
@@ -12,6 +12,8 @@ import {MatPaginator} from "@angular/material/paginator";
     styleUrls: ['./grid-report.component.scss']
 })
 export class GridReportComponent implements OnInit, OnDestroy {
+    public pageIndex: number = 0;
+    public previousPageIndex: number = 0;
 
     public displayedColumns: string[] = ['plate', 'date_event', 'event_name', 'address', 'x', 'y', 'speed', 'battery', 'vew_map'];
     public subscription$: Subscription;
@@ -63,6 +65,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                         let plate: string = '';
                         let historic: any = [];
                         for (let data of res) {
+                            console.log('aqui', data.length);
                             plate = data.plate;
                             if (data.historic_report.length) {
                                 this.messageNoReport = true;
@@ -79,6 +82,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                         }
                         this.dataSource = new MatTableDataSource(historic);
                         this.dataSource.paginator = this.paginator;
+                        console.log('data', this.dataSource.data)
                     });
                 } else {
                     console.log('entro en 2');
@@ -112,10 +116,27 @@ export class GridReportComponent implements OnInit, OnDestroy {
         });
     }
 
+    public downloadReport(): void {
+        this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
+            this.subscription$ = this._historicService.getHistoricExport(payload).subscribe((res) =>{
+
+            });
+        });
+    }
+
+
+    public pageChange($event: PageEvent) {
+
+
+        console.log('esto es event', $event);
+    }
+
     /**
      * @description: Destruye las subscripciones
      */
     ngOnDestroy(): void {
         this.subscription$.unsubscribe();
     }
+
+
 }
