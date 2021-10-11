@@ -117,9 +117,18 @@ export class GridReportComponent implements OnInit, OnDestroy {
     }
 
     public downloadReport(): void {
-        this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-            this.subscription$ = this._historicService.getHistoricExport(payload).subscribe((res) =>{
+        this.subscription$ = this._historicService.subjectDataForms.subscribe((payload) => {
+            this._historicService.getHistoricExport(payload).subscribe((res) => {
 
+                const blob = new Blob([res], {type: 'text/csv'});
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden','');
+                a.setAttribute('href', url);
+                a.setAttribute('download','download.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             });
         });
     }
