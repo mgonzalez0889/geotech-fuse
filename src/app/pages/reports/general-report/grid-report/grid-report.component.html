@@ -6,7 +6,7 @@
             <div class="text-3xl font-extrabold tracking-tight">Historico y eventos</div>
             <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
                 <!-- Boton generar reporte -->
-                <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="downloadReport()">
+                <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="downloadReport('http://api.geotech.com.co:3001/api/v1/historic.csv')">
                     <mat-icon>sim_card_download</mat-icon>
                 </button>
                 <button class="ml-4" mat-flat-button [color]="'primary'" (click)="generateReport()">

@@ -116,11 +116,12 @@ export class GridReportComponent implements OnInit, OnDestroy {
         });
     }
 
-    public downloadReport(): void {
+    /**
+     * @description: Metodo de exportar .CSV
+     */
+    public downloadReport(URL: any): void {
         this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-            this.subscription$ = this._historicService.getHistoricExport(payload).subscribe((res) =>{
-
-            });
+            window.open(URL,'_blank');
         });
     }
 
