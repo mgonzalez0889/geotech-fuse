@@ -12,8 +12,6 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
     styleUrls: ['./grid-report.component.scss']
 })
 export class GridReportComponent implements OnInit, OnDestroy {
-    public pageIndex: number = 0;
-    public previousPageIndex: number = 0;
 
     public displayedColumns: string[] = ['plate', 'date_event', 'event_name', 'address', 'x', 'y', 'speed', 'battery', 'vew_map'];
     public subscription$: Subscription;
@@ -33,7 +31,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
         this.listenObservables();
         this.messageExceedTime = true;
     }
-
 
     public generateReport(): void {
         const dialogConfig = new MatDialogConfig();
@@ -119,16 +116,35 @@ export class GridReportComponent implements OnInit, OnDestroy {
     /**
      * @description: Metodo de exportar .CSV
      */
-    public downloadReport(URL: any): void {
+    public downloadReport(): void {
         this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-            window.open(URL,'_blank');
+            this._historicService.getHistoricExport(payload).subscribe((res) => {
+                const csvRows = [];
+                const headers = Object.keys(res[0]);
+                csvRows.push(headers.join(','));
+                let values: any;
+                for (const row of res) {
+                     values = headers.map((header) => {
+                        return row[header];
+                    });
+                    console.log(values.join(','));
+                }
+
+                const blob = new Blob([values], {type: 'text/csv'});
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'download.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
         });
     }
 
 
     public pageChange($event: PageEvent) {
-
-
         console.log('esto es event', $event);
     }
 
