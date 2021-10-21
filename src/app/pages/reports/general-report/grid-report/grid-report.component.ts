@@ -119,18 +119,26 @@ export class GridReportComponent implements OnInit, OnDestroy {
     public downloadReport(): void {
         this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
             this._historicService.getHistoricExport(payload).subscribe((res) => {
-                const csvRows = [];
-                const headers = Object.keys(res[0]);
-                csvRows.push(headers.join(','));
-                let values: any;
-                for (const row of res) {
-                     values = headers.map((header) => {
+                const data = res.map(row => ({
+                    Placa: row.plate,
+                    Fecha: row.updated_at,
+                    Evento: row.name_event,
+                    Direccion: row.address,
+                    Latitud: row.x,
+                    Longitud: row.y,
+                    Velocidad: row.speed,
+                    Bateria: row.battery
+                }));
+                const csv = [];
+                const headers = Object.keys(data[0]);
+                csv.push(headers.join(','));
+                for (const row of data) {
+                    const values = headers.map((header) => {
                         return row[header];
                     });
-                    console.log(values.join(','));
+                    csv.push(values.join(','));
                 }
-
-                const blob = new Blob([values], {type: 'text/csv'});
+                const blob = new Blob([csv], {type: 'text/csv'});
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.setAttribute('hidden', '');
@@ -139,6 +147,8 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+
+
             });
         });
     }
