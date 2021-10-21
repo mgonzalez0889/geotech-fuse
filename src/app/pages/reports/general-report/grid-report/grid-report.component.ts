@@ -125,7 +125,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 const a = document.createElement('a');
                 a.setAttribute('hidden', '');
                 a.setAttribute('href', url);
-                a.setAttribute('descargar', 'Report.csv');
+                a.setAttribute('download', 'Report.csv');
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
