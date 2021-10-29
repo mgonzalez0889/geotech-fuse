@@ -110,13 +110,4 @@ export class AppSettingsService {
             base: EndPoints.uri('historic')
         }
     };
-    /**
-     *@description: End-point histories.csv
-     */
-    public historiesExport = {
-        url: {
-            base: EndPoints.uri('historic.csv')
-        }
-    };
-
 }

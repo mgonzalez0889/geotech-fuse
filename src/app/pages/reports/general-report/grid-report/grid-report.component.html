@@ -7,7 +7,7 @@
             <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
                 <!-- Boton generar reporte -->
                 <button *ngIf="messageNoReport" mat-mini-fab color="primary"
-                        aria-label="Example icon button with a menu icon" (click)="downloadReport()">
+                        aria-label="Example icon button with a menu icon" (click)="listenObservablesExport()">
                     <mat-icon>sim_card_download</mat-icon>
                 </button>
                 <button class="ml-4" mat-flat-button [color]="'primary'" (click)="onReport()">
@@ -87,5 +87,11 @@
             <p>Lo sentimos, no se encontraron datos</p>
         </mat-card-content>
     </mat-card>
-    <mat-paginator (page)="pageChange($event)" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [length]="length" [pageSize]="pageSize" (page)="pageChange($event)"   showFirstLastButtons></mat-paginator>
+    <div *ngIf="pageChange">
+        <h5>Page Change Event Properties</h5>
+        <div>List length: {{pageChange.length}}</div>
+<!--        <div>Page size: {{pageEvent.pageSize}}</div>
+        <div>Page index: {{pageEvent.pageIndex}}</div>-->
+    </div>
 </div>

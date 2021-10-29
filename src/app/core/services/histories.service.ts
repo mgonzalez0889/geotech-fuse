@@ -38,10 +38,17 @@ export class HistoriesService {
         return this._http.post(this._appSettings.histories.url.base,data,{params});
     }
     /**
-     * @description: Genera el reporte en .CSV
+     * @description: Genera el reporte por vehiculo en .CSV
      */
-    public getHistoricExport(data: any): Observable<any>{
+    public getHistoricExportMovile(data: any): Observable<any>{
         const params = { method: 'create_report_historic_export'};
+        return this._http.post(this._appSettings.histories.url.base,data,{params});
+    }
+    /**
+     * @description: Genera el reporte por flota en .CSV
+     */
+    public getHistoricExportFleet(data: any): Observable<any>{
+        const params = { method: 'create_report_historic_fleet_export'};
         return this._http.post(this._appSettings.histories.url.base,data,{params});
     }
 }

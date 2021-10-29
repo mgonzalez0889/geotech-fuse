@@ -19,6 +19,8 @@ export class GridReportComponent implements OnInit, OnDestroy {
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
     public dataHistoric: any;
+    public length: number;
+    public pageSize: number =2;
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
     constructor(
@@ -28,7 +30,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.listenObservables();
+        this.listenObservablesReport();
         this.messageExceedTime = true;
     }
 
@@ -39,15 +41,13 @@ export class GridReportComponent implements OnInit, OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        /*      dialogConfig.height = '600px';
-                dialogConfig.width = '460px';*/
         this.dialog.open(FormReportComponent, dialogConfig);
     }
 
     /**
-     * @description: Escucha el observable behavior y realiza llamada a la API
+     * @description: Escucha el observable behavior y realiza llamada a la API para generar reporte
      */
-    private listenObservables(): void {
+    private listenObservablesReport(): void {
         this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
             const daysMils = 86400000;
             const diff = payload.date?.date_end.getTime() - payload.date?.date_init.getTime();
@@ -56,10 +56,16 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 this.messageExceedTime = true;
                 if (payload.radioButton == 1) {
                     this.subscription$ = this._historicService.getHistoricPlate(payload).subscribe((res) => {
+                        for (const x of res){
+                            console.log('tamaño de la pagina',x.length)
+                            this.length = x.length;
+                        }
                         this.generateReport(res);
                     });
                 } else {
                     this.subscription$ = this._historicService.getGistoricFleet(payload).subscribe((res) => {
+                        this.length = res.length.value;
+                        console.log('tamaño de la pagina',this.length)
                         this.generateReport(res);
                     });
                 }
@@ -95,49 +101,95 @@ export class GridReportComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * @description: Escucha el observable behavior y valida si genera el reporte por flota o vehiculo
+     */
+    public listenObservablesExport(): void {
+        this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
+            if (payload.radioButton == 1) {
+                this._historicService.getHistoricExportMovile(payload).subscribe((res) => {
+                    this.downloadReport(res);
+                });
+            } else {
+                this._historicService.getHistoricExportFleet(payload).subscribe((res) => {
+                    this.downloadReport(res);
+                });
+            }
+        });
+    }
+
+    /**
      * @description: Exportar .CSV
      */
-    public downloadReport(): void {
-        this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-            this._historicService.getHistoricExport(payload).subscribe((res) => {
-                const data = res.map(row => ({
-                    Placa: row.plate,
-                    Fecha: row.updated_at,
-                    Evento: row.name_event,
-                    Direccion: row.address,
-                    Latitud: row.x,
-                    Longitud: row.y,
-                    Velocidad: row.speed,
-                    Bateria: row.battery
-                }));
-                let values;
-                const csv: any = [];
-                const csvTemp: any = [];
-                const headers = Object.keys(data[0]);
-                csvTemp.push(headers.join(','));
-                for (const row of data) {
-                    values = headers.map(header => row[header]);
-                    csvTemp.push(values.join(','));
-                }
-                csv.push(csvTemp.join('\n'));
-                const blob = new Blob([csv], {type: 'text/csv'});
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.setAttribute('hidden', '');
-                a.setAttribute('href', url);
-                a.setAttribute('download', 'Report.csv');
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+    private downloadReport(res: any): void {
+        let plate: string = '';
+        const historic: any = [];
+        for (const data1 of res) {
+            plate = data1.plate;
+            data1.historic_report.map((x) => {
+                x['plate'] = plate;
+                return x;
             });
-        });
+            data1.historic_report.forEach((m) => {
+                historic.push(m);
+            });
+        }
+        const data = historic.map(row => ({
+            Placa: row.plate,
+            Fecha: row.date_event,
+            Evento: row.event_name,
+            Direccion: row.address,
+            Latitud: row.x,
+            Longitud: row.y,
+            Velocidad: row.speed,
+            Bateria: row.battery
+        }));
+        let values;
+        const csv: any = [];
+        const csvTemp: any = [];
+        const headers = Object.keys(data[0]);
+        csvTemp.push(headers.join(','));
+        for (const row of data) {
+            values = headers.map(header => row[header]);
+            csvTemp.push(values.join(','));
+        }
+        csv.push(csvTemp.join('\n'));
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'Report.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 
     /**
      * @description: Paginacion
      */
     public pageChange($event: PageEvent) {
-        //console.log('esto es event', $event);
+        let actualPage: number;
+        this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
+            console.log('dato originar', payload.page)
+            actualPage = payload.page;
+            if ($event.pageIndex === actualPage + 1) {
+                const nuevaPagina = actualPage + 1;
+                payload.page = nuevaPagina;
+                this._historicService.subjectDataForms.next({payload: payload});
+                this.listenObservablesReport();
+
+                console.log('pagina sumada', payload);
+                //this._historicService.subjectDataForms.next({payload: data});
+                //console.log('la pagiana aumento')
+            } else if ($event.pageIndex === actualPage - 1) {
+                const nuevaPagina = actualPage - 1;
+                payload.page = nuevaPagina;
+                this._historicService.subjectDataForms.next({payload: payload});
+                this.listenObservablesReport();
+                console.log('la pagiana retrocedio')
+            }
+        });
+        console.log('esto es event', $event);
     }
 
     /**
@@ -145,8 +197,5 @@ export class GridReportComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         this.subscription$.unsubscribe();
-        console.log('destruido')
     }
-
-
 }
