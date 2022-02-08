@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {MobileManagementModule} from "./mobile-management/mobile-management.module";
 
 const routes: Routes = [
     {
@@ -16,6 +17,10 @@ const routes: Routes = [
             {
                 path: 'tracking',
                 loadChildren: () => import('./tracking/tracking.module').then(m => m.TrackingModule)
+            },
+            {
+                path: 'mobile-management',
+                loadChildren: () => MobileManagementModule
             }
         ]
     }
