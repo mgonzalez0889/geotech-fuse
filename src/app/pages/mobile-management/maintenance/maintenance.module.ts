@@ -10,6 +10,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTableModule} from "@angular/material/table";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import {MatTableModule} from "@angular/material/table";
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
-        MatTableModule
+        MatTableModule,
+        MatSlideToggleModule,
+        MatTooltipModule
     ]
 })
 export class MaintenanceModule { }

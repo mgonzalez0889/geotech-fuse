@@ -1,27 +1,80 @@
-<div class="h-full h-screen overflow-auto px-3 py-2 rounded-lg shadow w-full y-100">
+<div class="bg-white card h-full m-4 overflow-auto py-2 rounded-lg shadow w-full y-100">
     <div class="flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
         <div class="flex flex-col">
-            <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-start py-6 px-6 md:px-8 border-b">
-                <h3 class="mb-2 text-gray-900">Gestión de mantenimiento</h3>
+            <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-6 px-6 ">
+                <div>
+                    <h2 class="font-medium mb-2 text-2xl text-gray-900">Gestión de mantenimiento</h2>
+                </div>
+                <div class="flex flex-row items-center">
+                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 mr-3">
+                        <mat-label>Vehículo</mat-label>
+                        <mat-select [multiple]="true">
+                            <mat-option
+                            >No agrupar
+                            </mat-option>
+                            <mat-option
+                            >Agrupar
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon
+                            class="icon-size-5"
+                            matPrefix
+                            [svgIcon]="'mat_outline:directions_car'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 mr-3">
+                        <mat-label>Estados</mat-label>
+                        <mat-select [multiple]="true">
+                            <mat-option
+                            >Programado
+                            </mat-option>
+                            <mat-option
+                            >Terminado
+                            </mat-option>
+                            <mat-option
+                            >Expirado
+                            </mat-option>
+                            <mat-option
+                            >Pendiente
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon
+                            class="icon-size-5"
+                            matPrefix
+                            [svgIcon]="'mat_outline:circle'"></mat-icon>
+                    </mat-form-field>
+                    <mat-slide-toggle class="mr-2" [matTooltip]="'Tareas no planeadas'"></mat-slide-toggle>
+                    <mat-slide-toggle class="mr-2" [matTooltip]="'Tareas planeadas'"></mat-slide-toggle>
+                    <button
+                        mat-flat-button
+                        class="bg-blue-600 text-white"
+                    >Nuevo
+                        <mat-icon [svgIcon]="'mat_outline:add'"></mat-icon>
+                    </button>
+                </div>
             </div>
-
         </div>
     </div>
-    <div class="flex flex-col">
+    <!--Opciones-->
+    <div class="card bg-white shadow flex flex-col">
         <div class="flex flex-row items-center justify-between p-5">
-            <div class="">
-                <mat-form-field class="fuse-mat-dense  fuse-mat-no-subscript min-w-50">
+            <div class="flex flex-row items-end">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 mr-2">
                     <mat-label>Agrupar por</mat-label>
                     <mat-select>
                         <mat-option
                             >No agrupar
                         </mat-option>
                     </mat-select>
+                    <mat-icon
+                        class="icon-size-5"
+                        matPrefix
+                        [svgIcon]="'heroicons_outline:search'"></mat-icon>
                 </mat-form-field>
                 <button
-                        mat-flat-button
-                        class="bg-green-600 text-white"
+                        mat-stroked-button
+                        class="text-green-600"
                 >Realizar
+                    <mat-icon class="text-green-600" [svgIcon]="'mat_outline:done'"></mat-icon>
                 </button>
             </div>
             <div class="">
@@ -58,8 +111,9 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-1">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 w-full">
+    <!--Main table-->
+    <div class="card bg-white grid grid-cols-1 p-5">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z10 w-full">
             <!-- Position Column -->
             <ng-container matColumnDef="position">
                 <th mat-header-cell *matHeaderCellDef>No.</th>
@@ -90,6 +144,8 @@
                 *matRowDef="let row; columns: displayedColumns;"
             ></tr>
         </table>
-
+    </div>
+    <!--Espacio para las graficas-->
+    <div class="card bg-white grid grid-cols-1 p-5">
     </div>
 </div>
