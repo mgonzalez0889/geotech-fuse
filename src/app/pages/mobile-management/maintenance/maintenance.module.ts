@@ -12,6 +12,10 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatTableModule} from "@angular/material/table";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {NgApexchartsModule} from "ng-apexcharts";
+import {MatDialogModule} from "@angular/material/dialog";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -29,7 +33,11 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         MatSelectModule,
         MatTableModule,
         MatSlideToggleModule,
-        MatTooltipModule
+        MatTooltipModule,
+        NgApexchartsModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        MatCheckboxModule
     ]
 })
 export class MaintenanceModule { }

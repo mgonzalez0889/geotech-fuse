@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
+import {ApexChart, ApexNonAxisChartSeries, ApexResponsive, ChartComponent} from "ng-apexcharts";
+import {MatDialog} from "@angular/material/dialog";
+import {FormMaintenanceComponent} from "../form-maintenance/form-maintenance.component";
 
 const ELEMENT_DATA: any[] = [
     {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
@@ -14,6 +17,13 @@ const ELEMENT_DATA: any[] = [
     {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 ];
 
+export type ChartOptions = {
+    series: ApexNonAxisChartSeries;
+    chart: ApexChart;
+    responsive: ApexResponsive[];
+    labels: any;
+};
+
 
 @Component({
   selector: 'app-grid-maintenance',
@@ -23,10 +33,43 @@ const ELEMENT_DATA: any[] = [
 export class GridMaintenanceComponent implements OnInit {
   public dataSource: MatTableDataSource<any> = new MatTableDataSource(ELEMENT_DATA);
   public displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  @ViewChild('chart') chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
 
-  constructor() { }
+  constructor(
+      private _matDialog: MatDialog
+  ) {
+      this.chartOptions = {
+          series: [44, 55, 13, 43, 22],
+          chart: {
+              type: 'donut'
+          },
+          labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+          responsive: [
+              {
+                  breakpoint: 480,
+                  options: {
+                      chart: {
+                          width: 200,
+                      },
+                      legend: {
+                          position: 'bottom'
+                      }
+                  }
+              }
+          ]
+      };
+  }
 
   ngOnInit(): void {
+  }
+
+  public openForm(): void {
+      const dialofRef = this._matDialog.open(FormMaintenanceComponent, {
+          minWidth: '70%',
+          minHeight: '85%',
+      });
+      dialofRef.afterClosed().toPromise();
   }
 
 }
