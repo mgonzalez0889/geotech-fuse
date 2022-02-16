@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Agregar servicio</h2>
 <mat-dialog-content>
     <form [formGroup]="form">
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
             <div class="flex flex-col">
                 <span class="font-medium mb-3 p-0 text-xl">Información básica</span>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
@@ -35,33 +35,13 @@
                     Seleccione los contactos que reciben recordatios
                     de servicios pendientes
                 </p>
-                <section class="mb-3">
+                <section class="mb-3.5">
                     <mat-checkbox class="example-margin" >Notificaciones push</mat-checkbox>
                 </section>
-                <div class="mb-2">
-                    <button mat-flat-button
-                            class="bg-blue-600 text-white"
-                            (click)="addSms()"
-                    >Agregar
-                        <mat-icon [svgIcon]="'mat_outline:add'"></mat-icon>
-                    </button>
-                </div>
-                <ng-container formArrayName="sms">
-                    <ng-container *ngFor="let item of smsArray.controls; let i = index;">
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3" >
-                            <mat-label>Notificaciones de email</mat-label>
-                            <input type="text" matInput [formControlName]="i">
-                        </mat-form-field>
-                        <button mat-flat-button
-                                [color]="'warn'"
-                                (click)="removeSms(i)"
-                        >
-                            -
-                        </button>
-                    </ng-container>
-                </ng-container>
-
-
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3" >
+                    <mat-label>Notificaciones de email</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
 
             </div>
             <!--Segunda columna-->
@@ -111,4 +91,20 @@
         </div>
     </form>
 </mat-dialog-content>
-<mat-dialog-actions></mat-dialog-actions>
+<mat-dialog-actions>
+    <div class="flex flex-col sm:flex-row items-center justify-end sm:justify-end w-full">
+        <button mat-raised-button
+                class="w-full sm:w-30 mb-2 sm:mb-0"
+                color="primary"
+                type="button"
+        >
+            Guardar
+        </button>
+        <button mat-raised-button
+                class="w-full mr-2 bg-gray-400 text-white sm:w-30"
+                type="button"
+        >
+            Cerrar
+        </button>
+    </div>
+</mat-dialog-actions>
