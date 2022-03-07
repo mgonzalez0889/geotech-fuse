@@ -228,6 +228,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   private listenDataObservable(): void {
       this.subscription = this.historyService.subjectDataSelected.subscribe(({payload, select}) => {
           if (select) {
+              console.log('Seleccionado para pintar', select);
             const {color_line} = payload;
               // this.markAndPolyline(payload);
               let myLatLng: any = [];

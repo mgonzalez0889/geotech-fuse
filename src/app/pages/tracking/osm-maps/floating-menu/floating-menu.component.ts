@@ -7,6 +7,10 @@ import {fuseAnimations} from '../../../../../@fuse/animations';
 import {HelperService} from '../../../../core/services/helper.service';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
 import {HistoriesService} from '../../../../core/services/histories.service';
+import {MatDialog} from "@angular/material/dialog";
+import {
+    FormDialogSelectHistorialComponent
+} from "../form-dialog-select-historial/form-dialog-select-historial.component";
 
 @Component({
   selector: 'app-floating-menu',
@@ -32,6 +36,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
       private mobilesService: MobileService,
       private _helperService: HelperService,
       private historiesService: HistoriesService,
+      public dialog: MatDialog
   ) {
       this.animationStates = {
           expandCollapse: 'expanded',
@@ -139,8 +144,12 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
       this.historiesService.floatingMenuFleet$.next({show: true});
   }
     public onFormModal(): void {
-        const data: any = [];
-        this._helperService.showDialogSelectHistorial({
+        const dialogRef = this.dialog.open(FormDialogSelectHistorialComponent, {
+            minWidth: '25%',
+            minHeight: '60%',
+        });
+        dialogRef.afterClosed().toPromise();
+        /*this._helperService.showDialogSelectHistorial({
             data
         }).then(
             (result) => {
@@ -148,7 +157,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
 
                 }
             }
-        );
+        );*/
     }
 
     /** Whether the number of selected elements matches the total number of rows. */
