@@ -80,12 +80,12 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-    /*  const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+     /* const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
           minZoom: 10,
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      });*/
-      //tiles.addTo(this.map);
+      });
+      tiles.addTo(this.map);*/
       // L.marker([4.658383846282959, -74.09394073486328]).addTo(this.map);
       this.getCurrentPosition().subscribe((position: any) => {
           this.map.flyTo([position.latitude, position.longitude], 13);
