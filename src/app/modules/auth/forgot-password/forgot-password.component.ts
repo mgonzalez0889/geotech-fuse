@@ -43,7 +43,8 @@ export class AuthForgotPasswordComponent implements OnInit
     {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]]
+            email: ['', [Validators.required, Validators.email]],
+            phone: ['', [Validators.required]]
         });
     }
 

@@ -1,0 +1,39 @@
+<div class="fixed z-999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow rounded overflow-hidden"
+     [@fadeInLeft]="animationStates.fadeOut.right"
+>
+    <!--Main options-->
+    <div class="flex items-center justify-end -mt-5">
+        <button
+            mat-icon-button
+            class="-mr-5"
+            (click)="onClose()"
+        >
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <!--Details-->
+    <div class="flex flex-col p-0.5">
+        <div class="mt-4 mb-4 text-lg font-medium">Widgets</div>
+        <ng-container *ngIf="data$ | async as data">
+            <div class="flex items-center leading-5 text-md text-secondary">
+                <mat-icon
+                    [svgIcon]="'mat_outline:directions_car'"> </mat-icon>
+                <span class="ml-1.5"> {{data.payload?.plate}}</span>
+            </div>
+            <div class="w-auto h-1 my-4 border-t-2"></div>
+            <div class="flex items-center leading-5 text-md text-secondary">
+                <mat-icon
+                    [svgIcon]="'mat_outline:place'"> </mat-icon>
+                <span class="ml-1.5"> {{data.payload?.address}}</span>
+            </div>
+            <div class="w-auto h-1 my-4 border-t-2"></div>
+            <div class="flex items-center leading-5 text-md text-secondary">
+                <mat-icon
+                    [svgIcon]="'mat_outline:speed'"> </mat-icon>
+                <span class="ml-1.5"> {{data.payload?.speed + ' km/h'}}</span>
+            </div>
+            <div class="w-auto h-1 my-4 border-t-2"></div>
+
+        </ng-container>
+    </div>
+</div>

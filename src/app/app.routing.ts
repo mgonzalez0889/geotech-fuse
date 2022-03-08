@@ -9,7 +9,10 @@ import { InitialDataResolver } from 'app/app.resolvers';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
-    {path: '', pathMatch : 'full', redirectTo: 'example'},
+    {
+        path: '', pathMatch: 'full', redirectTo: 'sign-in'
+    },
+    /*{path: '', pathMatch : 'full', redirectTo: 'example'},*/
 
     // Redirect signed in user to the '/example'
     //
@@ -21,8 +24,8 @@ export const appRoutes: Route[] = [
     // Auth routes for guests
     {
         path: '',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
+        /*canActivate: [NoAuthGuard],
+        canActivateChild: [NoAuthGuard],*/
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -39,8 +42,8 @@ export const appRoutes: Route[] = [
     // Auth routes for authenticated users
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        /*canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],*/
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -52,7 +55,7 @@ export const appRoutes: Route[] = [
     },
 
     // Landing routes
-    {
+    /*{
         path: '',
         component  : LayoutComponent,
         data: {
@@ -61,13 +64,13 @@ export const appRoutes: Route[] = [
         children   : [
             {path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)},
         ]
-    },
+    },*/
 
     // Admin routes
     {
         path       : '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        /*canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],*/
         component  : LayoutComponent,
         resolve    : {
             initialData: InitialDataResolver,
@@ -75,5 +78,20 @@ export const appRoutes: Route[] = [
         children   : [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
         ]
+    },
+    {
+        path: '',
+        component: LayoutComponent,
+        resolve : {
+            initialData: InitialDataResolver,
+        },
+        children: [
+            {
+                path: 'default',
+                loadChildren: () => import('./pages/default.module').then(m => m.DefaultModule)
+            }
+        ]
+
     }
+
 ];

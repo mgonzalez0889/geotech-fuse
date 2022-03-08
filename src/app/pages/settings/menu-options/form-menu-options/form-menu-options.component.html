@@ -1,0 +1,106 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
+     cdkScrollable
+>
+    <!-- Main -->
+    <div class="flex-auto p-4 sm:p-4 ">
+        <!-- CONTENT GOES HERE -->
+        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
+            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
+            </div>
+        </div>
+
+        <form [formGroup]="form" class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden ">
+            <div class="flex flex-col p-8 ">
+                <mat-form-field class="fuse-mat-dense flex-auto">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput
+                           formControlName="title"
+                    >
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-textarea flex-auto">
+                    <mat-label>Descripción</mat-label>
+                    <textarea
+                        matInput
+                        formControlName="option_description"
+                        [rows]="3"></textarea>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense flex-auto">
+                    <mat-label>Ruta</mat-label>
+                    <input matInput
+                           formControlName="link"
+                    >
+                    <span matPrefix>/administration/users</span>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense flex-auto">
+                    <mat-label>Icono</mat-label>
+                    <input matInput
+                           formControlName="icon"
+                    >
+                </mat-form-field>
+                <ng-container *ngIf="menuOptions$ | async as options">
+                    <mat-form-field class="fuse-mat-dense flex-auto">
+                        <mat-label>Opciones de menu</mat-label>
+                        <mat-select formControlName="id_father"
+                        >
+                            <mat-option [value]="0">Padre</mat-option>
+                            <mat-option
+                                [value]="option.id"
+                                *ngFor="let option of options.data"
+                            >
+                                {{option.title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+                <span class="font-semibold mb-2 gt-xs:text-right gt-xs:min-w-32 gt-xs:mr-4 gt-xs:mb-0">Opciones</span>
+                <div class="flex flex-row">
+                    <mat-checkbox
+                        class="mb-2 mr-2"
+                        [color]="'primary'"
+                        formControlName="option_read"
+                    >
+                        Ver
+                    </mat-checkbox>
+                    <mat-checkbox
+                        class="mb-2 mr-2"
+                        [color]="'primary'"
+                        formControlName="option_create"
+                    >
+                        Crear
+                    </mat-checkbox>
+                    <mat-checkbox
+                        class="mb-2 mr-2"
+                        [color]="'primary'"
+                        formControlName="option_update"
+                    >
+                        Editar
+                    </mat-checkbox>
+                    <mat-checkbox
+                        class="mb-2 mr-2"
+                        [color]="'primary'"
+                        formControlName="option_delete"
+                    >
+                        Eliminar
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div class="flex items-center justify-between border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                <button mat-flat-button
+                        [color]="'warn'"
+                        (click)="onCLose()"
+                >
+                Cerrar
+                </button>
+                <button
+                    class="px-6 ml-3"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="onSave()"
+                >
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

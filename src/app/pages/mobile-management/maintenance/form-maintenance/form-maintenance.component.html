@@ -1,0 +1,110 @@
+<h2 mat-dialog-title>Agregar servicio</h2>
+<mat-dialog-content>
+    <form [formGroup]="form">
+        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+            <div class="flex flex-col">
+                <span class="font-medium mb-3 p-0 text-xl">Información básica</span>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Vehículo</mat-label>
+                    <mat-select [multiple]="true">
+                        <mat-option
+                        >Ford
+                        </mat-option>
+                        <mat-option
+                        >Chevrolet
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Nombre</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Descripción</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Costo</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <section class="example-section">
+                    <mat-checkbox class="example-margin" >Tarea de servicio no planeada</mat-checkbox>
+                </section>
+                <span class="font-medium mb-3 mt-3 p-0 text-xl">Notificaciones</span>
+                <p class="mb-3">
+                    Seleccione los contactos que reciben recordatios
+                    de servicios pendientes
+                </p>
+                <section class="mb-3.5">
+                    <mat-checkbox class="example-margin" >Notificaciones push</mat-checkbox>
+                </section>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3" >
+                    <mat-label>Notificaciones de email</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+
+            </div>
+            <!--Segunda columna-->
+            <div class="flex flex-col">
+                <span class="font-medium mb-2 p-0 text-xl">Intervalo de servicio</span>
+                <mat-slide-toggle class="" [matTooltip]="'Autorrepetir'"
+                >
+                    Autorrepetir
+                </mat-slide-toggle>
+                <p class="">
+                    Programe un servicio definiendo una o más condiciones
+                </p>
+                <section class="mb-3">
+                    <mat-checkbox class="example-margin">Por fecha</mat-checkbox>
+                </section>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Realizar</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-7 mr-3">
+                    <mat-label>Recordar antes</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <section class="mb-7">
+                    <mat-checkbox class="example-margin">Por kilometraje</mat-checkbox>
+                </section>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Kilometraje al destino</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Recordar antes</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <section class="mb-3">
+                    <mat-checkbox class="example-margin">Por horas trabajadas</mat-checkbox>
+                </section>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Horas meta</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
+                    <mat-label>Recordar antes</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="flex flex-col sm:flex-row items-center justify-end sm:justify-end w-full">
+        <button mat-raised-button
+                class="w-full sm:w-30 mb-2 sm:mb-0"
+                color="primary"
+                type="button"
+        >
+            Guardar
+        </button>
+        <button mat-raised-button
+                class="w-full mr-2 bg-gray-400 text-white sm:w-30"
+                type="button"
+        >
+            Cerrar
+        </button>
+    </div>
+</mat-dialog-actions>

@@ -1,0 +1,39 @@
+<ng-container *ngIf="showMenuMobiles">
+    <app-floating-menu
+        (sendMarker)="onValue($event)"
+    >
+    </app-floating-menu>
+</ng-container>
+<ng-container *ngIf="showMenuFleet">
+    <app-floating-menu-fleet
+    >
+    </app-floating-menu-fleet>
+</ng-container>
+<ng-container *ngIf="showHistory">
+    <app-form-assign-mark
+        (closeMenu)="onCloseMenu($event)">
+    </app-form-assign-mark>
+</ng-container>
+<ng-container *ngIf="showDetailMobile">
+    <app-form-detail-mobile
+        (closeMenu)="onCloseDetailMenu($event)"
+    ></app-form-detail-mobile>
+</ng-container>
+<div #map
+     style="height: 80vh; width: 100%;"
+>
+</div>
+<!--<div style="height: 100%; width: 100%"
+      #map
+     >
+</div>-->
+<!--
+<div class="sm:absolute  sm:inset-0 flex flex-col flex-auto sm:overflow-hidden bg-card dark:bg-transparent">
+    <div class="container">
+         <div #map
+              class="w-min sm:w-screen h-screen"
+         >
+         </div>
+    </div>
+</div>
+-->

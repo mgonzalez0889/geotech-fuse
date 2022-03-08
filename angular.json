@@ -47,13 +47,16 @@
                         },
                         "styles": [
                             "src/@fuse/styles/tailwind.scss",
+                            "node_modules/leaflet/dist/leaflet.css",
                             "src/@fuse/styles/themes.scss",
                             "src/styles/vendors.scss",
                             "src/@fuse/styles/main.scss",
                             "src/styles/styles.scss",
                             "src/styles/tailwind.scss"
                         ],
-                        "scripts": []
+                        "scripts": [
+                            "node_modules/leaflet/dist/leaflet.js"
+                        ]
                     },
                     "configurations": {
                         "production": {
