@@ -1,14 +1,14 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import * as R from 'leaflet-marker-rotation';
-import {Observable, Subject, Subscriber, Subscription} from 'rxjs';
+import {Observable, Subject, Subscriber, Subscription, timer} from 'rxjs';
 import {MobileService} from '../../../../core/services/mobile.service';
 import {HistoriesService} from '../../../../core/services/histories.service';
 import {DatePipe} from '@angular/common';
 import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
 import {FleetsService} from "../../../../core/services/fleets.service";
 import {FleetInterface} from "../../../../core/interfaces/fleets.interface";
-import {takeUntil} from "rxjs/operators";
+import {delay, takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-maps',
@@ -36,10 +36,13 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       private historyService: HistoriesService,
       private datePipe: DatePipe,
       private fleetService: FleetsService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-      this.getDevices();
+      const time = timer(2000);
+      time.subscribe((t) => {
+        this.getDevices();
+      });
       this.listenObservables();
       this.listenDataObservable();
       this.listenObservableCloseModal();
@@ -385,7 +388,10 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit(): void {
-      this.initMap();
+      const time = timer(1000);
+      time.subscribe((t) => {
+          this.initMap();
+      });
   }
 
   ngOnDestroy(): void {

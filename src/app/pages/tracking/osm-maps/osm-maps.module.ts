@@ -33,7 +33,7 @@ import { FormDetailMobileComponent } from './form-detail-mobile/form-detail-mobi
     FormDialogSelectHistorialComponent,
     FormAssignMarkComponent,
     FloatingMenuFleetComponent,
-    FormDetailMobileComponent
+    FormDetailMobileComponent,
   ],
     imports: [
         CommonModule,
