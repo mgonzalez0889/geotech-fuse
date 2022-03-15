@@ -18,9 +18,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     public dataSource: MatTableDataSource<any>;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
-    public dataHistoric: any;
-    public length: number;
-    public pageSize: number =2;
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
     constructor(
@@ -56,20 +53,15 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 this.messageExceedTime = true;
                 if (payload.radioButton == 1) {
                     this.subscription$ = this._historicService.getHistoricPlate(payload).subscribe((res) => {
-                        for (const x of res){
-                            console.log('tamaño de la pagina',x.length)
-                            this.length = x.length;
-                        }
                         this.generateReport(res);
                     });
                 } else {
                     this.subscription$ = this._historicService.getGistoricFleet(payload).subscribe((res) => {
-                        this.length = res.length.value;
-                        console.log('tamaño de la pagina',this.length)
                         this.generateReport(res);
                     });
                 }
             } else {
+                this.dataSource = null;
                 this.messageExceedTime = false;
             }
         });
@@ -164,33 +156,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
         document.body.removeChild(a);
     }
 
-    /**
-     * @description: Paginacion
-     */
-    public pageChange($event: PageEvent) {
-        let actualPage: number;
-        this.subscription$ = this._historicService.subjectDataForms.subscribe(({payload}) => {
-            console.log('dato originar', payload.page)
-            actualPage = payload.page;
-            if ($event.pageIndex === actualPage + 1) {
-                const nuevaPagina = actualPage + 1;
-                payload.page = nuevaPagina;
-                this._historicService.subjectDataForms.next({payload: payload});
-                this.listenObservablesReport();
-
-                console.log('pagina sumada', payload);
-                //this._historicService.subjectDataForms.next({payload: data});
-                //console.log('la pagiana aumento')
-            } else if ($event.pageIndex === actualPage - 1) {
-                const nuevaPagina = actualPage - 1;
-                payload.page = nuevaPagina;
-                this._historicService.subjectDataForms.next({payload: payload});
-                this.listenObservablesReport();
-                console.log('la pagiana retrocedio')
-            }
-        });
-        console.log('esto es event', $event);
-    }
 
     /**
      * @description: Destruye las subscripciones
