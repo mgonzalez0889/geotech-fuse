@@ -21,6 +21,10 @@ const routes: Routes = [
             {
                 path: 'mobile-management',
                 loadChildren: () => MobileManagementModule
+            },
+            {
+                path: 'reports',
+                loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
             }
         ]
     }
