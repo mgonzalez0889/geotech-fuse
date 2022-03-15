@@ -1,4 +1,4 @@
-<div class="fixed z-999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded overflow-hidden h-96"
+<div class="fixed z-999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-3 bg-card shadow rounded overflow-hidden h-96"
      [@fadeInLeft]="animationStates.fadeOut.right"
      cdkDragHandle
 >
@@ -14,41 +14,49 @@
         </button>
     </div>
     <ng-container *ngFor="let item of histories; ">
-        <fuse-card class="flex flex-col mt-5">
-            <div class="m-4">
-                <div class="text-1xl font-semibold leading-tight">{{item.plate}}</div>
+        <fuse-card class="mt-5 shadow-md">
+            <div class="flex flex-row items-center m-4">
                 <mat-checkbox #checkbox
                               (change)="onSelected(checkbox, item)"
                               [checked]="checkModel"
                 >
                 </mat-checkbox>
-                <ng-container *ngIf="item.time_line?.length">
-                    <ng-container *ngFor="let time of item.time_line; let i = index; first as isFirst; last as isLast">
-                        <div *ngIf="isFirst">
-                            <span>Nombre evento inicio: {{time.event_name}}</span>
-                            <span>Dirección: {{time.address}}</span>
-                        </div>
-                        <div *ngIf="isLast">
-                            <span>Nombre evento fin: {{time.event_name}}</span>
-                            <span>Dirección: {{time.address}}</span>
-                        </div>
+                <div class="">
+                    <div class="text-1xl font-semibold leading-tight">{{item.plate}}</div>
+                    <ng-container *ngIf="item.time_line?.length">
+                        <ng-container *ngFor="let time of item.time_line; let i = index; first as isFirst; last as isLast">
+                            <div *ngIf="isFirst" >
+                                <p class="text-md">
+                                   Evento inicio: {{time.event_name}}
+                                </p>
+                                <p class="text-md">
+                                   Dirección: {{time.address}}
+                                </p>
+                                <p class="text-md">
+                                    Fecha inicio: {{time.date_event | date:'dd/MM/yyyy' }}
+                                </p>
+                                <p class="text-md border-b font-medium">
+                                    Hora inicio: {{time.date_event | date: 'HH:MM:SS'}}
+                                </p>
+                            </div>
+                            <div *ngIf="isLast">
+                                <p class="text-md">
+                                    Evento fin: {{time.event_name}}
+                                </p>
+                                <p class="text-md">
+                                    Dirección: {{time.address}}
+                                </p>
+                                <p class="text-md">
+                                    Fecha fin: {{time.date_event | date:'dd/MM/yyyy' }}
+                                </p>
+                                <p class="text-md font-medium">
+                                    Hora fin: {{time.date_event | date: 'HH:MM:SS'}}
+                                </p>
+                            </div>
+                        </ng-container>
                     </ng-container>
-                </ng-container>
+                </div>
             </div>
         </fuse-card>
    </ng-container>
 </div>
-<!--
-<div class="fixed z-9999 ml-2.5 top-40 shadow-md rounded-lg">
-    <div class="text-1xl font-extrabold tracking-tight">Historial</div>
-    <mat-tab-group>
-        <mat-tab label="Historial">
-
-
-        </mat-tab>
-
-    </mat-tab-group>
-
-
-</div>
--->
