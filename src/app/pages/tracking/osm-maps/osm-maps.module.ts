@@ -25,6 +25,8 @@ import {FuseDrawerModule} from "../../../../@fuse/components/drawer";
 import {MatInputModule} from "@angular/material/input";
 import { FloatingMenuFleetComponent } from './floating-menu-fleet/floating-menu-fleet.component';
 import { FormDetailMobileComponent } from './form-detail-mobile/form-detail-mobile.component';
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {FuseAlertModule} from "../../../../@fuse/components/alert";
 
 @NgModule({
   declarations: [
@@ -33,7 +35,7 @@ import { FormDetailMobileComponent } from './form-detail-mobile/form-detail-mobi
     FormDialogSelectHistorialComponent,
     FormAssignMarkComponent,
     FloatingMenuFleetComponent,
-    FormDetailMobileComponent
+    FormDetailMobileComponent,
   ],
     imports: [
         CommonModule,
@@ -56,6 +58,8 @@ import { FormDetailMobileComponent } from './form-detail-mobile/form-detail-mobi
         FuseDrawerModule,
         FormsModule,
         MatInputModule,
+        DragDropModule,
+        FuseAlertModule,
 
     ]
 })

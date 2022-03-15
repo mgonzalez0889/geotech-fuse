@@ -1,5 +1,6 @@
-<div class="fixed z-999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded overflow-hidden"
+<div class="fixed z-999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-3 bg-card shadow rounded overflow-hidden h-96"
      [@fadeInLeft]="animationStates.fadeOut.right"
+     cdkDragHandle
 >
     <!--Main options-->
     <div class="flex items-center justify-between -mt-5">
@@ -12,43 +13,50 @@
             <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
-    <div class="flex flex-col sm:flex-row items-start mt-5 justify-between overflow-auto h-96">
-        <div class="mt-3 sm:mt-0 sm:ml-2">
-            <ng-container *ngFor="let item of histories; let i = index">
-                <div class="flex flex-col flex-auto p-6 bg-gray-50 sm:mb-4 shadow rounded overflow-hidden">
-                    <div class="flex items-center justify-between">
-                        <div class="text-1xl font-semibold leading-tight">{{item.plate}}</div>
-                    </div>
-                    <div class="flex flex-col items-center mt-5">
-                        <div class="flex">
-                            <mat-checkbox #checkbox
-                                (change)="onSelected(checkbox, item)"
-                                [checked]="checkModel"
-                                >
-                                <mat-icon
-                                class="icon-size-5 mt-0.5 mr-2"
-                                [svgIcon]="'heroicons_solid:bell'"></mat-icon>
-                            </mat-checkbox>
-
-                            <!--<div><b>20% OFF</b> in your favorite hats shop.</div>-->
-                        </div>
-                    </div>
+    <ng-container *ngFor="let item of histories; ">
+        <fuse-card class="mt-5 shadow-md">
+            <div class="flex flex-row items-center m-4">
+                <mat-checkbox #checkbox
+                              (change)="onSelected(checkbox, item)"
+                              [checked]="checkModel"
+                >
+                </mat-checkbox>
+                <div class="">
+                    <div class="text-1xl font-semibold leading-tight">{{item.plate}}</div>
+                    <ng-container *ngIf="item.time_line?.length">
+                        <ng-container *ngFor="let time of item.time_line; let i = index; first as isFirst; last as isLast">
+                            <div *ngIf="isFirst" >
+                                <p class="text-md">
+                                   Evento inicio: {{time.event_name}}
+                                </p>
+                                <p class="text-md">
+                                   Dirección: {{time.address}}
+                                </p>
+                                <p class="text-md">
+                                    Fecha inicio: {{time.date_event | date:'dd/MM/yyyy' }}
+                                </p>
+                                <p class="text-md border-b font-medium">
+                                    Hora inicio: {{time.date_event | date: 'HH:MM:SS'}}
+                                </p>
+                            </div>
+                            <div *ngIf="isLast">
+                                <p class="text-md">
+                                    Evento fin: {{time.event_name}}
+                                </p>
+                                <p class="text-md">
+                                    Dirección: {{time.address}}
+                                </p>
+                                <p class="text-md">
+                                    Fecha fin: {{time.date_event | date:'dd/MM/yyyy' }}
+                                </p>
+                                <p class="text-md font-medium">
+                                    Hora fin: {{time.date_event | date: 'HH:MM:SS'}}
+                                </p>
+                            </div>
+                        </ng-container>
+                    </ng-container>
                 </div>
-            </ng-container>
-        </div>
-    </div>
+            </div>
+        </fuse-card>
+   </ng-container>
 </div>
-<!--
-<div class="fixed z-9999 ml-2.5 top-40 shadow-md rounded-lg">
-    <div class="text-1xl font-extrabold tracking-tight">Historial</div>
-    <mat-tab-group>
-        <mat-tab label="Historial">
-
-
-        </mat-tab>
-
-    </mat-tab-group>
-
-
-</div>
--->
