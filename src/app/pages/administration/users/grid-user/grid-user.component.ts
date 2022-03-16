@@ -6,6 +6,7 @@ import {fuseAnimations} from "../../../../../@fuse/animations";
 import {debounceTime, switchMap, takeUntil} from "rxjs/operators";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ConfirmDeleteComponent} from "../../../../shared/dialogs/confirm-delete/confirm-delete.component";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-grid-user',
@@ -19,6 +20,9 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public users$: Observable<any>;
   public show: boolean = false;
   public subscription$: Subscription;
+  public dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
+  public displayedColumns: string[] = ['user_login', 'full_name', 'profile', 'email'];
+    // 'full_name', 'profile', 'email'
   constructor(
       private usersService: UsersService,
       public dialog: MatDialog,

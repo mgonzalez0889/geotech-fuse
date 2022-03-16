@@ -1,6 +1,7 @@
 module.exports = {
     blackGeo: '#0F1B2B',
     grayGeo: '#666666',
+    orangeGeo: '#F08225',
     blueGeo: {
         50: '#2593F0',
         100: '#00AFD4',
