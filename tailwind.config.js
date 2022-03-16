@@ -3,6 +3,7 @@ const process = require('process');
 const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme');
 const generatePalette = require(path.resolve(__dirname, ('src/@fuse/tailwind/utils/generate-palette')));
+const geoColors = require('./colors-geotech');
 
 /**
  * Custom palettes
@@ -99,7 +100,11 @@ const config = {
             teal       : colors.teal,
             blue       : colors.blue,
             indigo     : colors.indigo,
-            purple     : colors.purple
+            purple     : colors.purple,
+            blueGeo    : geoColors.blueGeo,
+            redGeo     : geoColors.redGeo,
+            blackGeo   : geoColors.blackGeo,
+            grayGeo    : geoColors.grayGeo
         },
         fontSize: {
             'xs'  : '0.625rem',
