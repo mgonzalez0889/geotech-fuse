@@ -70,7 +70,6 @@ export class AuthService
      */
     signIn(credentials: { user: string; password: string, client_id: string, client_secret: string, grant_type: string }): Observable<any>
     {
-        console.log(credentials);
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {

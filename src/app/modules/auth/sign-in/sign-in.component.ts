@@ -43,15 +43,7 @@ export class AuthSignInComponent implements OnInit
      */
     ngOnInit(): void
     {
-        // Create the form
-        this.signInForm = this._formBuilder.group({
-            user     : ['', [Validators.required]],
-            password  : ['', Validators.required],
-            rememberMe: [''],
-            client_id : '2kRiNFSuQu--YZzKAw__OpMJ16RJyxQOd9Q735JWVLA',
-            client_secret : 'XIOL8fmasMN6T4h4xPNEGtTZSx6mf_wWlqwSHzTuh7U',
-            grant_type : 'password'
-        });
+       this.createForm();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -76,7 +68,11 @@ export class AuthSignInComponent implements OnInit
         this.showAlert = false;
 
         // Sign in
-        this._authService.signIn(this.signInForm.value)
+        const data: any = this.signInForm.getRawValue();
+        data.client_id = '2kRiNFSuQu--YZzKAw__OpMJ16RJyxQOd9Q735JWVLA';
+        data.client_secret = 'XIOL8fmasMN6T4h4xPNEGtTZSx6mf_wWlqwSHzTuh7U';
+        data.grant_type = 'password';
+        this._authService.signIn(data)
             .subscribe(
                 () => {
 
@@ -102,12 +98,24 @@ export class AuthSignInComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Wrong email or password'
+                        message: 'Error de usuario o contraseña!'
                     };
 
                     // Show the alert
                     this.showAlert = true;
                 }
             );
+    }
+
+    private createForm(): void {
+        // Create the form
+        this.signInForm = this._formBuilder.group({
+            user     : ['', [Validators.required]],
+            password  : ['', Validators.required],
+            rememberMe: [''],
+            client_id : [''],
+            client_secret : [''],
+            grant_type : ['']
+        });
     }
 }
