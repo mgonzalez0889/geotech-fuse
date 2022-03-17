@@ -9,6 +9,7 @@
                 <input
                     matInput
                     formControlName="full_name"
+                    [autocomplete]="'off'"
                 >
             </mat-form-field>
 
@@ -28,6 +29,7 @@
                 <input
                     matInput
                     formControlName="user_login"
+                    [autocomplete]="'off'"
                 >
             </mat-form-field>
 
@@ -35,8 +37,10 @@
                             *ngIf="fieldPassword || form.getRawValue().enable_pass">
                 <mat-label>Contraseña</mat-label>
                 <input
-                    matInput type="password"
+                    matInput
+                    type="password"
                     formControlName="password_digest"
+                    [autocomplete]="'off'"
                 >
             </mat-form-field>
 
@@ -47,6 +51,7 @@
                     matInput
                     type="password"
                     formControlName="confirm_password"
+                    [autocomplete]="'off'"
                 >
                 <mat-error *ngIf="form.get('confirm_password').hasError('mustMatch')">
                     La contraseña no coincide
@@ -58,6 +63,7 @@
                 <input
                     matInput
                     formControlName="phone"
+                    [autocomplete]="'off'"
                 >
             </mat-form-field>
 
@@ -75,6 +81,7 @@
                 <input
                     matInput
                     formControlName="email"
+                    [autocomplete]="'off'"
                 >
             </mat-form-field>
 
@@ -83,6 +90,7 @@
                 <input
                     matInput
                     formControlName="address"
+                    [autocomplete]="'off'"
                 >
             </mat-form-field>
 
@@ -90,7 +98,8 @@
                 <span class="font-semibold mb-2">¿Cambiar contraseña?</span>
                 <mat-slide-toggle
                     formControlName="enable_pass"
-                    [color]="'primary'">
+                    [color]="'primary'"
+                >
                     <!--{{selectedProductForm.get('active').value === true ? 'Active' : 'Disabled'}}-->
                 </mat-slide-toggle>
             </ng-container>
