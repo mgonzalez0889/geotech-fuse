@@ -7,6 +7,7 @@ import {debounceTime, switchMap, takeUntil} from "rxjs/operators";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ConfirmDeleteComponent} from "../../../../shared/dialogs/confirm-delete/confirm-delete.component";
 import {MatTableDataSource} from "@angular/material/table";
+import {FormUserComponent} from "../form-user/form-user.component";
 
 @Component({
   selector: 'app-grid-user',
@@ -21,7 +22,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public show: boolean = false;
   public subscription$: Subscription;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
-  public displayedColumns: string[] = ['user_login', 'full_name', 'profile', 'email'];
+  public displayedColumns: string[] = ['user_login', 'full_name', 'profile', 'email', 'actions'];
     // 'full_name', 'profile', 'email'
   constructor(
       private usersService: UsersService,
@@ -38,7 +39,16 @@ export class GridUserComponent implements OnInit, OnDestroy {
    * @description: Abre el formulario
    */
   public openForm(): void {
-      this.show = true;
+      const dialogRef = this.dialog.open(FormUserComponent, {
+          data: {
+              type: 'NEW',
+              isEdit: false
+          },
+          minWidth: '30%',
+          maxWidth: '10vw'
+      });
+      dialogRef.afterClosed().toPromise();
+      //this.show = true;
       this.usersService.behaviorSubjectUser$.next({type: 'NEW', isEdit: false});
   }
   public closeForm(value): void {

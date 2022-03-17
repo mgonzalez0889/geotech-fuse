@@ -20,6 +20,7 @@ import { SmartUserComponent } from './smart-user/smart-user.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTableModule} from "@angular/material/table";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import {MatTableModule} from "@angular/material/table";
         MatRadioModule,
         MatTooltipModule,
         MatSnackBarModule,
-        MatTableModule
+        MatTableModule,
+        MatDialogModule
     ]
 })
 export class UsersModule { }
