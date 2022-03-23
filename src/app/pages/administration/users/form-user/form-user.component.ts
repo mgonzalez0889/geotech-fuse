@@ -1,6 +1,6 @@
 import {
     Component,
-    EventEmitter,
+    EventEmitter, Inject,
     Input,
     OnDestroy,
     OnInit,
@@ -14,6 +14,7 @@ import {UsersService} from '../../../../core/services/users.service';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FuseValidators} from "../../../../../@fuse/validators";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
     selector: 'app-form-user',
@@ -36,6 +37,8 @@ export class FormUserComponent implements OnInit, OnDestroy {
         private profileService: ProfilesService,
         private userService: UsersService,
         private _snackBar: MatSnackBar,
+        private _matDialog: MatDialogRef<FormUserComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
     ) {
     }
 
@@ -49,11 +52,15 @@ export class FormUserComponent implements OnInit, OnDestroy {
      * @description: Metodo para guardar y editar usuario
      */
     public onSave(): void {
-        const data = this.form.getRawValue();
-        if (!data.id) {
-            this.newUser(data);
-        } else {
-            this.editUser(data);
+        if (this.form.valid) {
+            const data = this.form.getRawValue();
+            if (!data.id) {
+                this.newUser(data);
+            } else {
+                this.editUser(data);
+            }
+        }else {
+            this.form.markAllAsTouched();
         }
     }
 
@@ -61,7 +68,8 @@ export class FormUserComponent implements OnInit, OnDestroy {
      * @description: Cierra formulario
      */
     public onClose(): void {
-        this.onShow.emit(false);
+        // this.onShow.emit(false);
+        this._matDialog.close();
     }
 
     /**

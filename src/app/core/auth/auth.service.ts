@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import {Observable, of, throwError, timer} from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
@@ -9,7 +9,7 @@ import {AppSettingsService} from "../app-configs/app-settings.service";
 @Injectable()
 export class AuthService
 {
-    private _authenticated: boolean = false;
+    public _authenticated: boolean = false;
 
     /**
      * Constructor
@@ -70,7 +70,6 @@ export class AuthService
      */
     signIn(credentials: { user: string; password: string, client_id: string, client_secret: string, grant_type: string }): Observable<any>
     {
-        console.log(credentials);
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {
@@ -134,7 +133,10 @@ export class AuthService
         localStorage.removeItem('accessToken');
 
         // Set the authenticated flag to false
-        this._authenticated = false;
+        const count = timer(500);
+        count.subscribe(() => {
+            this._authenticated = false;
+        });
 
         // Return the observable
         return of(true);
