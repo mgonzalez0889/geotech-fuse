@@ -1,3 +1,91 @@
+<h2 mat-dialog-title class="font-medium mb-2 text-2xl text-gray-900">{{titleForm}}</h2>
+<mat-dialog-content>
+    <div class="flex flex-col">
+        <!--Form-->
+        <form [formGroup]="form">
+            <mat-form-field class="fuse-mat-dense w-full">
+                <mat-label>Nombre</mat-label>
+                <input matInput
+                       formControlName="title"
+                >
+            </mat-form-field>
+            <mat-form-field class="fuse-mat-textarea w-full">
+                <mat-label>Descripción</mat-label>
+                <textarea
+                    matInput
+                    formControlName="option_description"
+                    [rows]="3"></textarea>
+            </mat-form-field>
+            <mat-form-field class="fuse-mat-dense w-full">
+                <mat-label>Ruta</mat-label>
+                <input matInput
+                       formControlName="link"
+                >
+                <span matPrefix>/administration/users</span>
+            </mat-form-field>
+            <mat-form-field class="fuse-mat-dense w-full">
+                <mat-label>Icono</mat-label>
+                <input matInput
+                       formControlName="icon"
+                >
+            </mat-form-field>
+            <ng-container *ngIf="menuOptions$ | async as options">
+                <mat-form-field class="fuse-mat-dense w-full">
+                    <mat-label>Opciones de menu</mat-label>
+                    <mat-select formControlName="id_father"
+                    >
+                        <mat-option [value]="0">Padre</mat-option>
+                        <mat-option
+                            [value]="option.id"
+                            *ngFor="let option of options.data"
+                        >
+                            {{option.title}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
+            <span class="font-semibold mb-2 gt-xs:text-right gt-xs:min-w-32 gt-xs:mr-4 gt-xs:mb-0">Opciones</span>
+            <div class="flex flex-row">
+                <mat-checkbox
+                    class="mb-2 mr-2"
+                    [color]="'primary'"
+                    formControlName="option_read"
+                >
+                    Ver
+                </mat-checkbox>
+                <mat-checkbox
+                    class="mb-2 mr-2"
+                    [color]="'primary'"
+                    formControlName="option_create"
+                >
+                    Crear
+                </mat-checkbox>
+                <mat-checkbox
+                    class="mb-2 mr-2"
+                    [color]="'primary'"
+                    formControlName="option_update"
+                >
+                    Editar
+                </mat-checkbox>
+                <mat-checkbox
+                    class="mb-2 mr-2"
+                    [color]="'primary'"
+                    formControlName="option_delete"
+                >
+                    Eliminar
+                </mat-checkbox>
+            </div>
+
+
+
+        </form>
+
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+
+</mat-dialog-actions>
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
      cdkScrollable
 >
@@ -90,7 +178,7 @@
                         [color]="'warn'"
                         (click)="onCLose()"
                 >
-                Cerrar
+                    Cerrar
                 </button>
                 <button
                     class="px-6 ml-3"

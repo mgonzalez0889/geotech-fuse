@@ -13,6 +13,9 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {CoreModule} from "../../../core/core.module";
+import {MatTableModule} from "@angular/material/table";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -31,6 +34,9 @@ import {CoreModule} from "../../../core/core.module";
         MatSelectModule,
         MatCheckboxModule,
         MatRadioModule,
+        MatTableModule,
+        MatTooltipModule,
+        MatDialogModule,
     ]
 })
 export class MenuOptionsModule { }

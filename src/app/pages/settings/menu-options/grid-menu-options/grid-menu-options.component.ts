@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs";
 import {MenuOptionsService} from "../../../../core/services/menu-options.service";
+import {MatDialog} from "@angular/material/dialog";
+import {FormMenuOptionsComponent} from "../form-menu-options/form-menu-options.component";
 
 @Component({
   selector: 'app-grid-menu-options',
@@ -12,8 +14,10 @@ export class GridMenuOptionsComponent implements OnInit {
   searchInputControl: FormControl = new FormControl();
   public options$: Observable<any>;
   public show: boolean = false;
+  public displayedColums: string[] = ['title', 'option_description', 'link', 'actions'];
   constructor(
-      private menuOptionService: MenuOptionsService
+      private menuOptionService: MenuOptionsService,
+      private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -23,7 +27,16 @@ export class GridMenuOptionsComponent implements OnInit {
    * @description: Abre el formulario menu opcion
    */
   public openForm(): void {
-      this.show = true;
+      const dialogRef = this.dialog.open(FormMenuOptionsComponent, {
+          data: {
+              type: 'NEW',
+              isEdit: false
+          },
+          minWidth: '30%',
+          maxWidth: '10vh'
+      });
+      dialogRef.afterClosed().toPromise();
+      // this.show = true;
       this.menuOptionService.behaviorSubjectOption$.next({type: 'NEW', isEdit: false});
   }
   public closeForm(value: boolean): void {
