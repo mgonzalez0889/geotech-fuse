@@ -15,12 +15,13 @@ import { ShortcutsModule } from 'app/layout/common/shortcuts/shortcuts.module';
 import { UserModule } from 'app/layout/common/user/user.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { ClassicLayoutComponent } from 'app/layout/layouts/vertical/classic/classic.component';
+import {FuseLoadingBarModule} from "../../../../../@fuse/components/loading-bar";
 
 @NgModule({
     declarations: [
         ClassicLayoutComponent
     ],
-    imports     : [
+    imports: [
         HttpClientModule,
         RouterModule,
         MatButtonModule,
@@ -35,7 +36,8 @@ import { ClassicLayoutComponent } from 'app/layout/layouts/vertical/classic/clas
         SearchModule,
         ShortcutsModule,
         UserModule,
-        SharedModule
+        SharedModule,
+        FuseLoadingBarModule
     ],
     exports     : [
         ClassicLayoutComponent
