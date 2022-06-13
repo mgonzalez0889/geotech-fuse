@@ -150,6 +150,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   private getDevices(): void {
       this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
           this.setMarkers(data);
+          console.log(data,'esto es data')
       });
   }
   /**
