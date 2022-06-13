@@ -12,11 +12,11 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
-import {AppSettingsService} from "./core/app-configs/app-settings.service";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatMomentDateModule} from "@angular/material-moment-adapter";
-import {MatNativeDateModule} from "@angular/material/core";
-import {MatDialogModule} from "@angular/material/dialog";
+import {AppSettingsService} from './core/app-configs/app-settings.service';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDialogModule} from '@angular/material/dialog';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
