@@ -7,11 +7,13 @@
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
                     <mat-label>Vehículo</mat-label>
                     <mat-select [multiple]="true">
-                        <mat-option
-                        >Ford
-                        </mat-option>
-                        <mat-option
-                        >Chevrolet
+                        <input style="text-align: center;height: 40px"
+                               placeholder="Buscar" matInput type="text" (keyup)="keyword($event.target.value)">
+                        <mat-option disabled>Seleccione una placa</mat-option>
+                        <mat-option [value]="mobile"
+                                    *ngFor="let mobile of mobileList">
+                            <mat-icon svgIcon="two_wheeler"></mat-icon>
+                            {{mobile}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -25,7 +27,7 @@
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mb-3 mr-3">
                     <mat-label>Costo</mat-label>
-                    <input type="text" matInput>
+                    <input type="number" matInput>
                 </mat-form-field>
                 <section class="example-section">
                     <mat-checkbox class="example-margin" >Tarea de servicio no planeada</mat-checkbox>

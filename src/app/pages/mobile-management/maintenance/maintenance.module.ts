@@ -16,6 +16,7 @@ import {NgApexchartsModule} from "ng-apexcharts";
 import {MatDialogModule} from "@angular/material/dialog";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         NgApexchartsModule,
         MatDialogModule,
         ReactiveFormsModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatMenuModule
     ]
 })
 export class MaintenanceModule { }

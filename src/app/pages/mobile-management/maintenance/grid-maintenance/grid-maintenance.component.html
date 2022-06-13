@@ -6,49 +6,49 @@
                     <h2 class="font-medium mb-2 text-2xl text-gray-900">Gestión de mantenimiento</h2>
                 </div>
                 <div class="flex flex-row items-center">
+                    <button
+                        mat-stroked-button
+                        class="text-green-600"
+                    >Realizar
+                        <mat-icon class="text-green-600" [svgIcon]="'mat_outline:done'"></mat-icon>
+                    </button>
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 mr-3">
                         <mat-label>Vehículo</mat-label>
                         <mat-select [multiple]="true">
-                            <mat-option
-                            >No agrupar
-                            </mat-option>
-                            <mat-option
-                            >Agrupar
+                            <input style="text-align: center;height: 40px"
+                                   placeholder="Buscar" matInput type="text" (keyup)="keyword($event.target.value)">
+                            <mat-option disabled>Seleccione una placa</mat-option>
+                            <mat-option [value]="mobile"
+                                        *ngFor="let mobile of mobileList">
+                                <mat-icon svgIcon="two_wheeler"></mat-icon>
+                                {{mobile}}
                             </mat-option>
                         </mat-select>
                         <mat-icon
                             class="icon-size-5"
                             matPrefix
-                            [svgIcon]="'mat_outline:directions_car'"></mat-icon>
+                            [svgIcon]="'mat_outline:directions_car'">
+                        </mat-icon>
                     </mat-form-field>
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 mr-3">
                         <mat-label>Estados</mat-label>
                         <mat-select [multiple]="true">
-                            <mat-option
-                            >Programado
-                            </mat-option>
-                            <mat-option
-                            >Terminado
-                            </mat-option>
-                            <mat-option
-                            >Expirado
-                            </mat-option>
-                            <mat-option
-                            >Pendiente
+                            <mat-option *ngFor="let state of states" [value]="state.id">
+                                <mat-icon [class]="state.style" svgIcon="circle">
+                                </mat-icon>
+                                {{state.state}}
                             </mat-option>
                         </mat-select>
                         <mat-icon
                             class="icon-size-5"
                             matPrefix
-                            [svgIcon]="'mat_outline:circle'"></mat-icon>
+                            [svgIcon]="'check_box'"></mat-icon>
                     </mat-form-field>
-                    <mat-slide-toggle class="mr-2" [matTooltip]="'Tareas no planeadas'"></mat-slide-toggle>
-                    <mat-slide-toggle class="mr-2" [matTooltip]="'Tareas planeadas'"></mat-slide-toggle>
-                    <button
-                        mat-flat-button
-                        class="bg-blue-600 text-white"
-                        (click)="openForm()"
-                    >Nuevo
+                    <button style="margin-top: 25px"
+                            mat-flat-button
+                            class="bg-blue-600 text-white"
+                            (click)="openForm()"
+                    >Nuevo registro
                         <mat-icon [svgIcon]="'mat_outline:add'"></mat-icon>
                     </button>
                 </div>
@@ -56,64 +56,46 @@
         </div>
     </div>
     <!--Opciones-->
-    <div class="card bg-white shadow flex flex-col">
-        <div class="flex flex-row items-center justify-between p-5">
-            <div class="flex flex-row items-end">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 mr-2">
-                    <mat-label>Agrupar por</mat-label>
-                    <mat-select>
-                        <mat-option
-                            >No agrupar
-                        </mat-option>
-                    </mat-select>
-                    <mat-icon
-                        class="icon-size-5"
-                        matPrefix
-                        [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                </mat-form-field>
-                <button
-                        mat-stroked-button
-                        class="text-green-600"
-                >Realizar
-                    <mat-icon class="text-green-600" [svgIcon]="'mat_outline:done'"></mat-icon>
-                </button>
-            </div>
-            <div class="">
-                <button
-                    mat-icon-button
-                >
-                    <mat-icon [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                >
-                    <mat-icon [svgIcon]="'mat_outline:content_copy'"></mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                >
-                    <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                >
-                    <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                >
-                    <mat-icon [svgIcon]="'mat_outline:print'"></mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                >
-                    <mat-icon [svgIcon]="'mat_outline:download'"></mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
+
     <!--Main table-->
     <div class="card bg-white grid grid-cols-1 p-5">
+        <div>
+            <button
+                mat-icon-button
+            >
+                <mat-icon [svgIcon]="'heroicons_outline:search'"></mat-icon>
+            </button>
+            <button
+                mat-icon-button
+            >
+                <mat-icon [svgIcon]="'mat_outline:content_copy'"></mat-icon>
+            </button>
+            <button
+                mat-icon-button
+            >
+                <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
+            </button>
+            <button
+                mat-icon-button
+            >
+                <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+            </button>
+            <button
+                mat-icon-button
+            >
+                <mat-icon [svgIcon]="'mat_outline:print'"></mat-icon>
+            </button>
+            <button [matMenuTriggerFor]="downloadOptions"
+                    mat-icon-button
+            >
+                <mat-icon [svgIcon]="'mat_outline:download'"></mat-icon>
+            </button>
+            <mat-menu #downloadOptions="matMenu">
+                <button mat-menu-item>PDF</button>
+                <button mat-menu-item>CSV</button>
+                <button mat-menu-item>EXCEL</button>
+            </mat-menu>
+        </div>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z10 w-full">
             <!-- Position Column -->
             <ng-container matColumnDef="position">

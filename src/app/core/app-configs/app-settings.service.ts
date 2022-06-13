@@ -110,5 +110,4 @@ export class AppSettingsService {
             base: EndPoints.uri('historic')
         }
     };
-
 }

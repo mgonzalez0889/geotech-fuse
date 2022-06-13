@@ -52,7 +52,6 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             color: ['', [Validators.required]],
             description: ['', [Validators.required]],
             checkNotificationEmail: [''],
-            //contacDate: ['']
         });
     }
 

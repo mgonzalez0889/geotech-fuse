@@ -16,7 +16,7 @@ export class MobileService {
   ) { }
 
   /**
-   * @description: Obtiene todos los mobiles
+   * @description: Obtiene todos los moviles
    */
   public getMobiles(): Observable<ApiResponseInterface<MobilesInterface[]>> {
       const params = {method: 'index_all_mobile'};
