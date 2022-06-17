@@ -5,6 +5,8 @@ import * as L from 'leaflet';
 import { MobileService } from 'app/core/services/mobile.service';
 import { FleetsService } from 'app/core/services/fleets.service';
 import 'leaflet.markercluster';
+import 'leaflet-rotatedmarker';
+import moment from 'moment';
 
 @Component({
     selector: 'app-map',
@@ -46,12 +48,68 @@ export class MapComponent implements OnInit, AfterViewInit {
      */
     private setmarker(mobiles: any): void {
         const markerCluster = new MarkerClusterGroup();
-        mobiles.forEach((value, index) => {
+        const infoWindows = `<table>
+        <tr>
+            <th rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+            </th>
+            <th>GB001</th>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+
+            </td>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+
+            </td>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+
+            </td>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+            </td>
+        </tr>
+        <tr>
+            <td>4444</td>
+        </tr>
+        <tr>
+            <th colspan="3"> ultimo reporte</th>
+            <th colspan="3">Velocidad</td>
+        </tr>
+        <tr>
+            <td colspan="3"> hace 40 min</td>
+            <td colspan="3">45 Km/H</td>
+        </tr>
+        <tr>
+            <th colspan="6">Ultima posicion</th>
+        </tr>
+        <tr>
+            <td colspan="6">Cra 55 # 100 - 51 Barranquilla, Atlantico</td>
+        </tr>
+        <tr>
+            <th colspan="6">Frencuencia actual</th>
+        </tr>
+        <tr>
+            <td colspan="6"><md-button class="md-raised btn-w-md md-primary" type="submit">{{ 'GENERAL.SAVE' | translate}}
+            </md-button></td>
+        </tr>
+
+    </table>`;
+    const popup = L.popup();
+        mobiles.forEach((value: any, index: string | number) => {
             const data = mobiles[index];
             this.markers[data.id] = new L.Marker([data.x, data.y], {
                 icon: this.setIcon(data),
-                //rotationAngle: data.orientation,
-            }).addTo(markerCluster);
+                rotationAngle: this.rotationIcon(data),
+            })
+                .bindTooltip(data.plate, {
+                    permanent: true,
+                    direction: 'bottom',
+                    offset: L.point({ x: 2, y: 10 }),
+                })
+                .addTo(markerCluster);
+            this.markers[data.id].bindPopup(infoWindows).openPopup();
         });
         markerCluster.addTo(this.map);
     }
@@ -59,48 +117,54 @@ export class MapComponent implements OnInit, AfterViewInit {
      * @description: Asigna los iconos para el marcador deacuerdo al estado
      */
     private setIcon(data: any): any {
-        let iconArrow: string = '/assets/icons/arrow-01.svg';
-        iconArrow =
-            'data:image/svg+xml;utf-8,' +
-            encodeURIComponent(
-                '<?xml version="1.0" encoding="utf-8"?>\n' +
-                    '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
-                    '\t viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">\n' +
-                    '<style type="text/css">\n' +
-                    '\t.st0{fill:' +
-                    data.color +
-                    ';}\n' +
-                    '\t.st1{fill:' +
-                    data.color +
-                    ';}\n' +
-                    '</style>\n' +
-                    '<g>\n' +
-                    '\t<polygon class="st0" points="100,141.1 63.4,153.7 100.4,46 \t"/>\n' +
-                    '\t<polygon class="st1" points="100,141.1 136.6,154 100.4,46 \t"/>\n' +
-                    '</g>\n' +
-                    '</svg>\n '
-            );
-        let myIcon;
-        if (data.engine === 0) {
+        const diffDays = moment(new Date()).diff(
+            moment(data.date_entry),
+            'days'
+        );
+        let myIcon: L.Icon<L.IconOptions>;
+        if (diffDays >= 1 || isNaN(diffDays)) {
             return (myIcon = L.icon({
-                iconUrl: '/assets/icons/off.svg',
-                iconSize: [30, 30],
-                iconAnchor: [15, 15],
+                iconUrl: '../assets/icons/iconMap/no_report.svg',
+                iconSize: [25, 25],
+                iconAnchor: [12.5, 12.5],
             }));
         } else {
-            if (data.speed === 0) {
+            if (data.engine === 0) {
                 return (myIcon = L.icon({
-                    iconUrl: '/assets/icons/on.svg',
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15],
+                    iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
+                    iconSize: [25, 25],
+                    iconAnchor: [12.5, 12.5],
                 }));
             } else {
-                return (myIcon = L.icon({
-                    iconUrl: iconArrow,
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15],
-                }));
+                if (data.speed === 0) {
+                    return (myIcon = L.icon({
+                        iconUrl: '../assets/icons/iconMap/engine_ignition.svg',
+                        iconSize: [25, 25],
+                        iconAnchor: [12.5, 12.5],
+                    }));
+                } else {
+                    return (myIcon = L.icon({
+                        iconUrl: '../assets/icons/iconMap/arrow.svg',
+                        iconSize: [36, 36],
+                        iconAnchor: [18, 18],
+                    }));
+                }
             }
+        }
+    }
+    /**
+     * @description: Asigna la rotacion de los iconos
+     */
+    private rotationIcon(data: any): any {
+        const diffDays = moment(new Date()).diff(
+            moment(data.date_entry),
+            'days'
+        );
+        let rotaIcon: any;
+        if (diffDays >= 1 || isNaN(diffDays)) {
+            return (rotaIcon = null);
+        } else {
+            return (rotaIcon = data.orientation);
         }
     }
     /**
@@ -132,8 +196,10 @@ export class MapComponent implements OnInit, AfterViewInit {
             });
 
             const baseLayers = {
-                googleMaps: googleMaps,
-                googleHybrid: googleHybrid,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                'Google Maps': googleMaps,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                'Google Hibrido': googleHybrid,
             };
             L.control.layers(baseLayers).addTo(this.map);
         });

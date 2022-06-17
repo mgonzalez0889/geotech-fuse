@@ -1,404 +1,206 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Subscription, timer } from 'rxjs';
+import { MarkerClusterGroup } from 'leaflet';
 import * as L from 'leaflet';
-import * as R from 'leaflet-marker-rotation';
-import {Observable, Subject, Subscriber, Subscription, timer} from 'rxjs';
-import {MobileService} from '../../../../core/services/mobile.service';
-import {HistoriesService} from '../../../../core/services/histories.service';
-import {DatePipe} from '@angular/common';
-import {MobilesInterface} from '../../../../core/interfaces/mobiles.interface';
-import {FleetsService} from "../../../../core/services/fleets.service";
-import {FleetInterface} from "../../../../core/interfaces/fleets.interface";
-import {delay, takeUntil} from "rxjs/operators";
+import { MobileService } from 'app/core/services/mobile.service';
+import { FleetsService } from 'app/core/services/fleets.service';
+import 'leaflet.markercluster';
+import 'leaflet-rotatedmarker';
+import moment from 'moment';
 
 @Component({
-  selector: 'app-maps',
-  templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.scss'],
-  providers: [DatePipe]
+    selector: 'app-maps',
+    templateUrl: './maps.component.html',
+    styleUrls: ['./maps.component.scss'],
 })
-export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
-  private map: L.Map;
-  @ViewChild('map') divMaps: ElementRef;
-  public subscription: Subscription;
-  public markers: MobilesInterface[] = [];
-  public markersAll: L.Marker[] = [];
-  public showHistory: boolean = false;
-  public layerGroup: any = [];
-  public layerGorupFleet: any = [];
-  public showMenuFleet: boolean = false;
-  public showMenuMobiles: boolean = true;
-  public markersFleet: L.Marker[] = [];
-  private unsubscribe$: Subject<any> = new Subject<any>();
-  public showDetailMobile: boolean = false;
+export class MapsComponent implements OnInit, AfterViewInit {
+    public showMenuMobiles: boolean = true;
+    public showDetailMobile: boolean = false;
+    public showHistory: boolean = false;
+    public showMenuFleet: boolean = false;
+    public markerClusterGroup: L.MarkerClusterGroup;
+    public map: L.Map;
+    public subscription: Subscription;
+    public markers: any = {};
+    constructor(
+        private mobilesService: MobileService,
+        private fleetService: FleetsService
+    ) {}
 
-  constructor(
-      private mobilesService: MobileService,
-      private historyService: HistoriesService,
-      private datePipe: DatePipe,
-      private fleetService: FleetsService
-  ) {}
+    ngOnInit(): void {
+        const time = timer(2000);
+        time.subscribe((t) => {
+            this.getMobiles();
+        });
+    }
 
-  ngOnInit(): void {
-      const time = timer(2000);
-      time.subscribe((t) => {
-        this.getDevices();
-      });
-      this.listenObservables();
-      this.listenDataObservable();
-      this.listenObservableCloseModal();
-      this.listenObservableMenuFleet();
-      this.listenObservableMenuMobile();
-      this.listenObservableFleetPlate();
-  }
-
-  public onCloseMenu(event): void {
-      this.showHistory = event;
-  }
-  public onCloseDetailMenu(event): void {
-      this.showDetailMobile = event;
-  }
-  /**
-   * @description: Recibe data y envia al metodo addMarker
-   */
-  public onValue(value: MobilesInterface[]): void {
-      this.addMarker(value);
-  }
-  /**
-   * @description: Inicializacion del mapa
-  */
-  private initMap(): void {
-      const myLatLng: L.LatLngExpression = [4.658383846282959, -74.09394073486328];
-      this.map = L.map(this.divMaps.nativeElement, {
-          center: myLatLng,
-          zoom: 15,
-          // zoomControl: false
-      });
-      this.map.zoomControl.setPosition('bottomright');
-
-      const tiles = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-          attribution: 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://cloudmade.com">CloudMade</a>',
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      });
-      tiles.addTo(this.map);
-
-
-
-     /* const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          minZoom: 10,
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      });
-      tiles.addTo(this.map);*/
-      // L.marker([4.658383846282959, -74.09394073486328]).addTo(this.map);
-      this.getCurrentPosition().subscribe((position: any) => {
-          this.map.flyTo([position.latitude, position.longitude], 13);
-
-          /*const marker = L.marker([position.latitude, position.longitude],  ).bindPopup('Angular Leaflet');
-          marker.addTo(this.map);*/
-      });
-
-  }
-  /**
-   * @description: Adiciona marcadores al inicio
-   */
-  public addMarker(markers: MobilesInterface[]): void {
-      if (markers.length) {
-          this.markersAll.forEach((t) => {
-              t.remove();
-          });
-          markers.forEach((m) => {
-              if (m.selected) {
-                  this.markers.push(m);
-                  // const value = this.markersAll.hasOwnProperty(m.id);
-              }else {
-                  const index = this.markers.indexOf(m);
-                  // console.log(index);
-                  if (index > -1) {
-                      this.markers.splice(index, 1);
-                  }
-              }
-          });
-          // console.log(this.markers);
-          this.historyService.subjectHistories.next({payload: this.markers});
-          this.setMarkers(this.markers);
-      }
-      if(!this.markers.length) {
-          this.getDevices();
-      }
-  }
-  /**
-   * @description: Metodo que identifica la posicion actual
-   */
-  private getCurrentPosition(): any {
-      return new Observable((observer: Subscriber<any>) => {
-          if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition((position: any) => {
-                  observer.next({
-                      latitude: position.coords.latitude,
-                      longitude: position.coords.longitude
-                  });
-                  observer.complete();
-              });
-          }else {
-              observer.error();
-          }
-      });
-  }
-  /**
-   * @description: Obtiene todos los dispositivos
-   */
-  private getDevices(): void {
-      this.subscription = this.mobilesService.getMobiles().subscribe(({data}) => {
-          this.setMarkers(data);
-          console.log(data,'esto es data')
-      });
-  }
-  /**
-   * @description: Muestra los marcadores en el mapa desde el inicio
-   */
-  private setMarkers(markers: MobilesInterface[]): void {
-      if (markers) {
-          let myLatLng: any = {lat: '', lng: ''};
-          let title: string;
-          const iconStop = new L.Icon({
-              iconUrl: '/assets/icons/punt-01.svg',
-              iconSize: [55, 71],
-              iconAnchor: [12, 41],
-              popupAnchor: [1, -34],
-              shadowSize: [41, 41],
-          });
-          // const iconStop: any = '/assets/icons/arrow-01.svg';
-          let iconArrow: string = '/assets/icons/arrow-01.svg';
-          let customIcon: L.Icon;
-          markers.forEach((m) => {
-              myLatLng = {
-                  lat: Number(m.y),
-                  lng: Number(m.x)
-              };
-              title = m.plate;
-              // eslint-disable-next-line max-len
-              console.log(customIcon);
-              iconArrow =
-                  'data:image/svg+xml;utf-8,' + encodeURIComponent('<?xml version="1.0" encoding="utf-8"?>\n' +
-                  '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
-                  '\t viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">\n' +
-                  '<style type="text/css">\n' +
-                  '\t.st0{fill:'+ m.color +';}\n' +
-                  '\t.st1{fill:'+ m.color +';}\n' +
-                  '</style>\n' +
-                  '<g>\n' +
-                  '\t<polygon class="st0" points="100,141.1 63.4,153.7 100.4,46 \t"/>\n' +
-                  '\t<polygon class="st1" points="100,141.1 136.6,154 100.4,46 \t"/>\n' +
-                  '</g>\n' +
-                  '</svg>\n ');
-              customIcon = new L.Icon({
-                  iconUrl: iconArrow,
-                  iconSize: [55, 71],
-                  iconAnchor: [12, 41],
-                  popupAnchor: [1, -34],
-                  shadowSize: [41, 41],
-              });
-              // console.log(iconArrow);
-              this.markersAll[m.id] = new R.RotatedMarker([myLatLng.lat, myLatLng.lng],
-                  {rotationAngle: Number(m.heading),
-                           rotationOrigin: 'bottom center',
-                           icon: customIcon })
-                  .addTo(this.map).on('click', (e) => {
-                     console.log(e);
-                     this.showDetailMobile = !this.showDetailMobile;
-                     this.historyService.subjectDataSelectedDetail.next({payload: m, select: true});
-                     this.historyService.modalShowSelected$.next({show: false});
-                  });
-
-              // this.markersAll[m.id] = L.marker([myLatLng.lat, myLatLng.lng]).addTo(this.map);
-              // this.markersInit.push(mark);
-          });
-          // console.log(this.markersAll);
-      }
-  }
-  /**
-   * @description: Escucha el observable
-   */
-  private listenObservables(): void {
-      this.subscription = this.historyService.subjectDataHistories.subscribe(({show}) => {
-          if (show) {
-              this.showHistory = show;
-          }
-      });
-  }
-  /**
-   * @description: Escucha el observable data para marcador
-   */
-  private listenDataObservable(): void {
-      this.subscription = this.historyService.subjectDataSelected.subscribe(({payload, select}) => {
-          if (select) {
-              console.log('Seleccionado para pintar', select);
-            const {color_line} = payload;
-              // this.markAndPolyline(payload);
-              let myLatLng: any = [];
-              let marker: any = {lat: '', lng: ''};
-              let bindTooltip: string;
-              let mark: L.Marker;
-              let layerGroup: L.LayerGroup = new L.LayerGroup();
-              let polyline: L.Polyline;
-              let colorPolyline: string;
-              const customIcon = new L.Icon({
-                  iconUrl: '/assets/icons/markerblue.svg',
-                  iconSize: [45, 61],
-                  iconAnchor: [12, 41],
-                  popupAnchor: [1, -34],
-                  shadowSize: [41, 41],
-              });
-              payload.time_line.forEach((m) => {
-                  myLatLng= [Number.parseFloat(m.x), Number.parseFloat(m.y)];
-                  colorPolyline = m.event_color;
-                  // console.log(m.x, m.y);
-                  marker = {
-                      lat: Number(m.x),
-                      lng: Number(m.y)
-                  };
-                  // console.log(marker);
-                  bindTooltip = `
-                    <h2 class="'semibold'">${payload.plate}</h2>
-                    <P class="'extralight'">
-                        Dirección: ${m.address}
-                    </P>
-                    <P class="'extralight'">
-                        Evento: ${m.event_name}
-                    </P>
-                    <P class="'extralight'">
-                        Fecha de Evento: ${this.datePipe.transform(m.date_event, 'medium')}
-                    </P>
-                    `;
-                  mark = L.marker([marker.lat, marker.lng],
-                      {icon: customIcon})
-                      .bindTooltip(bindTooltip, {direction: 'auto'})
-                  layerGroup.addLayer(mark).addTo(this.map);
-                  console.log('POLYLINE');
-                  console.log(myLatLng);
-                  console.log('COLOR');
-                  console.log(colorPolyline);
-                  polyline = L.polyline([myLatLng], {color: colorPolyline, weight: 5});
-                  console.log('LISTA');
-                  console.log(polyline);
-                  layerGroup.addLayer(polyline).addTo(this.map);
-                  // console.log(layerGroup);
-              });
-              // console.log('POLYLINE');
-              this.layerGroup.push({id: payload.plate, layerGroup});
-              // console.log(myLatLng);
-              // console.log(this.layerGroup);
-          }else {
-              const layer = this.layerGroup.find(t => t.id == payload.plate);
-              const index = this.layerGroup.indexOf( layer );
-              this.layerGroup.splice( index, 1 );
-              // console.log(layer?.layerGroup);
-              layer?.layerGroup.clearLayers();
-          }
-      });
-  }
-  /**
-   * @description: Escucha el observable fleet plate
-   */
-  private listenObservableFleetPlate(): void {
-      this.subscription = this.fleetService.behaviorSelectedFleetPlate$.subscribe(({payload, selected, id}) => {
-          if (selected) {
-            console.log(payload);
-            let mark: L.Marker;
-            let myLatLng: any = {lat: '', lng: ''};
-            let layerGroup: L.LayerGroup = new L.LayerGroup();
-            payload.forEach((m) => {
-                myLatLng = {
-                    lat: Number(m.x),
-                    lng: Number(m.y)
-                };
-                mark = L.marker([myLatLng.lat, myLatLng.lng])
-                layerGroup.addLayer(mark).addTo(this.map);
+    /**
+     * @description: Obtengo las flotas y vehiculosdel cliente
+     */
+    private getMobiles(): void {
+        this.subscription = this.mobilesService
+            .getMobiles()
+            .subscribe((data) => {
+                this.setmarker(data.data);
             });
-            console.log(layerGroup);
-            this.layerGorupFleet.push({id, layerGroup});
-            console.log(this.layerGorupFleet);
-          }else {
-              const layer = this.layerGorupFleet.find(t => t.id == id);
-              const index = this.layerGorupFleet.indexOf( layer );
-              this.layerGorupFleet.splice( index, 1 );
-              layer?.layerGroup.clearLayers();
-          }
-      });
+        this.subscription = this.fleetService.getFleets().subscribe((data) => {
+            console.log(data, ' estos son las flotas');
+        });
+    }
+    /**
+     * @description: Genera los marcadores de los moviles en el mapa
+     */
+    private setmarker(mobiles: any): void {
+        const markerCluster = new MarkerClusterGroup();
+        const infoWindows = `<table>
+        <tr>
+            <th rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+            </th>
+            <th>GB001</th>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
 
-  }
+            </td>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
 
-  /**
-   * @description: Metodo que marca y traza una polilinea
-   */
-  private markAndPolyline(mark): void {
-      console.log(mark);
-      mark.time_line.forEach(m => {
-          L.marker(m.x, m.y).addTo(this.map);
-      });
-  }
+            </td>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
 
-  private addIcon(engine, orientation) {
-      let icon: L.Icon;
+            </td>
+            <td rowspan="2">
+                <img src="./assets/icons/iconMap/geobolt_close.svg">
+            </td>
+        </tr>
+        <tr>
+            <td>4444</td>
+        </tr>
+        <tr>
+            <th colspan="3"> ultimo reporte</th>
+            <th colspan="3">Velocidad</td>
+        </tr>
+        <tr>
+            <td colspan="3"> hace 40 min</td>
+            <td colspan="3">45 Km/H</td>
+        </tr>
+        <tr>
+            <th colspan="6">Ultima posicion</th>
+        </tr>
+        <tr>
+            <td colspan="6">Cra 55 # 100 - 51 Barranquilla, Atlantico</td>
+        </tr>
+        <tr>
+            <th colspan="6">Frencuencia actual</th>
+        </tr>
+           </table>`;
+        const popup = L.popup();
+        mobiles.forEach((value: any, index: string | number) => {
+            const data = mobiles[index];
+            this.markers[data.id] = new L.Marker([data.x, data.y], {
+                icon: this.setIcon(data),
+                rotationAngle: this.rotationIcon(data),
+            })
+                .bindTooltip(data.plate, {
+                    permanent: true,
+                    direction: 'bottom',
+                    offset: L.point({ x: 2, y: 10 }),
+                })
+                .addTo(markerCluster);
+            this.markers[data.id].bindPopup(infoWindows).openPopup();
+        });
+        markerCluster.addTo(this.map);
+    }
+    /**
+     * @description: Asigna los iconos para el marcador deacuerdo al estado
+     */
+    private setIcon(data: any): any {
+        const diffDays = moment(new Date()).diff(
+            moment(data.date_entry),
+            'days'
+        );
+        let myIcon: L.Icon<L.IconOptions>;
+        if (diffDays >= 1 || isNaN(diffDays)) {
+            return (myIcon = L.icon({
+                iconUrl: '../assets/icons/iconMap/no_report.svg',
+                iconSize: [25, 25],
+                iconAnchor: [12.5, 12.5],
+            }));
+        } else {
+            if (data.engine === 0) {
+                return (myIcon = L.icon({
+                    iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
+                    iconSize: [25, 25],
+                    iconAnchor: [12.5, 12.5],
+                }));
+            } else {
+                if (data.speed === 0) {
+                    return (myIcon = L.icon({
+                        iconUrl: '../assets/icons/iconMap/engine_ignition.svg',
+                        iconSize: [25, 25],
+                        iconAnchor: [12.5, 12.5],
+                    }));
+                } else {
+                    return (myIcon = L.icon({
+                        iconUrl: '../assets/icons/iconMap/arrow.svg',
+                        iconSize: [36, 36],
+                        iconAnchor: [18, 18],
+                    }));
+                }
+            }
+        }
+    }
+    /**
+     * @description: Asigna la rotacion de los iconos
+     */
+    private rotationIcon(data: any): any {
+        const diffDays = moment(new Date()).diff(
+            moment(data.date_entry),
+            'days'
+        );
+        let rotaIcon: any;
+        if (diffDays >= 1 || isNaN(diffDays)) {
+            return (rotaIcon = null);
+        } else {
+            return (rotaIcon = data.orientation);
+        }
+    }
+    /**
+     * @description: Muestra la capa de los mapas
+     */
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    ngAfterViewInit(): void {
+        const time = timer(1000);
+        time.subscribe((t) => {
+            const googleMaps = L.tileLayer(
+                'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+                {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                }
+            );
+            const googleHybrid = L.tileLayer(
+                'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+                {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                }
+            );
+            this.map = L.map('map', {
+                center: [4.658383846282959, -74.09394073486328],
+                zoom: 10,
+                layers: [googleMaps],
+            });
 
-  }
-  /**
-   * @description: Escucha el observable Event de Histories
-   */
-  private listenObservableCloseModal(): void {
-      this.subscription = this.historyService.eventShowModal$.subscribe(({show}) => {
-          if (show) {
-              this.layerGroup.forEach((t) => {
-                  t.layerGroup.clearLayers();
-              });
-              this.layerGroup = [];
-          }
-      });
-  }
-  /**
-   * @description: Escucha el observable Menu FLoating Fleet
-   */
-  private listenObservableMenuFleet(): void {
-      this.subscription = this.historyService.floatingMenuFleet$.subscribe((show) => {
-          if (show) {
-              this.showMenuFleet = show;
-              this.showMenuMobiles = !show;
-              this.markersAll.forEach((t) => {
-                  t.remove();
-              });
-          }
-      });
-  }
-  /**
-   * @description: Escucha el observable Menu Floating Mobiles
-   */
-  private listenObservableMenuMobile(): void {
-      this.subscription = this.historyService.floatingMenuMobile$.subscribe((show) => {
-          if (show) {
-              this.showMenuMobiles = show;
-              this.showMenuFleet = !show;
-              this.getDevices();
-              this.layerGorupFleet.forEach((t) => {
-                  t.layerGroup.clearLayers();
-              });
-              this.layerGorupFleet = [];
-          }
-      });
-  }
-
-
-  ngAfterViewInit(): void {
-      const time = timer(1000);
-      time.subscribe((t) => {
-          this.initMap();
-      });
-  }
-
-  ngOnDestroy(): void {
-     this.subscription.unsubscribe();
-     this.historyService.resetValuesDataHistories();
-     this.historyService.resetDataSelected();
-  }
-
+            const baseLayers = {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                'Google Maps': googleMaps,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                'Google Hibrido': googleHybrid,
+            };
+            L.control.layers(baseLayers).addTo(this.map);
+        });
+    }
 }
