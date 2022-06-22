@@ -11,6 +11,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {
     FormDialogSelectHistorialComponent
 } from "../form-dialog-select-historial/form-dialog-select-historial.component";
+import {MatIconRegistry} from "@angular/material/icon";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-floating-menu',
@@ -22,7 +24,7 @@ import {
 })
 export class FloatingMenuComponent implements OnInit, OnDestroy {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
-  public displayedColumns: string[] = ['select'];
+  public displayedColumns: string[] = ['select', 'imei', 'batery', 'dop', 'id', 'satellite'];
   public dataSource: any = [];
   public items: MobilesInterface[] = [];
   public selection = new SelectionModel<MobilesInterface>(true, []);
@@ -36,8 +38,18 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
       private mobilesService: MobileService,
       private _helperService: HelperService,
       private historiesService: HistoriesService,
-      public dialog: MatDialog
+      public dialog: MatDialog,
+      private iconRegistry: MatIconRegistry,
+      private sanitizer: DomSanitizer,
   ) {
+      iconRegistry.addSvgIcon('unlock', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/fi-rr-unlock.svg'));
+      iconRegistry.addSvgIcon('lock', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/fi-rr-lock.svg'));
+      iconRegistry.addSvgIcon('gps', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/gps.svg'));
+      iconRegistry.addSvgIcon('signal', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/signal.svg'));
+      iconRegistry.addSvgIcon('batery', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/batery.svg'));
+      iconRegistry.addSvgIcon('gpsblack', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/gps-black-2.svg'));
+      iconRegistry.addSvgIcon('target', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/fi-rr-target.svg'));
+
       this.animationStates = {
           expandCollapse: 'expanded',
           fadeIn        : {

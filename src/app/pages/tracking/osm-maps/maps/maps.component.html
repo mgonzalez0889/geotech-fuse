@@ -1,10 +1,8 @@
 <ng-container *ngIf="showMenuMobiles">
-    <app-floating-menu
-        (sendMarker)="onValue($event)"
-    >
+    <app-floating-menu>
     </app-floating-menu>
 </ng-container>
-<ng-container *ngIf="showMenuFleet">
+<!--<ng-container *ngIf="showMenuFleet">
     <app-floating-menu-fleet
     >
     </app-floating-menu-fleet>
@@ -18,7 +16,7 @@
     <app-form-detail-mobile
         (closeMenu)="onCloseDetailMenu($event)"
     ></app-form-detail-mobile>
-</ng-container>
+</ng-container>-->
 <div #map
      id="map"
 >
