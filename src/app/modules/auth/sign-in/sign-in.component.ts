@@ -69,8 +69,8 @@ export class AuthSignInComponent implements OnInit
 
         // Sign in
         const data: any = this.signInForm.getRawValue();
-        data.client_id = 'DVs74vRZ3J6-_MftUb70MHlquw3baN9xYPQ9JXqums0';
-        data.client_secret = 'otrNDf1pvLEhmUp4NHxreaIdcX0sVEp_Kvp82HuX2cM';
+        data.client_id = '_jknKk6LqEZ2glpeEivOw_DA3qOtd4Z_qeFmZNzSEpE';
+        data.client_secret = '09EjyZX0hexPk7LOkc4-K12mTVCSMdy9ufplBnPCB3U';
         data.grant_type = 'password';
         this._authService.signIn(data)
             .subscribe(
