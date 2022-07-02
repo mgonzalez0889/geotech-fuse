@@ -10,7 +10,7 @@ import { timer } from 'rxjs';
   providedIn: 'root'
 })
 export class MapService {
-
+  public pointLatLens: any = [];
   mobiles: any[] = [];
   public markers: any = {};
   public map: L.Map;
@@ -119,7 +119,12 @@ export class MapService {
         })
         .openPopup();
       markerCluster.addTo(this.map);
+      this.pointLatLens.push(
+        Object.values(this.markers[data.id].getLatLng())
+    );
     });
+    const bounds = new L.LatLngBounds(this.pointLatLens);
+        this.map.fitBounds(bounds);
   }
 
   /**
