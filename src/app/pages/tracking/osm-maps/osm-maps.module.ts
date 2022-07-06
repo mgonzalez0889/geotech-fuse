@@ -28,6 +28,7 @@ import { FormDetailMobileComponent } from './form-detail-mobile/form-detail-mobi
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {FuseAlertModule} from "../../../../@fuse/components/alert";
 import {_MatMenuDirectivesModule, MatMenuModule} from "@angular/material/menu";
+import { FloatingMenuDetailComponent } from './floating-menu-detail/floating-menu-detail.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {_MatMenuDirectivesModule, MatMenuModule} from "@angular/material/menu";
     FormAssignMarkComponent,
     FloatingMenuFleetComponent,
     FormDetailMobileComponent,
+    FloatingMenuDetailComponent,
   ],
     imports: [
         CommonModule,

@@ -1,0 +1,199 @@
+<div class="menu-detail">
+        <div style="display: inline-block; margin-left: 13px; margin-top: 16px;">
+            <b style="font-size: 20px;">Detalles</b>
+        </div>
+    <div style="display: inline-block; padding-left: 50px; ">
+        <mat-button-toggle-group [value]="selectedState" (change)="onChange($event)" style="width: 215px; height: 44px; background: #EAEAEA;
+                border-radius: 10px;">
+                    <mat-button-toggle [value]="0"style="width: 97px; height: 35px; top: 4.5px; left: 7px;
+                    " value="eventos">Eventos</mat-button-toggle>
+                    <mat-button-toggle [value]="1" style="width: 97px; height: 35px; top: 4.5px; left: 7px;
+                    " value="historico">Historico</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+    <div *ngIf="selectedState === 0">
+    <table align="center" cellpadding="5" >
+        <tr>
+            <th align="left" style="font-size: 18px;">
+                GB00133
+            </th>
+            <td style="font-size: 18px;">
+                123456978
+            </td>
+        </tr>
+        <tr>
+            <th align="left">
+                Imei
+            </th>
+            <td align="left">
+                36565625
+            </td>
+            <td></td>
+            <th align="right">
+                Modelo
+            </th>
+            <td>
+                KRATEUS 2019
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="6" style="width: 450px; height: 99px; background: #2C384F; border-radius: 5px; color: white;">
+                <tr>
+                    <td>
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/status_close_contrast.svg">
+                    </td>
+                    <th style="font-size: 16px;">
+                        Cerrado
+                    </th>
+                    <th style="font-size: 16px;">
+                        00:00:00
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/status_open_contrast.svg">
+                    </td>
+                    <th style="font-size: 16px;">
+                        Abierto
+                    </th>
+                    <th style="font-size: 16px;">
+                        00:00:00
+                    </th>
+                </tr>
+            </td>
+        </tr>
+        <tr>
+            <th style="font-size: 16px;">
+                Ultimos eventos
+            </th>
+        </tr>
+        <tr>
+            <td align="center" colspan="6" style="width: 450px; height: 99px; background: #e9dbdb; border-radius: 5px;">
+                <tr>
+                    <td rowspan="3" align="center" style="padding: 10px;">
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/marker_position.svg">
+                    </td>
+                    <th align="left" style="font-size: 15px;">
+                        Ultima posición
+                    </th>
+                    <td rowspan="3" align="center">
+                        <button style="
+                                width: 94.26px;
+                                height: 78px;
+                                background: #2C384F; color: white;
+                                border-radius: 5px; font-size: 14px;">Ver en el mapa
+                                <div><mat-icon><img style="height: 13; width: 15px;" src="./assets/icons/iconMap/map.svg"></mat-icon></div>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        10:00 am 09/06/2022
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        Cra 55 # 100 - 51 Barranquilla Atlantico colombia
+                    </td>
+                </tr>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td align="center" colspan="6" style="width: 450px; height: 99px; background: #e9dbdb; border-radius: 5px;">
+                <tr>
+                    <td rowspan="3" align="center" style="padding: 10px;">
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/engine_shutdown_icon.svg">
+                    </td>
+                    <th align="left" style="font-size: 15px;">
+                        Apagado
+                    </th>
+                    <td rowspan="3" align="center">
+                        <button style="
+                                width: 94.26px;
+                                height: 78px;
+                                background: #2C384F; color: white;
+                                border-radius: 5px; font-size: 14px;">Ver en el mapa
+                                <div><mat-icon><img style="height: 13px; width: 15px;" src="./assets/icons/iconMap/map.svg"></mat-icon></div>
+                            </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        10:00 am 09/06/2022
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        Cra 55 # 100 - 51 Barranquilla Atlantico colombia
+                    </td>
+                </tr>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td align="center" colspan="6" style="width: 450px; height: 99px; background: #e9dbdb; border-radius: 5px;">
+                <tr>
+                    <td rowspan="3" align="center" style="padding: 10px;">
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/engine_ignition_icon.svg">
+                    </td>
+                    <th align="left" style="font-size: 15px;">
+                        Encendido
+                    </th>
+                    <td rowspan="3" align="center">
+                        <button style="
+                                width: 94.26px;
+                                height: 78px;
+                                background: #2C384F; color: white;
+                                border-radius: 5px; font-size: 14px;">Ver en el mapa
+                                <div><mat-icon><img style="height: 13px; width: 15px;" src="./assets/icons/iconMap/map.svg"></mat-icon></div>
+                            </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        10:00 am 09/06/2022
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        Cra 55 # 100 - 51 Barranquilla Atlantico colombia
+                    </td>
+                </tr>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td align="center" colspan="6" style="width: 450px; height: 99px; background: #e9dbdb; border-radius: 5px;">
+                <tr>
+                    <td rowspan="3" align="center" style="padding: 10px;">
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/speeding.svg">
+                    </td>
+                    <th align="left" style="font-size: 15px;">
+                        Exceso de Velocidad
+                    </th>
+                    <td rowspan="3" align="center">
+                        <button style="
+                                width: 94.26px;
+                                height: 78px;
+                                background: #2C384F; color: white;
+                                border-radius: 5px; font-size: 14px;">Ver en el mapa
+                                <div><mat-icon><img style="height: 13px; width: 15px;" src="./assets/icons/iconMap/map.svg"></mat-icon></div>
+                            </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        10:00 am 09/06/2022
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="font-size: 15px;">
+                        Cra 55 # 100 - 51 Barranquilla Atlantico colombia
+                    </td>
+                </tr>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>

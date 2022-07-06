@@ -64,7 +64,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
         console.log(data);
     }
     private moveMarker(data: any): void {
-        console.log(data, 'data importer');
         const marker = new DriftMarker([10, 10]);
         marker.slideTo([20, 20], {
             duration: 2000,
