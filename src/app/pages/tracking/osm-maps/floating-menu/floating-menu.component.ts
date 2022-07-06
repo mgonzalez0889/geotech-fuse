@@ -14,6 +14,7 @@ import {
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { MapService } from 'app/services/maps/map.service';
+import { MobilesService } from 'app/services/mobiles/mobiles.service';
 
 @Component({
     selector: 'app-floating-menu',
@@ -36,6 +37,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     public showMenuGroup: boolean = false;
     constructor(
         private mobilesService: MobileService,
+        private mobileService: MobilesService,
         private _helperService: HelperService,
         private historiesService: HistoriesService,
         public dialog: MatDialog,
@@ -210,46 +212,24 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
      * @description: Selecciona un mobile individual
      */
     public individual(event, value: MobilesInterface): void {
-        // console.log(this.selection);
-        this.items.map((x) => {
+        this.mobileService.items.map((x) => {
             if (x.id == value.id) {
-                console.log('entro')
                 x.selected = !event;
             }
             return x;
         });
-        // const dataSelected: MobilesInterface[] = [];
-        // const dataDeselect: MobilesInterface[] = [];
-        // if (value.selected) {
-        //     dataSelected.push(value);
-        //     // console.log(dataSelected);
-        //     this.sendMarker.emit(dataSelected);
-        // } else {
-        //     dataDeselect.push(value);
-        //     // console.log(dataDeselect);
-        //     this.sendMarker.emit(dataDeselect);
-        // }
-        console.log(this.items)
-        let marker = this.items.filter(function(x) {
+        let marker = this.mobileService.items.filter(function (x) {
             return x.selected == true;
-         });
-        // this.mapService.setMarkers(marker)
-        
+        });
+        this.mapService.receiveData('checked', marker)
+
     }
 
     /**
      * @description: Carga los mobiles desde el inicio
      */
-    private getMobiles(): void {
-        this.subscription = this.mobilesService.getMobiles().subscribe(({ data }) => {
-            this.items = data;
-            this.dataSource = new MatTableDataSource(data);
-            this.items.map((x) => {
-                x['selected'] = false;
-                return x;
-            });
-            // this.sendDataDevice.emit(this.items);
-        });
+    async getMobiles() {
+        await this.mobileService.getMobiles();
     }
 
     /**

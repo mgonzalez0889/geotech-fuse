@@ -14,6 +14,7 @@ export class MapService {
   mobiles: any[] = [];
   public markers: any = {};
   public map: L.Map;
+  public markerCluster = new MarkerClusterGroup;
 
   constructor(
   ) { }
@@ -52,9 +53,34 @@ export class MapService {
 
   }
 
+  loadAllsMobiles() {
+    this.deleteChecks(this.mobiles);
+    this.setMarkers(this.mobiles);
+  }
+
+  receiveData(type: string, data: any) {
+    if (type === 'checked') {
+      if (data.length) {
+        this.deleteChecks(data);
+        this.setMarkers(data);
+      } else {
+        this.loadAllsMobiles();
+      }
+    } else {
+      this.loadAllsMobiles();
+    }
+  }
+
+  deleteChecks(data: any) {
+    for (let i = 0; i < data.length; i++) {
+      const element = data[i];
+      console.log(element);
+      this.map.removeLayer(this.markers[element.id]);
+      this.markerCluster.clearLayers();
+    }
+  }
+
   setMarkers(mobiles) {
-    console.log(mobiles);
-    const markerCluster = new MarkerClusterGroup;
     const infoWindows = `<table>
         <tr>
             <th rowspan="2">
@@ -98,7 +124,6 @@ export class MapService {
             <th colspan="6">Frencuencia actual</th>
         </tr>
            </table>`;
-    const popup = L.popup();
     mobiles.forEach((value: any, index: string | number) => {
       const data = mobiles[index];
       this.markers[data.id] = new L.Marker([data.x, data.y], {
@@ -110,21 +135,20 @@ export class MapService {
           direction: 'bottom',
           offset: L.point({ x: 2, y: 10 }),
         })
-        .addTo(markerCluster);
+        .addTo(this.markerCluster);
       this.markers[data.id]
         .bindPopup(infoWindows, {
           closeOnClick: false,
           autoClose: false,
           closeButton: true,
-        })
-        .openPopup();
-      markerCluster.addTo(this.map);
+        });
+      this.markerCluster.addTo(this.map);
       this.pointLatLens.push(
         Object.values(this.markers[data.id].getLatLng())
-    );
+      );
     });
     const bounds = new L.LatLngBounds(this.pointLatLens);
-        this.map.fitBounds(bounds);
+    this.map.fitBounds(bounds);
   }
 
   /**

@@ -28,7 +28,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
         private fleetService: FleetsService,
         private socketIoService: SocketIoClientService,
         public mapService: MapService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         //abre el socket y manda el token del usuario
@@ -36,6 +36,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
         //escucha el socket de new position
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
             this.moveMarker(data);
+            this.loadNewData(data);
         });
         const time = timer(2000);
         time.subscribe((t) => {
@@ -50,13 +51,17 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.subscription = this.mobilesService
             .getMobiles()
             .subscribe((data) => {
-                this.mobiles = data.data;
+                this.mapService.mobiles = data.data;
                 console.log('carros', this.mobiles);
-                this.setmarker(this.mobiles);
+                this.setmarker(data.data);
             });
         this.subscription = this.fleetService.getFleets().subscribe((data) => {
             console.log(data, ' estos son las flotas');
         });
+    }
+
+    loadNewData(data: any) {
+        console.log(data);
     }
     private moveMarker(data: any): void {
         console.log(data, 'data importer');
@@ -64,7 +69,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
         marker.slideTo([20, 20], {
             duration: 2000,
             keepAtCenter: true,
-          });
+        });
     }
 
     /**
