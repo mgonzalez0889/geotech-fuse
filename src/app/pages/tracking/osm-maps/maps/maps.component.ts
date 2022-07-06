@@ -51,7 +51,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
             .getMobiles()
             .subscribe((data) => {
                 this.mobiles = data.data;
-                console.log('carros', this.mobiles);
                 this.setmarker(this.mobiles);
             });
         this.subscription = this.fleetService.getFleets().subscribe((data) => {
@@ -59,7 +58,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
         });
     }
     private moveMarker(data: any): void {
-        console.log(data, 'data importer');
         const marker = new DriftMarker([10, 10]);
         marker.slideTo([20, 20], {
             duration: 2000,
