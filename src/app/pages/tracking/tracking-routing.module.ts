@@ -11,6 +11,9 @@ const routes: Routes = [
             },  {
                 path: 'maps2',
                 loadChildren: () => import('./maps/maps-routing.module').then(m => m.MapsRoutingModule)
+            },  {
+                path: 'commands',
+                loadChildren: () => import('./commands/commands.module').then(m => m.CommandsModule)
             }
         ]
 

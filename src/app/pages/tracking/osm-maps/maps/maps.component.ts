@@ -14,7 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     styleUrls: ['./maps.component.scss'],
 })
 export class MapsComponent implements OnInit, AfterViewInit {
-    
+
     public showHistory: boolean = false;
     public showMenuFleet: boolean = false;
     public subscription: Subscription;
@@ -38,7 +38,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
             name: 'settings-map'
         }
     ]
-    
+
     constructor(
         private mobilesService: MobileService,
         private fleetService: FleetsService,
@@ -47,7 +47,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
         public iconService: IconService,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer
-    ) { 
+    ) {
         iconRegistry.addSvgIcon('settings-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/settings.svg'));
         iconRegistry.addSvgIcon('type-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/type-map.svg'));
         iconRegistry.addSvgIcon('route-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/route.svg'));
@@ -61,8 +61,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.socketIoService.sendMessage('authorization');
         //escucha el socket de new position
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
-            this.mapService.moveMarker(data);   
-            console.log(data);
+            console.log(data,'sssss')
+            this.moveMarker(data);
+            this.loadNewData(data);
         });
         const time = timer(2000);
         time.subscribe((t) => {
