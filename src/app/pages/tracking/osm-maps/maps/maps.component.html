@@ -1,15 +1,17 @@
- <ng-container *ngIf="showMenuMobiles">
+<ng-container *ngIf="mapService.showMenuMobiles">
     <app-floating-menu>
     </app-floating-menu>
 </ng-container>
 
-
-<ng-container >
+<ng-container *ngIf="mapService.showDetailMobile">
     <app-floating-menu-detail>
     </app-floating-menu-detail>
 </ng-container>
 
-
+<ng-container>
+    <app-geotools>
+    </app-geotools>
+</ng-container>
 
 
 <!--<ng-container *ngIf="showMenuFleet">
@@ -27,9 +29,18 @@
         (closeMenu)="onCloseDetailMenu($event)"
     ></app-form-detail-mobile>
 </ng-container>-->
-<div #map
-     id="map"
->
+<div #map id="map">
+</div>
+
+
+<div class="options">
+    <ul>
+        <li *ngFor="let option of optionsIcons" (click)="mapService.drawerOpenedChanged(true)">
+            <span>
+                <mat-icon svgIcon="{{option.name}}"></mat-icon>
+            </span>
+        </li>
+    </ul>
 </div>
 <!--
 <div class="sm:absolute  sm:inset-0 flex flex-col flex-auto sm:overflow-hidden bg-card dark:bg-transparent">
@@ -41,4 +52,3 @@
     </div>
 </div>
 -->
-

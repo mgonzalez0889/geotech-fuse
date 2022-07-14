@@ -1,0 +1,35 @@
+import { Injectable } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class IconService {
+
+  constructor(
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer
+  ) { }
+
+  loadIcons() {
+    this.iconRegistry.addSvgIcon('status_gps_green', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_gps_green.svg'));
+    this.iconRegistry.addSvgIcon('status_gps_orange', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_gps_orange.svg'));
+    this.iconRegistry.addSvgIcon('status_gps_red', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_gps_red.svg'));
+    this.iconRegistry.addSvgIcon('status_gps_gray', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_gps_gray.svg'));
+    this.iconRegistry.addSvgIcon('status_open_color', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_open_color.svg'));
+    this.iconRegistry.addSvgIcon('status_close_color', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_close_color.svg'));
+    this.iconRegistry.addSvgIcon('signal_level_green', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_green.svg'));
+    this.iconRegistry.addSvgIcon('signal_level_orange', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_orange.svg'));
+    this.iconRegistry.addSvgIcon('signal_level_red', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_red.svg'));
+    this.iconRegistry.addSvgIcon('signal_level_gray', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_gray.svg'));
+    this.iconRegistry.addSvgIcon('driver', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/driver.svg'));
+    this.iconRegistry.addSvgIcon('sheet', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/sheet.svg'));
+    this.iconRegistry.addSvgIcon('batery', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/batery_level.svg'));
+    this.iconRegistry.addSvgIcon('settings-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/settings.svg'));
+    this.iconRegistry.addSvgIcon('type-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/type-map.svg'));
+    this.iconRegistry.addSvgIcon('route-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/route.svg'));
+    this.iconRegistry.addSvgIcon('zone-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/zone.svg'));
+    this.iconRegistry.addSvgIcon('point-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/point.svg'));
+  }
+}

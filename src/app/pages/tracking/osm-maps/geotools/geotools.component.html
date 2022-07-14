@@ -1,0 +1,22 @@
+<div class="content-geotools">
+    <div class="relative flex overflow-hidden border mt-8 min-h-80" style="height: 100% !important">
+        <fuse-drawer [name]="'leftDrawer'" [opened]="mapService.drawerOpened" [position]="'right'" [mode]="'side'">
+            <div class="p-4">
+                <div class="title">Enrutamiento</div>
+
+                <button>Agregar</button>
+
+                <div class="flex flex-wrap">
+                    <mat-form-field class="fuse-mat-dense w-full">
+                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                        <input matInput [autocomplete]="'off'" [placeholder]="'Search'">
+                    </mat-form-field>
+                </div>
+
+                <div class="geo">
+
+                </div>
+            </div>
+        </fuse-drawer>
+    </div>
+</div>

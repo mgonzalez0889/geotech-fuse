@@ -11,10 +11,9 @@ import { MatDialog } from "@angular/material/dialog";
 import {
     FormDialogSelectHistorialComponent
 } from "../form-dialog-select-historial/form-dialog-select-historial.component";
-import { MatIconRegistry } from "@angular/material/icon";
-import { DomSanitizer } from "@angular/platform-browser";
-import { MapService } from 'app/services/maps/map.service';
-import { MobilesService } from 'app/services/mobiles/mobiles.service';
+import { IconService } from 'app/core/services/icons/icon.service';
+import { MobilesService } from 'app/core/services/mobiles/mobiles.service';
+import { MapService } from 'app/core/services/maps/map.service';
 
 @Component({
     selector: 'app-floating-menu',
@@ -38,21 +37,11 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     constructor(
         private mobilesService: MobileService,
         private mobileService: MobilesService,
-        private _helperService: HelperService,
         private historiesService: HistoriesService,
         public dialog: MatDialog,
-        private iconRegistry: MatIconRegistry,
-        private sanitizer: DomSanitizer,
-        public mapService: MapService
+        public mapService: MapService,
+        private iconService: IconService
     ) {
-        iconRegistry.addSvgIcon('unlock', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/fi-rr-unlock.svg'));
-        iconRegistry.addSvgIcon('lock', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/fi-rr-lock.svg'));
-        iconRegistry.addSvgIcon('gps', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/gps.svg'));
-        iconRegistry.addSvgIcon('signal', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/signal.svg'));
-        iconRegistry.addSvgIcon('batery', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/batery.svg'));
-        iconRegistry.addSvgIcon('gpsblack', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/gps-black-2.svg'));
-        iconRegistry.addSvgIcon('target', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/fi-rr-target.svg'));
-
         this.animationStates = {
             expandCollapse: 'expanded',
             fadeIn: {
@@ -137,6 +126,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.iconService.loadIcons();
         this.getMobiles();
         this.listenObservableShow();
     }
@@ -168,15 +158,6 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
             minHeight: '60%',
         });
         dialogRef.afterClosed().toPromise();
-        /*this._helperService.showDialogSelectHistorial({
-            data
-        }).then(
-            (result) => {
-                if (result.value) {
-
-                }
-            }
-        );*/
     }
 
     /** Whether the number of selected elements matches the total number of rows. */
@@ -244,13 +225,15 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
             }
         });
     }
+
     /**
      * @description: Filtra registros de la grid
     */
     public applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
+        this.mobileService.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
     /**
      * @description: Elimina las subcripciones
      */

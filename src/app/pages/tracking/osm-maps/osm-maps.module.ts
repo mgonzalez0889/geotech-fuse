@@ -29,6 +29,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {FuseAlertModule} from "../../../../@fuse/components/alert";
 import {_MatMenuDirectivesModule, MatMenuModule} from "@angular/material/menu";
 import { FloatingMenuDetailComponent } from './floating-menu-detail/floating-menu-detail.component';
+import { InfoWindowsComponent } from './info-windows/info-windows.component';
+import { GeotoolsComponent } from './geotools/geotools.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import { FloatingMenuDetailComponent } from './floating-menu-detail/floating-men
     FloatingMenuFleetComponent,
     FormDetailMobileComponent,
     FloatingMenuDetailComponent,
+    InfoWindowsComponent,
+    GeotoolsComponent,
   ],
     imports: [
         CommonModule,
@@ -66,6 +70,9 @@ import { FloatingMenuDetailComponent } from './floating-menu-detail/floating-men
         _MatMenuDirectivesModule,
         MatMenuModule,
 
+    ],
+    entryComponents: [
+      InfoWindowsComponent,
     ]
 })
 export class OsmMapsModule { }

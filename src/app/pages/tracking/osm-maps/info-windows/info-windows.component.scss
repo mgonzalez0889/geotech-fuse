@@ -1,0 +1,66 @@
+.infoWindows {
+    width: 250px;
+    font-family: "Inter var", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    .items {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: #2c384f;
+        .item {
+            line-height: initial;
+            label {
+                display: block;
+                font-weight: bold;
+            }
+        }
+
+        .icons {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .items-big {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 10px;
+
+        .item-big {
+            padding: 10px;
+            background: #e3e3e3;
+            width: 40%;
+            text-align: center;
+            border-radius: 10px;
+            label {
+                display: block;
+                font-size: 11px;
+            }
+
+            .name {
+                color: #2c384f;
+                font-weight: bold;
+                font-size: 13px;
+            }
+
+            .phone {
+                font-size: 11px;
+            }
+        }
+    }
+
+    .buttons {
+        button {
+            display: block;
+            width: 100%;
+            background: #2c384f;
+            padding: 10px;
+            color: #fff;
+            border: 0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    }
+}
