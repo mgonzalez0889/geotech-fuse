@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MobileService } from 'app/core/services/mobile.service';
 
 @Component({
   selector: 'app-floating-menu-detail',
