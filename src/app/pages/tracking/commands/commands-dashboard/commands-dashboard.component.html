@@ -1,0 +1,246 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full mx-auto p-6">
+        <!--Title-->
+        <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
+            <div class="flex items-center justify-between w-full">
+                <div>
+                    <h2 class="text-3xl font-semibold tracking-tight leading-8">Comandos</h2>
+                </div>
+                <div class="hidden sm:inline-flex justify-end">
+                    <div
+                        class="mx-2 text-center px-4 py-1 rounded-md bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50">
+                        <div class="text-lg font-bold">32</div>
+                        <p class="text-sm">Pendientes</p>
+                    </div>
+                    <div
+                        class="mx-2 text-center px-4 py-1 rounded-md bg-green-200  text-green-800 dark:bg-green-600 dark:text-green-50">
+                        <div class="text-lg font-bold">32</div>
+                        <p class="text-sm">Enviados</p>
+                    </div>
+                    <div
+                        class="mx-2 text-center px-4 py-1 rounded-md bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
+                        <div class="text-lg font-bold">32</div>
+                        <p class="text-sm">Expirados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="w-full flex justify-start">
+
+
+            <!-- <div class="flex items-center bg-card rounded-2xl p-3">
+                <div class="flex items-center justify-center pl-2">
+                    <mat-icon class="icon-size-5" svgIcon="heroicons_outline:search"></mat-icon>
+                </div>
+                <div class="overflow-hidden">
+                    <input type="text" placeholder="Filtrar">
+                </div>
+            </div> -->
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 py-4 grid-rows-2 w-full gap-4">
+            <div class="flex flex-col col-span-2 row-span-2 lex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <div class="overflow-hidden">
+                            <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate">Comandos enviados
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center pl-2">
+                            <mat-icon>keyboard_command_key</mat-icon>
+                        </div>
+                        <div class="">
+                            <div class="relative flex items-center px-4 leading-9 rounded-full cursor-pointer"
+                                (click)="dueDatePicker.open()">
+                                <mat-icon class="icon-size-5 text-current" svgIcon="feather:calendar">
+                                </mat-icon>
+                                <span class="ml-2 text-md font-medium">
+                                    <ng-container>20/10/2022</ng-container>
+                                </span>
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+                                    <input matInput formControlName="dueDate" [matDatepicker]="dueDatePicker">
+                                    <mat-datepicker #dueDatePicker>
+                                        <mat-date-range-picker-actions>
+                                            <button mat-button matDateRangePickerCancel>Cancel</button>
+                                            <button mat-raised-button color="primary"
+                                                matDateRangePickerApply>Apply</button>
+                                        </mat-date-range-picker-actions>
+                                    </mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table mat-table [dataSource]="dataCommandsSent" matSort class="w-full">
+                        <!-- plate Column -->
+                        <ng-container matColumnDef="plate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.plate}}</span>
+                            </td>
+                        </ng-container>
+                        <!-- date_sent Column -->
+                        <ng-container matColumnDef="date_sent">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del envio </th>
+                            <td mat-cell *matCellDef="let row"> <span class="pr-6 whitespace-nowrap">
+                                    {{row.date_send | date: 'dd/MM/yyyy hh:mm:ss'
+                                    }} </span></td>
+                        </ng-container>
+                        <!-- type_command Column -->
+                        <ng-container matColumnDef="type_command">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de comando </th>
+                            <td mat-cell *matCellDef="let row"> <span class="pr-6 whitespace-nowrap">
+                                    {{row.name_command}} </span> </td>
+                        </ng-container>
+                        <!-- user Column -->
+                        <ng-container matColumnDef="user">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
+                            <td mat-cell *matCellDef="let row"> <span class="pr-6 whitespace-nowrap">
+                                    {{row.user_sent}} </span></td>
+                        </ng-container>
+                        <!-- state Column -->
+                        <ng-component matColumnDef="state">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span
+                                    class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                    [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.state === 'EXPIRADO',
+                                                'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': row.state === 'CONFIRMADO',
+                                                'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': row.state === 'PENDIENTE'
+                                            }">
+                                    <span class="leading-relaxed whitespace-nowrap">{{row.state}}</span>
+                                </span>
+                            </td>
+                        </ng-component>
+                        <!-- boton Column -->
+                        <ng-container matColumnDef="resend">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let row">
+                                <button matTooltip="Reenviar comando"
+                                    class="leading-relaxed whitespace-nowrap fuse-mat-button-rounded" mat-flat-button>
+                                    <mat-icon class="icon-size-6">refresh</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsCommands"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsCommands;"></tr>
+                    </table>
+                    <mat-paginator #tableCommandsSent="matPaginator" [pageSizeOptions]="[5, 10, 25, 100]"
+                        aria-label="Select page of users">
+                    </mat-paginator>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate"> Seleccion de comandos
+                    </div>
+                    <div class="py-3">
+                        <mat-form-field class="w-full">
+                            <mat-label>Comandos</mat-label>
+                            <mat-select>
+                                <mat-option *ngFor="let command of typeCommands" [value]="command.id">
+                                    {{command.description_command}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate"> Seleccion de moviles
+                    </div>
+                </div>
+                <mat-tab-group [animationDuration]="'0'">
+                    <!--Tab Vehiculos-->
+                    <mat-tab label="Vehiculo">
+
+                        <div class="">
+                            <table mat-table [dataSource]="dataMobile" matSort #sortMobile="matSort" class="w-full">
+                                <!-- Checkbox Column -->
+                                <ng-container matColumnDef="select">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox>
+                                        </mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <mat-checkbox>
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <!-- plate Column -->
+                                <ng-container matColumnDef="plate">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <div class="p-6 ">
+                                            {{row.plate}} <span [hidden]="!row.internal_code"> - {{row.internal_code
+                                                }}</span></div>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="columnsMobile"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columnsMobile;"></tr>
+                            </table>
+                            <mat-paginator #tableMobile="matPaginator" [pageSizeOptions]="[5, 10, 25, 100]"
+                                aria-label="Select page of users">
+                            </mat-paginator>
+                        </div>
+
+
+                    </mat-tab>
+                    <!--Tab Flotas-->
+                    <mat-tab label="Flota">
+                        sss
+                    </mat-tab>
+                </mat-tab-group>
+                <div>
+                    <button matTooltip="Reenviar comando"
+                        class="leading-relaxed whitespace-nowrap fuse-mat-button-rounded" mat-flat-button>
+                        ENVIAR COAMNDO
+                    </button>
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+        <!--
+        <div class="grid grid-cols-1 w-full">
+            <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <div class="overflow-hidden">
+                            <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate">Comandos enviados
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center pl-2">
+                            <mat-icon>keyboard_command_key</mat-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+<!--
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full mx-auto p-6 bg-card">
+        <div>
+            <h2 class="text-3xl font-semibold tracking-tight leading-8">Comandos</h2>
+        </div>
+    </div>
+</div> -->

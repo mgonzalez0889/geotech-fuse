@@ -35,6 +35,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.socketIoService.sendMessage('authorization');
         //escucha el socket de new position
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
+            console.log(data,'sssss')
             this.moveMarker(data);
         });
         const time = timer(2000);

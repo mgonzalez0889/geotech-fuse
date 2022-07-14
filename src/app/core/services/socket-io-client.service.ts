@@ -7,7 +7,8 @@ import * as io from 'socket.io-client';
 })
 export class SocketIoClientService {
     socket: any;
-    readonly url: string = 'http://192.168.140.27:3030';
+    //readonly url: string = 'http://192.168.140.27:3030';
+    readonly url: string = 'ec2-3-219-47-62.compute-1.amazonaws.com:3030';
 
     constructor() {
         this.socket = io.connect(this.url, {
