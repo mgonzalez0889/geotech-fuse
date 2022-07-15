@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MobileService } from 'app/core/services/mobile.service';
+import { map, filter } from 'rxjs/operators';
 export interface Task {
     name: string;
     completed: boolean;
@@ -18,10 +19,24 @@ export interface Task {
     styleUrls: ['./commands-dashboard.component.scss'],
 })
 export class CommandsDashboardComponent implements OnInit {
-    public typeCommands: any;
+    public today = new Date();
+    public month = this.today.getMonth();
+    public year = this.today.getFullYear();
+    public day = this.today.getDay();
     public dataCommandsSent: MatTableDataSource<any>;
-    public dataMobile: MatTableDataSource<any>;
-    public dataFleet: MatTableDataSource<any>;
+    public send: number = 0;
+    public expired: number = 0;
+    public pending: number = 0;
+
+    public selectedFleets2;
+    public typeCommands: any;
+    public initialDate: Date = new Date(this.year, this.month, this.day);
+    public finalDate: Date = new Date(this.year, this.month, this.day);
+    public selectedPlates: [] = [];
+    public selectedTypeCommand: number;
+    public selectedFleets: [] = [];
+    public mobiles: any = [];
+    public fleets: any = [];
     public columnsCommands: string[] = [
         'plate',
         'date_sent',
@@ -30,22 +45,9 @@ export class CommandsDashboardComponent implements OnInit {
         'state',
         'resend',
     ];
-    public columnsMobile: string[] = ['select', 'plate'];
-    public columnsFleet: string[] = [
-        'plate',
-        'date_sent',
-        'type_command',
-        'user',
-        'state',
-        'resend',
-    ];
-    @ViewChild('tableCommandsSent', { static: true })
-    tableCommandsSent: MatPaginator;
-    @ViewChild('tableMobile', { static: true }) tableMobile: MatPaginator;
-    @ViewChild('tableFleet', { static: true }) tableFleet: MatPaginator;
-    @ViewChild('sortMobile') sortMobile: MatSort;
-    @ViewChild('sortFleet') sortFleet: MatSort;
-    @ViewChild('sortCommandsSent') sortCommandsSent: MatSort;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(
         private commandsService: CommandsService,
@@ -58,6 +60,9 @@ export class CommandsDashboardComponent implements OnInit {
         this.getSentCommands();
         this.getFleets();
         this.getMobiles();
+        setInterval(() => {
+            this.getSentCommands();
+        }, 50000);
     }
 
     /**
@@ -71,15 +76,24 @@ export class CommandsDashboardComponent implements OnInit {
     /**
      * @description: Obtiene los comandos enviados
      */
-    private getSentCommands(): void {
-        const data = {
-            date_init: '2022-06-01T05:00:00.000Z',
-            date_end: '2022-07-21T05:00:00.000Z',
+    public getSentCommands(): void {
+        const date = {
+            date_init: this.initialDate,
+            date_end: this.finalDate,
         };
-        this.commandsService.postCommandsSend(data).subscribe((x) => {
-            this.dataCommandsSent = new MatTableDataSource(x.data);
-            this.dataCommandsSent.paginator = this.tableCommandsSent;
-            this.dataCommandsSent.sort = this.sortCommandsSent;
+        this.commandsService.postCommandsSend(date).subscribe((data) => {
+            if (data.data_count) {
+                this.send = data.data_count[0]?.count_state;
+                this.expired = data.data_count[1]?.count_state;
+                this.pending = data.data_count[2]?.count_state;
+            } else {
+                this.send = 0;
+                this.expired = 0;
+                this.pending = 0;
+            }
+            this.dataCommandsSent = new MatTableDataSource(data.data);
+            this.dataCommandsSent.paginator = this.paginator;
+            this.dataCommandsSent.sort = this.sort;
         });
     }
     /**
@@ -87,10 +101,11 @@ export class CommandsDashboardComponent implements OnInit {
      */
     private getMobiles(): void {
         this.mobilesService.getMobiles().subscribe((data) => {
-            this.dataMobile = new MatTableDataSource(data.data);
-            this.dataMobile.paginator = this.tableMobile;
-            this.dataMobile.sort = this.sortMobile;
-            console.log(data.data, ' estos son las placas');
+            this.mobiles = data.data.map((x) => {
+                x['selected'] = false;
+                return x;
+            });
+            console.log(this.mobiles, 'this.mobiles');
         });
     }
     /**
@@ -98,45 +113,20 @@ export class CommandsDashboardComponent implements OnInit {
      */
     private getFleets(): void {
         this.fleetService.getFleets().subscribe((data) => {
+            this.fleets = data.data.map((x) => {
+                x['selected'] = false;
+                return x;
+            });
             console.log(data.data, ' estos son las flotas');
         });
     }
-
-    task: Task = {
-        name: 'Indeterminate',
-        completed: false,
-        subtasks: [
-            { name: 'Primary', completed: false },
-            { name: 'Accent', completed: false },
-            { name: 'Warn', completed: false },
-        ],
-    };
-
-    allComplete: boolean = true;
-
-    updateAllComplete() {
-        this.allComplete =
-            this.task.subtasks != null &&
-            this.task.subtasks.every((t) => t.completed);
+    filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        console.log(filterValue.trim().toLowerCase(), 'filterValue');
+        this.dataCommandsSent.filter = filterValue.trim().toLowerCase();
     }
-
-    someComplete(): boolean {
-        console.log('someComplete');
-
-        if (this.task.subtasks == null) {
-            return false;
-        }
-        return (
-            this.task.subtasks.filter((t) => t.completed).length > 0 && !this.allComplete
-        );
-    }
-
-    setAll(completed: boolean) {
-        console.log('setAll',completed);
-        this.allComplete = completed;
-        if (this.task.subtasks == null) {
-            return;
-        }
-        this.task.subtasks.forEach((t) => (t.completed = completed));
+    filterfleet(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        console.log(filterValue, 'filterValue');
     }
 }
