@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="flex flex-wrap w-full py-6">
-            <div class="w-3/5 bg-card shadow rounded-2xl overflow-hidden">
+            <div class="w-full md:w-3/5 bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-center p-6">
                     <div class="overflow-hidden">
                         <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate">Comandos enviados
@@ -110,7 +110,7 @@
                             <th mat-header-cell *matHeaderCellDef></th>
                             <td mat-cell *matCellDef="let row">
                                 <button matTooltip="Reenviar comando"
-                                    class="leading-relaxed whitespace-nowrap fuse-mat-button-rounded" mat-flat-button>
+                                    class="leading-relaxed whitespace-nowrap fuse-mat-button-rounded" mat-flat-button (click)="resendCommand(row.plate,row.typecommand_id)">
                                     <mat-icon class="icon-size-6">refresh</mat-icon>
                                 </button>
                             </td>
@@ -125,24 +125,22 @@
                     </table>
                 </div>
             </div>
-            <div class=" w-2/5 pl-6">
-                <div class="pb-6  ">
-                    <div class="bg-card shadow rounded-2xl overflow-hidden">
-                        <div class="mr-4  p-6 text-2xl font-medium tracking-tight leading-6 truncate"> Seleccion de
-                            moviles
-                        </div>
-                        <mat-tab-group [animationDuration]="'0'">
-                            <!--Tab Vehiculos-->
-                            <mat-tab label="Vehiculo">
-                                <div class="flex border-2 rounded-full p-2">
-                                    <input matInput placeholder="Buscar vehiculo" #searchMobile
-                                        [(ngModel)]="searchPlate">
-                                    <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
-                                    </mat-icon>
-                                </div>
-                                <mat-selection-list #allSelected class="h-80" [(ngModel)]="selectedPlates">
+            <div class="w-full md:w-2/5 pl-6">
+                <div class="bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="mr-4 p-6 text-2xl font-medium tracking-tight leading-6 truncate"> Seleccion de
+                        moviles
+                    </div>
+                    <mat-tab-group [animationDuration]="'0'">
+                        <!--Tab Vehiculos-->
+                        <mat-tab label="Vehiculo">
+                            <div class="flex border-2 rounded-full p-2">
+                                <input matInput placeholder="Buscar vehiculo" #searchMobile [(ngModel)]="searchPlate">
+                                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
+                                </mat-icon>
+                            </div>
+                            <mat-selection-list #allSelected class="h-80" [(ngModel)]="selectedPlates">
 
-                                    <!-- <mat-list-option *ngIf="!searchPlate" checkboxPosition="before" (click)="selectAll()">
+                                <!-- <mat-list-option *ngIf="!searchPlate" checkboxPosition="before" (click)="selectAll()">
                                         Seleccionar todo
                                     </mat-list-option> -->
 
@@ -150,52 +148,52 @@
 
 
 
-                                    <mat-list-option checkboxPosition="before"
-                                        *ngFor="let mobile of mobiles | pipeFilterPlate: searchMobile.value"
-                                        (click)="mobile.selected = !mobile.selected;" [selected]="mobile.selected"
-                                        [value]="mobile.plate">
-                                        <span>{{mobile.plate}}</span>
-                                    </mat-list-option>
-                                </mat-selection-list>
-                            </mat-tab>
-                            <!--Tab Flotas-->
-                            <mat-tab label="Flota">
-                                <div class="flex border-2 rounded-full p-2">
-                                    <input matInput placeholder="Buscar flota" #searchFleet>
-                                    <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
-                                    </mat-icon>
-                                </div>
-                                <mat-selection-list class="h-80" [(ngModel)]="selectedFleets">
-                                    <mat-list-option checkboxPosition="before"
-                                        *ngFor="let fleet of fleets | pipeFilter: searchFleet.value" [value]="fleet.id"
-                                        (click)="fleet.selected = !fleet.selected;" [selected]="fleet.selected">
-                                        <span>{{fleet.name}}</span>
-                                    </mat-list-option>
-                                </mat-selection-list>
-                            </mat-tab>
-                        </mat-tab-group>
-                    </div>
-                </div>
-                <div class="p-6 bg-card shadow rounded-2xl overflow-hidden">
-                    <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate"> Seleccion de comandos
-                    </div>
-                    <div class="pt-3">
-                        <mat-form-field class="w-full">
-                            <mat-label>Comandos</mat-label>
-                            <mat-select [(ngModel)]="selectedTypeCommand">
-                                <mat-option *ngFor="let command of typeCommands" [value]="command.id">
-                                    {{command.description_command}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <div class="flex justify-end">
-                            <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="sentCommands()">
-                                <mat-icon class="icon-size-5">send</mat-icon>
-                                <span class="ml-2">Enviar comando</span>
-                            </button>
+                                <mat-list-option checkboxPosition="before"
+                                    *ngFor="let mobile of mobiles | pipeFilterPlate: searchMobile.value"
+                                    (click)="mobile.selected = !mobile.selected;" [selected]="mobile.selected"
+                                    [value]="mobile.plate">
+                                    <span>{{mobile.plate}}</span>
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </mat-tab>
+                        <!--Tab Flotas-->
+                        <mat-tab label="Flota">
+                            <div class="flex border-2 rounded-full p-2">
+                                <input matInput placeholder="Buscar flota" #searchFleet>
+                                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
+                                </mat-icon>
+                            </div>
+                            <mat-selection-list class="h-80" [(ngModel)]="selectedFleets">
+                                <mat-list-option checkboxPosition="before"
+                                    *ngFor="let fleet of fleets | pipeFilter: searchFleet.value" [value]="fleet.id"
+                                    (click)="fleet.selected = !fleet.selected;" [selected]="fleet.selected">
+                                    <span>{{fleet.name}}</span>
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </mat-tab>
+                    </mat-tab-group>
+                    <div class="p-7 overflow-hidden">
+                        <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate"> Seleccion de comandos
+                        </div>
+                        <div class="pt-3">
+                            <mat-form-field class="w-full">
+                                <mat-label>Comandos</mat-label>
+                                <mat-select [(ngModel)]="selectedTypeCommand">
+                                    <mat-option *ngFor="let command of typeCommands" [value]="command.id">
+                                        {{command.description_command}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div class="flex justify-end">
+                                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
+                                    (click)="sentCommands()">
+                                    <mat-icon class="icon-size-5">send</mat-icon>
+                                    <span class="ml-2">Enviar comando</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
-</div>

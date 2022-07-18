@@ -84,9 +84,9 @@ export class CommandsDashboardComponent implements OnInit {
         };
         this.commandsService.postSearchCommandsSend(date).subscribe((data) => {
             if (data.data_count) {
-                this.send = data.data_count[0]?.count_state;
-                this.expired = data.data_count[1]?.count_state;
-                this.pending = data.data_count[2]?.count_state;
+                this.send = data.data_count[1]?.count_state;
+                this.expired = data.data_count[2]?.count_state;
+                this.pending = data.data_count[0]?.count_state;
             } else {
                 this.send = 0;
                 this.expired = 0;
@@ -121,9 +121,18 @@ export class CommandsDashboardComponent implements OnInit {
             console.log(data.data, ' estos son las flotas');
         });
     }
+
     filterTable(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataCommandsSent.filter = filterValue.trim().toLowerCase();
+    }
+
+    public resendCommand(plate, typeCommand) {
+        const commands = {
+            plates: [plate],
+            command: typeCommand
+        };
+        console.log(plate, 'plate', typeCommand, 'typeCommand','commands=>',commands);
     }
 
     public sentCommands(): void {
@@ -131,6 +140,7 @@ export class CommandsDashboardComponent implements OnInit {
             plates: this.selectedPlates,
             command: this.selectedTypeCommand,
         };
+        console.log(commands,'commands')
         this.commandsService.postCommandsSend(commands).subscribe((data) => {
             this.getSentCommands();
             console.log(data, 'comando');
