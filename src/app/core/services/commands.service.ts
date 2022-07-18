@@ -22,8 +22,17 @@ export class CommandsService {
     /**
      * @description: Trae los comandos enviados por el usuario
      */
-    public postCommandsSend(data: any): Observable<any> {
+    public postSearchCommandsSend(data: any): Observable<any> {
         const params = { method: 'command_sents' };
+        return this._http.post(this._appSettings.commands.url.base, data, {
+            params,
+        });
+    }
+    /**
+     * @description: Envia comandos
+     */
+     public postCommandsSend(data: any): Observable<any> {
+        const params = { method: 'sent_commands' };
         return this._http.post(this._appSettings.commands.url.base, data, {
             params,
         });

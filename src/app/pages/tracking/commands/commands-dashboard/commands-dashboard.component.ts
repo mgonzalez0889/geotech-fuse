@@ -6,12 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MobileService } from 'app/core/services/mobile.service';
-import { map, filter } from 'rxjs/operators';
-export interface Task {
-    name: string;
-    completed: boolean;
-    subtasks?: Task[];
-}
+
+import { MatSelect } from '@angular/material/select';
+import { MatSelectionList, MatListOption } from '@angular/material/list';
+import { MatOption } from '@angular/material/core';
 
 @Component({
     selector: 'app-commands-dashboard',
@@ -22,13 +20,14 @@ export class CommandsDashboardComponent implements OnInit {
     public today = new Date();
     public month = this.today.getMonth();
     public year = this.today.getFullYear();
-    public day = this.today.getDay();
+    public day = this.today.getDate();
     public dataCommandsSent: MatTableDataSource<any>;
     public send: number = 0;
     public expired: number = 0;
     public pending: number = 0;
+    public isSelected: boolean = false;
+    public searchPlate;
 
-    public selectedFleets2;
     public typeCommands: any;
     public initialDate: Date = new Date(this.year, this.month, this.day);
     public finalDate: Date = new Date(this.year, this.month, this.day);
@@ -48,6 +47,8 @@ export class CommandsDashboardComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('allSelected', { static: true })
+    private allSelected: MatSelectionList;
 
     constructor(
         private commandsService: CommandsService,
@@ -78,10 +79,10 @@ export class CommandsDashboardComponent implements OnInit {
      */
     public getSentCommands(): void {
         const date = {
-            date_init: this.initialDate,
-            date_end: this.finalDate,
+            dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
+            dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
         };
-        this.commandsService.postCommandsSend(date).subscribe((data) => {
+        this.commandsService.postSearchCommandsSend(date).subscribe((data) => {
             if (data.data_count) {
                 this.send = data.data_count[0]?.count_state;
                 this.expired = data.data_count[1]?.count_state;
@@ -122,11 +123,29 @@ export class CommandsDashboardComponent implements OnInit {
     }
     filterTable(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        console.log(filterValue.trim().toLowerCase(), 'filterValue');
         this.dataCommandsSent.filter = filterValue.trim().toLowerCase();
     }
-    filterfleet(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        console.log(filterValue, 'filterValue');
+
+    public sentCommands(): void {
+        const commands = {
+            plates: this.selectedPlates,
+            command: this.selectedTypeCommand,
+        };
+        this.commandsService.postCommandsSend(commands).subscribe((data) => {
+            this.getSentCommands();
+            console.log(data, 'comando');
+        });
     }
+
+    // selectAll(): void {
+    //     if (!this.isSelected) {
+    //         this.allSelected.selectAll();
+    //         this.mobiles.forEach((element) => (element.selected = true));
+    //         this.isSelected = true;
+    //     } else {
+    //         this.allSelected.deselectAll();
+    //         this.mobiles.forEach((element) => (element.selected = false));
+    //         this.isSelected = false;
+    //     }
+    // }
 }

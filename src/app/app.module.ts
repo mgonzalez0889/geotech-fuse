@@ -12,22 +12,20 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
-import {AppSettingsService} from './core/app-configs/app-settings.service';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatMomentDateModule} from '@angular/material-moment-adapter';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDialogModule} from '@angular/material/dialog';
+import { AppSettingsService } from './core/app-configs/app-settings.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routerConfig: ExtraOptions = {
-    preloadingStrategy       : PreloadAllModules,
-    scrollPositionRestoration: 'enabled'
+    preloadingStrategy: PreloadAllModules,
+    scrollPositionRestoration: 'enabled',
 };
 
 @NgModule({
-    declarations: [
-        AppComponent
-    ],
-    imports     : [
+    declarations: [AppComponent],
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes, routerConfig),
@@ -48,15 +46,9 @@ const routerConfig: ExtraOptions = {
         MatDatepickerModule,
         MatMomentDateModule,
         MatNativeDateModule,
-        MatDialogModule
+        MatDialogModule,
     ],
-    providers: [
-      AppSettingsService
-    ],
-    bootstrap   : [
-        AppComponent
-    ]
+    providers: [AppSettingsService],
+    bootstrap: [AppComponent],
 })
-export class AppModule
-{
-}
+export class AppModule {}
