@@ -3,10 +3,11 @@ import { Subscription, timer } from 'rxjs';
 import { MobileService } from 'app/core/services/mobile.service';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { SocketIoClientService } from '../../../../core/services/socket-io-client.service';
-import { MapService } from 'app/core/services/maps/map.service';
+import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { IconService } from 'app/core/services/icons/icon.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-maps',
@@ -14,12 +15,13 @@ import { DomSanitizer } from '@angular/platform-browser';
     styleUrls: ['./maps.component.scss'],
 })
 export class MapsComponent implements OnInit, AfterViewInit {
-    
+
     public showHistory: boolean = false;
     public showMenuFleet: boolean = false;
     public subscription: Subscription;
     public markers: any = {};
     public mobiles: any = [];
+    public dataSource: any = [];
 
     optionsIcons: any = [
         {
@@ -38,21 +40,44 @@ export class MapsComponent implements OnInit, AfterViewInit {
             name: 'settings-map'
         }
     ]
-    
+
+    optionsGeo: any = [
+        {
+            icon: 'geo-cancel',
+            name: 'Cancelar'
+        },
+        {
+            icon: 'geo-back',
+            name: 'Retroceder'
+        },
+        {
+            icon: 'geo-clear',
+            name: 'Limpiar'
+        },
+        {
+            icon: 'geo-save',
+            name: 'Agregar'
+        }
+    ]
+
     constructor(
         private mobilesService: MobileService,
         private fleetService: FleetsService,
         private socketIoService: SocketIoClientService,
-        public mapService: MapService,
+        public mapFunctionalitieService: MapFunctionalitieService,
         public iconService: IconService,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer
-    ) { 
+    ) {
         iconRegistry.addSvgIcon('settings-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/settings.svg'));
         iconRegistry.addSvgIcon('type-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/type-map.svg'));
         iconRegistry.addSvgIcon('route-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/route.svg'));
         iconRegistry.addSvgIcon('zone-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/zone.svg'));
         iconRegistry.addSvgIcon('point-map', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/point.svg'));
+        iconRegistry.addSvgIcon('geo-cancel', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/geo-cancel.svg'));
+        iconRegistry.addSvgIcon('geo-back', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/geo-back.svg'));
+        iconRegistry.addSvgIcon('geo-clear', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/geo-clear.svg'));
+        iconRegistry.addSvgIcon('geo-save', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/geo-save.svg'));
     }
 
     ngOnInit(): void {
@@ -61,8 +86,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.socketIoService.sendMessage('authorization');
         //escucha el socket de new position
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
-            this.mapService.moveMarker(data);   
-            console.log(data);
+            this.mapFunctionalitieService.moveMarker(data);
         });
         const time = timer(2000);
         time.subscribe((t) => {
@@ -77,7 +101,12 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.subscription = this.mobilesService
             .getMobiles()
             .subscribe((data) => {
-                this.mapService.mobiles = data.data;
+                this.mapFunctionalitieService.mobiles = data.data;
+                this.mapFunctionalitieService.mobiles.map((x) => {
+                    x['selected'] = false;
+                    return x;
+                });
+                this.mapFunctionalitieService.dataSource = new MatTableDataSource(this.mapFunctionalitieService.mobiles);
                 this.setmarker(data.data);
             });
         this.subscription = this.fleetService.getFleets().subscribe((data) => {
@@ -89,11 +118,11 @@ export class MapsComponent implements OnInit, AfterViewInit {
      * @description: Genera los marcadores de los moviles en el mapa
      */
     private setmarker(mobiles: any): void {
-        this.mapService.setMarkers(mobiles);
+        this.mapFunctionalitieService.setMarkers(mobiles);
     }
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     ngAfterViewInit(): void {
-        this.mapService.init();
+        this.mapFunctionalitieService.init();
     }
 }
