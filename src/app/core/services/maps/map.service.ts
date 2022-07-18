@@ -11,9 +11,10 @@ import { InfoWindowsComponent } from 'app/pages/tracking/osm-maps/info-windows/i
 @Injectable({
   providedIn: 'root',
 })
-export class MapService {
+export class MapFunctionalitieService {
   public pointLatLens: any = [];
   mobiles: any[] = [];
+  public dataSource: any = [];
   public markers: any = {};
   public map: L.Map;
   public markerCluster = new MarkerClusterGroup;
@@ -22,6 +23,7 @@ export class MapService {
   public showMenuMobiles: boolean = true;
   public showDetailMobile: boolean = false;
   public showGeoTools: boolean = false;
+  public showOptionsGeoTools: boolean = false;
 
   drawerMode = 'side';
   drawerOpened = false;
@@ -43,9 +45,13 @@ export class MapService {
   ) { }
 
   drawerOpenedChanged(opened: boolean): void {
-    this.drawerOpened = opened;
-    console.log("entro cole");
-    console.log(this.drawerOpened);
+    this.drawerOpened = !this.drawerOpened;
+  }
+
+  visibleGeo() {
+    this.drawerOpenedChanged(!this.drawerOpened);
+    this.showMenuMobiles = !this.showMenuMobiles;
+    this.showOptionsGeoTools = !this.showOptionsGeoTools;
   }
 
   init() {
@@ -89,7 +95,7 @@ export class MapService {
   }
 
   receiveData(type: string, data: any) {
-    console.log(data);
+    console.log(data)
     if (type === 'checked') {
       if (data.length) {
         this.deleteChecks(data);

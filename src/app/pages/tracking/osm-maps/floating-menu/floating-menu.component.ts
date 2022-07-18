@@ -13,7 +13,7 @@ import {
 } from "../form-dialog-select-historial/form-dialog-select-historial.component";
 import { IconService } from 'app/core/services/icons/icon.service';
 import { MobilesService } from 'app/core/services/mobiles/mobiles.service';
-import { MapService } from 'app/core/services/maps/map.service';
+import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 
 @Component({
     selector: 'app-floating-menu',
@@ -39,7 +39,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
         private mobileService: MobilesService,
         private historiesService: HistoriesService,
         public dialog: MatDialog,
-        public mapService: MapService,
+        public mapFunctionalitieService: MapFunctionalitieService,
         private iconService: IconService
     ) {
         this.animationStates = {
@@ -193,16 +193,16 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
      * @description: Selecciona un mobile individual
      */
     public individual(event, value: MobilesInterface): void {
-        this.mobileService.items.map((x) => {
+        this.mapFunctionalitieService.mobiles.map((x) => {
             if (x.id == value.id) {
                 x.selected = !event;
             }
             return x;
         });
-        let marker = this.mobileService.items.filter(function (x) {
+        let marker = this.mapFunctionalitieService.mobiles.filter(function (x) {
             return x.selected == true;
         });
-        this.mapService.receiveData('checked', marker)
+        this.mapFunctionalitieService.receiveData('checked', marker)
 
     }
 

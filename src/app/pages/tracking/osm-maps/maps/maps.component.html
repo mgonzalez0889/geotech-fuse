@@ -1,9 +1,9 @@
-<ng-container *ngIf="mapService.showMenuMobiles">
+<ng-container *ngIf="mapFunctionalitieService.showMenuMobiles">
     <app-floating-menu>
     </app-floating-menu>
 </ng-container>
 
-<ng-container *ngIf="mapService.showDetailMobile">
+<ng-container *ngIf="mapFunctionalitieService.showDetailMobile">
     <app-floating-menu-detail>
     </app-floating-menu-detail>
 </ng-container>
@@ -34,7 +34,7 @@
 
 <div class="options">
     <ul>
-        <li *ngFor="let option of optionsIcons" (click)="mapService.drawerOpenedChanged(true)">
+        <li *ngFor="let option of optionsIcons" (click)="mapFunctionalitieService.drawerOpenedChanged(true)">
             <span>
                 <mat-icon svgIcon="{{option.name}}"></mat-icon>
             </span>
@@ -51,3 +51,15 @@
     </div>
 </div>
 -->
+
+<div class="options-geo-tools" *ngIf="mapFunctionalitieService.showOptionsGeoTools">
+    <div class="item" *ngFor="let options of optionsGeo" (click)="mapFunctionalitieService.visibleGeo()">
+        <div class="item-icon">
+            <mat-icon svgIcon="{{options.icon}}"></mat-icon>
+        </div>
+
+        <div class="item-title">
+            {{options.name}}
+        </div>
+    </div>
+</div>

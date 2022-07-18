@@ -118,4 +118,12 @@ export class AppSettingsService {
             base: EndPoints.uri('command'),
         },
     };
+    /**
+     *@description: End-point geo zonas
+     */
+    public owner_zone = {
+        url: {
+            base: EndPoints.uri('owner_zone')
+        }
+    };
 }

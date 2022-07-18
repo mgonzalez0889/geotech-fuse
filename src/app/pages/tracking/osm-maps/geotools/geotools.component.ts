@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MapService } from 'app/core/services/maps/map.service';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MapService } from 'app/core/services/map.service';
+import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-geotools',
@@ -10,10 +14,16 @@ export class GeotoolsComponent implements OnInit {
 
   public animationStates: any;
   public visibilityStates: any;
-
+  public subscription: Subscription;
   constructor(
-    public mapService: MapService
+    public mapFunctionalitieService: MapFunctionalitieService,
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer,
+    private mapService: MapService
   ) {
+
+    this.iconRegistry.addSvgIcon('plus-border', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/plus-border.svg'));
+
     this.animationStates = {
       expandCollapse: 'expanded',
       fadeIn: {
@@ -98,6 +108,18 @@ export class GeotoolsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getZones();
+  }
+
+  /**
+     * @description: Obtengo las flotas y vehiculosdel cliente
+     */
+  private getZones(): void {
+    this.subscription = this.mapService
+      .getZones()
+      .subscribe((data) => {
+        console.log(data)
+      });
   }
 
 }
