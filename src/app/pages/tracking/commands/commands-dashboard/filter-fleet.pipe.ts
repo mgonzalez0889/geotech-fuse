@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { result } from 'lodash';
 
 @Pipe({
-    name: 'pipeFilter',
+    name: 'pipeFilterFleet',
 })
 export class PipeFilterPipe implements PipeTransform {
     public transform(value: any, arg: any): any {

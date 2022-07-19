@@ -25,17 +25,21 @@ export class CommandsDashboardComponent implements OnInit {
     public send: number = 0;
     public expired: number = 0;
     public pending: number = 0;
-    public isSelected: boolean = false;
-    public searchPlate;
-
+    public searchPlate: any;
+    public searchFleets: any;
+    public validationFleet: number = 0;
+    public allSelectedMobiles: boolean = false;
+    public allSelectedFleets: boolean = false;
     public typeCommands: any;
     public initialDate: Date = new Date(this.year, this.month, this.day);
     public finalDate: Date = new Date(this.year, this.month, this.day);
-    public selectedPlates: [] = [];
+    public selectedPlates = [];
     public selectedTypeCommand: number;
-    public selectedFleets: [] = [];
+    public selectedFleets = [];
     public mobiles: any = [];
     public fleets: any = [];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
     public columnsCommands: string[] = [
         'plate',
         'date_sent',
@@ -44,11 +48,6 @@ export class CommandsDashboardComponent implements OnInit {
         'state',
         'resend',
     ];
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    @ViewChild('allSelected', { static: true })
-    private allSelected: MatSelectionList;
 
     constructor(
         private commandsService: CommandsService,
@@ -127,35 +126,79 @@ export class CommandsDashboardComponent implements OnInit {
         this.dataCommandsSent.filter = filterValue.trim().toLowerCase();
     }
 
-    public resendCommand(plate, typeCommand) {
+    public resendCommand(plate: any, typeCommand: number): void {
         const commands = {
+            validationFleet: this.validationFleet,
+            fleets: this.selectedFleets,
             plates: [plate],
-            command: typeCommand
+            command: typeCommand,
         };
-        console.log(plate, 'plate', typeCommand, 'typeCommand','commands=>',commands);
+        this.sendCommandsToDevice(commands);
     }
 
     public sentCommands(): void {
+        this.mobiles.forEach((x) => {
+            if (x.selected) {
+                this.selectedPlates.push(x.plate);
+            }
+        });
+        this.fleets.forEach((x) => {
+            if (x.selected) {
+                this.selectedFleets.push(x.id);
+            }
+        });
         const commands = {
+            validationFleet: this.validationFleet,
+            fleets: this.selectedFleets,
             plates: this.selectedPlates,
             command: this.selectedTypeCommand,
         };
-        console.log(commands,'commands')
-        this.commandsService.postCommandsSend(commands).subscribe((data) => {
-            this.getSentCommands();
-            console.log(data, 'comando');
-        });
+        this.sendCommandsToDevice(commands);
     }
 
-    // selectAll(): void {
-    //     if (!this.isSelected) {
-    //         this.allSelected.selectAll();
-    //         this.mobiles.forEach((element) => (element.selected = true));
-    //         this.isSelected = true;
-    //     } else {
-    //         this.allSelected.deselectAll();
-    //         this.mobiles.forEach((element) => (element.selected = false));
-    //         this.isSelected = false;
-    //     }
-    // }
+    private sendCommandsToDevice(commands: any): void {
+        console.log(commands, 'commands');
+        this.commandsService.postCommandsSend(commands).subscribe((data) => {
+            this.getSentCommands();
+        });
+    }
+    public typeOfSelection(event: any): void {
+        this.validationFleet = event.index;
+    }
+
+    setAll(completed: boolean, type: string): any {
+        if (type === 'mobiles') {
+            this.allSelectedMobiles = completed;
+            if (this.mobiles == null) {
+                return;
+            }
+            this.mobiles.forEach((t) => (t.selected = completed));
+        } else if ('fleets') {
+            this.allSelectedFleets = completed;
+            if (this.fleets == null) {
+                return;
+            }
+            this.fleets.forEach((t) => (t.selected = completed));
+        }
+    }
+
+    someComplete(type: string): boolean {
+        if (type === 'mobiles') {
+            if (this.mobiles == null) {
+                return false;
+            }
+            return (
+                this.mobiles.filter((t) => t.selected).length > 0 &&
+                !this.allSelectedMobiles
+            );
+        } else if ('fleets') {
+            if (this.fleets == null) {
+                return false;
+            }
+            return (
+                this.fleets.filter((t) => t.selected).length > 0 &&
+                !this.allSelectedFleets
+            );
+        }
+    }
 }
