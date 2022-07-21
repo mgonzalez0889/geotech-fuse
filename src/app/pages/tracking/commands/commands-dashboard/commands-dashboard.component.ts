@@ -6,10 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MobileService } from 'app/core/services/mobile.service';
-
-import { MatSelect } from '@angular/material/select';
-import { MatSelectionList, MatListOption } from '@angular/material/list';
-import { MatOption } from '@angular/material/core';
+import { DateAdapter, MatOption } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-commands-dashboard',
@@ -52,8 +50,12 @@ export class CommandsDashboardComponent implements OnInit {
     constructor(
         private commandsService: CommandsService,
         private mobilesService: MobileService,
-        private fleetService: FleetsService
-    ) {}
+        private fleetService: FleetsService,
+        private dateAdapter: DateAdapter<any>,
+        private snackBar: MatSnackBar
+    ) {
+        this.dateAdapter.setLocale('es');
+    }
 
     ngOnInit(): void {
         this.getTypeCommand();
@@ -137,6 +139,8 @@ export class CommandsDashboardComponent implements OnInit {
     }
 
     public sentCommands(): void {
+        this.selectedPlates = [];
+        this.selectedFleets = [];
         this.mobiles.forEach((x) => {
             if (x.selected) {
                 this.selectedPlates.push(x.plate);
@@ -157,10 +161,26 @@ export class CommandsDashboardComponent implements OnInit {
     }
 
     private sendCommandsToDevice(commands: any): void {
-        console.log(commands, 'commands');
-        this.commandsService.postCommandsSend(commands).subscribe((data) => {
-            this.getSentCommands();
-        });
+        if (commands.fleets.length || commands.plates.length) {
+            this.commandsService
+                .postCommandsSend(commands)
+                .subscribe((data) => {
+                    if (data.code !== 200) {
+                        this.snackBar.open(
+                            'El comando no pudo ser enviado, intente nuevamente.',
+                            'CERRAR',
+                            { duration: 4000 }
+                        );
+                    }
+                    this.getSentCommands();
+                });
+        } else {
+            this.snackBar.open(
+                'Favor seleccione un Vehículo o una flota.',
+                'CERRAR',
+                { duration: 4000 }
+            );
+        }
     }
     public typeOfSelection(event: any): void {
         this.validationFleet = event.index;
@@ -172,7 +192,10 @@ export class CommandsDashboardComponent implements OnInit {
             if (this.mobiles == null) {
                 return;
             }
-            this.mobiles.forEach((t) => (t.selected = completed));
+            this.mobiles.forEach((x) => {
+                x.selected = completed;
+                console.log(x, 'x');
+            });
         } else if ('fleets') {
             this.allSelectedFleets = completed;
             if (this.fleets == null) {

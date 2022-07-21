@@ -1,107 +1,139 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ContactService } from "../../../../core/services/contact.service";
-import { fuseAnimations } from "../../../../../@fuse/animations";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Subscription } from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ContactService } from 'app/core/services/contact.service';
 
 @Component({
     selector: 'app-form-contact',
     templateUrl: './form-contact.component.html',
     styleUrls: ['./form-contact.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
 })
-export class FormContactComponent implements OnInit, OnDestroy {
-
-    @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
-    public formContacts: FormGroup;
-    public subscription$: Subscription;
-    public titleForm: string;
-    public id: string;
-
+export class FormContactComponent implements OnInit {
+    public contacts: any = [];
+    public editMode: boolean = false;
+    public opened: boolean = true;
+    public contactForm: FormGroup;
     constructor(
+        private contactService: ContactService,
         private fb: FormBuilder,
-        private _contactService: ContactService,
-        private _snackBar: MatSnackBar,
-    ) {
-    }
+        private snackBar: MatSnackBar
+    ) {}
 
     ngOnInit(): void {
-        this.createContactForm();
         this.listenObservables();
+        this.createContactForm();
     }
-
-    /**
-     * @description: Crear o editar un nuevo contacto
-     */
     public onSave(): void {
-        const data = this.formContacts.getRawValue();
+        const data = this.contactForm.getRawValue();
         if (!data.id) {
             this.newContact(data);
         } else {
             this.editContact(data);
         }
     }
+    public closeMenu(): void {
+        this.contactService.behaviorSubjectContactActions$.next({
+            reload: false,
+            opened: false,
+        });
+    }
+
     /**
-     * @description: Cierra formulario
+     * @description: Eliminar contacto
      */
-    public onClose(): void {
-        this.onShow.emit(false);
+    public deleteContact(id: number): void {
+        this.contactService.deleteContacts(id).subscribe((data) => {
+            if (data.code === 200) {
+                this.contactService.behaviorSubjectContactActions$.next({
+                    reload: true,
+                    opened: false,
+                });
+                this.snackBar.open('Contacto eliminiado con exito.', 'CERRAR', {
+                    duration: 4000,
+                });
+            } else {
+                this.snackBar.open(
+                    'El contacto no se pudo elimnar, favor intente nuevamente.',
+                    'CERRAR',
+                    {
+                        duration: 4000,
+                    }
+                );
+            }
+        });
     }
     /**
      * @description: Creacion de los datos del formulario de contactos
      */
     private createContactForm(): void {
-        this.formContacts = this.fb.group({
-            id: undefined,
+        this.contactForm = this.fb.group({
+            id: [''],
             full_name: ['', [Validators.required]],
-            identification: ['', [Validators.required]],
-            email: ['', [Validators.email]],
+            email: ['', [Validators.email, Validators.required]],
             phone: ['', [Validators.required]],
-            address: ['', [Validators.required]]
-        }
-        );
-    }
-    /**
-     * @description: Crear un nuevo contacto
-     */
-    private newContact(data: any): void {
-        this.subscription$ = this._contactService.postContacts(data).subscribe(() => {
-            this._snackBar.open('Se ha creado el nuevo contacto', 'CERRAR', { duration: 4000 });
-            this.onShow.emit(false);
+            identification: ['', [Validators.required]],
+            address: ['', [Validators.required]],
         });
     }
     /**
-     * @description: Editar contacto
+     * @description: Escucha el observable behavior y busca al contacto
      */
-    private editContact(data: any): void {
-        this.subscription$ = this._contactService.putContacts(data).subscribe(() => {
-            this._snackBar.open('Contacto actualizado con exito', 'CERRAR', { duration: 4000 });
-            this.onShow.emit(false);
-        }
+    private listenObservables(): void {
+        this.contactService.behaviorSubjectContactId$.subscribe(
+            ({ id, newContact }) => {
+                console.log(newContact, 'newContact');
+                this.editMode = newContact;
+                this.contactService.getContact(id).subscribe((data) => {
+                    this.contacts = data.data;
+                    this.contactForm.patchValue(this.contacts);
+                });
+            }
         );
     }
     /**
-     * @description: Escucha el observable behavior
+     * @description: Editar un contacto
      */
-    private listenObservables(): void {
-        this.subscription$ = this._contactService.behaviorSubjectContact$.subscribe(({ type, isEdit, payload }) => {
-            if (isEdit && type == 'EDIT') {
-                this.formContacts.patchValue(payload);
-                this.titleForm = `Editar contacto ${payload.full_name}`;
-            } else if (!isEdit && type == 'NEW') {
-                this.formContacts.reset({
+    private editContact(data: any): void {
+        this.contactService.putContacts(data).subscribe((res) => {
+            this.contactService.behaviorSubjectContactActions$.next({
+                reload: true,
+                opened: true,
+            });
+            if (res.code === 200) {
+                this.editMode = false;
+                this.listenObservables();
+                this.snackBar.open('Contacto actualizado con exito', 'CERRAR', {
+                    duration: 4000,
                 });
-                this.titleForm = 'Nuevo contacto';
+            } else {
+                this.snackBar.open(
+                    'El contacto no se pudo actualizar, favor intente nuevamente.',
+                    'CERRAR',
+                    {
+                        duration: 4000,
+                    }
+                );
             }
         });
     }
-    /**
-     * @description: Destruye las subscripciones
-     */
-    ngOnDestroy(): void {
-        this.subscription$.unsubscribe();
-    }
 
+    private newContact(data: any): void {
+        this.contactService.postContacts(data).subscribe((res) => {
+            if (res.code === 200) {
+                this.editMode = false;
+                this.listenObservables();
+                this.snackBar.open('Contacto creado con exito', 'CERRAR', {
+                    duration: 4000,
+                });
+            } else {
+                this.snackBar.open(
+                    'El contacto no se pudo crear, favor intente nuevamente.',
+                    'CERRAR',
+                    {
+                        duration: 4000,
+                    }
+                );
+            }
+        });
+    }
 }

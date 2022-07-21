@@ -1,74 +1,73 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {ContactService} from 'app/core/services/contact.service';
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Observable, Subscription} from "rxjs";
+/* eslint-disable @typescript-eslint/member-ordering */
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ContactService } from 'app/core/services/contact.service';
 
 @Component({
     selector: 'app-grid-contact',
     templateUrl: './grid-contact.component.html',
     styleUrls: ['./grid-contact.component.scss'],
-    encapsulation: ViewEncapsulation.None,
- })
-export class GridContactComponent implements OnInit, OnDestroy {
+})
+export class GridContactComponent implements OnInit {
+    public opened: boolean = false;
+    public dataTableContact: MatTableDataSource<any>;
+    public contactsCount: number = 0;
+    public columnsContact: string[] = ['name', 'address', 'email', 'cellPhone'];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
-    public show: boolean = false;
-    public contacts$: Observable<any>;
-    public subscription$: Subscription;
-
-    constructor(
-        private _contactService: ContactService,
-        private _snackBar: MatSnackBar) {
-    }
+    constructor(private contactService: ContactService) {}
 
     ngOnInit(): void {
-        this.showContact();
+        //this.getContact();
+        this.listenObservables();
     }
     /**
-     * @description: Abre/cierra el formulario
+     * @description: Trael todos los contactos del cliente
      */
-    public openForm(): void {
-        this.show = true;
-        this._contactService.behaviorSubjectContact$.next({type: 'NEW', isEdit: false});
-    }
-    public closeForm(value): void {
-        this.show = value;
-    }
-    /**
-     * @description: Edita un contacto
-     */
-    public onEdit(id: number): void {
-        this.show = true;
-        this.getEditContact(id);
-    }
-    /**
-     * @description: Mostrar todos los contactos
-     */
-    public showContact(): void {
-        this.contacts$ = this._contactService.getContacts();
-    }
-    /**
-     * @description: Mostrar informacion de un contacto
-     */
-    private getEditContact(id: number): void {
-        this.subscription$ = this._contactService.getContact(id).subscribe(({data}) => {
-            this._contactService.behaviorSubjectContact$.next({type: 'EDIT', id, isEdit: true, payload: data});
+    public getContact(): void {
+        this.contactService.getContacts().subscribe((data) => {
+            this.contactsCount = data.data.length;
+            this.dataTableContact = new MatTableDataSource(data.data);
+            this.dataTableContact.paginator = this.paginator;
+            this.dataTableContact.sort = this.sort;
         });
     }
     /**
-     * @description: Eliminar un contacto
+     * @description: Filtrar datos de la tabla
      */
-    public deleteContact(id: number): void {
-        this.subscription$ = this._contactService.deleteContacts(id).subscribe(
-            () => {
-                this.contacts$ = this._contactService.getContacts();
-                this._snackBar.open('Se ha eliminado el contacto', 'CERRAR', {duration: 4000});
-                console.log('Elemento eliminado');
-            });
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataTableContact.filter = filterValue.trim().toLowerCase();
+    }
+    /**
+     * @description: Guarda el ID del contacto para aburirlo en el formulario
+     */
+    public actionsContact(id: number): void {
+        this.opened = true;
+        this.contactService.behaviorSubjectContactId$.next({
+            id: id,
+            newContact: true,
+        });
+    }
+    private listenObservables(): void {
+        this.contactService.behaviorSubjectContactActions$.subscribe(
+            ({ reload, opened }) => {
+                console.log(reload, opened, 'ssssssss');
+                this.opened = opened;
+                if (reload) {
+                    this.getContact();
+                }
+            }
+        );
     }
 
-    ngOnDestroy(): void {
-     }
-
-
+    /**
+     * @description: Crear un nuevo contacto
+     */
+    public newContact(): void {
+        this.contactService.behaviorSubjectContactId$.next({ newContact: true });
+    }
 }
