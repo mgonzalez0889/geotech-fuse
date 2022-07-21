@@ -77,6 +77,7 @@ export class MapFunctionalitieService {
         center: [4.658383846282959, -74.09394073486328],
         zoom: 10,
         layers: [googleMaps],
+        attributionControl: false,
       });
 
       const baseLayers = {

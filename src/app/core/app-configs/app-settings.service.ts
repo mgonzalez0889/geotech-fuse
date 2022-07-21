@@ -123,7 +123,15 @@ export class AppSettingsService {
      */
     public owner_zone = {
         url: {
-            base: EndPoints.uri('owner_zone')
-        }
+            base: EndPoints.uri('owner_zone'),
+        },
+    };
+    /**
+     *@description: End-point Centro de control
+     */
+    public controlCenter = {
+        url: {
+            base: EndPoints.uri('alarm'),
+        },
     };
 }

@@ -29,7 +29,7 @@ export class GridContactComponent implements OnInit {
      */
     public getContact(): void {
         this.contactService.getContacts().subscribe((data) => {
-            this.contactsCount = data.data.length;
+            this.contactsCount = data.data?.length;
             this.dataTableContact = new MatTableDataSource(data.data);
             this.dataTableContact.paginator = this.paginator;
             this.dataTableContact.sort = this.sort;
@@ -55,7 +55,6 @@ export class GridContactComponent implements OnInit {
     private listenObservables(): void {
         this.contactService.behaviorSubjectContactActions$.subscribe(
             ({ reload, opened }) => {
-                console.log(reload, opened, 'ssssssss');
                 this.opened = opened;
                 if (reload) {
                     this.getContact();

@@ -12,10 +12,20 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { ControlCenterActionsComponent } from './control-center-actions/control-center-actions.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+
+
+
 
 @NgModule({
   declarations: [
-    ControlCenterDashboardComponent
+    ControlCenterDashboardComponent,
+    ControlCenterActionsComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +38,12 @@ import { MatListModule } from '@angular/material/list';
     MatSidenavModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDatepickerModule,
+    FormsModule,
+    MatButtonModule
   ]
 })
 export class MonitoringCenterModule { }
