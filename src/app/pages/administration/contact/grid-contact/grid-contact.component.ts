@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ContactService } from 'app/core/services/contact.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-grid-contact',
     templateUrl: './grid-contact.component.html',
     styleUrls: ['./grid-contact.component.scss'],
 })
-export class GridContactComponent implements OnInit {
+export class GridContactComponent implements OnInit, OnDestroy {
+    public subscription: Subscription;
     public opened: boolean = false;
     public dataTableContact: MatTableDataSource<any>;
     public contactsCount: number = 0;
@@ -25,7 +27,7 @@ export class GridContactComponent implements OnInit {
         this.listenObservables();
     }
     /**
-     * @description: Trael todos los contactos del cliente
+     * @description: Trae todos los contactos del cliente
      */
     public getContact(): void {
         this.contactService.getContacts().subscribe((data) => {
@@ -52,17 +54,20 @@ export class GridContactComponent implements OnInit {
             isEdit: false,
         });
     }
+    /**
+     * @description: Escucha el observable behavior
+     */
     private listenObservables(): void {
-        this.contactService.behaviorSubjectContactGrid.subscribe(
-            ({ reload, opened }) => {
-                this.opened = opened;
-                if (reload) {
-                    this.getContact();
+        this.subscription =
+            this.contactService.behaviorSubjectContactGrid.subscribe(
+                ({ reload, opened }) => {
+                    this.opened = opened;
+                    if (reload) {
+                        this.getContact();
+                    }
                 }
-            }
-        );
+            );
     }
-
     /**
      * @description: Crear un nuevo contacto
      */
@@ -71,5 +76,11 @@ export class GridContactComponent implements OnInit {
         this.contactService.behaviorSubjectContactForm.next({
             newContact: 'Nuevo contacto',
         });
+    }
+    /**
+     * @description: Destruye el observable
+     */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

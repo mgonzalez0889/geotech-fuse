@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ContactService } from 'app/core/services/contact.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-form-contact',
     templateUrl: './form-contact.component.html',
     styleUrls: ['./form-contact.component.scss'],
 })
-export class FormContactComponent implements OnInit {
+export class FormContactComponent implements OnInit, OnDestroy {
     public contacts: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
     public contactForm: FormGroup;
+    public subscription: Subscription;
     constructor(
         private contactService: ContactService,
         private fb: FormBuilder,
-        private snackBar: MatSnackBar,
         private confirmationService: ConfirmationService
     ) {}
 
@@ -25,6 +25,9 @@ export class FormContactComponent implements OnInit {
         this.listenObservables();
         this.createContactForm();
     }
+    /**
+     * @description: Valida si es edita o guarda un contacto nuevo
+     */
     public onSave(): void {
         const data = this.contactForm.getRawValue();
         if (!data.id) {
@@ -33,15 +36,17 @@ export class FormContactComponent implements OnInit {
             this.editContact(data);
         }
     }
+    /**
+     * @description: Cierra el menu lateral de la derecha
+     */
     public closeMenu(): void {
         this.contactService.behaviorSubjectContactGrid.next({
             opened: false,
             reload: false,
         });
     }
-
     /**
-     * @description: Eliminar contacto
+     * @description: Elimina el contacto
      */
     public deleteContact(id: number): void {
         let confirmation = this.confirmationService.open({
@@ -103,7 +108,13 @@ export class FormContactComponent implements OnInit {
         });
     }
     /**
-     * @description: Creacion de los datos del formulario de contactos
+     * @description: Destruye el observable
+     */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+    /**
+     * @description: Inicializa el formulario de contactos
      */
     private createContactForm(): void {
         this.contactForm = this.fb.group({
@@ -119,24 +130,25 @@ export class FormContactComponent implements OnInit {
      * @description: Escucha el observable behavior y busca al contacto
      */
     private listenObservables(): void {
-        this.contactService.behaviorSubjectContactForm.subscribe(
-            ({ newContact, id, isEdit }) => {
-                this.editMode = isEdit;
-                if (newContact) {
-                    this.contacts = [];
-                    this.contacts['full_name'] = newContact;
-                    if (this.contactForm) {
-                        this.contactForm.reset();
+        this.subscription =
+            this.contactService.behaviorSubjectContactForm.subscribe(
+                ({ newContact, id, isEdit }) => {
+                    this.editMode = isEdit;
+                    if (newContact) {
+                        this.contacts = [];
+                        this.contacts['full_name'] = newContact;
+                        if (this.contactForm) {
+                            this.contactForm.reset();
+                        }
+                    }
+                    if (id) {
+                        this.contactService.getContact(id).subscribe((data) => {
+                            this.contacts = data.data;
+                            this.contactForm.patchValue(this.contacts);
+                        });
                     }
                 }
-                if (id) {
-                    this.contactService.getContact(id).subscribe((data) => {
-                        this.contacts = data.data;
-                        this.contactForm.patchValue(this.contacts);
-                    });
-                }
-            }
-        );
+            );
     }
     /**
      * @description: Editar un contacto
@@ -205,7 +217,9 @@ export class FormContactComponent implements OnInit {
             }
         });
     }
-
+    /**
+     * @description: Guarda un nuevo contacto
+     */
     private newContact(data: any): void {
         this.contactService.postContacts(data).subscribe((res) => {
             if (res.code !== 200) {
