@@ -48,7 +48,7 @@ export enum DialogAlertEnum {
     question = 'help_outline',
 }
 
-export interface FuseConfirmationConfig
+export interface ConfirmationConfig
 {
     title?: string;
     message?: string;

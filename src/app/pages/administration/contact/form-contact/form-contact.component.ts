@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ContactService } from 'app/core/services/contact.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class FormContactComponent implements OnInit {
     constructor(
         private contactService: ContactService,
         private fb: FormBuilder,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private confirmationService: ConfirmationService
     ) {}
 
     ngOnInit(): void {
@@ -32,9 +34,9 @@ export class FormContactComponent implements OnInit {
         }
     }
     public closeMenu(): void {
-        this.contactService.behaviorSubjectContactActions$.next({
-            reload: false,
+        this.contactService.behaviorSubjectContactGrid.next({
             opened: false,
+            reload: false,
         });
     }
 
@@ -42,23 +44,61 @@ export class FormContactComponent implements OnInit {
      * @description: Eliminar contacto
      */
     public deleteContact(id: number): void {
-        this.contactService.deleteContacts(id).subscribe((data) => {
-            if (data.code === 200) {
-                this.contactService.behaviorSubjectContactActions$.next({
-                    reload: true,
-                    opened: false,
-                });
-                this.snackBar.open('Contacto eliminiado con exito.', 'CERRAR', {
-                    duration: 4000,
-                });
-            } else {
-                this.snackBar.open(
-                    'El contacto no se pudo elimnar, favor intente nuevamente.',
-                    'CERRAR',
-                    {
-                        duration: 4000,
+        let confirmation = this.confirmationService.open({
+            title: 'Eliminar contacto',
+            message:
+                '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',
+            actions: {
+                confirm: {
+                    label: 'Eliminar',
+                },
+            },
+        });
+        confirmation.afterClosed().subscribe((result) => {
+            if (result === 'confirmed') {
+                this.contactService.deleteContacts(id).subscribe((res) => {
+                    if (res.code === 200) {
+                        this.contactService.behaviorSubjectContactGrid.next({
+                            reload: true,
+                            opened: false,
+                        });
+                        confirmation = this.confirmationService.open({
+                            title: 'Eliminar contacto',
+                            message: 'Contacto eliminado con exito!',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                name: 'heroicons_outline:exclamation',
+                                color: 'warn',
+                            },
+                        });
+                    } else {
+                        confirmation = this.confirmationService.open({
+                            title: 'Eliminar contacto',
+                            message:
+                                'El contacto no se pudo eliminar, favor intente nuevamente.',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                show: true,
+                                name: 'heroicons_outline:exclamation',
+                                color: 'warn',
+                            },
+                        });
                     }
-                );
+                });
             }
         });
     }
@@ -79,14 +119,22 @@ export class FormContactComponent implements OnInit {
      * @description: Escucha el observable behavior y busca al contacto
      */
     private listenObservables(): void {
-        this.contactService.behaviorSubjectContactId$.subscribe(
-            ({ id, newContact }) => {
-                console.log(newContact, 'newContact');
-                this.editMode = newContact;
-                this.contactService.getContact(id).subscribe((data) => {
-                    this.contacts = data.data;
-                    this.contactForm.patchValue(this.contacts);
-                });
+        this.contactService.behaviorSubjectContactForm.subscribe(
+            ({ newContact, id, isEdit }) => {
+                this.editMode = isEdit;
+                if (newContact) {
+                    this.contacts = [];
+                    this.contacts['full_name'] = newContact;
+                    if (this.contactForm) {
+                        this.contactForm.reset();
+                    }
+                }
+                if (id) {
+                    this.contactService.getContact(id).subscribe((data) => {
+                        this.contacts = data.data;
+                        this.contactForm.patchValue(this.contacts);
+                    });
+                }
             }
         );
     }
@@ -94,45 +142,112 @@ export class FormContactComponent implements OnInit {
      * @description: Editar un contacto
      */
     private editContact(data: any): void {
-        this.contactService.putContacts(data).subscribe((res) => {
-            this.contactService.behaviorSubjectContactActions$.next({
-                reload: true,
-                opened: true,
-            });
-            if (res.code === 200) {
-                this.editMode = false;
-                this.listenObservables();
-                this.snackBar.open('Contacto actualizado con exito', 'CERRAR', {
-                    duration: 4000,
-                });
-            } else {
-                this.snackBar.open(
-                    'El contacto no se pudo actualizar, favor intente nuevamente.',
-                    'CERRAR',
-                    {
-                        duration: 4000,
+        let confirmation = this.confirmationService.open({
+            title: 'Editar contacto',
+            message:
+                '¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!',
+            actions: {
+                confirm: {
+                    label: 'Editar',
+                    color: 'accent',
+                },
+            },
+            icon: {
+                name: 'heroicons_outline:pencil',
+                color: 'info',
+            },
+        });
+        confirmation.afterClosed().subscribe((result) => {
+            if (result === 'confirmed') {
+                this.contactService.putContacts(data).subscribe((res) => {
+                    if (res.code === 200) {
+                        this.contactService.behaviorSubjectContactGrid.next({
+                            reload: true,
+                            opened: false,
+                        });
+                        confirmation = this.confirmationService.open({
+                            title: 'Editar contacto',
+                            message: 'Contacto editado con exito!',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                name: 'heroicons_outline:check-circle',
+                                color: 'success',
+                            },
+                        });
+                    } else {
+                        confirmation = this.confirmationService.open({
+                            title: 'Editar contacto',
+                            message:
+                                'El contacto no se pudo actualizar, favor intente nuevamente.',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                show: true,
+                                name: 'heroicons_outline:exclamation',
+                                color: 'warn',
+                            },
+                        });
                     }
-                );
+                });
             }
         });
     }
 
     private newContact(data: any): void {
         this.contactService.postContacts(data).subscribe((res) => {
-            if (res.code === 200) {
-                this.editMode = false;
-                this.listenObservables();
-                this.snackBar.open('Contacto creado con exito', 'CERRAR', {
-                    duration: 4000,
+            if (res.code !== 200) {
+                this.contactService.behaviorSubjectContactGrid.next({
+                    reload: true,
+                    opened: false,
+                });
+                const confirmation = this.confirmationService.open({
+                    title: 'Crear contacto',
+                    message: 'Contacto creado con exito!',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        name: 'heroicons_outline:check-circle',
+                        color: 'success',
+                    },
                 });
             } else {
-                this.snackBar.open(
-                    'El contacto no se pudo crear, favor intente nuevamente.',
-                    'CERRAR',
-                    {
-                        duration: 4000,
-                    }
-                );
+                const confirmation = this.confirmationService.open({
+                    title: 'Crear contacto',
+                    message:
+                        'El contacto no se pudo crear, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                });
             }
         });
     }

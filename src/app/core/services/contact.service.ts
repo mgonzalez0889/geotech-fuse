@@ -7,29 +7,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class ContactService {
-    public behaviorSubjectContact$: BehaviorSubject<{
-        type?: string;
-        isEdit?: boolean;
+    public behaviorSubjectContactForm: BehaviorSubject<{
         payload?: any;
         id?: number;
-    }> = new BehaviorSubject<{
-        type?: string;
+        newContact?: any;
         isEdit?: boolean;
-        payload?: any;
-        id?: number;
-    }>({ type: '', isEdit: false, id: 0 });
-    public behaviorSubjectContactId$: BehaviorSubject<{
-        id?: number;
-        newContact?: boolean;
-    }> = new BehaviorSubject<{ id?: number; newContact?: boolean }>({
-        id: null,
-        newContact: false
-    });
-    public behaviorSubjectContactActions$: BehaviorSubject<{
+    }> = new BehaviorSubject(null);
+    public behaviorSubjectContactGrid: BehaviorSubject<{
         reload?: boolean;
         opened?: boolean;
-        new?: boolean;
-    }> = new BehaviorSubject({ reload: true });
+    }> = new BehaviorSubject({ reload: false, opened: false });
 
     constructor(
         private _http: HttpClient,

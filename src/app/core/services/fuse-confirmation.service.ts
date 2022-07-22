@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {FuseConfirmationConfig} from '../interfaces/fuse-confirmation-config';
+import {ConfirmationConfig} from '../interfaces/fuse-confirmation-config';
 import {MatDialog} from '@angular/material/dialog';
 import {MessageDialogComponent} from '../../shared/dialogs/message-dialog/message-dialog.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FuseConfirmationService {
+export class ConfirmationService {
 
   constructor(
       public _dialog: MatDialog,
@@ -14,7 +14,7 @@ export class FuseConfirmationService {
   /**
    * @description: Cuadro de dialogo para confirmacion
    */
-  public openDialog(data: FuseConfirmationConfig): Promise<FuseConfirmationConfig> {
+  public openDialog(data: ConfirmationConfig): Promise<ConfirmationConfig> {
       return this._dialog.open(MessageDialogComponent , {
           data,
           maxWidth: '88vw',

@@ -21,7 +21,7 @@ export class GridContactComponent implements OnInit {
     constructor(private contactService: ContactService) {}
 
     ngOnInit(): void {
-        //this.getContact();
+        this.getContact();
         this.listenObservables();
     }
     /**
@@ -47,13 +47,13 @@ export class GridContactComponent implements OnInit {
      */
     public actionsContact(id: number): void {
         this.opened = true;
-        this.contactService.behaviorSubjectContactId$.next({
+        this.contactService.behaviorSubjectContactForm.next({
             id: id,
-            newContact: true,
+            isEdit: false,
         });
     }
     private listenObservables(): void {
-        this.contactService.behaviorSubjectContactActions$.subscribe(
+        this.contactService.behaviorSubjectContactGrid.subscribe(
             ({ reload, opened }) => {
                 this.opened = opened;
                 if (reload) {
@@ -67,6 +67,9 @@ export class GridContactComponent implements OnInit {
      * @description: Crear un nuevo contacto
      */
     public newContact(): void {
-        this.contactService.behaviorSubjectContactId$.next({ newContact: true });
+        this.opened = true;
+        this.contactService.behaviorSubjectContactForm.next({
+            newContact: 'Nuevo contacto',
+        });
     }
 }
