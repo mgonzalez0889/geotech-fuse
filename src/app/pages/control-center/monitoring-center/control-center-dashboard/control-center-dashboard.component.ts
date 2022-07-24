@@ -11,7 +11,7 @@ import { ControlCenterService } from 'app/core/services/control-center.service';
     styleUrls: ['./control-center-dashboard.component.scss'],
 })
 export class ControlCenterDashboardComponent implements OnInit {
-    public opened: boolean  = false;
+    public opened: boolean  = true;
     public dataAlarms: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

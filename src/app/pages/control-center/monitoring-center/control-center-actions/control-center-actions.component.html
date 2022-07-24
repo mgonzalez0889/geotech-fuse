@@ -1,23 +1,39 @@
 <div class="flex flex-col w-full pl-6">
     <div class="bg-card shadow rounded-2xl">
-        <div class="p-4">
-            <div #map id="map" class="h-64 rounded-2xl">
+        <ng-container *ngIf="!isAttended">
+            <div class="p-4">
+                <div #map id="map" class="h-64 rounded-2xl">
+                </div>
             </div>
-        </div>
-        <div class="px-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b py-3">
-                <div>
-                    <div class="text-2xl font-semibold
-                    tracking-tight leading-6 truncate">
-                        Seguimiento
+            <div class="px-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b py-3">
+                    <div class="flex">
+                        <div class="text-2xl font-semibold                    tracking-tight leading-6 truncate">
+                            Seguimiento
+                        </div>
                     </div>
-                    <div class="pt-5">
+                    <div class="flex text-center px-4 py-1 rounded-md bg-gray-200">
+                        <span class="text-base font-normal">Placa:</span>
+                        <span class="text-base font-semibold pl-3">QLC52E</span>
+                        <span class="text-base font-semibold"> - 1234</span>
+                    </div>
+                    <div class="flex flex-col">
                         <div>
                             Cliente:
                         </div>
                         <div class="text-base font-semibold tracking-tight leading-6 truncate">
                             Brasilia Sa
                         </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div>
+                            Direccion:
+                        </div>
+                        <div class="text-base font-semibold tracking-tight leading-6 truncate">
+                            cra 55 10 51
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
                         <div>
                             Alarma:
                         </div>
@@ -25,40 +41,23 @@
                             Panico
                         </div>
                     </div>
-
-                </div>
-                <div>
-                    <div class=" text-center px-4 py-1 rounded-md bg-gray-200">
-                        <span class="text-base font-normal">Placa:</span>
-                        <span class="text-base font-semibold pl-3">QLC52E</span>
-                        <span class="text-base font-semibold"> - 1234</span>
-                    </div>
-                    <div class="pt-5">
-                        <div>
-                            Direccion:
-                        </div>
-                        <div class="text-base font-semibold tracking-tight leading-6 truncate">
-                            cra 55 10 51
-                        </div>
+                    <div class="flex flex-col">
                         <div>
                             Fecha de generación:
                         </div>
                         <div class="text-base font-semibold tracking-tight leading-6 truncate">
-                            14/05/1999 14:20
+                            14/05/1999 12:40 am
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="px-6">
-            <div class="grid grid-cols-2 gap-4 py-3 border-b">
-                <div>
+            <div class="px-6 border-b">
+                <div class="grid grid-cols-2 gap-4 py-3">
                     <div class="flex text-2xl font-semibold
                     tracking-tight leading-6 truncate">
                         Historico
                     </div>
-                </div>
-                <div>
+                    <!-- <div>
                     <div class="flex border-2 rounded-full p-1 cursor-pointer w-52" (click)="picker.open()">
                         <div>
                             <mat-date-range-input [rangePicker]="picker">
@@ -75,9 +74,106 @@
                         <mat-icon class="icon-size-5 mr-2" matSuffix svgIcon="feather:calendar">
                         </mat-icon>
                     </div>
+                </div> -->
+                </div>
+                <div class="overflow-x-auto">
+
+                    <table mat-table [dataSource]="dataHisotiric" matSort class="w-full">
+                        <!-- plate Column -->
+                        <ng-container matColumnDef="plate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.plate}}</span>
+                            </td>
+                        </ng-container>
+                        <!-- date_entry Column -->
+                        <ng-container matColumnDef="date_entry">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
+                                    }} </span>
+                            </td>
+                        </ng-container>
+                        <!-- event Column -->
+                        <ng-container matColumnDef="event">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Evento </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.state}}
+                                </span>
+                            </td>
+                        </ng-container>
+                        <!-- address Column -->
+                        <ng-container matColumnDef="address">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <a class="pr-6 whitespace-nowrap" href="https://maps.google.com/?q={{row.x}},{{row.y}}"
+                                    target="_blank" rel="noopener noreferrer">{{row.address}}
+                                </a>
+                            </td>
+                        </ng-container>
+                        <!-- speed Column -->
+                        <ng-container matColumnDef="speed">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Velocidad </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.speed}}
+                                </span>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsHisotiric"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsHisotiric;"></tr>
+                    </table>
+                    <mat-paginator class=" inset-x-0 bottom-0  z-10 bg-gray-200" [pageSizeOptions]="[5]"
+                        aria-label="Select page of users">
+                    </mat-paginator>
                 </div>
             </div>
-
-        </div>
+        </ng-container>
+        <ng-container *ngIf="isAttended">
+            <div class="px-6 py-3">
+                <div>
+                    <span class="text-base font-semibold">Atención de alarmas </span>
+                    <span class="text-lg font-bold">| QLC52E</span>
+                </div>
+                <form [formGroup]="contactForm">
+                    <div class="flex flex-col pt-3">
+                        <mat-form-field>
+                            <mat-label>Estado de atención</mat-label>
+                            <mat-select [value]="'buy'" required>
+                                <mat-option [value]="'buy'">Buy</mat-option>
+                                <mat-option [value]="'sell'">Sell</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-form-field>
+                            <mat-label>Causal de la alarma</mat-label>
+                            <mat-select [value]="'buy'" required>
+                                <mat-option [value]="'buy'">Buy</mat-option>
+                                <mat-option [value]="'sell'">Sell</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="lex flex-col">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Sucesos</mat-label>
+                            <textarea required matInput matTextareaAutosize></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="pt-3">
+                        <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'">
+                            <span>Cancelar</span>
+                        </button>
+                        <button class="pl-7" mat-flat-button [color]="'accent'">
+                            <span>Atender</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </ng-container>
     </div>
 </div>

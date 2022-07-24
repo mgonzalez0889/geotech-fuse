@@ -69,7 +69,6 @@ export class NavigationService
                     futuristic: navigation,
                     horizontal: navigation
                 };
-                console.log(navigations);
                 this._navigation.next(navigations);
             }),
         );

@@ -40,7 +40,6 @@ export class LayoutComponent implements OnInit, OnDestroy
         public authService: AuthService
     )
     {
-        console.log(this.layout);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -55,7 +54,6 @@ export class LayoutComponent implements OnInit, OnDestroy
         // Get the themes
         this._fuseTailwindConfigService.tailwindConfig$.subscribe((config) => {
             this.themes = Object.entries(config.themes);
-            console.log(this.themes);
         });
 
         // Set the theme and scheme based on the configuration
