@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { ContactService } from 'app/core/services/contact.service';
+import { ControlCenterService } from 'app/core/services/control-center.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,8 +15,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
     public opened: boolean = true;
     public contactForm: FormGroup;
     public subscription: Subscription;
+
     constructor(
-        private contactService: ContactService,
+        private controlCenterService: ControlCenterService,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService
     ) {}
@@ -37,21 +38,21 @@ export class FormContactComponent implements OnInit, OnDestroy {
         }
     }
     /**
+     * @description: Cierra el menu lateral de la derecha
+     */
+    public closeMenu(): void {
+        this.controlCenterService.behaviorSubjectContactGrid.next({
+            opened: false,
+            reload: false,
+        });
+    }
+    /**
      * @description: Funcion boton cancelar
      */
     public onCancel(): void {
         if (this.contactForm) {
             this.contactForm.reset();
         }
-    }
-    /**
-     * @description: Cierra el menu lateral de la derecha
-     */
-    public closeMenu(): void {
-        this.contactService.behaviorSubjectContactGrid.next({
-            opened: false,
-            reload: false,
-        });
     }
     /**
      * @description: Elimina el contacto
@@ -69,49 +70,53 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.contactService.deleteContacts(id).subscribe((res) => {
-                    if (res.code === 200) {
-                        this.contactService.behaviorSubjectContactGrid.next({
-                            reload: true,
-                            opened: false,
-                        });
-                        confirmation = this.confirmationService.open({
-                            title: 'Eliminar contacto',
-                            message: 'Contacto eliminado con exito!',
-                            actions: {
-                                cancel: {
-                                    label: 'Aceptar',
+                this.controlCenterService
+                    .deleteContacts(id)
+                    .subscribe((res) => {
+                        if (res.code === 200) {
+                            this.controlCenterService.behaviorSubjectContactGrid.next(
+                                {
+                                    reload: true,
+                                    opened: false,
+                                }
+                            );
+                            confirmation = this.confirmationService.open({
+                                title: 'Eliminar contacto',
+                                message: 'Contacto eliminado con exito!',
+                                actions: {
+                                    cancel: {
+                                        label: 'Aceptar',
+                                    },
+                                    confirm: {
+                                        show: false,
+                                    },
                                 },
-                                confirm: {
-                                    show: false,
+                                icon: {
+                                    name: 'heroicons_outline:exclamation',
+                                    color: 'warn',
                                 },
-                            },
-                            icon: {
-                                name: 'heroicons_outline:exclamation',
-                                color: 'warn',
-                            },
-                        });
-                    } else {
-                        confirmation = this.confirmationService.open({
-                            title: 'Eliminar contacto',
-                            message:
-                                'El contacto no se pudo eliminar, favor intente nuevamente.',
-                            actions: {
-                                cancel: {
-                                    label: 'Aceptar',
+                            });
+                        } else {
+                            confirmation = this.confirmationService.open({
+                                title: 'Eliminar contacto',
+                                message:
+                                    'El contacto no se pudo eliminar, favor intente nuevamente.',
+                                actions: {
+                                    cancel: {
+                                        label: 'Aceptar',
+                                    },
+                                    confirm: {
+                                        show: false,
+                                    },
                                 },
-                                confirm: {
-                                    show: false,
+                                icon: {
+                                    show: true,
+                                    name: 'heroicons_outline:exclamation',
+                                    color: 'warn',
                                 },
-                            },
-                            icon: {
-                                show: true,
-                                name: 'heroicons_outline:exclamation',
-                                color: 'warn',
-                            },
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
             }
         });
     }
@@ -127,11 +132,13 @@ export class FormContactComponent implements OnInit, OnDestroy {
     private createContactForm(): void {
         this.contactForm = this.fb.group({
             id: [''],
+            typeContacs: [1, [Validators.required]],
             full_name: ['', [Validators.required]],
             email: ['', [Validators.email, Validators.required]],
             phone: ['', [Validators.required]],
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
+            description: ['', [Validators.required]],
         });
     }
     /**
@@ -139,7 +146,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription =
-            this.contactService.behaviorSubjectContactForm.subscribe(
+            this.controlCenterService.behaviorSubjectContactForm.subscribe(
                 ({ newContact, id, isEdit }) => {
                     this.editMode = isEdit;
                     if (newContact) {
@@ -150,10 +157,12 @@ export class FormContactComponent implements OnInit, OnDestroy {
                         }
                     }
                     if (id) {
-                        this.contactService.getContact(id).subscribe((data) => {
-                            this.contacts = data.data;
-                            this.contactForm.patchValue(this.contacts);
-                        });
+                        this.controlCenterService
+                            .getContact(id)
+                            .subscribe((data) => {
+                                this.contacts = data.data;
+                                this.contactForm.patchValue(this.contacts);
+                            });
                     }
                 }
             );
@@ -179,12 +188,14 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.contactService.putContacts(data).subscribe((res) => {
+                this.controlCenterService.putContacts(data).subscribe((res) => {
                     if (res.code === 200) {
-                        this.contactService.behaviorSubjectContactGrid.next({
-                            reload: true,
-                            opened: false,
-                        });
+                        this.controlCenterService.behaviorSubjectContactGrid.next(
+                            {
+                                reload: true,
+                                opened: false,
+                            }
+                        );
                         confirmation = this.confirmationService.open({
                             title: 'Editar contacto',
                             message: 'Contacto editado con exito!',
@@ -229,9 +240,10 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Guarda un nuevo contacto
      */
     private newContact(data: any): void {
-        this.contactService.postContacts(data).subscribe((res) => {
-            if (res.code !== 200) {
-                this.contactService.behaviorSubjectContactGrid.next({
+        data['owner_id'] = 12621;
+        this.controlCenterService.postContacts(data).subscribe((res) => {
+            if (res.code === 200) {
+                this.controlCenterService.behaviorSubjectContactGrid.next({
                     reload: true,
                     opened: false,
                 });

@@ -134,4 +134,12 @@ export class AppSettingsService {
             base: EndPoints.uri('alarm'),
         },
     };
+    /**
+     *@description: End-point contactos de Centro de control
+     */
+    public contactsControlCenter = {
+        url: {
+            base: EndPoints.uri('control_center_contact'),
+        },
+    };
 }

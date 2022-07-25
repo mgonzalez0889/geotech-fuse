@@ -8,6 +8,7 @@ import { FleetsService } from 'app/core/services/fleets.service';
 import { MobileService } from 'app/core/services/mobile.service';
 import { DateAdapter, MatOption } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 
 @Component({
     selector: 'app-commands-dashboard',
@@ -52,7 +53,8 @@ export class CommandsDashboardComponent implements OnInit {
         private mobilesService: MobileService,
         private fleetService: FleetsService,
         private dateAdapter: DateAdapter<any>,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private confirmationService: ConfirmationService
     ) {
         this.dateAdapter.setLocale('es');
     }
@@ -64,11 +66,11 @@ export class CommandsDashboardComponent implements OnInit {
         this.getMobiles();
         setInterval(() => {
             this.getSentCommands();
-        }, 50000);
+        }, 20000);
     }
 
     /**
-     * @description: Muestra los tipos de comandos
+     * @description: Muestra los tipos de comandos del cliente
      */
     private getTypeCommand(): void {
         this.commandsService.getTypeCommands().subscribe((data) => {
@@ -122,12 +124,17 @@ export class CommandsDashboardComponent implements OnInit {
             console.log(data.data, ' estos son las flotas');
         });
     }
+    /**
+     * @description: Funcion del filtro en la tabla
+     */
 
     filterTable(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataCommandsSent.filter = filterValue.trim().toLowerCase();
     }
-
+    /**
+     * @description: Armar los datos para poder mandar el comando desde la opcion de reenviar
+     */
     public resendCommand(plate: any, typeCommand: number): void {
         const commands = {
             validationFleet: this.validationFleet,
@@ -137,7 +144,9 @@ export class CommandsDashboardComponent implements OnInit {
         };
         this.sendCommandsToDevice(commands);
     }
-
+    /**
+     * @description: Armar los datos para poder mandar el comando
+     */
     public sentCommands(): void {
         this.selectedPlates = [];
         this.selectedFleets = [];
@@ -159,21 +168,66 @@ export class CommandsDashboardComponent implements OnInit {
         };
         this.sendCommandsToDevice(commands);
     }
-
+    /**
+     * @description: Funcion de enviar comandos
+     */
     private sendCommandsToDevice(commands: any): void {
         if (commands.fleets.length || commands.plates.length) {
-            this.commandsService
-                .postCommandsSend(commands)
-                .subscribe((data) => {
-                    if (data.code !== 200) {
-                        this.snackBar.open(
-                            'El comando no pudo ser enviado, intente nuevamente.',
-                            'CERRAR',
-                            { duration: 4000 }
-                        );
-                    }
-                    this.getSentCommands();
-                });
+            let confirmation = this.confirmationService.open({
+                title: 'Enviar comando',
+                message:
+                    '¿Está seguro de que desea enviar este comando? ¡Esta acción no se puede deshacer!',
+                actions: {
+                    confirm: {
+                        label: 'Enviar',
+                    },
+                },
+            });
+            confirmation.afterClosed().subscribe((result) => {
+                if (result === 'confirmed') {
+                    this.commandsService
+                        .postCommandsSend(commands)
+                        .subscribe((data) => {
+                            if (data.code === 200) {
+                                confirmation = this.confirmationService.open({
+                                    title: 'Enviar comando',
+                                    message: 'Comando enviado con exito!',
+                                    actions: {
+                                        cancel: {
+                                            label: 'Aceptar',
+                                        },
+                                        confirm: {
+                                            show: false,
+                                        },
+                                    },
+                                    icon: {
+                                        name: 'heroicons_outline:check-circle',
+                                        color: 'success',
+                                    },
+                                });
+                            } else {
+                                confirmation = this.confirmationService.open({
+                                    title: 'Enviar comando',
+                                    message:
+                                        'El comando no se pudo enviar, favor intente nuevamente!',
+                                    actions: {
+                                        cancel: {
+                                            label: 'Aceptar',
+                                        },
+                                        confirm: {
+                                            show: false,
+                                        },
+                                    },
+                                    icon: {
+                                        name: 'heroicons_outline:exclamation',
+                                        color: 'warn',
+                                    },
+                                });
+                            }
+                            this.getSentCommands();
+                        });
+                }
+            });
         } else {
             this.snackBar.open(
                 'Favor seleccione un Vehículo o una flota.',
@@ -182,11 +236,16 @@ export class CommandsDashboardComponent implements OnInit {
             );
         }
     }
+    /**
+     * @description: Funcion valida si estamos enviando comandos a una flota o un vehiculo
+     */
     public typeOfSelection(event: any): void {
         this.validationFleet = event.index;
     }
-
-    setAll(completed: boolean, type: string): any {
+    /**
+     * @description: Funcion de seleccionar todo
+     */
+    public setAll(completed: boolean, type: string): any {
         if (type === 'mobiles') {
             this.allSelectedMobiles = completed;
             if (this.mobiles == null) {
@@ -204,8 +263,10 @@ export class CommandsDashboardComponent implements OnInit {
             this.fleets.forEach((t) => (t.selected = completed));
         }
     }
-
-    someComplete(type: string): boolean {
+    /**
+     * @description: Funcion de validar si esta todo seleccionado
+     */
+    public someComplete(type: string): boolean {
         if (type === 'mobiles') {
             if (this.mobiles == null) {
                 return false;

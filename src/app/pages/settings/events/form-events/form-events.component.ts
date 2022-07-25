@@ -30,8 +30,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.listenObservables();
-        this.contacsList();
+         this.contacsList();
         this.dataCotact();
     }
 
@@ -58,24 +57,24 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     /**
      * @description: Editar un evento
      */
-    public editEvent(): void {
-        const data = this.form.getRawValue();
-        this.subscription$ = this._eventsServices.putEvents(data).subscribe(() => {
-            this._snackBar.open('Evento actualizado con exito', 'CERRAR', {duration: 4000});
-            this.onShow.emit(false);
-        });
-    }
+    // public editEvent(): void {
+    //     const data = this.form.getRawValue();
+    //     this.subscription$ = this._eventsServices.putEvents(data).subscribe(() => {
+    //         this._snackBar.open('Evento actualizado con exito', 'CERRAR', {duration: 4000});
+    //         this.onShow.emit(false);
+    //     });
+    // }
 
-    /**
-     * @description: Escucha el observable behavior
-     */
-    private listenObservables(): void {
-        this.subscription$ = this._eventsServices.behaviorSubjectEvents$.subscribe(({isEdit, payload}) => {
-            if (isEdit) {
-                this.form.patchValue(payload);
-            }
-        });
-    }
+    // /**
+    //  * @description: Escucha el observable behavior
+    //  */
+    // private listenObservables(): void {
+    //     this.subscription$ = this._eventsServices.behaviorSubjectEvents$.subscribe(({isEdit, payload}) => {
+    //         if (isEdit) {
+    //             this.form.patchValue(payload);
+    //         }
+    //     });
+    // }
 
     /**
      * @description: Lista desplegable de contactos

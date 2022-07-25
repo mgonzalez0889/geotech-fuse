@@ -27,10 +27,6 @@
         </div>
         <div class="flex flex-wrap w-full py-6">
             <div class="w-full md:w-3/5 bg-card shadow rounded-2xl overflow-hidden">
-
-
-
-
                 <div class="flex flex-col flex-auto ">
                     <div class="flex flex-wrap items-center pl-4 pr-6 py-3 md:pl-6 border-b">
                         <div class="flex flex-col flex-auto my-3">
@@ -67,16 +63,8 @@
                                 </mat-icon>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
-
-
-
-
-
                 <div class="overflow-x-auto">
                     <mat-paginator [pageSizeOptions]="[10]" aria-label="Select page of users">
                     </mat-paginator>
@@ -157,11 +145,6 @@
                                 </mat-icon>
                             </div>
                             <mat-selection-list class="h-80">
-
-                                <!-- <mat-list-option *ngIf="!searchPlate" checkboxPosition="before" (click)="selectAll()" [selected]="isSelected">
-                                    Seleccionar todo
-                                </mat-list-option> -->
-
                                 <mat-checkbox *ngIf="!searchPlate" checkboxPosition="before"
                                     (change)="setAll($event.checked,'mobiles')"
                                     [indeterminate]="someComplete('mobiles')" [selected]="allSelectedMobiles">
@@ -217,7 +200,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

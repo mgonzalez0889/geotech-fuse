@@ -8,6 +8,10 @@ const routes: Routes = [
             {
                 path: 'monitoring-center',
                 loadChildren: () => import('./monitoring-center/monitoring-center.module').then(m => m.MonitoringCenterModule)
+            },
+            {
+                path: 'contacts-control-center',
+                loadChildren: () => import('./contacts-control-center/contacts-control-center.module').then(m => m.ContactsControlCenterModule)
             }
         ]
 
