@@ -5,7 +5,7 @@
 @import url("https://unpkg.com/leaflet@1.8.0/dist/leaflet.css");
 .leaflet-tooltip {
     color: #fff !important;
-    background: rgba(33, 95, 133, .7) !important;
+    background: rgba(33, 95, 133, 0.7) !important;
     line-height: 2px !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -16,4 +16,16 @@
 }
 .leaflet-tooltip-bottom:before {
     border-bottom-color: #ffffff00 !important;
+}
+
+.mat-button-toggle-checked {
+    background-color: #2c384f !important;
+}
+
+.mat-button-toggle-group .mat-button-toggle.mat-button-toggle-checked .mat-button-toggle-label-content {
+    color: #fff !important;
+}
+
+.cdk-overlay-pane {
+    z-index: 9999 !important;
 }

@@ -126,4 +126,13 @@ export class AppSettingsService {
             base: EndPoints.uri('owner_zone')
         }
     };
+
+    /**
+     *@description: End-point geo zonas
+     */
+     public show_mobile = {
+        url: {
+            base: EndPoints.uri('show_mobile')
+        }
+    };
 }

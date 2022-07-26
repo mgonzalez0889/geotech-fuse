@@ -12,7 +12,7 @@
     }
 
     button {
-        background: #F8F8F8;
+        background: #f8f8f8;
         display: flex;
         justify-content: space-between;
         padding: 5px 10px;
@@ -25,5 +25,48 @@
         height: 17px !important;
         min-width: 17px !important;
         min-height: 17px !important;
+    }
+
+    .geometrys {
+        .geometry {
+            display: flex;
+            align-items: center;
+            span {
+                width: 20px;
+                height: 20px;
+                border-radius: 50px;
+                margin-right: 10px;
+            }
+        }
+
+        .not-found {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #151d2d54;
+            font-weight: 600;
+            font-size: 15px;
+            margin-top: 60px;
+        }
+    }
+
+    .icon-close {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: -36px;
+        padding: 10px;
+        border-radius: 10px 0 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #2c384f;
+
+        mat-icon {
+            width: 17px !important;
+            height: 17px !important;
+            min-width: 17px !important;
+            min-height: 17px !important;
+        }
     }
 }

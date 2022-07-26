@@ -25,7 +25,6 @@ export class InfoWindowsComponent implements OnInit {
 
   ngOnInit(): void {
     this.iconService.loadIcons();
-    console.log(this.mapFunctionalitieService.dataInfoWindows);
     this.data = this.mapFunctionalitieService.mobiles.filter(x=> {
       return x.id === this.data.id
     })[0];

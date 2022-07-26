@@ -3,7 +3,10 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapService } from 'app/core/services/map.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
+import { MapRequestService } from 'app/core/services/request/map-request.service';
 import { Subscription, timer } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatListOption, MatSelectionListChange } from '@angular/material/list';
 
 @Component({
   selector: 'app-geotools',
@@ -15,14 +18,21 @@ export class GeotoolsComponent implements OnInit {
   public animationStates: any;
   public visibilityStates: any;
   public subscription: Subscription;
+  public displayedColumns: string[] = ['select', 'name', 'satellite'];
+
+  public selection = new SelectionModel(true, []);
+
+  isSelected = false;
+
   constructor(
     public mapFunctionalitieService: MapFunctionalitieService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
-    private mapService: MapService
+    private mapService: MapService,
+    public mapRequestService: MapRequestService
   ) {
-
     this.iconRegistry.addSvgIcon('plus-border', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/plus-border.svg'));
+    this.iconRegistry.addSvgIcon('close-geo', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/close.svg'));
 
     this.animationStates = {
       expandCollapse: 'expanded',
@@ -108,18 +118,16 @@ export class GeotoolsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getZones();
   }
 
-  /**
-     * @description: Obtengo las flotas y vehiculosdel cliente
-     */
-  private getZones(): void {
-    this.subscription = this.mapService
-      .getZones()
-      .subscribe((data) => {
-        console.log(data)
-      });
-  }
+  onListSelectionChange(options) {
+    this.mapFunctionalitieService.goDeleteGeometryPath();
+    if (Object.keys(options).length) {
+      for (let i = 0; i < options.length; i++) {
+        const element = options[i].value;
+        this.mapFunctionalitieService.createPunt(element);
+      }
+    }
 
+  }
 }

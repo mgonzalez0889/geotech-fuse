@@ -14,6 +14,10 @@ export class MobilesService {
   public subscription: Subscription;
   public items: MobilesInterface[] = [];
   public dataSource: any = [];
+  detailMobile: any = {};
+  lastEvents: any = [];
+  time: string;
+  status_device: string;
 
   constructor(
     private mobilesService: MobileService,
@@ -22,14 +26,20 @@ export class MobilesService {
 
   getMobiles() {
     this.dataSource = new MatTableDataSource(this.mapFuncionalitieService.mobiles);
-    // this.subscription = this.mobilesService.getMobiles().subscribe(({ data }) => {
-    //   this.items = data;
-    //   this.items.map((x) => {
-    //     x['selected'] = false;
-    //     return x;
-    //   });
-    //   this.dataSource = new MatTableDataSource(this.items);
-    //   // this.sendDataDevice.emit(this.items);
-    // });
+  }
+
+  async getDetailMobile(id: number) {
+    return new Promise((resolve, reject) => {
+      this.mobilesService.getDetailMobile(id)
+        .subscribe((res: any) => {
+          resolve(res);
+          this.detailMobile = res.data;
+          this.lastEvents = res.last_events;
+          this.time = res.time;
+          this.status_device = res.status_device;
+        }, async (err) => {
+          reject(err);
+        })
+    })
   }
 }
