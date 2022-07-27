@@ -93,8 +93,8 @@
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user">
                                 </mat-icon>
                                 <mat-select required [formControlName]="'type_contact_id'">
-                                    <mat-option [value]="1">Propietario</mat-option>
-                                    <mat-option [value]="3">Administrador</mat-option>
+                                    <mat-option *ngFor="let type of typeContacts" [value]="type.id">{{type.description}}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>

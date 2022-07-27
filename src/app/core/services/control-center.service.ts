@@ -9,6 +9,7 @@ import { AppSettingsService } from '../app-configs/app-settings.service';
 export class ControlCenterService {
     public behaviorSubjectContactForm: BehaviorSubject<{
         payload?;
+        ownerId?: number;
         id?: number;
         newContact?: any;
         isEdit?: boolean;
@@ -40,6 +41,18 @@ export class ControlCenterService {
         const params = { method: 'index_all_contact', owner_id: id };
         return this._http.get(
             this._appSettings.contactsControlCenter.url.base,
+            {
+                params,
+            }
+        );
+    }
+    /**
+     * @description: Todos los estado de atencion de alarmas
+     */
+    public getTypeContactsControlCenter(): Observable<any> {
+        const params = { method: 'index_all_type_contact' };
+        return this._http.get(
+            this._appSettings.typeContactsControlCenter.url.base,
             {
                 params,
             }

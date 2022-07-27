@@ -142,4 +142,12 @@ export class AppSettingsService {
             base: EndPoints.uri('control_center_contact'),
         },
     };
+    /**
+     *@description: End-point tipos de contactos Centro de control
+     */
+    public typeContactsControlCenter = {
+        url: {
+            base: EndPoints.uri('type_contact'),
+        },
+    };
 }

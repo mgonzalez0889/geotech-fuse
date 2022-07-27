@@ -15,6 +15,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
     public opened: boolean = true;
     public contactForm: FormGroup;
     public subscription: Subscription;
+    public typeContacts: any = [];
 
     constructor(
         private controlCenterService: ControlCenterService,
@@ -23,8 +24,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.listenObservables();
         this.createContactForm();
+        this.listenObservables();
+        this.typeContact();
     }
     /**
      * @description: Valida si es edita o guarda un contacto nuevo
@@ -46,6 +48,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
             reload: false,
         });
     }
+
     /**
      * @description: Elimina el contacto
      */
@@ -119,18 +122,29 @@ export class FormContactComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
     /**
+     * @description: Trae los tipos de contacto
+     */
+    private typeContact(): void {
+        this.controlCenterService
+            .getTypeContactsControlCenter()
+            .subscribe((res) => {
+                this.typeContacts = res.data;
+            });
+    }
+    /**
      * @description: Inicializa el formulario de contactos
      */
     private createContactForm(): void {
         this.contactForm = this.fb.group({
             id: [''],
+            owner_id: [''],
             type_contact_id: [1, [Validators.required]],
             full_name: ['', [Validators.required]],
             email: ['', [Validators.email, Validators.required]],
             phone: ['', [Validators.required]],
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
-            description: ['', [Validators.required]],
+            description: [''],
         });
     }
     /**
@@ -139,7 +153,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
     private listenObservables(): void {
         this.subscription =
             this.controlCenterService.behaviorSubjectContactForm.subscribe(
-                ({ newContact, id, isEdit }) => {
+                ({ newContact, id, isEdit, ownerId }) => {
                     this.editMode = isEdit;
                     if (newContact) {
                         this.contacts = [];
@@ -148,6 +162,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                             this.contactForm.reset();
                         }
                     }
+                    this.contactForm.patchValue({
+                        owner_id: ownerId,
+                    });
                     if (id) {
                         this.controlCenterService
                             .getContact(id)
@@ -232,7 +249,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Guarda un nuevo contacto
      */
     private newContact(data: any): void {
-        data['owner_id'] = 12621;
         this.controlCenterService.postContacts(data).subscribe((res) => {
             if (res.code === 200) {
                 this.controlCenterService.behaviorSubjectContactGrid.next({

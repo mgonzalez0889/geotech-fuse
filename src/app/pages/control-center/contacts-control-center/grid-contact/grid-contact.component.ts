@@ -15,10 +15,11 @@ import { Subscription } from 'rxjs';
 })
 export class GridContactComponent implements OnInit, OnDestroy {
     public subscription: Subscription;
+    public showSearchClients: boolean;
     public ownerId: number;
     public opened: boolean = false;
-    public owners;
-    public ownerSelect;
+    public owners: any;
+    public ownerSelect: any;
     public dataTableContactsControlCenter: MatTableDataSource<any>;
     public contactsCount: number = 0;
     public columnsContactsControlCenter: string[] = [
@@ -39,19 +40,22 @@ export class GridContactComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.listenObservables();
         this.getInfoUser();
+        this.listenObservables();
     }
     /**
      * @description: Trae todos los contactos del cliente
      */
     public getContactsControlCenter(ownerId: number): void {
+        this.ownerId = ownerId;
         this.opened = false;
         this.controlCenterService
             .getContactsControlCenter(ownerId)
             .subscribe((data) => {
                 if (data.data) {
                     this.contactsCount = data.data.length;
+                } else {
+                    this.contactsCount = 0;
                 }
                 this.dataTableContactsControlCenter = new MatTableDataSource(
                     data.data
@@ -100,6 +104,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
         this.opened = true;
         this.controlCenterService.behaviorSubjectContactForm.next({
             newContact: 'Nuevo contacto',
+            ownerId: this.ownerId,
         });
     }
     /**
@@ -113,14 +118,19 @@ export class GridContactComponent implements OnInit, OnDestroy {
     /**
      * @description: Trae la informacion del usuario
      */
-    private getInfoUser(): void {
+    public getInfoUser(): void {
         this.usersService.getInfoUser().subscribe((res) => {
             this.ownerId = res.data.owner_id;
-            console.log(this.ownerId);
             if (this.ownerId === 1) {
-                console.log('entro');
+                this.showSearchClients = true;
                 this.getOwners();
+            } else {
+                this.showSearchClients = false;
             }
+            this.getContactsControlCenter(this.ownerId);
+        });
+        this.controlCenterService.behaviorSubjectContactForm.next({
+            ownerId: this.ownerId,
         });
     }
     /**
