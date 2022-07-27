@@ -150,4 +150,13 @@ export class AppSettingsService {
             base: EndPoints.uri('type_contact'),
         },
     };
+
+    /**
+     *@description: End-point geo zonas
+     */
+     public show_mobile = {
+        url: {
+            base: EndPoints.uri('show_mobile')
+        }
+    };
 }

@@ -13,10 +13,18 @@ export class MapService {
   ) { }
 
   /**
-   * @description: Obtiene todos las zonas
+   * @description: Obtiene todos las geometrias, dependiendo de parametro type(routes, zones, punts)
    */
-  public getZones() {
-    const params = { method: 'index_all_zones', type: 'zones' };
+  public getGeometry(type: string) {
+    const params = { method: 'index_all_zones', type: type };
     return this._http.get(this._appSettings.owner_zone.url.base, { params });
+  }
+
+  /**
+   * @description: Guarda las geometrias, dependiendo de parametro type(routes, zones, punts)
+   */
+  public postGeometry(type: string, data: any) {
+    const params = { method: 'create_geozones', type: type };
+    return this._http.post(this._appSettings.owner_zone.url.base, data, { params });
   }
 }

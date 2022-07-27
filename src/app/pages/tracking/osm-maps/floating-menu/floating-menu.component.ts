@@ -24,7 +24,7 @@ import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 })
 export class FloatingMenuComponent implements OnInit, OnDestroy {
     @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
-    public displayedColumns: string[] = ['select', 'imei', 'batery', 'dop', 'id', 'satellite'];
+    public displayedColumns: string[] = ['select', 'code', 'menu'];
     public dataSource: any = [];
     public items: MobilesInterface[] = [];
     public selection = new SelectionModel<MobilesInterface>(true, []);
@@ -36,7 +36,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     public showMenuGroup: boolean = false;
     constructor(
         private mobilesService: MobileService,
-        private mobileService: MobilesService,
+        public mobileRequestService: MobilesService,
         private historiesService: HistoriesService,
         public dialog: MatDialog,
         public mapFunctionalitieService: MapFunctionalitieService,
@@ -210,7 +210,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
      * @description: Carga los mobiles desde el inicio
      */
     async getMobiles() {
-        await this.mobileService.getMobiles();
+        await this.mobileRequestService.getMobiles();
     }
 
     /**
@@ -231,7 +231,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     */
     public applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        this.mobileService.dataSource.filter = filterValue.trim().toLowerCase();
+        this.mapFunctionalitieService.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     /**
@@ -239,5 +239,10 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    async goDetail(id) {
+        await this.mobileRequestService.getDetailMobile(id);
+        this.mapFunctionalitieService.showDetailMobile = true
     }
 }

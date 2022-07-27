@@ -13,6 +13,11 @@
     </app-geotools>
 </ng-container>
 
+<ng-container *ngIf="mapFunctionalitieService.showFormGeomertry">
+    <app-form-geometry>
+    </app-form-geometry>
+</ng-container>
+
 
 <!--<ng-container *ngIf="showMenuFleet">
     <app-floating-menu-fleet>
@@ -34,10 +39,11 @@
 
 <div class="options">
     <ul>
-        <li *ngFor="let option of optionsIcons" (click)="mapFunctionalitieService.drawerOpenedChanged(true)">
+        <li *ngFor="let option of optionsIcons" (click)="eventClick(option.type)">
             <span>
                 <mat-icon svgIcon="{{option.name}}"></mat-icon>
             </span>
+            {{click}}
         </li>
     </ul>
 </div>
@@ -53,7 +59,7 @@
 -->
 
 <div class="options-geo-tools" *ngIf="mapFunctionalitieService.showOptionsGeoTools">
-    <div class="item" *ngFor="let options of optionsGeo" (click)="mapFunctionalitieService.visibleGeo()">
+    <div class="item" *ngFor="let options of optionsGeo" (click)="eventOptionGeotools(options.type)">
         <div class="item-icon">
             <mat-icon svgIcon="{{options.icon}}"></mat-icon>
         </div>

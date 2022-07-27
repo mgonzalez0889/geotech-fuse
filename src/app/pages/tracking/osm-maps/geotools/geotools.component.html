@@ -1,10 +1,12 @@
 <div class="content-geotools">
-    <div class="relative flex overflow-hidden border mt-8 min-h-80" style="height: 100% !important">
-        <fuse-drawer [name]="'leftDrawer'" [opened]="mapFunctionalitieService.drawerOpened" [position]="'right'" [mode]="'side'">
+    <div class="relative flex overflow-hidden border min-h-80" style="height: 100% !important">
+        <fuse-drawer [name]="'leftDrawer'" [opened]="mapFunctionalitieService.drawerOpened" [position]="'right'"
+            [mode]="'side'">
             <div class="p-4" style="width: 100%">
-                <div class="title">Enrutamiento</div>
+                <div class="title">{{mapFunctionalitieService.type_geometry}}</div>
 
-                <button (click)="mapFunctionalitieService.visibleGeo()">Agregar <mat-icon svgIcon="plus-border"></mat-icon></button>
+                <button (click)="mapFunctionalitieService.visibleGeo()" style="margin-bottom: 10px;">Agregar <mat-icon svgIcon="plus-border">
+                    </mat-icon></button>
 
                 <div class="flex flex-wrap">
                     <mat-form-field class="fuse-mat-dense w-full">
@@ -13,10 +15,27 @@
                     </mat-form-field>
                 </div>
 
-                <div class="geo">
-                    
+                <div class="geometrys">
+                    <mat-selection-list *ngIf="mapFunctionalitieService.geometrys.length" #geometryList (selectionChange)="onListSelectionChange(geometryList.selectedOptions.selected)">
+                        <mat-list-option *ngFor="let geometry of mapFunctionalitieService.geometrys"
+                            checkboxPosition="before" [value]="geometry">
+                            <div class="geometry">
+                                <span style="background: {{geometry.color}}"></span>
+                                {{geometry.code}} {{geometry.name}}
+                            </div>
+                        </mat-list-option>
+                    </mat-selection-list>
+
+                    <div class="not-found" *ngIf="!mapFunctionalitieService.geometrys.length">
+                        No se encontraron resultados.
+                    </div>
                 </div>
             </div>
         </fuse-drawer>
+    </div>
+
+    <div class="icon-close" *ngIf="mapFunctionalitieService.drawerOpened"
+        (click)="mapFunctionalitieService.drawerOpenedChanged()">
+        <mat-icon svgIcon="close-geo"></mat-icon>
     </div>
 </div>

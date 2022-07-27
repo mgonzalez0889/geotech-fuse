@@ -1,6 +1,6 @@
 <ng-container *ngIf="showReport">
     <ng-container *ngIf="!showMenu">
-        <div class="fixed z-9999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow rounded overflow-hidden"
+        <div class="fixed z-9999 ml-2.5 top-18 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow rounded"
             [@fadeInLeft]="animationStates.fadeOut.right">
             <div class="flex flex-wrap items-center justify-between ">
                 <button mat-icon-button (click)="showMenu = !showMenu">
@@ -11,7 +11,7 @@
     </ng-container>
     <!--Options menu-->
     <ng-container *ngIf="showMenu">
-        <div class="fixed z-9999 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow overflow-hidden "
+        <div class="fixed z-999 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow"
             [@fadeInLeft]="animationStates.fadeOut.left" style="width: 361px;">
             <div class="">
                 <div class="flex flex-wrap items-center justify-items-start sm:-mt-4">
@@ -64,47 +64,55 @@
                         </td>
                     </ng-container>
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="imei">
+                    <ng-container matColumnDef="code">
                         <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let element" class="w-24">
-                            <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).status}}"></mat-icon>
+                        <td mat-cell *matCellDef="let element" class="w-30">
+                            {{element.internal_code}}
                         </td>
                     </ng-container>
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="batery">
+                    <!-- <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let element" class="w-30">
+                            
+                        </td>
+                    </ng-container> -->
+                    <!-- Weight Column -->
+                    <!-- <ng-container matColumnDef="batery">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let element" class="w-24">
                             <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).statusGps}}"></mat-icon>
                         </td>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="dop">
+                    <!-- <ng-container matColumnDef="dop">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let element" class="w-24">
                             <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).statusSignal}}"></mat-icon>
                         </td>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="id">
+                    <!-- <ng-container matColumnDef="id">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let element" class="w-24">
                             <mat-icon svgIcon="batery"></mat-icon>
                         </td>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="satellite">
+                    <ng-container matColumnDef="menu">
                         <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element" class="w-24">
+                        <td mat-cell *matCellDef="let element" class="w-30">
+                            <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).status}}"></mat-icon>
                             <button mat-icon-button [matMenuTriggerFor]="menu"
                                 aria-label="Example icon-button with a menu">
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item>
-                                    <span>Ver eventos</span>
+                                <button mat-menu-item (click)="goDetail(element.id)">
+                                    <span>Ver detalle</span>
                                 </button>
                                 <button mat-menu-item disabled>
                                     <span>Configuración</span>

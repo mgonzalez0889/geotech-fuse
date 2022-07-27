@@ -13,7 +13,8 @@ import { InfoWindowsComponent } from 'app/pages/tracking/osm-maps/info-windows/i
 })
 export class MapFunctionalitieService {
   public pointLatLens: any = [];
-  mobiles: any[] = [];
+  public mobiles: any[] = [];
+  public geometrys: any[] = [];
   public dataSource: any = [];
   public markers: any = {};
   public map: L.Map;
@@ -24,6 +25,7 @@ export class MapFunctionalitieService {
   public showDetailMobile: boolean = false;
   public showGeoTools: boolean = false;
   public showOptionsGeoTools: boolean = false;
+  public showFormGeomertry: boolean = false;
 
   drawerMode = 'side';
   drawerOpened = false;
@@ -37,6 +39,16 @@ export class MapFunctionalitieService {
   placeInfoWindow: any;
   counter: any;
   dataInfoWindows: any;
+  type_geometry: string;
+  type_geo: string = '';
+  punts_geometry: any = [];
+  paint_punts: any = [];
+  coordinates = [];
+  markersPoint = {};
+  shape: any = [];
+  new_point: string;
+  punt_geometry: any = [];;
+  count: number = 0;
 
   constructor(
     private resolver: ComponentFactoryResolver,
@@ -44,14 +56,20 @@ export class MapFunctionalitieService {
     private appRef: ApplicationRef
   ) { }
 
-  drawerOpenedChanged(opened: boolean): void {
+  drawerOpenedChanged(): void {
     this.drawerOpened = !this.drawerOpened;
   }
 
   visibleGeo() {
-    this.drawerOpenedChanged(!this.drawerOpened);
+    this.drawerOpenedChanged();
     this.showMenuMobiles = !this.showMenuMobiles;
     this.showOptionsGeoTools = !this.showOptionsGeoTools;
+
+    if (!this.showOptionsGeoTools) {
+      this.setMarkers(this.mobiles);
+    } else {
+      this.deleteChecks(this.mobiles);
+    }
   }
 
   init() {
@@ -86,7 +104,11 @@ export class MapFunctionalitieService {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Google Hibrido': googleHybrid,
       };
-      L.control.layers(baseLayers).addTo(this.map);
+      // L.control.layers(baseLayers).addTo(this.map);
+
+      // L.control.zoom({
+      //   position: 'topright'
+      // }).addTo(this.map);
     });
   }
 
@@ -170,6 +192,133 @@ export class MapFunctionalitieService {
       });
     });
     this.map.fitBounds(this.pointLatLens);
+    this.map.on('click', (e) => {
+      if (!this.showMenuMobiles) {
+        switch (this.type_geo) {
+          case 'route':
+            this.createGeometry(e);
+            break;
+          case 'zone':
+            this.createGeometry(e);
+            break;
+          case 'punt':
+            let id = 9999999999;
+            this.showFormGeomertry = true;
+            this.showOptionsGeoTools = false;
+            this.showGeoTools = false;
+            var latlng = this.map.mouseEventToLatLng(e.originalEvent);
+            // if (this.markersPoint[id] != undefined) {
+            //   this.map.removeLayer(this.markersPoint[id]);
+            // }
+            this.goDeleteGeometryPath();
+            this.map.setView([latlng.lat, latlng.lng]);
+            this.markersPoint[id] = L.marker(
+              [latlng.lat, latlng.lng], {
+              icon: L.icon({
+                iconUrl: '../assets/icons/iconMap/punt.svg',
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+              })
+            });
+
+            this.shape.push(String(latlng.lat + ' ' + latlng.lng));
+            this.markersPoint[id].addTo(this.map);
+            break;
+        }
+      }
+    });
+  }
+
+
+  createPunt(data: any) {
+    let myIconUrl = "data:image/svg+xml," + encodeURIComponent('<svg width="14" height="19" viewBox="0 0 14 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 19C5.73693 17.9227 4.56619 16.7416 3.5 15.4691C1.9 13.5581 8.83662e-07 10.712 8.83662e-07 8.00005C-0.00141728 5.1676 1.70425 2.61344 4.32107 1.52945C6.93789 0.445455 9.95007 1.04529 11.952 3.04905C13.2685 4.35966 14.0059 6.14244 14 8.00005C14 10.712 12.1 13.5581 10.5 15.4691C9.43382 16.7416 8.26307 17.9227 7 19ZM7 5.00005C5.92821 5.00005 4.93782 5.57185 4.40193 6.50005C3.86603 7.42825 3.86603 8.57185 4.40193 9.50005C4.93782 10.4283 5.92821 11.0001 7 11.0001C8.65686 11.0001 10 9.6569 10 8.00005C10 6.3432 8.65686 5.00005 7 5.00005Z" fill="'+data.color+'"/></svg>');
+    let shape = JSON.parse(data.shape)[0]
+    let x = shape.split(' ')[0]
+    let y = shape.split(' ')[1]
+    this.map.setView([x, y]);
+    this.markersPoint[data.id] = L.marker(
+      [x, y], {
+      icon: L.icon({
+        iconUrl: myIconUrl,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20]
+      })
+    });
+
+    this.markersPoint[data.id].addTo(this.map);
+  }
+
+  createGeometry(e) {
+    this.showGeoTools = false;
+    this.count++;
+    var latlng = this.map.mouseEventToLatLng(e.originalEvent);
+    this.paint_punts.push({
+      lat: latlng.lat,
+      lng: latlng.lng,
+    });
+
+    this.punts_geometry.push(latlng.lng);
+    this.punts_geometry.push(latlng.lat);
+    var latlngs = [this.paint_punts];
+
+    switch (this.type_geo) {
+      case 'route':
+        this.shape.push(String(latlng.lat + ' ' + latlng.lng));
+
+        this.punt_geometry[this.count] = L.polyline(latlngs, {
+          color: "blue",
+          weight: 6,
+        });
+        break;
+      case 'zone':
+        this.shape.push(String(latlng.lat + ' ' + latlng.lng));
+
+        this.punt_geometry[this.count] = L.polygon(latlngs, {
+          color: "blue",
+          weight: 6,
+        });
+        break;
+    }
+
+    this.punt_geometry[this.count].addTo(this.map);
+  }
+
+  goCancelToGeometry() {
+    this.goDeleteGeometryPath();
+    this.type_geo = '';
+    this.visibleGeo();
+    this.showOptionsGeoTools = false;
+    this.showFormGeomertry = false;
+  }
+
+  goBackToGeometry() {
+    var punt;
+    for (punt in this.punt_geometry) {
+    }
+    this.map.removeLayer(this.punt_geometry[punt]);
+    delete this.punt_geometry[punt];
+    console.log(this.punt_geometry);
+    this.paint_punts.pop();
+    this.punts_geometry.splice(-2, 2);
+  };
+
+  goDeleteGeometryPath() {
+    for (const point in this.markersPoint) {
+      this.map.removeLayer(this.markersPoint[point]);
+    }
+
+    for (const punt in this.punt_geometry) {
+      this.map.removeLayer(this.punt_geometry[punt]);
+    }
+
+    this.punt_geometry = [];
+    this.paint_punts = [];
+    this.punts_geometry = [];
+  };
+
+  goAddGeometry() {
+    this.showFormGeomertry = true;
+    this.showOptionsGeoTools = false;
   }
 
   getPopup(e, data: any) {
@@ -180,7 +329,6 @@ export class MapFunctionalitieService {
     this.compRef = compFactory.create(this.injector);
 
     // example of parent-child communication
-    console.log(data);
     this.dataInfoWindows = data;
     this.compRef.instance.data = data;
     const subscription = this.compRef.instance.onRefreshData.subscribe(x => { data });
@@ -215,10 +363,6 @@ export class MapFunctionalitieService {
         iconInfoWindows['statusGps'] =
           'status_gps_red';
         break;
-      case 'X':
-        iconInfoWindows['statusGps'] =
-          'status_gps_gray';
-        break;
     }
     switch (status) {
       case 0:
@@ -242,10 +386,6 @@ export class MapFunctionalitieService {
       case 'Mala':
         iconInfoWindows['statusSignal'] =
           'signal_level_red';
-        break;
-      case 'X':
-        iconInfoWindows['statusSignal'] =
-          'signal_level_gray';
         break;
     }
 
@@ -291,6 +431,7 @@ export class MapFunctionalitieService {
       }
     }
   }
+
   /**
   * @description: Asigna la rotacion de los iconos
   */
