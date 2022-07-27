@@ -33,7 +33,7 @@
                         <ng-container *ngIf="contacts['phone']">
                             <div class="flex">
                                 <mat-icon [matTooltip]="'Tipo de contacto'" svgIcon="heroicons_outline:user"></mat-icon>
-                                <div class="break-all ml-6 leading-6">{{contacts['phone']}}</div>
+                                <div class="break-all ml-6 leading-6">{{contacts['type_contact_description']}}</div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="contacts['email']">
@@ -71,7 +71,7 @@
                         <ng-container *ngIf="contacts['phone']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Descripción'" svgIcon="heroicons_solid:menu-alt-2"></mat-icon>
-                                <div class="break-all ml-6 leading-6">{{contacts['phone']}}</div>
+                                <div class="break-all ml-6 leading-6">{{contacts['description']}}</div>
                             </div>
                         </ng-container>
                     </div>
@@ -90,9 +90,11 @@
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Tipo de contacto</mat-label>
-                                <mat-select required [formControlName]="'typeContacs'">
-                                    <mat-option value="1">Propietario</mat-option>
-                                    <mat-option value="3">Administrador</mat-option>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user">
+                                </mat-icon>
+                                <mat-select required [formControlName]="'type_contact_id'">
+                                    <mat-option [value]="1">Propietario</mat-option>
+                                    <mat-option [value]="3">Administrador</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
@@ -135,8 +137,7 @@
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                                 <mat-label>Descripción </mat-label>
-                                <textarea [formControlName]="'description'" required matInput
-                                    matTextareaAutosize></textarea>
+                                <textarea [formControlName]="'description'" matInput matTextareaAutosize></textarea>
                             </mat-form-field>
                         </div>
                         <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
@@ -145,8 +146,7 @@
                                 (click)="deleteContact(contacts['id'])">
                                 Eliminar </button>
                             <!-- Cancelar -->
-                            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'"
-                                (click)="editMode = false;onCancel()">
+                            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
                                 Cancelar
                             </button>
                             <!-- Guardar -->

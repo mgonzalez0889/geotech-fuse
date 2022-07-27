@@ -47,14 +47,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
     }
     /**
-     * @description: Funcion boton cancelar
-     */
-    public onCancel(): void {
-        if (this.contactForm) {
-            this.contactForm.reset();
-        }
-    }
-    /**
      * @description: Elimina el contacto
      */
     public deleteContact(id: number): void {
@@ -132,7 +124,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
     private createContactForm(): void {
         this.contactForm = this.fb.group({
             id: [''],
-            typeContacs: [1, [Validators.required]],
+            type_contact_id: [1, [Validators.required]],
             full_name: ['', [Validators.required]],
             email: ['', [Validators.email, Validators.required]],
             phone: ['', [Validators.required]],

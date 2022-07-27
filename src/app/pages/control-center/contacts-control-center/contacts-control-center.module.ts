@@ -14,6 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
     declarations: [FormContactComponent, GridContactComponent],
@@ -29,7 +31,9 @@ import { MatSelectModule } from '@angular/material/select';
         ReactiveFormsModule,
         MatTooltipModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        MatSortModule,
+        MatMenuModule,
     ],
 })
 export class ContactsControlCenterModule {}

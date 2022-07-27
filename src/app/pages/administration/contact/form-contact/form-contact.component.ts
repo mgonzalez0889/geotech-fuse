@@ -37,14 +37,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
         }
     }
     /**
-     * @description: Funcion boton cancelar
-     */
-    public onCancel(): void {
-        if (this.contactForm) {
-            this.contactForm.reset();
-        }
-    }
-    /**
      * @description: Cierra el menu lateral de la derecha
      */
     public closeMenu(): void {
@@ -230,7 +222,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
      */
     private newContact(data: any): void {
         this.contactService.postContacts(data).subscribe((res) => {
-            if (res.code !== 200) {
+            if (res.code === 200) {
                 this.contactService.behaviorSubjectContactGrid.next({
                     reload: true,
                     opened: false,

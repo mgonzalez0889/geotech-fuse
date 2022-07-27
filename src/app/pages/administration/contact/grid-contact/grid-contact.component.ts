@@ -16,7 +16,13 @@ export class GridContactComponent implements OnInit, OnDestroy {
     public opened: boolean = false;
     public dataTableContact: MatTableDataSource<any>;
     public contactsCount: number = 0;
-    public columnsContact: string[] = ['name', 'address', 'email', 'cellPhone'];
+    public columnsContact: string[] = [
+        'name',
+        'identification',
+        'address',
+        'email',
+        'cellPhone',
+    ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 

@@ -25,7 +25,7 @@
                             <app-form-contact></app-form-contact>
                         </ng-container>
                     </mat-drawer>
-                    <mat-drawer-content class="flex flex-col bg-card shadow rounded-2xl">
+                    <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
                         <!-- Acciones-->
                         <div class="flex border-b p-6">
                             <div class="flex border-2 rounded-full p-2 ">
@@ -41,56 +41,63 @@
                             </div>
                         </div>
                         <!-- Tabla-->
-                        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
-                            <table mat-table [dataSource]="dataTableContact" matSort class="w-full">
-                                <!-- full_name Column -->
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.full_name}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- address Column -->
-                                <ng-container matColumnDef="address">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.address}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- email Column -->
-                                <ng-component matColumnDef="email">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo electrónico </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.email}} </span>
-                                    </td>
-                                </ng-component>
-                                <!-- phone Column -->
-                                <ng-container matColumnDef="cellPhone">
-                                    <th mat-header-cell *matHeaderCellDef>Celular</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.phone}} </span>
-                                    </td>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="columnsContact"></tr>
-                                <tr mat-row (click)="actionsContact(row.id)"
-                                    *matRowDef="let row; columns: columnsContact;">
-                                </tr>
-                                <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
-                                <tr class="mat-row" *matNoDataRow>
-                                    <td class="mat-cell" colspan="4">No hay datos que coincidan con la busqueda:
-                                        "{{input.value}}"
-                                    </td>
-                                </tr>
-                            </table>
-                            <mat-paginator
-                                class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
-                                [pageSizeOptions]="[10]" aria-label="Select page of users">
-                            </mat-paginator>
-                        </div>
+                        <table mat-table [dataSource]="dataTableContact" matSort class="w-full">
+                            <!-- full_name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{row.full_name}} </span>
+                                </td>
+                            </ng-container>
+                            <!-- identification Column -->
+                            <ng-container matColumnDef="identification">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Indentificación </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{row.identification}} </span>
+                                </td>
+                            </ng-container>
+                            <!-- address Column -->
+                            <ng-container matColumnDef="address">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{row.address}} </span>
+                                </td>
+                            </ng-container>
+                            <!-- email Column -->
+                            <ng-component matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo electrónico </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <a class="hover:underline text-primary-500 pr-6 whitespace-nowrap"
+                                        [href]="'mailto:' + row.email" target="_blank">
+                                        {{row.email}}
+                                    </a>
+                                </td>
+                            </ng-component>
+                            <!-- phone Column -->
+                            <ng-container matColumnDef="cellPhone">
+                                <th mat-header-cell *matHeaderCellDef>Celular</th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{row.phone}} </span>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="columnsContact"></tr>
+                            <tr mat-row (click)="actionsContact(row.id)" *matRowDef="let row; columns: columnsContact;">
+                            </tr>
+                            <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="5">No hay datos que coincidan con la busqueda:
+                                    "{{input?.value}}"
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator
+                            class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
+                            [pageSizeOptions]="[10]" aria-label="Select page of users">
+                        </mat-paginator>
                     </mat-drawer-content>
                 </mat-drawer-container>
             </div>

@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ControlCenterService } from 'app/core/services/control-center.service';
+import { OwnersService } from 'app/core/services/owners.service';
+import { UsersService } from 'app/core/services/users.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,11 +15,15 @@ import { Subscription } from 'rxjs';
 })
 export class GridContactComponent implements OnInit, OnDestroy {
     public subscription: Subscription;
+    public ownerId: number;
     public opened: boolean = false;
+    public owners;
+    public ownerSelect;
     public dataTableContactsControlCenter: MatTableDataSource<any>;
     public contactsCount: number = 0;
     public columnsContactsControlCenter: string[] = [
         'name',
+        'identification',
         'type_contacs',
         'address',
         'email',
@@ -26,18 +32,23 @@ export class GridContactComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private controlCenterService: ControlCenterService) {}
+    constructor(
+        private controlCenterService: ControlCenterService,
+        private ownersService: OwnersService,
+        private usersService: UsersService
+    ) {}
 
     ngOnInit(): void {
-        this.getContact();
         this.listenObservables();
+        this.getInfoUser();
     }
     /**
      * @description: Trae todos los contactos del cliente
      */
-    public getContact(): void {
+    public getContactsControlCenter(ownerId: number): void {
+        this.opened = false;
         this.controlCenterService
-            .getContactsControlCenter(12621)
+            .getContactsControlCenter(ownerId)
             .subscribe((data) => {
                 if (data.data) {
                     this.contactsCount = data.data.length;
@@ -77,7 +88,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
                 ({ reload, opened }) => {
                     this.opened = opened;
                     if (reload) {
-                        this.getContact();
+                        this.getContactsControlCenter(this.ownerId);
                     }
                 }
             );
@@ -89,6 +100,27 @@ export class GridContactComponent implements OnInit, OnDestroy {
         this.opened = true;
         this.controlCenterService.behaviorSubjectContactForm.next({
             newContact: 'Nuevo contacto',
+        });
+    }
+    /**
+     * @description: Trae todos los clientes
+     */
+    private getOwners(): void {
+        this.ownersService.getOwners().subscribe((res) => {
+            this.owners = res.data;
+        });
+    }
+    /**
+     * @description: Trae la informacion del usuario
+     */
+    private getInfoUser(): void {
+        this.usersService.getInfoUser().subscribe((res) => {
+            this.ownerId = res.data.owner_id;
+            console.log(this.ownerId);
+            if (this.ownerId === 1) {
+                console.log('entro');
+                this.getOwners();
+            }
         });
     }
     /**

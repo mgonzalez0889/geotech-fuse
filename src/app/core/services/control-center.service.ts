@@ -8,10 +8,11 @@ import { AppSettingsService } from '../app-configs/app-settings.service';
 })
 export class ControlCenterService {
     public behaviorSubjectContactForm: BehaviorSubject<{
-        payload?: any;
+        payload?;
         id?: number;
         newContact?: any;
         isEdit?: boolean;
+        isAttended?: boolean;
     }> = new BehaviorSubject(null);
     public behaviorSubjectContactGrid: BehaviorSubject<{
         reload?: boolean;
@@ -44,19 +45,46 @@ export class ControlCenterService {
             }
         );
     }
-
-
-
-
+    /**
+     * @description: Todos los estado de atencion de alarmas
+     */
+    public getAllStatusAttends(): Observable<any> {
+        const params = { method: 'index_all_alarm_status_attens' };
+        return this._http.get(this._appSettings.controlCenter.url.base, {
+            params,
+        });
+    }
+    /**
+     * @description: Todos las causales de la alarmas
+     */
+    public getAllCausalAttends(): Observable<any> {
+        const params = { method: 'index_all_causals_alarm_attens' };
+        return this._http.get(this._appSettings.controlCenter.url.base, {
+            params,
+        });
+    }
+    /**
+     * @description: Atender alarmas
+     */
+    public postAttendAlarm(data: any): Observable<any> {
+        const params = { method: 'detail_alarm_attention' };
+        return this._http.post(this._appSettings.controlCenter.url.base, data, {
+            params,
+        });
+    }
 
     /**
      * @description: Crear un contacto
      */
     public postContacts(data: any): Observable<any> {
         const params = { method: 'create_contact' };
-        return this._http.post(this._appSettings.contactsControlCenter.url.base, data, {
-            params,
-        });
+        return this._http.post(
+            this._appSettings.contactsControlCenter.url.base,
+            data,
+            {
+                params,
+            }
+        );
     }
     /**
      * @description: Eliminar un contacto
@@ -86,8 +114,11 @@ export class ControlCenterService {
      */
     public getContact(id: number): Observable<any> {
         const params = { method: 'show_contact' };
-        return this._http.get(this._appSettings.contactsControlCenter.url.base + '/' + id, {
-            params,
-        });
+        return this._http.get(
+            this._appSettings.contactsControlCenter.url.base + '/' + id,
+            {
+                params,
+            }
+        );
     }
 }
