@@ -36,7 +36,10 @@
                             Direccion:
                         </div>
                         <div class="text-base font-semibold tracking-tight leading-6 truncate">
-                            {{selectedAlarm['address']}}
+                            <a class="pr-6 whitespace-nowrap" [matTooltip]="'Ver en el  mapa'"
+                                href="https://maps.google.com/?q={{selectedAlarm['x']}},{{selectedAlarm['y']}}"
+                                target="_blank" rel="noopener noreferrer">{{selectedAlarm['address']}}
+                            </a>
                         </div>
                     </div>
                     <div class="flex flex-col">

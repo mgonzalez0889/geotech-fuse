@@ -13,6 +13,10 @@ import { Subscription } from 'rxjs';
 })
 export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     public subscription: Subscription;
+    public notAttended: number = 0;
+    public silenced: number = 0;
+    public onTrack: number = 0;
+    public inRecovery: number = 0;
     public dataAlarmSelect = [];
     public opened: boolean = false;
     public dataAlarms: MatTableDataSource<any>;
@@ -39,6 +43,17 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
      */
     private getAllAlarms(): void {
         this.controlCenterService.getAllAlarms().subscribe((data) => {
+            if (data.count_status_alarms) {
+                this.notAttended = data.count_status_alarms[0]?.count_state;
+                this.silenced = data.count_status_alarms[1]?.count_state;
+                this.onTrack = data.count_status_alarms[2]?.count_state;
+                this.inRecovery = data.count_status_alarms[3]?.count_state;
+            } else {
+                this.notAttended = 0;
+                this.silenced = 0;
+                this.onTrack = 0;
+                this.inRecovery = 0;
+            }
             this.dataAlarms = new MatTableDataSource(data.data);
             this.dataAlarms.paginator = this.paginator;
             this.dataAlarms.sort = this.sort;
@@ -57,6 +72,13 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
                     }
                 }
             );
+    }
+    /**
+     * @description: Filtrar datos de la tabla
+     */
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataAlarms.filter = filterValue.trim().toLowerCase();
     }
     /**
      * @description: Guarda la data de la alarma para aburir el formulario

@@ -13,7 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ControlCenterService } from 'app/core/services/control-center.service';
 import { HistoriesService } from 'app/core/services/histories.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
     selector: 'app-control-center-actions',
@@ -71,7 +71,6 @@ export class ControlCenterActionsComponent
         this.getAllCausalAttends();
         this.getAllStatusAttends();
         this.createContactForm();
-        this.getContact();
     }
 
     ngAfterViewInit(): void {}
@@ -92,6 +91,14 @@ export class ControlCenterActionsComponent
         //     this.dataHisotiric.paginator = this.paginator;
         //     this.dataHisotiric.sort = this.sort;
         // });
+    }
+    /**
+     * @description: Pinta en el mapa el lugar donde fue la alarma
+     */
+    private getPointMap(data) {
+        this.mapFunctionalitieService.goDeleteGeometryPath();
+
+        this.mapFunctionalitieService.createPunt(data, true);
     }
     /**
      * @description:Genera los estado de atencion
@@ -136,12 +143,17 @@ export class ControlCenterActionsComponent
         const data = this.attendedAlarmsForm.getRawValue();
         this.controlCenterService.postAttendAlarm(data).subscribe((res) => {
             console.log(res, 'respuest');
+            this.controlCenterService.behaviorSubjectContactGrid.next({
+                opened: false,
+                reload: true,
+            });
         });
     }
     /**
      * @description: Trae todos los contactos del cliente
      */
     public getContact(): void {
+        this.dataTableContactsControlCenter = null;
         this.controlCenterService
             .getContactsControlCenter(this.selectedAlarm.owner_id)
             .subscribe((res) => {
@@ -184,6 +196,10 @@ export class ControlCenterActionsComponent
      */
     private loadMap(): void {
         this.mapFunctionalitieService.init();
+        const time = timer(1000);
+        time.subscribe((t) => {
+            this.getPointMap(this.selectedAlarm);
+        });
     }
     /**
      * @description: Escucha el observable behavior y busca al contacto
@@ -196,6 +212,8 @@ export class ControlCenterActionsComponent
                     this.isAttended = isAttended;
                     if (!this.isAttended) {
                         this.loadMap();
+                    } else {
+                        this.getContact();
                     }
                     console.log(payload, isAttended, 'payload');
                 }
