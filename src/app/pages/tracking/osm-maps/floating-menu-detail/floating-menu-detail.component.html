@@ -3,15 +3,6 @@
         <div class="title">
             Detalles
         </div>
-        <!-- <div style="display: inline-block;">
-            <mat-button-toggle-group [value]="selectedState" (change)="onChange($event)" style="width: 215px; height: 44px; background: #EAEAEA;
-                    border-radius: 10px;">
-                <mat-button-toggle [value]="0" style="width: 97px; height: 35px; top: 4.5px; left: 7px;
-                        " value="eventos">Eventos</mat-button-toggle>
-                <mat-button-toggle [value]="1" style="width: 97px; height: 35px; top: 4.5px; left: 7px;
-                        " value="historico">Historico</mat-button-toggle>
-            </mat-button-toggle-group>
-        </div> -->
         <div class="close" (click)="mapFuncionalitieService.showDetailMobile = false">
             <img style="height: 20px; width: 20px;" src="./assets/icons/iconMap/close-blue.svg">
         </div>
@@ -69,7 +60,7 @@
             <div class="cards">
                 <div class="card" *ngFor="let event of this.mobileRequestService.lastEvents">
                     <div class="card-icon">
-                        icon
+                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/marker_position.svg">
                     </div>
 
                     <div class="card-description">
@@ -87,7 +78,10 @@
                     </div>
 
                     <div class="card-map">
-mapa
+                        Ver en
+                        <br>
+                        mapa
+                        <img style="height: 13; width: 15px;" src="./assets/icons/iconMap/map.svg">
                     </div>
                 </div>
             </div>

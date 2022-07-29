@@ -128,6 +128,5 @@ export class GeotoolsComponent implements OnInit {
         this.mapFunctionalitieService.createPunt(element);
       }
     }
-
   }
 }

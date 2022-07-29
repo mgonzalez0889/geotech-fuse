@@ -63,7 +63,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
             () => {
                 this.contacts$ = this._contactService.getContacts();
                 this._snackBar.open('Se ha eliminado el contacto', 'CERRAR', {duration: 4000});
-                console.log('Elemento eliminado');
             });
     }
 

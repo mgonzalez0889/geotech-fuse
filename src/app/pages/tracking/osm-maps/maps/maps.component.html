@@ -1,6 +1,11 @@
-<ng-container *ngIf="mapFunctionalitieService.showMenuMobiles">
-    <app-floating-menu>
-    </app-floating-menu>
+<ng-container>
+    <div style="position: relative;">
+        <!-- <div class="closeListMobiles" (click)="mapFunctionalitieService.showMenuMobiles = false">
+            Ocultar
+        </div> -->
+        <app-floating-menu *ngIf="mapFunctionalitieService.showMenuMobiles">
+        </app-floating-menu>
+    </div>
 </ng-container>
 
 <ng-container *ngIf="mapFunctionalitieService.showDetailMobile">
@@ -18,6 +23,10 @@
     </app-form-geometry>
 </ng-container>
 
+<ng-container *ngIf="mapFunctionalitieService.showHistoricPlate">
+    <app-historics>
+    </app-historics>
+</ng-container>
 
 <!--<ng-container *ngIf="showMenuFleet">
     <app-floating-menu-fleet>

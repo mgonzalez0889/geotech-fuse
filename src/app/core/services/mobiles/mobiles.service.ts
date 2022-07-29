@@ -20,13 +20,8 @@ export class MobilesService {
   status_device: string;
 
   constructor(
-    private mobilesService: MobileService,
-    public mapFuncionalitieService: MapFunctionalitieService
+    private mobilesService: MobileService
   ) { }
-
-  getMobiles() {
-    this.dataSource = new MatTableDataSource(this.mapFuncionalitieService.mobiles);
-  }
 
   async getDetailMobile(id: number) {
     return new Promise((resolve, reject) => {

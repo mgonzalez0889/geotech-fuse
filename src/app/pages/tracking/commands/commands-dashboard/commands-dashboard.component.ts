@@ -106,7 +106,6 @@ export class CommandsDashboardComponent implements OnInit {
                 x['selected'] = false;
                 return x;
             });
-            console.log(this.mobiles, 'this.mobiles');
         });
     }
     /**
@@ -118,7 +117,6 @@ export class CommandsDashboardComponent implements OnInit {
                 x['selected'] = false;
                 return x;
             });
-            console.log(data.data, ' estos son las flotas');
         });
     }
 
@@ -132,7 +130,6 @@ export class CommandsDashboardComponent implements OnInit {
             plates: [plate],
             command: typeCommand
         };
-        console.log(plate, 'plate', typeCommand, 'typeCommand','commands=>',commands);
     }
 
     public sentCommands(): void {
@@ -140,10 +137,8 @@ export class CommandsDashboardComponent implements OnInit {
             plates: this.selectedPlates,
             command: this.selectedTypeCommand,
         };
-        console.log(commands,'commands')
         this.commandsService.postCommandsSend(commands).subscribe((data) => {
             this.getSentCommands();
-            console.log(data, 'comando');
         });
     }
 

@@ -1,0 +1,105 @@
+<div class="historic-plate">
+    <div class="title-historic">
+        <div class="title">
+            Historico y eventos
+        </div>
+        <div class="close" (click)="mapFunctionalitieService.showHistoricPlate = false">
+            <img style="height: 20px; width: 20px;" src="./assets/icons/iconMap/close-blue.svg">
+        </div>
+    </div>
+
+    <div class="filter-historic">
+        <div class="date-picker" (click)="picker.open()">
+            <div>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate [(ngModel)]="initialDate" placeholder="Fecha inicial">
+                    <input matEndDate [(ngModel)]="finalDate" placeholder="Fecha Final">
+                </mat-date-range-input>
+                <mat-date-range-picker #picker>
+                    <mat-datepicker-actions>
+                        <div class="inputs" style="display: flex; justify-content: space-between; padding: 10px;">
+                            <input type="time" matInput [(ngModel)]="initialHours">
+                            <input type="time" matInput [(ngModel)]="finalHours">
+                        </div>
+                        <div class="buttons" style="display: flex; justify-content: space-around;">
+                            <button mat-button matDatepickerCancel>Cancelar</button>
+                            <button mat-raised-button [color]="'accent'" matDatepickerApply>Ok</button>
+                        </div>
+                    </mat-datepicker-actions>
+                </mat-date-range-picker>
+            </div>
+            <mat-icon class="icon-size-5" matSuffix svgIcon="feather:calendar">
+            </mat-icon>
+        </div>
+
+        <ng-container *ngIf="events$ | async as events">
+            <mat-form-field appearance="fill" class="fuse-mat-dense w-30">
+                <mat-select multiple placeholder="Eventos" [(ngModel)]="mapFunctionalitieService.events">
+                    <mat-option [value]="event.id" *ngFor="let event of events.data">
+                        {{event.event_name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+
+        <button (click)="generateHistoric()" class="search-historic">
+            <img src="./assets/icons/iconMap/search-white.svg" alt="">
+        </button>
+    </div>
+
+    <div class="data-historic">
+        <div class="result-plate">
+            <div class="head-result" *ngFor="let data of this.mapFunctionalitieService.historic"
+                (click)="data.data.length > 0 ? viewHistoric(data.plate) : ''">
+                <div class="title-result">
+                    <div class="title">
+                        {{data.plate}}
+                    </div>
+                    <div class="close">
+                        <img style="height: 12px; width: 15px;" src="./assets/icons/iconMap/arrow-bottom.svg"
+                            [ngClass]="seletedHistoric === data.plate ? 'rotate' : ''">
+                    </div>
+                </div>
+
+                <div class="subtitle-result" *ngIf="data.data.length > 0">
+                    Se encontraron resultados.
+                </div>
+
+                <div class="subtitle-result" *ngIf="data.data.length <= 0">
+                    No se encontraron resultados.
+                </div>
+
+                <div class="body-result" *ngIf="seletedHistoric === data.plate">
+                    <div class="cards">
+                        <div class="card" *ngFor="let event of data.data">
+                            <div class="card-icon">
+                                <img style="height: 23px; width: 28px;"
+                                    src="./assets/icons/iconMap/marker_position.svg">
+                            </div>
+
+                            <div class="card-description">
+                                <div class="name-event">
+                                    {{event.event_name}}
+                                </div>
+
+                                <div class="date-event">
+                                    {{convertDate(event.date_entry)}}
+                                </div>
+
+                                <div class="address-event">
+                                    {{event.address}}
+                                </div>
+                            </div>
+
+                            <div class="card-map">
+                                Ver en
+                                <br>
+                                mapa
+                                <img style="height: 13; width: 15px;" src="./assets/icons/iconMap/map.svg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

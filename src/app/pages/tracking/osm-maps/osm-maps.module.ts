@@ -33,6 +33,7 @@ import { InfoWindowsComponent } from './info-windows/info-windows.component';
 import { GeotoolsComponent } from './geotools/geotools.component';
 import { MatListModule } from "@angular/material/list";
 import { FormGeometryComponent } from './form-geometry/form-geometry.component';
+import { HistoricsComponent } from './historics/historics.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { FormGeometryComponent } from './form-geometry/form-geometry.component';
     InfoWindowsComponent,
     GeotoolsComponent,
     FormGeometryComponent,
+    HistoricsComponent,
   ],
   imports: [
     CommonModule,

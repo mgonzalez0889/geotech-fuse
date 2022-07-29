@@ -38,7 +38,6 @@ export class FormGeometryComponent implements OnInit {
     this.formGeometry.controls.shape.setValue(this.mapFunctionalitieService.shape);
     this.formGeometry.controls.diameter.setValue(12);
 
-    console.log(this.formGeometry.value);
     let data = await this.mapRequestService.saveGeometry(this.mapFunctionalitieService.type_geo, this.formGeometry.value);
     if (data === 200) {
       this.mapFunctionalitieService.drawerOpenedChanged();
