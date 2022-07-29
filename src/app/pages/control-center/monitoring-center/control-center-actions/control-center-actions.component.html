@@ -154,16 +154,17 @@
                         <mat-form-field>
                             <mat-label>Estado de atención</mat-label>
                             <mat-select required [formControlName]="'stateAlarmAttend'">
-                                <mat-option *ngFor="let status of statusAttends" [value]="status.id">
+                                <mat-option *ngFor="let status of statusAttends" [value]="status.id"
+                                    (click)="validStateAlarmAttend(status.id)">
                                     {{status.description}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col" *ngIf="showPostponeAlarm">
                         <mat-form-field>
                             <mat-label>Posponer</mat-label>
-                            <mat-select [formControlName]="'postponeAlarm'" required>
+                            <mat-select [formControlName]="'postponeAlarm'" [required]="showPostponeAlarm">
                                 <mat-option *ngFor="let value of [5,10,15,20,25,30]" [value]="value">
                                     {{value}} - Minutos
                                 </mat-option>
@@ -199,38 +200,29 @@
                     </div>
                 </form>
             </div>
-            <div class="px-6 border-b">
+            <div class="px-6 ">
                 <!--Title-->
-                <div>
-                    <h2 class="text-2xl font-semibold tracking-tight leading-6">Contactos
-                    </h2>
-                    <div class="text-base font-semibold text-secondary">
-                        <ng-container *ngIf="contactsCount > 0">
-                            {{contactsCount}}
-                        </ng-container>
-                        {{contactsCount | i18nPlural: {
-                        '=0' : 'Sin contactos',
-                        '=1' : 'Contacto',
-                        'other': 'Contactos'
-                        } }}
+                <div class="border-t p-3 flex justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold tracking-tight leading-6">Contactos
+                        </h2>
+                        <div class="text-base font-semibold text-secondary">
+                            <ng-container *ngIf="contactsCount > 0">
+                                {{contactsCount}}
+                            </ng-container>
+                            {{contactsCount | i18nPlural: {
+                            '=0' : 'Sin contactos',
+                            '=1' : 'Contacto',
+                            'other': 'Contactos'
+                            } }}
+                        </div>
                     </div>
+
+                    <button class="ml-2 circ" mat-mini-fab [color]="'accent'" [matTooltip]="'Nuevo contacto'"
+                        (click)="newContact()">
+                        <mat-icon>add</mat-icon>
+                    </button>
                 </div>
-                <!-- <div class="grid grid-cols-2 gap-4 py-3">
-                    <div class="flex text-2xl font-semibold
-                    tracking-tight leading-6 truncate">
-                        Contactos
-                    </div>
-                    <div class="ml-0.5 font-medium text-secondary">
-                        <ng-container *ngIf="contactsCount > 0">
-                            {{contactsCount}}
-                        </ng-container>
-                        {{contactsCount | i18nPlural: {
-                        '=0' : 'Sin contactos',
-                        '=1' : 'Contacto',
-                        'other': 'Contactos'
-                        } }}
-                    </div>
-                </div> -->
                 <!-- Tabla-->
                 <div class="flex flex-col flex-auto overflow-y-auto">
                     <table mat-table [dataSource]="dataTableContactsControlCenter" matSort>
@@ -307,7 +299,8 @@
                             </td>
                         </tr> -->
                     </table>
-                    <mat-paginator class="bg-gray-200" [pageSizeOptions]="[5,10,15]" aria-label="Select page of users">
+                    <mat-paginator (show)="contactsCount>0" class="bg-gray-200" [pageSizeOptions]="[5,10,15]"
+                        aria-label="Select page of users">
                     </mat-paginator>
                 </div>
             </div>

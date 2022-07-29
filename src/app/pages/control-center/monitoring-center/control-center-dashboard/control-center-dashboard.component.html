@@ -7,23 +7,19 @@
                     <h2 class="text-3xl font-semibold tracking-tight leading-8">Centro de monitoreo</h2>
                 </div>
                 <div class="hidden sm:inline-flex justify-end">
-                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white text-base"
-                        style="background: linear-gradient(89.88deg, #FFBB55 0.09%, #E88B00 99.89%), #FF9900;">
+                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white " style="background: #403e3e;">
                         <div>{{notAttended}}</div>
                         <p class="text-sm">No Atendida</p>
                     </div>
-                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white"
-                        style="background: linear-gradient(89.88deg, #FFBB55 0.09%, #E88B00 99.89%), #FF9900;">
+                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white" style="background: #2e2e2e;">
                         <div>{{silenced}}</div>
                         <p class="text-sm">Silenciado</p>
                     </div>
-                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white"
-                        style="background: linear-gradient(89.88deg, #FFBB55 0.09%, #E88B00 99.89%), #FF9900;">
+                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white" style="background: #0000ff;">
                         <div>{{onTrack}}</div>
                         <p class="text-sm">En Seguimiento</p>
                     </div>
-                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white"
-                        style="background: linear-gradient(89.88deg, #FFBB55 0.09%, #E88B00 99.89%), #FF9900;">
+                    <div class="mx-2 text-center px-4 py-1 rounded-md text-white" style="background: #2e2fff;">
                         <div>{{inRecovery}}</div>
                         <p class="text-sm">En Recuperación</p>
                     </div>
@@ -126,7 +122,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="pt-6">
                                 <mat-tab-group>
@@ -137,7 +132,9 @@
                                                 <ng-container matColumnDef="event_name">
                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Alarmas </th>
                                                     <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
+                                                        <span
+                                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                                            style="background: {{row.color_event}};">
                                                             {{row.event_name}}</span>
                                                     </td>
                                                 </ng-container>
@@ -145,7 +142,8 @@
                                                 <ng-container matColumnDef="state">
                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
                                                     <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
+                                                        <span
+                                                            class="inline-flex items-center font-bold text-xs pr-2.5 py-0.5 rounded-full tracking-wide uppercase">
                                                             {{row.state}}
                                                         </span>
                                                     </td>
@@ -184,7 +182,8 @@
                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion
                                                     </th>
                                                     <td mat-cell *matCellDef="let row">
-                                                        <a class="pr-6 whitespace-nowrap" [matTooltip]="'Ver en el  mapa'"
+                                                        <a class="pr-6 whitespace-nowrap"
+                                                            [matTooltip]="'Ver en el  mapa'"
                                                             href="https://maps.google.com/?q={{row.x}},{{row.y}}"
                                                             target="_blank" rel="noopener noreferrer">{{row.address}}
                                                         </a>
@@ -219,9 +218,9 @@
                             </div>
                         </div>
                         <mat-paginator
-                        class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
-                        [pageSizeOptions]="[10]" aria-label="Select page of users">
-                    </mat-paginator>
+                            class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
+                            [pageSizeOptions]="[10]" aria-label="Select page of users">
+                        </mat-paginator>
                     </mat-drawer-content>
                 </mat-drawer-container>
             </div>

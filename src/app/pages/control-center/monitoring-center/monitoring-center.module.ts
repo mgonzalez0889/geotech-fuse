@@ -21,11 +21,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModalContactsComponent } from './modal-contacts/modal-contacts.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     declarations: [
         ControlCenterDashboardComponent,
         ControlCenterActionsComponent,
+        ModalContactsComponent,
     ],
     imports: [
         CommonModule,
@@ -47,6 +50,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatInputModule,
         ReactiveFormsModule,
         MatTooltipModule,
+        MatDialogModule
     ],
 })
 export class MonitoringCenterModule {}

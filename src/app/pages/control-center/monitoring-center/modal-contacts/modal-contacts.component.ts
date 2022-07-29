@@ -1,21 +1,15 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
-import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-form-contact',
-    templateUrl: './form-contact.component.html',
-    styleUrls: ['./form-contact.component.scss'],
+    selector: 'app-modal-contacts',
+    templateUrl: './modal-contacts.component.html',
+    styleUrls: ['./modal-contacts.component.scss'],
 })
-export class FormContactComponent implements OnInit, OnDestroy {
-    public contacts: any = [];
-    public editMode: boolean = false;
-    public opened: boolean = true;
+export class ModalContactsComponent implements OnInit {
     public contactForm: FormGroup;
-    public subscription: Subscription;
     public typeContacts: any = [];
 
     constructor(
@@ -26,7 +20,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.createContactForm();
-        this.listenObservables();
         this.typeContact();
     }
     /**
@@ -40,88 +33,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
             this.editContact(data);
         }
     }
-    /**
-     * @description: Cierra el menu lateral de la derecha
-     */
-    public closeMenu(): void {
-        this.controlCenterService.behaviorSubjectContactGrid.next({
-            opened: false,
-            reload: false,
-        });
-    }
 
-    /**
-     * @description: Elimina el contacto
-     */
-    public deleteContact(id: number): void {
-        let confirmation = this.confirmationService.open({
-            title: 'Eliminar contacto',
-            message:
-                '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',
-            actions: {
-                confirm: {
-                    label: 'Eliminar',
-                },
-            },
-        });
-        confirmation.afterClosed().subscribe((result) => {
-            if (result === 'confirmed') {
-                this.controlCenterService
-                    .deleteContacts(id)
-                    .subscribe((res) => {
-                        if (res.code === 200) {
-                            this.controlCenterService.behaviorSubjectContactGrid.next(
-                                {
-                                    reload: true,
-                                    opened: false,
-                                }
-                            );
-                            confirmation = this.confirmationService.open({
-                                title: 'Eliminar contacto',
-                                message: 'Contacto eliminado con exito!',
-                                actions: {
-                                    cancel: {
-                                        label: 'Aceptar',
-                                    },
-                                    confirm: {
-                                        show: false,
-                                    },
-                                },
-                                icon: {
-                                    name: 'heroicons_outline:exclamation',
-                                    color: 'warn',
-                                },
-                            });
-                        } else {
-                            confirmation = this.confirmationService.open({
-                                title: 'Eliminar contacto',
-                                message:
-                                    'El contacto no se pudo eliminar, favor intente nuevamente.',
-                                actions: {
-                                    cancel: {
-                                        label: 'Aceptar',
-                                    },
-                                    confirm: {
-                                        show: false,
-                                    },
-                                },
-                                icon: {
-                                    show: true,
-                                    name: 'heroicons_outline:exclamation',
-                                    color: 'warn',
-                                },
-                            });
-                        }
-                    });
-            }
-        });
-    }
-    /**
-     * @description: Destruye el observable
-     */
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
     /**
      * @description: Trae los tipos de contacto
      */
@@ -147,35 +59,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
             address: ['', [Validators.required]],
             description: [''],
         });
-    }
-    /**
-     * @description: Escucha el observable behavior y busca al contacto
-     */
-    private listenObservables(): void {
-        this.subscription =
-            this.controlCenterService.behaviorSubjectContactForm.subscribe(
-                ({ newContact, id, isEdit, ownerId }) => {
-                    this.editMode = isEdit;
-                    if (newContact) {
-                        this.contacts = [];
-                        this.contacts['full_name'] = newContact;
-                        if (this.contactForm) {
-                            this.contactForm.reset();
-                        }
-                    }
-                    this.contactForm.patchValue({
-                        owner_id: ownerId,
-                    });
-                    if (id) {
-                        this.controlCenterService
-                            .getContact(id)
-                            .subscribe((data) => {
-                                this.contacts = data.data;
-                                this.contactForm.patchValue(this.contacts);
-                            });
-                    }
-                }
-            );
     }
     /**
      * @description: Editar un contacto

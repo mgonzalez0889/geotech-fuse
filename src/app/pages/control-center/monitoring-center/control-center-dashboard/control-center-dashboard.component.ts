@@ -86,7 +86,6 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     public actionsControlCenter(data: any): void {
         this.opened = true;
         this.dataAlarmSelect = data;
-        console.log(data, 'sssss');
         this.controlCenterService.behaviorSubjectContactForm.next({
             payload: this.dataAlarmSelect,
             isAttended: false,

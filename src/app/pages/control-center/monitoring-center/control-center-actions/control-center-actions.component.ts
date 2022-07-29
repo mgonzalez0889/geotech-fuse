@@ -7,22 +7,24 @@ import {
     ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
 import { HistoriesService } from 'app/core/services/histories.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { Subscription, timer } from 'rxjs';
+import { ModalContactsComponent } from '../modal-contacts/modal-contacts.component';
 
 @Component({
     selector: 'app-control-center-actions',
     templateUrl: './control-center-actions.component.html',
     styleUrls: ['./control-center-actions.component.scss'],
 })
-export class ControlCenterActionsComponent
-    implements OnInit, AfterViewInit, OnDestroy
-{
+export class ControlCenterActionsComponent implements OnInit, OnDestroy {
+    public showPostponeAlarm: boolean = false;
     public attendedAlarmsForm: FormGroup;
     public selectedAlarm: any = [];
     public opened: boolean = true;
@@ -63,8 +65,17 @@ export class ControlCenterActionsComponent
         public mapFunctionalitieService: MapFunctionalitieService,
         public historicService: HistoriesService,
         public controlCenterService: ControlCenterService,
-        private fb: FormBuilder
-    ) {}
+        private fb: FormBuilder,
+        private confirmationService: ConfirmationService,
+        private paginatorIntl: MatPaginatorIntl,
+        private matDialog: MatDialog
+    ) {
+        this.paginatorIntl.itemsPerPageLabel = 'Items per pagina:';
+        this.paginatorIntl.firstPageLabel = 'Eerste pagina';
+        this.paginatorIntl.previousPageLabel = 'Vorige pagina';
+        this.paginatorIntl.nextPageLabel = 'Volgende pagina';
+        this.paginatorIntl.lastPageLabel = 'Laatste pagina';
+    }
 
     ngOnInit(): void {
         this.listenObservables();
@@ -73,7 +84,6 @@ export class ControlCenterActionsComponent
         this.createContactForm();
     }
 
-    ngAfterViewInit(): void {}
     /**
      * @description:Genera el historico y eventos de las ultimas 24H del vehiculo seleccionado
      */
@@ -93,11 +103,18 @@ export class ControlCenterActionsComponent
         // });
     }
     /**
+     * @description: Modal para agregar nuevo contacto
+     */
+    public newContact(): void {
+        this.matDialog.open(ModalContactsComponent, {
+            width: '485px',
+        });
+    }
+    /**
      * @description: Pinta en el mapa el lugar donde fue la alarma
      */
-    private getPointMap(data) {
+    private getPointMap(data): void {
         this.mapFunctionalitieService.goDeleteGeometryPath();
-
         this.mapFunctionalitieService.createPunt(data, true);
     }
     /**
@@ -106,7 +123,6 @@ export class ControlCenterActionsComponent
     private getAllStatusAttends(): void {
         this.controlCenterService.getAllStatusAttends().subscribe((res) => {
             this.statusAttends = res.data;
-            console.log(res, 'estado de atencion');
         });
     }
     /**
@@ -115,7 +131,6 @@ export class ControlCenterActionsComponent
     private getAllCausalAttends(): void {
         this.controlCenterService.getAllCausalAttends().subscribe((res) => {
             this.causalAttends = res.data;
-            console.log(res, 'causal de atencion');
         });
     }
     /**
@@ -126,7 +141,7 @@ export class ControlCenterActionsComponent
             alarmAttendedId: [''],
             causalName: [''],
             stateAlarmAttend: ['', [Validators.required]],
-            postponeAlarm: ['', [Validators.required]],
+            postponeAlarm: [''],
             causalAlarmAttend: ['', [Validators.required]],
             description: ['', [Validators.required]],
         });
@@ -135,30 +150,68 @@ export class ControlCenterActionsComponent
      * @description: Atiende la alarma
      */
     public attendAlarm(): void {
-        console.log(this.selectedAlarm.event_id, this.selectedAlarm.event_name);
         this.attendedAlarmsForm.patchValue({
             alarmAttendedId: this.selectedAlarm.id,
             causalName: this.selectedAlarm.event_name,
         });
         const data = this.attendedAlarmsForm.getRawValue();
         this.controlCenterService.postAttendAlarm(data).subscribe((res) => {
-            console.log(res, 'respuest');
-            this.controlCenterService.behaviorSubjectContactGrid.next({
-                opened: false,
-                reload: true,
-            });
+            if (res.code === 200) {
+                this.controlCenterService.behaviorSubjectContactGrid.next({
+                    opened: false,
+                    reload: true,
+                });
+                this.confirmationService.open({
+                    title: 'Atención de alarma',
+                    message: 'Alarma atendida con exito!',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        name: 'heroicons_outline:check-circle',
+                        color: 'success',
+                    },
+                });
+            } else {
+                this.confirmationService.open({
+                    title: 'Atención de alarma',
+                    message:
+                        'La alarma no se pudo atender, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                });
+            }
         });
     }
     /**
      * @description: Trae todos los contactos del cliente
      */
     public getContact(): void {
+        console.log(this.selectedAlarm.owner_id, 'this.selectedAlarm.owner_id');
         this.dataTableContactsControlCenter = null;
         this.controlCenterService
             .getContactsControlCenter(this.selectedAlarm.owner_id)
             .subscribe((res) => {
                 if (res.data) {
                     this.contactsCount = res.data.length;
+                } else {
+                    this.contactsCount = 0;
                 }
                 this.dataTableContactsControlCenter = new MatTableDataSource(
                     res.data
@@ -180,6 +233,27 @@ export class ControlCenterActionsComponent
             opened: false,
             reload: false,
         });
+    }
+    /**
+     * @description: Valida si se va a posponer la alarma
+     */
+    public validStateAlarmAttend(idEvent: number): void {
+        if (idEvent === 6) {
+            this.showPostponeAlarm = true;
+            this.attendedAlarmsForm.controls['postponeAlarm'].setValidators(
+                Validators.required
+            );
+            this.attendedAlarmsForm
+                .get('postponeAlarm')
+                .updateValueAndValidity();
+        } else {
+            this.showPostponeAlarm = false;
+
+            this.attendedAlarmsForm.controls['postponeAlarm'].clearValidators();
+            this.attendedAlarmsForm
+                .get('postponeAlarm')
+                .updateValueAndValidity();
+        }
     }
     /**
      * @description: Funcion boton cancelar
@@ -213,6 +287,9 @@ export class ControlCenterActionsComponent
                     if (!this.isAttended) {
                         this.loadMap();
                     } else {
+                        if (this.attendedAlarmsForm) {
+                            this.attendedAlarmsForm.reset();
+                        }
                         this.getContact();
                     }
                     console.log(payload, isAttended, 'payload');
