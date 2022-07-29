@@ -15,16 +15,18 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import {MatPaginatorModule} from "@angular/material/paginator";
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { GridMobileFleetAssinedComponent } from './grid-mobile-fleet-assined/grid-mobile-fleet-assined.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
-  declarations: [
-    FormFleetComponent,
-    GridFleetComponent,
-    GridMobileFleetComponent,
-    GridMobileFleetAssinedComponent
-  ],
+    declarations: [
+        FormFleetComponent,
+        GridFleetComponent,
+        GridMobileFleetComponent,
+        GridMobileFleetAssinedComponent,
+    ],
     imports: [
         CommonModule,
         FleetsRoutingModule,
@@ -40,6 +42,8 @@ import { GridMobileFleetAssinedComponent } from './grid-mobile-fleet-assined/gri
         MatSelectModule,
         FormsModule,
         MatPaginatorModule,
-    ]
+        MatSidenavModule,
+        MatSortModule
+    ],
 })
-export class FleetsModule { }
+export class FleetsModule {}

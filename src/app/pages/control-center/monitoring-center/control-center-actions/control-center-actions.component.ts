@@ -70,11 +70,11 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         private paginatorIntl: MatPaginatorIntl,
         private matDialog: MatDialog
     ) {
-        this.paginatorIntl.itemsPerPageLabel = 'Items per pagina:';
-        this.paginatorIntl.firstPageLabel = 'Eerste pagina';
-        this.paginatorIntl.previousPageLabel = 'Vorige pagina';
-        this.paginatorIntl.nextPageLabel = 'Volgende pagina';
-        this.paginatorIntl.lastPageLabel = 'Laatste pagina';
+        this.paginatorIntl.itemsPerPageLabel = 'Items por página:';
+        this.paginatorIntl.firstPageLabel = 'Página anterior';
+        this.paginatorIntl.previousPageLabel = 'Pagina anterior';
+        this.paginatorIntl.nextPageLabel = 'Siguiente página';
+        this.paginatorIntl.lastPageLabel = 'Última página';
     }
 
     ngOnInit(): void {

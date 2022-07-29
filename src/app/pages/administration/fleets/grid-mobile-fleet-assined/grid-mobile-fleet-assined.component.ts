@@ -21,7 +21,7 @@ export class GridMobileFleetAssinedComponent implements OnInit {
   public subscription: Subscription;
   public selection = new SelectionModel<any>(true, []);
   public arrayLength: number = 0;
-  public idFleet: number = this.fleetService.behaviorSubjectUserOwnerPlateFleet$.value.id;
+  public idFleet: number = null
   @ViewChild(MatPaginator) paginator: MatPaginator;
   public show: boolean = false;
   constructor(
@@ -91,20 +91,20 @@ export class GridMobileFleetAssinedComponent implements OnInit {
     private deleteFleetPlateAssigned(id: number): void {
         this.subscription = this.fleetService.deleteFleetsPlate(id).subscribe(res => {
             this._snackBar.open('Registro eliminado con exito', '', {duration: 4000});
-            this.fleetService.behaviorSubjectFleet$.next({isEdit: false});
+            // this.fleetService.behaviorSubjectFleet$.next({isEdit: false});
         });
     }
     /**
      * @description: Escucha el observable behavior
      */
     private listenObservables(): void {
-        this.subscription = this.fleetService.behaviorSubjectFleet$.subscribe(({isEdit}) => {
-            switch (isEdit) {
-                case false:
-                    this.getFleetPlatesAssigned(this.idFleet);
-                    break;
-            }
-        });
+        // this.subscription = this.fleetService.behaviorSubjectFleet$.subscribe(({isEdit}) => {
+        //     switch (isEdit) {
+        //         case false:
+        //             this.getFleetPlatesAssigned(this.idFleet);
+        //             break;
+        //     }
+        // });
     }
 
 }

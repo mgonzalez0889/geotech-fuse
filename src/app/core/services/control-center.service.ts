@@ -28,8 +28,8 @@ export class ControlCenterService {
     /**
      * @description: Todos las alarmas
      */
-    public getAllAlarms(): Observable<any> {
-        const params = { method: 'index_all_alarms' };
+    public getAllAlarms(filter: number): Observable<any> {
+        const params = { method: 'index_all_alarms', filterAlarms: filter };
         return this._http.get(this._appSettings.controlCenter.url.base, {
             params,
         });

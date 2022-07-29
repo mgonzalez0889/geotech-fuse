@@ -39,6 +39,8 @@ export class GridContactComponent implements OnInit, OnDestroy {
         this.contactService.getContacts().subscribe((data) => {
             if (data.data) {
                 this.contactsCount = data.data.length;
+            } else {
+                this.contactsCount = 0;
             }
             this.dataTableContact = new MatTableDataSource(data.data);
             this.dataTableContact.paginator = this.paginator;

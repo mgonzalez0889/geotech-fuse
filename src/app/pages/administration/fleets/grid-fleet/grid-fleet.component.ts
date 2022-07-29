@@ -1,97 +1,91 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {FleetsService} from '../../../../core/services/fleets.service';
-import {Observable} from 'rxjs';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {HelperService} from '../../../../core/services/helper.service';
-import {DialogAlertEnum} from '../../../../core/interfaces/fuse-confirmation-config';
+/* eslint-disable @typescript-eslint/member-ordering */
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { FleetsService } from 'app/core/services/fleets.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-grid-fleet',
     templateUrl: './grid-fleet.component.html',
     styleUrls: ['./grid-fleet.component.scss'],
-
 })
-export class GridFleetComponent implements OnInit {
+export class GridFleetComponent implements OnInit, OnDestroy {
+    public subscription: Subscription;
+    public opened: boolean = false;
+    public dataTableFleet: MatTableDataSource<any>;
+    public fleetsCount: number = 0;
+    public columnsFleet: string[] = ['name', 'description'];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
-    public fleet$: Observable<any>;
-    public show: string = 'FLEET';
-
-    constructor(
-        private _fleetService: FleetsService,
-        private _snackBar: MatSnackBar,
-        private helperService: HelperService
-    ) {
-    }
+    constructor(private fleetService: FleetsService) {}
 
     ngOnInit(): void {
-        this.showFleets();
+        this.getFleets();
+        this.listenObservables();
     }
     /**
-     * @description: Abre/cierra el formulario flota
+     * @description: Filtrar datos de la tabla
      */
-    public openForm(): void {
-        this.show = 'FORM';
-        this._fleetService.behaviorSubjectFleet$.next({type: 'NEW', isEdit: false});
-    }
-    public closeForm(value: string): void {
-        this.show = value;
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataTableFleet.filter = filterValue.trim().toLowerCase();
     }
     /**
-     * @description: Edita un contacto
+     * @description: Guarda el ID del contacto para aburirlo en el formulario
      */
-    public onEdit(id: number): void {
-        this.show = 'FORM';
-        this.getEditFleet(id);
+    public actionsFleet(id: number): void {
+        this.opened = true;
+        this.fleetService.behaviorSubjectFleetForm.next({
+            id: id,
+            isEdit: false,
+        });
     }
     /**
-     * @description: Elimina una flota del listado
+     * @description: Crear un nuevo contacto
      */
-    public onDelete(id: number): void {
-        this.helperService.showDialogAlertOption({
-            title: 'Eliminar registro',
-            text: '¿Desea eliminar la flota?',
-            type: DialogAlertEnum.question,
-            showCancelButton: true,
-            textCancelButton: 'No',
-            textConfirButton: 'Si'
-        }).then(
-            (result) => {
-                if (result.value) {
-                    this.deleteFleets(id);
-                }
+    public newFleet(): void {
+        this.opened = true;
+        this.fleetService.behaviorSubjectFleetForm.next({
+            newFleet: 'Nueva flota',
+        });
+    }
+    /**
+     * @description: Mostrar todas las flotas del cliente
+     */
+    public getFleets(): void {
+        this.fleetService.getFleets().subscribe((res) => {
+            console.log(res);
+            if (res.data) {
+                this.fleetsCount = res.data.length;
+            } else {
+                this.fleetsCount = 0;
             }
-        );
-    }
-    /**
-     * @description: Abre la grilla opciones de flotas
-     */
-    public onOptionFleet(fleet: any): void {
-        this.show = 'OPTIONS';
-        this._fleetService.behaviorSubjectUserOwnerPlateFleet$.next({id: fleet.id, payload: fleet});
-    }
-    /**
-     * @description: Mostrar todas las flotas
-     */
-    private showFleets(): void {
-        this.fleet$ = this._fleetService.getFleets();
-    }
-    /**
-     * @description: Mostrar informacion de una sola flota
-     */
-    private getEditFleet(id: number): void {
-        this._fleetService.getFleet(id).subscribe(({data}) => {
-            this._fleetService.behaviorSubjectFleet$.next({type: 'EDIT', id, isEdit: true, payload: data});
+            this.dataTableFleet = new MatTableDataSource(res.data);
+            this.dataTableFleet.paginator = this.paginator;
+            this.dataTableFleet.sort = this.sort;
         });
     }
     /**
-     * @description: Eliminar una flota
+     * @description: Destruye el observable
      */
-    private deleteFleets(id: number): void {
-        this._fleetService.deleteFleets(id).subscribe(
-            ()=>{
-            this.fleet$ = this._fleetService.getFleets();
-            this._snackBar.open('Se ha eliminado la flota','CERRAR',{duration: 4000});
-        });
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
-
+    /**
+     * @description: Escucha el observable behavior
+     */
+    private listenObservables(): void {
+        this.subscription =
+            this.fleetService.behaviorSubjectFleetGrid.subscribe(
+                ({ reload, opened }) => {
+                    this.opened = opened;
+                    if (reload) {
+                        this.getFleets();
+                    }
+                }
+            );
+    }
 }

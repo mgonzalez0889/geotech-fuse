@@ -159,7 +159,7 @@ export class FloatingMenuFleetComponent implements OnInit, OnDestroy {
 
   private getMobilesFleet(id: number, event: boolean): void {
       this.subscription = this.fleetServices.getFleetsPlateAssignedMap(id).subscribe(({data})=> {
-          this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: event, id});
+        //   this.fleetServices.behaviorSelectedFleetPlate$.next({payload: data, selected: event, id});
       });
   }
 
