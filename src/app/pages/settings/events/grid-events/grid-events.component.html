@@ -22,7 +22,7 @@
                     <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
                         class="w-full md:w-128 bg-gray-100 border-none">
                         <ng-container *ngIf="opened">
-                            <app-form-contact></app-form-contact>
+                            <app-form-events></app-form-events>
                         </ng-container>
                     </mat-drawer>
                     <mat-drawer-content class="flex flex-col bg-card shadow rounded-2xl">
@@ -34,13 +34,14 @@
                             </div>
                         </div>
                         <!-- Tabla-->
-                        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+                        <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
                             <table mat-table [dataSource]="dataTableEvents" matSort class="w-full">
                                 <!-- color Column -->
                                 <ng-container matColumnDef="color">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Color </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <div class="whitespace-nowrap w-5 h-5 rounded-full bg-black" style="background: {{row.color}};">
+                                        <div class="whitespace-nowrap w-5 h-5 rounded-full"
+                                            style="background: {{row.color}};">
                                         </div>
                                     </td>
                                 </ng-container>
@@ -48,15 +49,15 @@
                                 <ng-container matColumnDef="name">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.description}} </span>
+                                        <span class="pr-6">
+                                            {{row.event_name}} </span>
                                     </td>
                                 </ng-container>
                                 <!-- description Column -->
                                 <ng-container matColumnDef="description">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Detalle </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap break-all">
+                                        <span class="pr-6 break-all">
                                             {{row.description}} </span>
                                     </td>
                                 </ng-container>
@@ -64,7 +65,7 @@
                                 <ng-component matColumnDef="notificationMail">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Notificación por correo </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox class="pl-9 whitespace-nowrap" disabled>
+                                        <mat-checkbox [checked]="row.email" class="pl-9 whitespace-nowrap" disabled>
                                         </mat-checkbox>
                                     </td>
                                 </ng-component>
@@ -73,7 +74,7 @@
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Notificación en la pagina
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox class="pl-9 whitespace-nowrap" disabled>
+                                        <mat-checkbox [checked]="row.page" class="pl-9 whitespace-nowrap" disabled>
                                         </mat-checkbox>
                                     </td>
                                 </ng-component>
@@ -81,7 +82,7 @@
                                 <ng-component matColumnDef="notificationSms">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Notificación por SMS </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox class="pl-9 whitespace-nowrap" disabled>
+                                        <mat-checkbox [checked]="row.sms" class="pl-9 whitespace-nowrap" disabled>
                                         </mat-checkbox>
                                     </td>
                                 </ng-component>
@@ -89,13 +90,13 @@
                                 <ng-component matColumnDef="notificationSound">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Notificación sonora </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox class="pl-9 whitespace-nowrap" disabled>
+                                        <mat-checkbox [checked]="row.sound" class="pl-9 whitespace-nowrap" disabled>
                                         </mat-checkbox>
                                     </td>
                                 </ng-component>
 
                                 <tr mat-header-row *matHeaderRowDef="columnsContactsControlCenter"></tr>
-                                <tr mat-row (click)="actionsContact(row.id)"
+                                <tr mat-row (click)="actionsEvent(row.id)"
                                     *matRowDef="let row; columns: columnsContactsControlCenter;">
                                 </tr>
                                 <!-- Fila que se muestra cuando no hay datos coincidentes.. -->

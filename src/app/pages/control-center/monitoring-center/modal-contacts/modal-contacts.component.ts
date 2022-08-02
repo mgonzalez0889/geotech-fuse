@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
 
@@ -13,6 +15,8 @@ export class ModalContactsComponent implements OnInit {
     public typeContacts: any = [];
 
     constructor(
+        public dialogRef: MatDialogRef<ModalContactsComponent>,
+        @Inject(MAT_DIALOG_DATA) public infoContact,
         private controlCenterService: ControlCenterService,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService
@@ -59,72 +63,57 @@ export class ModalContactsComponent implements OnInit {
             address: ['', [Validators.required]],
             description: [''],
         });
+        if (this.infoContact.id) {
+            this.controlCenterService
+                .getContact(this.infoContact.id)
+                .subscribe((res) => {
+                    this.contactForm.patchValue(res.data);
+                });
+        }
+        this.contactForm.patchValue({
+            owner_id: this.infoContact.owner_id,
+        });
     }
     /**
      * @description: Editar un contacto
      */
     private editContact(data: any): void {
-        let confirmation = this.confirmationService.open({
-            title: 'Editar contacto',
-            message:
-                '¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!',
-            actions: {
-                confirm: {
-                    label: 'Editar',
-                    color: 'accent',
-                },
-            },
-            icon: {
-                name: 'heroicons_outline:pencil',
-                color: 'info',
-            },
-        });
-        confirmation.afterClosed().subscribe((result) => {
-            if (result === 'confirmed') {
-                this.controlCenterService.putContacts(data).subscribe((res) => {
-                    if (res.code === 200) {
-                        this.controlCenterService.behaviorSubjectContactGrid.next(
-                            {
-                                reload: true,
-                                opened: false,
-                            }
-                        );
-                        confirmation = this.confirmationService.open({
-                            title: 'Editar contacto',
-                            message: 'Contacto editado con exito!',
-                            actions: {
-                                cancel: {
-                                    label: 'Aceptar',
-                                },
-                                confirm: {
-                                    show: false,
-                                },
-                            },
-                            icon: {
-                                name: 'heroicons_outline:check-circle',
-                                color: 'success',
-                            },
-                        });
-                    } else {
-                        confirmation = this.confirmationService.open({
-                            title: 'Editar contacto',
-                            message:
-                                'El contacto no se pudo actualizar, favor intente nuevamente.',
-                            actions: {
-                                cancel: {
-                                    label: 'Aceptar',
-                                },
-                                confirm: {
-                                    show: false,
-                                },
-                            },
-                            icon: {
-                                show: true,
-                                name: 'heroicons_outline:exclamation',
-                                color: 'warn',
-                            },
-                        });
-                    }
+        this.controlCenterService.putContacts(data).subscribe((res) => {
+            if (res.code === 200) {
+                this.confirmationService.open({
+                    title: 'Editar contacto',
+                    message: 'Contacto editado con exito!',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        name: 'heroicons_outline:check-circle',
+                        color: 'success',
+                    },
+                });
+            } else {
+                this.confirmationService.open({
+                    title: 'Editar contacto',
+                    message:
+                        'El contacto no se pudo actualizar, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
                 });
             }
         });
@@ -135,11 +124,7 @@ export class ModalContactsComponent implements OnInit {
     private newContact(data: any): void {
         this.controlCenterService.postContacts(data).subscribe((res) => {
             if (res.code === 200) {
-                this.controlCenterService.behaviorSubjectContactGrid.next({
-                    reload: true,
-                    opened: false,
-                });
-                const confirmation = this.confirmationService.open({
+                this.confirmationService.open({
                     title: 'Crear contacto',
                     message: 'Contacto creado con exito!',
                     actions: {
@@ -156,7 +141,7 @@ export class ModalContactsComponent implements OnInit {
                     },
                 });
             } else {
-                const confirmation = this.confirmationService.open({
+                this.confirmationService.open({
                     title: 'Crear contacto',
                     message:
                         'El contacto no se pudo crear, favor intente nuevamente.',

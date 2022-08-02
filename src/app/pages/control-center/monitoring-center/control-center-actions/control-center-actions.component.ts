@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
 import {
     AfterViewInit,
@@ -50,16 +51,8 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         'description',
         'actions',
     ];
-    public columnsHisotiric: string[] = [
-        'plate',
-        'date_entry',
-        'event',
-        'address',
-        'speed',
-    ];
-    @ViewChild(MatPaginator) paginatorHistoric: MatPaginator;
+
     @ViewChild(MatPaginator) paginatorContactsControlCenter: MatPaginator;
-    @ViewChild(MatSort) sortHistoric: MatSort;
     @ViewChild(MatSort) sortContactsControlCenter: MatSort;
     constructor(
         public mapFunctionalitieService: MapFunctionalitieService,
@@ -83,31 +76,36 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         this.getAllStatusAttends();
         this.createContactForm();
     }
-
-    /**
-     * @description:Genera el historico y eventos de las ultimas 24H del vehiculo seleccionado
-     */
-    private getHistoric(): void {
-        const data = {
-            plate: ['GB00133'],
-            owner_event_id: [5, 2, 3],
-            date: {
-                dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
-                dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
-            },
-        };
-        // this.historicService.getHistoricPlate(data).subscribe((res) => {
-        //     this.dataHisotiric = new MatTableDataSource(res.data);
-        //     this.dataHisotiric.paginator = this.paginator;
-        //     this.dataHisotiric.sort = this.sort;
-        // });
-    }
     /**
      * @description: Modal para agregar nuevo contacto
      */
     public newContact(): void {
-        this.matDialog.open(ModalContactsComponent, {
-            width: '485px',
+        const dialogRef = this.matDialog.open(ModalContactsComponent, {
+            width: '455px',
+            data: {
+                owner_id: this.selectedAlarm.owner_id,
+            },
+        });
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.getContact();
+            }
+        });
+    }
+    /**
+     * @description: Modal para editar un contacto
+     */
+    public editContact(id: number): void {
+        const dialogRef = this.matDialog.open(ModalContactsComponent, {
+            width: '455px',
+            data: {
+                id: id,
+            },
+        });
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.getContact();
+            }
         });
     }
     /**
@@ -151,7 +149,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      */
     public attendAlarm(): void {
         this.attendedAlarmsForm.patchValue({
-            alarmAttendedId: this.selectedAlarm.id,
+            alarmAttendedId: [this.selectedAlarm.id],
             causalName: this.selectedAlarm.event_name,
         });
         const data = this.attendedAlarmsForm.getRawValue();
@@ -203,7 +201,6 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      * @description: Trae todos los contactos del cliente
      */
     public getContact(): void {
-        console.log(this.selectedAlarm.owner_id, 'this.selectedAlarm.owner_id');
         this.dataTableContactsControlCenter = null;
         this.controlCenterService
             .getContactsControlCenter(this.selectedAlarm.owner_id)
@@ -264,6 +261,67 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         if (this.attendedAlarmsForm) {
             this.attendedAlarmsForm.reset();
         }
+    }
+    /**
+     * @description: Elimina el contacto
+     */
+    public deleteContact(id: number): void {
+        let confirmation = this.confirmationService.open({
+            title: 'Eliminar contacto',
+            message:
+                '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',
+            actions: {
+                confirm: {
+                    label: 'Eliminar',
+                },
+            },
+        });
+        confirmation.afterClosed().subscribe((result) => {
+            if (result === 'confirmed') {
+                this.controlCenterService
+                    .deleteContacts(id)
+                    .subscribe((res) => {
+                        if (res.code === 200) {
+                            this.getContact();
+                            confirmation = this.confirmationService.open({
+                                title: 'Eliminar contacto',
+                                message: 'Contacto eliminado con exito!',
+                                actions: {
+                                    cancel: {
+                                        label: 'Aceptar',
+                                    },
+                                    confirm: {
+                                        show: false,
+                                    },
+                                },
+                                icon: {
+                                    name: 'heroicons_outline:exclamation',
+                                    color: 'warn',
+                                },
+                            });
+                        } else {
+                            confirmation = this.confirmationService.open({
+                                title: 'Eliminar contacto',
+                                message:
+                                    'El contacto no se pudo eliminar, favor intente nuevamente.',
+                                actions: {
+                                    cancel: {
+                                        label: 'Aceptar',
+                                    },
+                                    confirm: {
+                                        show: false,
+                                    },
+                                },
+                                icon: {
+                                    show: true,
+                                    name: 'heroicons_outline:exclamation',
+                                    color: 'warn',
+                                },
+                            });
+                        }
+                    });
+            }
+        });
     }
     /**
      * @description: Para cargar el mapa

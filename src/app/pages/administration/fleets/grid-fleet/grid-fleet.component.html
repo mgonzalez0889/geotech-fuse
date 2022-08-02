@@ -22,7 +22,7 @@
                     <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
                         class="w-full md:w-128 bg-gray-100 border-none">
                         <ng-container *ngIf="opened">
-                            <app-form-fleett></app-form-fleett>
+                            <app-form-fleet></app-form-fleet>
                         </ng-container>
                     </mat-drawer>
                     <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
@@ -60,7 +60,7 @@
                                     </td>
                                 </ng-container>
                                 <tr mat-header-row *matHeaderRowDef="columnsFleet"></tr>
-                                <tr mat-row (click)="actionsFleet(row.id)" *matRowDef="let row; columns: columnsFleet;">
+                                <tr mat-row (click)="actionsFleet(row)" *matRowDef="let row; columns: columnsFleet;">
                                 </tr>
                                 <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
                                 <tr class="mat-row" *matNoDataRow>

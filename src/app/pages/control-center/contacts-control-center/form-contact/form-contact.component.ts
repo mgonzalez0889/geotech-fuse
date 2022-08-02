@@ -1,6 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
 import { Subscription } from 'rxjs';
@@ -49,7 +49,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
             reload: false,
         });
     }
-
     /**
      * @description: Elimina el contacto
      */
@@ -171,6 +170,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
                             .getContact(id)
                             .subscribe((data) => {
                                 this.contacts = data.data;
+                                console.log(this.contacts,'this.contacts')
                                 this.contactForm.patchValue(this.contacts);
                             });
                     }

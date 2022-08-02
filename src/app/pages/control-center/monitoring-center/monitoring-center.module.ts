@@ -23,6 +23,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalContactsComponent } from './modal-contacts/modal-contacts.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 
 @NgModule({
     declarations: [
@@ -50,7 +52,8 @@ import { MatDialogModule } from '@angular/material/dialog';
         MatInputModule,
         ReactiveFormsModule,
         MatTooltipModule,
-        MatDialogModule
+        MatDialogModule,
+        MatCheckboxModule
     ],
 })
 export class MonitoringCenterModule {}

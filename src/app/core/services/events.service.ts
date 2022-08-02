@@ -55,7 +55,7 @@ export class EventsService {
      * @description: Trae un evento
      */
     public getEvent(id: number): Observable<any> {
-        const params = { method: 'show_event' };
+        const params = { method: 'show_owner_event' };
         return this._http.get(this._appSettings.events.url.base + '/' + id, {
             params,
         });

@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { GridMobileFleetAssinedComponent } from './grid-mobile-fleet-assined/grid-mobile-fleet-assined.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import { MatSortModule } from '@angular/material/sort';
         FormsModule,
         MatPaginatorModule,
         MatSidenavModule,
-        MatSortModule
+        MatSortModule,
+        MatTooltipModule,
     ],
 })
 export class FleetsModule {}

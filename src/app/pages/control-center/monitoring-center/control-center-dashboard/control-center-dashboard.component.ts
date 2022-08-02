@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     public subscription: Subscription;
-    public filterAlarms: number = 1;
+    public filterAlarms: number = 0;
     public notAttended: number = 0;
     public silenced: number = 0;
     public onTrack: number = 0;
@@ -21,6 +22,8 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     public dataAlarmSelect = [];
     public opened: boolean = false;
     public dataAlarms: MatTableDataSource<any>;
+    public selection = new SelectionModel<any>(true, []);
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     public columnsAlarms: string[] = [
@@ -39,6 +42,32 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
         this.getAllAlarms();
         this.listenObservables();
     }
+
+    /** Whether the number of selected elements matches the total number of rows. */
+    public isAllSelected(): any {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataAlarms?.data.length;
+        return numSelected === numRows;
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    public toggleAllRows(): void {
+        if (this.isAllSelected()) {
+            this.selection.clear();
+            return;
+        }
+        this.selection.select(...this.dataAlarms.data);
+    }
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+            row.position + 1
+        }`;
+    }
+
     /**
      * @description: Trae tolas las alarmas
      */
@@ -77,7 +106,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
             );
     }
     public changeTab(index: number): void {
-        this.filterAlarms = index + 1;
+        this.filterAlarms = index;
         this.getAllAlarms();
     }
     /**

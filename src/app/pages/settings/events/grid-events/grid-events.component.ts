@@ -44,7 +44,7 @@ export class GridEventsComponent implements OnInit, OnDestroy {
     /**
      * @description: Guarda el ID del evento para aburirlo en el formulario
      */
-    public actionsContact(id: number): void {
+    public actionsEvent(id: number): void {
         this.opened = true;
         this.eventService.behaviorSubjectEventForm.next({
             id: id,
@@ -73,14 +73,14 @@ export class GridEventsComponent implements OnInit, OnDestroy {
         this.eventService.getEvents().subscribe((res) => {
             if (res.data) {
                 this.eventsCount = res.data.length;
+            } else {
+                this.eventsCount = 0;
             }
-            console.log(this.eventsCount, 'ssss');
             this.dataTableEvents = new MatTableDataSource(res.data);
             this.dataTableEvents.paginator = this.paginator;
             this.dataTableEvents.sort = this.sort;
         });
     }
-
     /**
      * @description: Destruye el observable
      */
