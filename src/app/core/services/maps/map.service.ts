@@ -18,7 +18,8 @@ export class MapFunctionalitieService {
   public dataSource: any = [];
   public markers: any = {};
   public map: L.Map;
-  public markerCluster = new MarkerClusterGroup;
+//   public markerCluster = new MarkerClusterGroup();
+  public markerCluster = L.markerClusterGroup();
 
   // Mostrar y ocultar componentes de mapa (Menu mobiles, geotools, historico, comandos)
   public showMenuMobiles: boolean = true;
