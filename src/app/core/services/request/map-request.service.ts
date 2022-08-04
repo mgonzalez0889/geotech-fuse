@@ -47,13 +47,10 @@ export class MapRequestService {
 
           for (let i = 0; i < this.mapFunctionalitieService.plateHistoric.length; i++) {
             const element = this.mapFunctionalitieService.plateHistoric[i];
-            console.log(element)
 
             let encontrado = historic.plates.filter(x => {
               return x.plate == element;
             })
-
-            console.log(encontrado);
 
             let data = [];
             if (encontrado.length > 0) {
@@ -63,6 +60,7 @@ export class MapRequestService {
 
               this.mapFunctionalitieService.historic.push({
                 plate: element,
+                color: getRandomColor(),
                 data: data
               })
             } else {
@@ -71,9 +69,14 @@ export class MapRequestService {
                 data: data
               })
             }
-
-            console.log(this.mapFunctionalitieService.historic);
           }
+
+          for (let j = 0; j < this.mapFunctionalitieService.historic.length; j++) {
+            this.mapFunctionalitieService.historic[j].data.map(x => {
+              return x["selected"] = false;
+            })
+          }
+
         }, async (err) => {
           reject(err);
         })

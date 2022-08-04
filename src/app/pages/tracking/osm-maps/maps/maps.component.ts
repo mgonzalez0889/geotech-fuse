@@ -147,7 +147,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.subscription = this.fleetService.
             getFleets().
             subscribe((data) => {
-                console.log(data.data);
                 this.mapFunctionalitieService.fleets = data.data;
                 this.mapFunctionalitieService.fleets.map((x) => {
                     x['selected'] = false;

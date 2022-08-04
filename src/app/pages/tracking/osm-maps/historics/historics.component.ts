@@ -23,6 +23,8 @@ export class HistoricsComponent implements OnInit {
   public finalDate: Date = new Date(this.year, this.month, this.day);
   public events: any = [];
   public events$: Observable<any>;
+  public seleccionado = [];
+  message_dates: boolean = false;
 
   constructor(
     public mapFunctionalitieService: MapFunctionalitieService,
@@ -44,7 +46,6 @@ export class HistoricsComponent implements OnInit {
       page: 1,
       fleet_presence: 0
     }
-    console.log(data);
     await this.mapRequestService.getHistoric(data);
   }
 
@@ -62,6 +63,52 @@ export class HistoricsComponent implements OnInit {
 
   private getEvents(): void {
     this.events$ = this._eventsService.getEvents();
+  }
+
+  setFilter() {
+    var fechaInicio = new Date(moment(this.initialDate).format('YYYY-MM-DD')).getTime();
+    var fechaFin = new Date(moment(this.finalDate).format('YYYY-MM-DD')).getTime();
+
+    var diff = fechaFin - fechaInicio;
+
+    console.log(diff / (1000 * 60 * 60 * 24));
+
+    if (Number(diff / (1000 * 60 * 60 * 24)) > 30) {
+      this.message_dates = true;
+    } else {
+      this.message_dates = false;
+    }
+
+    
+  }
+
+  selectAll(ev, plate, color) {
+    for (let j = 0; j < this.mapFunctionalitieService.historic.length; j++) {
+      this.mapFunctionalitieService.historic[j].data.filter(x => {
+        return x.plate === plate;
+      }).map(x => {
+        x.selected = ev.checked;
+        return x
+      });
+    }
+    let data = this.mapFunctionalitieService.historic.filter(x => {
+      return x.plate === plate;
+    });
+    this.mapFunctionalitieService.type_geo = 'historic';
+    this.mapFunctionalitieService.createPunt(null, data[0].data, color);
+  }
+
+  onChange(ev, item) {
+    if (ev.checked) {
+      this.seleccionado.push(item);
+    } else {
+      const indx = this.seleccionado.findIndex(x => x.id === item.id);
+      this.seleccionado.splice(indx, indx >= 0 ? 1 : 0);
+    }
+
+    console.log(this.seleccionado);
+    this.mapFunctionalitieService.type_geo = 'historic';
+    this.mapFunctionalitieService.createPunt(null, this.seleccionado);
   }
 
 }

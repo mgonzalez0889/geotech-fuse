@@ -18,6 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MapRequestService } from 'app/core/services/request/map-request.service';
 import { HistoriesService } from 'app/core/services/histories.service';
 import moment from 'moment';
+import { FleetsService } from 'app/core/services/fleets.service';
 
 @Component({
     selector: 'app-floating-menu',
@@ -54,6 +55,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
         private iconService: IconService,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
+        private fleetServices: FleetsService,
         public mapRequestService: MapRequestService
     ) {
         this.iconRegistry.addSvgIcon('signal-movil', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal-movil.svg'));
@@ -229,8 +231,27 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
             const indx = this.mapFunctionalitieService.plateHistoric.findIndex(v => v === value.plate);
             this.mapFunctionalitieService.plateHistoric.splice(indx, indx >= 0 ? 1 : 0);
         }
+    }
 
-        console.log(this.mapFunctionalitieService.plateHistoric);
+    individualFleet(event, row) {
+        this.mapFunctionalitieService.fleets.map((x) => {
+            if (x.id == row.id) {
+                x.selected = !event;
+            }
+            return x;
+        });
+
+        if (!row.selected) {
+            let data = [row]
+            this.mapFunctionalitieService.deleteChecks(data);
+        } else {
+            this.subscription = this.fleetServices.getFleetsPlateAssignedMap(row.id).subscribe(({ data }) => {
+                console.log(data);
+                this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobiles);
+                this.mapFunctionalitieService.setMarkers(data);
+            });
+        }
+
     }
 
     /**
@@ -285,9 +306,9 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
             page: 1,
             fleet_presence: 0
         }
-
-        console.log(data);
         await this.mapRequestService.getHistoric(data);
         this.mapFunctionalitieService.showHistoricPlate = true;
     }
+
+
 }

@@ -23,7 +23,7 @@
                 <mat-tab label="Mobiles">
                     <!--Options group-->
                     <div class="flex justify-between" [@slideOutTop]="animationStates.slideIn.top">
-                        <mat-form-field class="fuse-mat-dense w-60">
+                        <mat-form-field class="fuse-mat-dense w-80">
                             <mat-select placeholder="Tipo de Servicio"
                                 (selectionChange)="mapFunctionalitieService.filterTypeService($event)">
                                 <mat-option [value]="type_service.class_mobile_id"
@@ -32,15 +32,17 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <button mat-icon-button>
-                            <mat-icon svgIcon="signal-movil"></mat-icon>
-                        </button>
+                        <!-- <button mat-icon-button>
+                            <mat-icon svgIcon="signal-movil" (click)="goNotSignal()"></mat-icon>
+
+                            <mat-icon svgIcon="not-signal-movil" (click)="goSignal()"></mat-icon>
+                        </button> -->
                         <button mat-icon-button>
                             <mat-icon svgIcon="fixed-movil"></mat-icon>
                         </button>
                     </div>
                     <!--Search mobiles-->
-                    <div class="flex flex-wrap" style="margin-top: 10px;">
+                    <div class="flex flex-wrap">
                         <mat-form-field class="fuse-mat-dense w-full">
                             <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
                             <input matInput [autocomplete]="'off'" [placeholder]="'Search'"
@@ -109,22 +111,6 @@
                     <!--End list mobiles-->
                 </mat-tab>
                 <mat-tab label="Flotas">
-                    <!-- <div class="flex flex-wrap justify-between" [@slideOutTop]="animationStates.slideIn.top">
-                        <mat-form-field class="fuse-mat-dense w-60">
-                            <mat-select>
-                                <mat-option [value]="'todos'" *ngFor="let event of [1,2]">
-                                    Estados
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <button mat-icon-button>
-                            <mat-icon svgIcon="signal-movil"></mat-icon>
-                        </button>
-                        <button mat-icon-button>
-                            <mat-icon svgIcon="fixed-movil"></mat-icon>
-                        </button>
-                    </div> -->
-                    <!--Search mobiles-->
                     <div class="flex flex-wrap">
                         <mat-form-field class="fuse-mat-dense w-full">
                             <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
@@ -139,7 +125,7 @@
                                 <ng-container matColumnDef="select">
                                     <th mat-header-cell *matHeaderCellDef></th>
                                     <td mat-cell *matCellDef="let row; let i=index;" class="w-100">
-                                        <mat-checkbox #checkbox (click)="individual(checkbox.checked, row)"
+                                        <mat-checkbox #checkbox (click)="individualFleet(checkbox.checked, row)"
                                             (change)="$event ? selection.toggle(row) : null"
                                             [checked]="selection.isSelected(row)">
                                             <span class="pr-6 whitespace-nowrap text-sm text-blackTertiary">
@@ -148,36 +134,6 @@
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
-
-                                <!-- Weight Column -->
-                                <!-- <ng-container matColumnDef="menu">
-                                    <th mat-header-cell *matHeaderCellDef></th>
-                                    <td mat-cell *matCellDef="let element" class="w-30">
-                                        <mat-icon
-                                            svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).status}}">
-                                        </mat-icon>
-                                        <button mat-icon-button [matMenuTriggerFor]="menu"
-                                            aria-label="Example icon-button with a menu">
-                                            <mat-icon>more_vert</mat-icon>
-                                        </button>
-                                        <mat-menu #menu="matMenu">
-                                            <button mat-menu-item
-                                                (click)="mapFunctionalitieService.goDetail(element.id)">
-                                                <span>Ver detalle</span>
-                                            </button>
-                                            <button mat-menu-item disabled>
-                                                <span>Configuración</span>
-                                            </button>
-                                            <button mat-menu-item>
-                                                <span>Comandos</span>
-                                            </button>
-                                            <button mat-menu-item>
-                                                <span>Informes</span>
-                                            </button>
-                                        </mat-menu>
-                                    </td>
-                                </ng-container> -->
-
                                 <tr mat-header-row *matHeaderRowDef="displayedColumnsFleets" [hidden]="true"></tr>
                                 <tr mat-row *matRowDef="let row; columns: displayedColumnsFleets;">
                                 </tr>

@@ -53,7 +53,8 @@ export class MapFunctionalitieService {
   markersPoint = {};
   shape: any = [];
   new_point: string;
-  punt_geometry: any = []; locationService: any;
+  punt_geometry: any = [];
+  locationService: any;
   latitud: null;
   longitud: null;
   plateHistoric = [];
@@ -180,7 +181,6 @@ export class MapFunctionalitieService {
   }
 
   setMarkers(mobiles: any[]): any {
-
     mobiles.forEach((value: any, index: number) => {
       const data = mobiles[index];
       this.markers[data.id] = new L.Marker([data.x, data.y], {
@@ -241,7 +241,7 @@ export class MapFunctionalitieService {
     });
   }
 
-  createPunt(data: any) {
+  createPunt(data: any, historic?, color?) {
     let shape;
     switch (this.type_geo) {
       case 'route':
@@ -263,6 +263,36 @@ export class MapFunctionalitieService {
         });
 
         this.punt_geometry[data.id].addTo(this.map);
+        break;
+      case 'historic':
+        this.paint_punts = [];
+        for (let i = 0; i < historic.length; i++) {
+          const element = historic[i];
+          let x = element.x;
+          let y = element.y;
+          this.paint_punts.push({
+            lat: x,
+            lng: y,
+          });
+
+          this.markersPoint[historic[i].id] = L.marker(
+            [x, y],
+            {
+              icon: this.setIcon(historic[i], 'historic')
+            }).addTo(this.map)
+            .bindPopup(historic[i].address).openPopup();
+
+          this.markersPoint[historic[i].id].options.rotationAngle =
+            this.rotationIcon(historic[i]);
+        }
+        this.map.setView([this.paint_punts[0].lat, this.paint_punts[0].lng], 12);
+
+        this.punt_geometry[historic[0].id] = L.polyline(this.paint_punts, {
+          color: color,
+          weight: 6,
+        });
+
+        this.punt_geometry[historic[0].id].addTo(this.map);
         break;
       case 'zone':
         shape = JSON.parse(data.shape);
@@ -405,6 +435,9 @@ export class MapFunctionalitieService {
   public setIconInfoWindows(data: any): any {
     const iconInfoWindows = [];
     let status = Number(data.status);
+    let battery = Number(data.battery);
+
+    // Estado de gps
     switch (data.status_gps) {
       case 'Excelente':
         iconInfoWindows['statusGps'] =
@@ -419,6 +452,8 @@ export class MapFunctionalitieService {
           'status_gps_red';
         break;
     }
+
+    // Estado de geobolt
     switch (status) {
       case 0:
         iconInfoWindows['status'] =
@@ -429,6 +464,8 @@ export class MapFunctionalitieService {
           'status_close_color';
         break;
     }
+
+    // Estado de señal de el gps
     switch (data.status_signal) {
       case 'Excelente':
         iconInfoWindows['statusSignal'] =
@@ -444,47 +481,71 @@ export class MapFunctionalitieService {
         break;
     }
 
+    if (battery >= 0 && battery <= 25) {
+      iconInfoWindows['battery'] =
+        'battery_red';
+    } else if (battery >= 26 && battery <= 50) {
+      iconInfoWindows['battery'] =
+        'battery_orange';
+    } else if (battery >= 51 && battery <= 75) {
+      iconInfoWindows['battery'] =
+        'battery_yellow';
+    } else if (battery >= 76 && battery <= 100) {
+      iconInfoWindows['battery'] =
+        'battery_green';
+    }
+
     return iconInfoWindows;
   }
 
   /**
        * @description: Asigna los iconos para el marcador deacuerdo al estado
        */
-  private setIcon(data: any): any {
+  private setIcon(data: any, type?): any {
     const diffDays = moment(new Date()).diff(
       moment(data.date_entry),
       'days'
     );
     let myIcon: L.Icon<L.IconOptions>;
-    if (diffDays >= 1 || isNaN(diffDays)) {
+    if (type === 'historic') {
       return (myIcon = L.icon({
-        iconUrl: '../assets/icons/iconMap/no_report.svg',
-        iconSize: [25, 25],
-        iconAnchor: [12.5, 12.5],
+        iconUrl: '../assets/icons/iconMap/arrow.svg',
+        iconSize: [36, 36],
+        iconAnchor: [18, 18],
       }));
     } else {
-      if (data.status === 0) {
+      if (diffDays >= 1 || isNaN(diffDays)) {
         return (myIcon = L.icon({
-          iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
+          iconUrl: '../assets/icons/iconMap/no_report.svg',
           iconSize: [25, 25],
           iconAnchor: [12.5, 12.5],
         }));
       } else {
-        if (data.speed === 0) {
+        if (data.status === 0) {
           return (myIcon = L.icon({
-            iconUrl: '../assets/icons/iconMap/engine_ignition.svg',
+            iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
             iconSize: [25, 25],
             iconAnchor: [12.5, 12.5],
           }));
         } else {
-          return (myIcon = L.icon({
-            iconUrl: '../assets/icons/iconMap/arrow.svg',
-            iconSize: [36, 36],
-            iconAnchor: [18, 18],
-          }));
+          if (data.speed === 0) {
+            return (myIcon = L.icon({
+              iconUrl: '../assets/icons/iconMap/engine_ignition.svg',
+              iconSize: [25, 25],
+              iconAnchor: [12.5, 12.5],
+            }));
+          } else {
+            return (myIcon = L.icon({
+              iconUrl: '../assets/icons/iconMap/arrow.svg',
+              iconSize: [36, 36],
+              iconAnchor: [10, 10],
+            }));
+          }
         }
       }
     }
+
+
   }
 
   /**
