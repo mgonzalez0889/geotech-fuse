@@ -1,0 +1,2 @@
+export interface MyLatLng.Interface {
+}

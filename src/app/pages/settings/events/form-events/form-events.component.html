@@ -1,0 +1,155 @@
+<div class="flex flex-col w-full sm:pl-6">
+    <div class="bg-card shadow rounded-2xl min-h-180">
+        <form [formGroup]="eventForm">
+            <div class="px-6 py-3">
+                <div>
+                    <span class="text-base font-semibold">Edición de eventos</span>
+                    <span class="text-lg font-bold"> | {{events['event_name']}}</span>
+                </div>
+                <div class=" border-b">
+                    <div class="flex flex-col py-3">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Color</mat-label>
+                            <input matInput type="color" [formControlName]="'color'" required placeholder="Color">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-col pb-3">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Nombre</mat-label>
+                            <input [formControlName]="'event_name'" required matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-col pb-3">
+                        <mat-checkbox [formControlName]="'email'">Notificación Por Correo</mat-checkbox>
+                    </div>
+                    <div class="flex flex-col pb-3">
+                        <mat-checkbox [formControlName]="'page'">Notificación En La Pagina</mat-checkbox>
+                    </div>
+                    <div class="flex flex-col pb-3">
+                        <mat-checkbox [formControlName]="'sms'">Notificación Por SMS</mat-checkbox>
+                    </div>
+                    <div class="flex flex-col pb-3">
+                        <mat-checkbox [formControlName]="'sound'">Notificación Sonora</mat-checkbox>
+                    </div>
+                    <div class="flex flex-col  pb-5">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Descripción</mat-label>
+                            <textarea [formControlName]="'description'" placeholder="Agregar descripción" required
+                                matInput matTextareaAutosize></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="px-3 pt-5 flex justify-between">
+                    <div class="flex flex-col">
+                        <h2 class="text-2xl font-semibold tracking-tight leading-6">Contactos
+                        </h2>
+                        <div class="text-base font-semibold text-secondary">
+                            <ng-container *ngIf="contactsCount > 0">
+                                {{contactsCount}}
+                            </ng-container>
+                            {{contactsCount | i18nPlural: {
+                            '=0' : 'Sin contactos',
+                            '=1' : 'Contacto',
+                            'other': 'Contactos'
+                            } }}
+                        </div>
+                    </div>
+                    <div class="flex border-2 rounded-full p-2 ">
+                        <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                        <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto sm:mb-3 overflow-y-auto">
+                    <!-- Tabla-->
+                    <table mat-table [dataSource]="dataTableContact" matSort class="w-full">
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-checkbox class="pr-6 whitespace-nowrap" (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+                        <!-- full_name Column -->
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.full_name}} </span>
+                            </td>
+                        </ng-container>
+                        <!-- identification Column -->
+                        <ng-container matColumnDef="identification">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Indentificación </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.identification}} </span>
+                            </td>
+                        </ng-container>
+                        <!-- address Column -->
+                        <ng-container matColumnDef="address">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.address}} </span>
+                            </td>
+                        </ng-container>
+                        <!-- email Column -->
+                        <ng-component matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo electrónico </th>
+                            <td mat-cell *matCellDef="let row">
+                                <a class="hover:underline text-primary-500 pr-6 whitespace-nowrap"
+                                    [href]="'mailto:' + row.email" target="_blank">
+                                    {{row.email}}
+                                </a>
+                            </td>
+                        </ng-component>
+                        <!-- phone Column -->
+                        <ng-container matColumnDef="cellPhone">
+                            <th mat-header-cell *matHeaderCellDef>Celular</th>
+                            <td mat-cell *matCellDef="let row">
+                                <span class="pr-6 whitespace-nowrap">
+                                    {{row.phone}} </span>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsContact"></tr>
+                        <tr mat-row (click)="selection.toggle(row)" *matRowDef="let row; columns: columnsContact;">
+                        </tr>
+                        <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="5">No hay datos que coincidan con la busqueda:
+                                "{{input?.value}}"
+                            </td>
+                        </tr>
+                    </table>
+                    <mat-paginator class="bg-gray-200" [pageSizeOptions]="[10]" aria-label="Select page of users">
+                    </mat-paginator>
+                </div>
+                <div class="flex pb-3">
+                    <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="onCancel()">
+                        Cancelar
+                    </button>
+                    <!-- Guardar -->
+                    <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="eventForm.invalid"
+                        [matTooltip]="'Guardar'" [disabled]="eventForm.disabled" (click)="saveEvent()">
+                        <span *ngIf="!eventForm.disabled">
+                            Guardar
+                        </span>
+                        <mat-progress-spinner *ngIf="eventForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                        </mat-progress-spinner>
+
+                    </button>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+@import url("https://unpkg.com/leaflet@1.8.0/dist/leaflet.css");
+.leaflet-tooltip {
+    color: #fff !important;
+    background: rgba(33, 95, 133, 0.7) !important;
+    line-height: 2px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    // padding: 10px !important;
+    border: 1px solid #215f85 !important;
+    letter-spacing: 1px !important;
+    text-align: center !important;
+}
+.leaflet-tooltip-bottom:before {
+    border-bottom-color: #ffffff00 !important;
+}
+
+.mat-tab-group .mat-tab-body-content {
+    padding: 10px !important;
+}
+
+.mat-tab-header {
+    margin: auto !important;
+}
+
+.mat-tab-group .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active {
+    background-color: #2c384f !important;
+    color: #fff !important;
+}
+
+.mat-datepicker-actions {
+    display: block !important;
+}
+
+// .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper {
+//     margin: 0 !important;
+// }

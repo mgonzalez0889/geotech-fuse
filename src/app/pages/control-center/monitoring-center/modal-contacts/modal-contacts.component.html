@@ -1,0 +1,83 @@
+<mat-dialog-content class="">
+    <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
+        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+
+        </div>
+    </div>
+    <form [formGroup]="contactForm">
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Nombre completo</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:user-circle'">
+                </mat-icon>
+                <input matInput required [formControlName]="'full_name'" [placeholder]="'Nombre completo'">
+            </mat-form-field>
+        </div>
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Tipo de contacto</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user">
+                </mat-icon>
+                <mat-select required [formControlName]="'type_contact_id'">
+                    <mat-option *ngFor="let type of typeContacts" [value]="type.id">{{type.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Correo electrónico</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:mail'">
+                </mat-icon>
+                <input required matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'">
+            </mat-form-field>
+        </div>
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Celular</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                <input required type="number" matInput [formControlName]="'phone'" [placeholder]="'Celular'">
+            </mat-form-field>
+        </div>
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Identificación</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:identification'">
+                </mat-icon>
+                <input required matInput [formControlName]="'identification'" [placeholder]="'Identificación'">
+            </mat-form-field>
+        </div>
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Dirección</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:location-marker'">
+                </mat-icon>
+                <input required matInput [formControlName]="'address'" [placeholder]="'Dirección'">
+            </mat-form-field>
+        </div>
+        <div class="mt-4">
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Descripción </mat-label>
+                <textarea [formControlName]="'description'" matInput matTextareaAutosize></textarea>
+            </mat-form-field>
+        </div>
+
+        <!-- <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+            <button *ngIf="contacts['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                (click)="deleteContact(contacts['id'])">
+                Eliminar </button>
+            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
+                Cancelar
+            </button>
+            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="contactForm.invalid"
+                [matTooltip]="'Guardar'" (click)="onSave()">
+                Guardar
+            </button>
+        </div> -->
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close [matTooltip]="'Cancelar'">Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" [color]="'accent'" [disabled]="contactForm.invalid"
+        [matTooltip]="'Guardar'" (click)="onSave()">Guardar</button>
+</mat-dialog-actions>

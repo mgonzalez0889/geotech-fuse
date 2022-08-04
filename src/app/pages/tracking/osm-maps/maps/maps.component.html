@@ -1,0 +1,80 @@
+<ng-container>
+    <div style="position: relative;">
+        <!-- <div class="closeListMobiles" (click)="mapFunctionalitieService.showMenuMobiles = false">
+            Ocultar
+        </div> -->
+        <app-floating-menu *ngIf="mapFunctionalitieService.showMenuMobiles">
+        </app-floating-menu>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="mapFunctionalitieService.showDetailMobile">
+    <app-floating-menu-detail>
+    </app-floating-menu-detail>
+</ng-container>
+
+<ng-container>
+    <app-geotools>
+    </app-geotools>
+</ng-container>
+
+<ng-container *ngIf="mapFunctionalitieService.showFormGeomertry">
+    <app-form-geometry>
+    </app-form-geometry>
+</ng-container>
+
+<ng-container *ngIf="mapFunctionalitieService.showHistoricPlate">
+    <app-historics>
+    </app-historics>
+</ng-container>
+
+<!--<ng-container *ngIf="showMenuFleet">
+    <app-floating-menu-fleet>
+    </app-floating-menu-fleet>
+</ng-container>
+<ng-container *ngIf="showHistory">
+    <app-form-assign-mark
+        (closeMenu)="onCloseMenu($event)">
+    </app-form-assign-mark>
+</ng-container>
+<ng-container *ngIf="showDetailMobile">
+    <app-form-detail-mobile
+        (closeMenu)="onCloseDetailMenu($event)"
+    ></app-form-detail-mobile>
+</ng-container>-->
+<div #map id="map">
+</div>
+
+
+<div class="options">
+    <ul>
+        <li *ngFor="let option of optionsIcons" (click)="eventClick(option.type)">
+            <span>
+                <mat-icon svgIcon="{{option.name}}"></mat-icon>
+            </span>
+            {{click}}
+        </li>
+    </ul>
+</div>
+<!--
+<div class="sm:absolute  sm:inset-0 flex flex-col flex-auto sm:overflow-hidden bg-card dark:bg-transparent">
+    <div class="container">
+         <div #map
+              class="w-min sm:w-screen h-screen"
+         >
+         </div>
+    </div>
+</div>
+-->
+
+<div class="options-geo-tools" *ngIf="mapFunctionalitieService.showOptionsGeoTools">
+    <div class="item" *ngFor="let options of optionsGeo" (click)="eventOptionGeotools(options.type)">
+        <div class="item-icon">
+            <mat-icon svgIcon="{{options.icon}}"></mat-icon>
+        </div>
+
+        <div class="item-title">
+            {{options.name}}
+        </div>
+    </div>
+</div>

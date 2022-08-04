@@ -1,0 +1,127 @@
+<h2 mat-dialog-title class="font-medium mb-2 text-2xl text-gray-900">{{titleForm}}</h2>
+<mat-dialog-content>
+    <div class="flex flex-col ">
+        <!--Form-->
+        <form [formGroup]="form">
+            <!-- Name -->
+            <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Nombre completo</mat-label>
+                <input
+                    matInput
+                    formControlName="full_name"
+                    [autocomplete]="'off'"
+                >
+            </mat-form-field>
+
+            <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Perfil</mat-label>
+                <mat-select formControlName="user_profile_id">
+                    <mat-option *ngFor="let item of profile$ | async"
+                                [value]="item.id"
+                    >
+                        {{item?.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Usuario</mat-label>
+                <input
+                    matInput
+                    formControlName="user_login"
+                    [autocomplete]="'off'"
+                >
+            </mat-form-field>
+
+            <mat-form-field class="w-full fuse-mat-dense"
+                            *ngIf="fieldPassword || form.getRawValue().enable_pass">
+                <mat-label>Contraseña</mat-label>
+                <input
+                    matInput
+                    type="password"
+                    formControlName="password_digest"
+                    [autocomplete]="'off'"
+                >
+            </mat-form-field>
+
+            <mat-form-field class="w-full fuse-mat-dense"
+                            *ngIf="fieldPassword || form.getRawValue().enable_pass">
+                <mat-label>Confirmar contraseña</mat-label>
+                <input
+                    matInput
+                    type="password"
+                    formControlName="confirm_password"
+                    [autocomplete]="'off'"
+                >
+                <mat-error *ngIf="form.get('confirm_password').hasError('mustMatch')">
+                    La contraseña no coincide
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Teléfono</mat-label>
+                <input
+                    matInput
+                    formControlName="phone"
+                    [autocomplete]="'off'"
+                >
+            </mat-form-field>
+
+            <!--<div class="w-full fuse-mat-dense lg:w-1/5">
+                <button
+                    mat-icon-button
+                    matTooltip="Buscar perfil"
+                >
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>-->
+
+            <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Correo electronico</mat-label>
+                <input
+                    matInput
+                    formControlName="email"
+                    [autocomplete]="'off'"
+                >
+            </mat-form-field>
+
+            <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Dirección</mat-label>
+                <input
+                    matInput
+                    formControlName="address"
+                    [autocomplete]="'off'"
+                >
+            </mat-form-field>
+
+            <ng-container *ngIf="editPassword">
+                <span class="font-semibold mb-2">¿Cambiar contraseña?</span>
+                <mat-slide-toggle
+                    formControlName="enable_pass"
+                    [color]="'primary'"
+                >
+                    <!--{{selectedProductForm.get('active').value === true ? 'Active' : 'Disabled'}}-->
+                </mat-slide-toggle>
+            </ng-container>
+        </form>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="flex items-center justify-end w-full ">
+        <button
+            mat-flat-button
+            [color]="'primary'"
+            (click)="onSave()"
+        >
+            Guardar
+        </button>
+        <button
+            class="bg-gray-400 text-white"
+            mat-raised-button
+            (click)="onClose()"
+        >
+            Cerrar
+        </button>
+    </div>
+</mat-dialog-actions>
+

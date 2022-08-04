@@ -1,0 +1,121 @@
+<div class="flex flex-col w-full sm:pl-6">
+    <div class="bg-card shadow rounded-2xl h-180">
+        <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 ">
+
+            <div class="flex justify-between w-full max-w-3xl mx-auto py-6 border-b">
+                <div>
+                    <h2 class="text-3xl font-semibold tracking-tight leading-8">{{fleets['name']}}</h2>
+                    <div class="ml-0.5 font-medium text-secondary">
+                        <ng-container *ngIf="fleetsPlateCount > 0">
+                            {{fleetsPlateCount}}
+                        </ng-container>
+                        {{fleetsPlateCount | i18nPlural: {
+                        '=0' : 'Sin vehiculos',
+                        '=1' : 'Vehiculo',
+                        'other': 'Vehiculos'
+                        } }}
+                    </div>
+                </div>
+                <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+                    <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+                <!-- Avatar and actions -->
+                <ng-container *ngIf="!editMode">
+                    <div class="flex flex-auto items-end -mt-16">
+                        <!-- Actions -->
+                        <div class="flex items-center ml-auto mb-1">
+                            <button mat-stroked-button (click)="editMode = true">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                <span class="ml-2">Editar</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col mt-4 pt-6 space-y-8">
+
+                        <ng-container *ngIf="fleets['name']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Descripción'" svgIcon="heroicons_solid:menu-alt-2"></mat-icon>
+
+                                <div class="ml-6 leading-6">{{fleets['description']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngFor="let x of fleetsPlate">
+                            <span>{{x.plate}}</span>
+
+                        </ng-container>
+
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="editMode">
+                    <form [formGroup]="contactForm">
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Nombre completo</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input matInput [formControlName]="'full_name'" [placeholder]="'Nombre completo'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Correo electrónico</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_outline:mail'">
+                                </mat-icon>
+                                <input matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Celular</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                                <input type="number" matInput [formControlName]="'phone'" [placeholder]="'Celular'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Identificación</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+                                <input matInput [formControlName]="'identification'" [placeholder]="'Identificación'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Dirección</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
+                                <input matInput [formControlName]="'address'" [placeholder]="'Dirección'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+                            <!-- Eliminar -->
+                            <button *ngIf="fleets['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                                (click)="deleteContact(fleets['id'])">
+                                Eliminar </button>
+                            <!-- Cancelar -->
+                            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
+                                Cancelar
+                            </button>
+                            <!-- Guardar -->
+                            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="fleetForm.invalid"
+                                [matTooltip]="'Guardar'" (click)="onSave()">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

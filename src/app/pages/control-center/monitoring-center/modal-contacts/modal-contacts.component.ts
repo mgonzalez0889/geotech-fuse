@@ -1,0 +1,165 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { ControlCenterService } from 'app/core/services/control-center.service';
+
+@Component({
+    selector: 'app-modal-contacts',
+    templateUrl: './modal-contacts.component.html',
+    styleUrls: ['./modal-contacts.component.scss'],
+})
+export class ModalContactsComponent implements OnInit {
+    public contactForm: FormGroup;
+    public typeContacts: any = [];
+
+    constructor(
+        public dialogRef: MatDialogRef<ModalContactsComponent>,
+        @Inject(MAT_DIALOG_DATA) public infoContact,
+        private controlCenterService: ControlCenterService,
+        private fb: FormBuilder,
+        private confirmationService: ConfirmationService
+    ) {}
+
+    ngOnInit(): void {
+        this.createContactForm();
+        this.typeContact();
+    }
+    /**
+     * @description: Valida si es edita o guarda un contacto nuevo
+     */
+    public onSave(): void {
+        const data = this.contactForm.getRawValue();
+        if (!data.id) {
+            this.newContact(data);
+        } else {
+            this.editContact(data);
+        }
+    }
+
+    /**
+     * @description: Trae los tipos de contacto
+     */
+    private typeContact(): void {
+        this.controlCenterService
+            .getTypeContactsControlCenter()
+            .subscribe((res) => {
+                this.typeContacts = res.data;
+            });
+    }
+    /**
+     * @description: Inicializa el formulario de contactos
+     */
+    private createContactForm(): void {
+        this.contactForm = this.fb.group({
+            id: [''],
+            owner_id: [''],
+            type_contact_id: [1, [Validators.required]],
+            full_name: ['', [Validators.required]],
+            email: ['', [Validators.email, Validators.required]],
+            phone: ['', [Validators.required]],
+            identification: ['', [Validators.required]],
+            address: ['', [Validators.required]],
+            description: [''],
+        });
+        if (this.infoContact.id) {
+            this.controlCenterService
+                .getContact(this.infoContact.id)
+                .subscribe((res) => {
+                    this.contactForm.patchValue(res.data);
+                });
+        }
+        this.contactForm.patchValue({
+            owner_id: this.infoContact.owner_id,
+        });
+    }
+    /**
+     * @description: Editar un contacto
+     */
+    private editContact(data: any): void {
+        this.controlCenterService.putContacts(data).subscribe((res) => {
+            if (res.code === 200) {
+                this.confirmationService.open({
+                    title: 'Editar contacto',
+                    message: 'Contacto editado con exito!',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        name: 'heroicons_outline:check-circle',
+                        color: 'success',
+                    },
+                });
+            } else {
+                this.confirmationService.open({
+                    title: 'Editar contacto',
+                    message:
+                        'El contacto no se pudo actualizar, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                });
+            }
+        });
+    }
+    /**
+     * @description: Guarda un nuevo contacto
+     */
+    private newContact(data: any): void {
+        this.controlCenterService.postContacts(data).subscribe((res) => {
+            if (res.code === 200) {
+                this.confirmationService.open({
+                    title: 'Crear contacto',
+                    message: 'Contacto creado con exito!',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        name: 'heroicons_outline:check-circle',
+                        color: 'success',
+                    },
+                });
+            } else {
+                this.confirmationService.open({
+                    title: 'Crear contacto',
+                    message:
+                        'El contacto no se pudo crear, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                });
+            }
+        });
+    }
+}
