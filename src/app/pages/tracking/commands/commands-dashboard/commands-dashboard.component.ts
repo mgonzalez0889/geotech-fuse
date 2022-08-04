@@ -109,7 +109,6 @@ export class CommandsDashboardComponent implements OnInit {
                 x['selected'] = false;
                 return x;
             });
-            console.log(this.mobiles, 'this.mobiles');
         });
     }
     /**
@@ -121,7 +120,6 @@ export class CommandsDashboardComponent implements OnInit {
                 x['selected'] = false;
                 return x;
             });
-            console.log(data.data, ' estos son las flotas');
         });
     }
     /**

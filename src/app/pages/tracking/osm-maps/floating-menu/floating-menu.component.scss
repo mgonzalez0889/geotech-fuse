@@ -2,3 +2,18 @@ tr.mat-row:hover {
     background-color: rgba(44, 56, 79, .2);
     cursor: pointer;
 }
+
+.historic {
+    width: 110px;
+    background: #2c384f;
+    color: #fff;
+    position: fixed;
+    left: 240px;
+    bottom: 20px;
+    z-index: 9999;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+}

@@ -104,9 +104,10 @@ export class MapsComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * @description: Obtengo las flotas y vehiculosdel cliente
+     * @description: Obtengo las flotas y vehiculos del cliente
      */
     private getMobiles(): void {
+        // vehiculos del cliente
         this.subscription = this.mobilesService
             .getMobiles()
             .subscribe((data) => {
@@ -116,11 +117,43 @@ export class MapsComponent implements OnInit, AfterViewInit {
                     return x;
                 });
                 this.mapFunctionalitieService.dataSource = new MatTableDataSource(this.mapFunctionalitieService.mobiles);
-                this.setmarker(data.data);
+                // this.setmarker(data.data);
+                this.mapFunctionalitieService.setMarkers(data.data);
+
+                let alls = {
+                    class_mobile_id: 0,
+                    class_mobile_name: 'Todos'
+                };
+
+                this.mapFunctionalitieService.type_service.push(alls);
+
+                for (let i = 0; i < this.mapFunctionalitieService.mobiles.length; i++) {
+                    const element = this.mapFunctionalitieService.mobiles[i];
+                    if (Object.keys(this.mapFunctionalitieService.type_service).length) {
+                        let validate = this.mapFunctionalitieService.type_service.filter(x => {
+                            return x.class_mobile_id === element.class_mobile_id;
+                        })
+
+                        if (!validate.length) {
+                            this.mapFunctionalitieService.type_service.push(element);
+                        }
+                    } else {
+                        this.mapFunctionalitieService.type_service.push(element);
+                    }
+                }
             });
-        this.subscription = this.fleetService.getFleets().subscribe((data) => {
-            console.log(data, ' estos son las flotas');
-        });
+
+        // Flotas de el cliente
+        this.subscription = this.fleetService.
+            getFleets().
+            subscribe((data) => {
+                this.mapFunctionalitieService.fleets = data.data;
+                this.mapFunctionalitieService.fleets.map((x) => {
+                    x['selected'] = false;
+                    return x;
+                });
+                this.mapFunctionalitieService.dataSourceFleets = new MatTableDataSource(this.mapFunctionalitieService.fleets);
+            });
     }
 
     /**
@@ -133,6 +166,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     ngAfterViewInit(): void {
         this.mapFunctionalitieService.init();
+        this.mapFunctionalitieService.getLocation();
     }
 
     async eventClick(type) {
@@ -159,7 +193,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
     }
 
     eventOptionGeotools(type) {
-        console.log(type);
         if (type === 1) {
             this.mapFunctionalitieService.goCancelToGeometry();
         } else if (type === 2) {

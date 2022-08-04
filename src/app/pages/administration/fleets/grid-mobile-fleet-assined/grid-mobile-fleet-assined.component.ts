@@ -43,7 +43,6 @@ export class GridMobileFleetAssinedComponent implements OnInit {
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     public masterToggle(): void {
-        console.log(this.selection);
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));

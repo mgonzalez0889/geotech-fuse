@@ -31,5 +31,9 @@ export class IconService {
     this.iconRegistry.addSvgIcon('route-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/route.svg'));
     this.iconRegistry.addSvgIcon('zone-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/zone.svg'));
     this.iconRegistry.addSvgIcon('point-map', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/point.svg'));
+    this.iconRegistry.addSvgIcon('battery_green', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/battery-green.svg'));
+    this.iconRegistry.addSvgIcon('battery_yellow', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/battery-yellow.svg'));
+    this.iconRegistry.addSvgIcon('battery_orange', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/battery-orange.svg'));
+    this.iconRegistry.addSvgIcon('battery_red', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/battery-red.svg'));
   }
 }

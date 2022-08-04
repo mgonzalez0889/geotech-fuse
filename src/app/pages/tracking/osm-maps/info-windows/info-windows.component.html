@@ -16,7 +16,7 @@
                 <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).status}}"></mat-icon>
             </div>
             <div class="icon">
-                <mat-icon svgIcon="batery"></mat-icon>
+                <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).battery}}"></mat-icon>
             </div>
         </div>
     </div>
@@ -75,6 +75,6 @@
 
     <div class="buttons">
         <button>Comandos</button>
-        <button>Detalles</button>
+        <button (click)="mapFunctionalitieService.goDetail(data.id)">Detalles</button>
     </div>
 </div>

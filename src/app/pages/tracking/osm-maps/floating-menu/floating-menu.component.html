@@ -11,128 +11,143 @@
     </ng-container>
     <!--Options menu-->
     <ng-container *ngIf="showMenu">
-        <div class="fixed z-999 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-4 bg-card shadow"
+        <div class="fixed z-999 sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto bg-card shadow"
             [@fadeInLeft]="animationStates.fadeOut.left" style="width: 361px;">
-            <div class="">
+            <div class="p-4">
                 <div class="flex flex-wrap items-center justify-items-start sm:-mt-4">
                     <span class="text-2xl text-blackGeo">Objetos</span>
                 </div>
             </div>
-            <!--Options group-->
-            <div class="flex flex-wrap justify-between " [@slideOutTop]="animationStates.slideIn.top">
-                <mat-form-field class="fuse-mat-dense">
-                    <mat-select>
-                        <mat-option [value]="'todos'" *ngFor="let event of [1,2]">
-                            Estados
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-dense">
-                    <mat-select>
-                        <mat-option [value]="'todos'" *ngFor="let event of [1,2]">
-                            Todos
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button mat-icon-button>
-                    <mat-icon svgIcon="gpsblack"></mat-icon>
-                </button>
-                <button mat-icon-button>
-                    <mat-icon svgIcon="target"></mat-icon>
-                </button>
 
-            </div>
-            <!--Search mobiles-->
-            <div class="flex flex-wrap">
-                <mat-form-field class="fuse-mat-dense w-full">
-                    <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                    <input matInput [autocomplete]="'off'" [placeholder]="'Search'" (keyup)="applyFilter($event)">
-                </mat-form-field>
-            </div>
-            <!--Table list Mobiles-->
-            <div [@fadeInLeft]="animationStates.fadeOut.left">
-                <table mat-table [dataSource]="mapFunctionalitieService.dataSource" class="overflow-auto h-auto">
-                    <ng-container matColumnDef="select">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let row; let i=index;" class="w-3">
-                            <mat-checkbox #checkbox (click)="individual(checkbox.checked, row)"
-                                (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                                <span class="pr-6 whitespace-nowrap text-sm text-blackTertiary">
-                                    {{row.plate}}
-                                </span>
-                            </mat-checkbox>
-                        </td>
-                    </ng-container>
-                    <!-- Weight Column -->
-                    <ng-container matColumnDef="code">
-                        <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let element" class="w-30">
-                            {{element.internal_code}}
-                        </td>
-                    </ng-container>
-                    <!-- Weight Column -->
-                    <!-- <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let element" class="w-30">
-                            
-                        </td>
-                    </ng-container> -->
-                    <!-- Weight Column -->
-                    <!-- <ng-container matColumnDef="batery">
-                        <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let element" class="w-24">
-                            <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).statusGps}}"></mat-icon>
-                        </td>
-                    </ng-container> -->
+            <mat-tab-group>
+                <mat-tab label="Mobiles">
+                    <!--Options group-->
+                    <div class="flex justify-between" [@slideOutTop]="animationStates.slideIn.top">
+                        <mat-form-field class="fuse-mat-dense w-80">
+                            <mat-select placeholder="Tipo de Servicio"
+                                (selectionChange)="mapFunctionalitieService.filterTypeService($event)">
+                                <mat-option [value]="type_service.class_mobile_id"
+                                    *ngFor="let type_service of mapFunctionalitieService.type_service">
+                                    {{type_service.class_mobile_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!-- <button mat-icon-button>
+                            <mat-icon svgIcon="signal-movil" (click)="goNotSignal()"></mat-icon>
 
-                    <!-- Weight Column -->
-                    <!-- <ng-container matColumnDef="dop">
-                        <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let element" class="w-24">
-                            <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).statusSignal}}"></mat-icon>
-                        </td>
-                    </ng-container> -->
+                            <mat-icon svgIcon="not-signal-movil" (click)="goSignal()"></mat-icon>
+                        </button> -->
+                        <button mat-icon-button>
+                            <mat-icon svgIcon="fixed-movil"></mat-icon>
+                        </button>
+                    </div>
+                    <!--Search mobiles-->
+                    <div class="flex flex-wrap">
+                        <mat-form-field class="fuse-mat-dense w-full">
+                            <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                            <input matInput [autocomplete]="'off'" [placeholder]="'Search'"
+                                (keyup)="applyFilter($event)">
+                        </mat-form-field>
+                    </div>
+                    <!--Table list Mobiles-->
+                    <div [@fadeInLeft]="animationStates.fadeOut.left" class="overflow-y-auto">
+                        <div class="h-100">
+                            <table mat-table [dataSource]="mapFunctionalitieService.dataSource">
+                                <ng-container matColumnDef="select">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let row; let i=index;" class="w-3">
+                                        <mat-checkbox #checkbox (click)="individual(checkbox.checked, row)"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)">
+                                            <span class="pr-6 whitespace-nowrap text-sm text-blackTertiary">
+                                                {{row.plate}}
+                                            </span>
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="code">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let element" class="w-30">
+                                        {{element.internal_code}}
+                                    </td>
+                                </ng-container>
 
-                    <!-- Weight Column -->
-                    <!-- <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let element" class="w-24">
-                            <mat-icon svgIcon="batery"></mat-icon>
-                        </td>
-                    </ng-container> -->
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="menu">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element" class="w-30">
+                                        <mat-icon
+                                            svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).status}}">
+                                        </mat-icon>
+                                        <button mat-icon-button [matMenuTriggerFor]="menu"
+                                            aria-label="Example icon-button with a menu">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item
+                                                (click)="mapFunctionalitieService.goDetail(element.id)">
+                                                <span>Ver detalle</span>
+                                            </button>
+                                            <button mat-menu-item disabled>
+                                                <span>Configuración</span>
+                                            </button>
+                                            <button mat-menu-item>
+                                                <span>Comandos</span>
+                                            </button>
+                                            <button mat-menu-item>
+                                                <span>Informes</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
 
-                    <!-- Weight Column -->
-                    <ng-container matColumnDef="menu">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element" class="w-30">
-                            <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(element).status}}"></mat-icon>
-                            <button mat-icon-button [matMenuTriggerFor]="menu"
-                                aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="goDetail(element.id)">
-                                    <span>Ver detalle</span>
-                                </button>
-                                <button mat-menu-item disabled>
-                                    <span>Configuración</span>
-                                </button>
-                                <button mat-menu-item>
-                                    <span>Comandos</span>
-                                </button>
-                                <button mat-menu-item>
-                                    <span>Informes</span>
-                                </button>
-                            </mat-menu>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns" [hidden]="true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                    </tr>
-                </table>
-            </div>
-            <!--End list mobiles-->
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns" [hidden]="true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!--End list mobiles-->
+                </mat-tab>
+                <mat-tab label="Flotas">
+                    <div class="flex flex-wrap">
+                        <mat-form-field class="fuse-mat-dense w-full">
+                            <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                            <input matInput [autocomplete]="'off'" [placeholder]="'Search'"
+                                (keyup)="applyFilterFleets($event)">
+                        </mat-form-field>
+                    </div>
+                    <!--Table list Mobiles-->
+                    <div [@fadeInLeft]="animationStates.fadeOut.left" class="overflow-y-auto">
+                        <div>
+                            <table mat-table [dataSource]="mapFunctionalitieService.dataSourceFleets">
+                                <ng-container matColumnDef="select">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let row; let i=index;" class="w-100">
+                                        <mat-checkbox #checkbox (click)="individualFleet(checkbox.checked, row)"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)">
+                                            <span class="pr-6 whitespace-nowrap text-sm text-blackTertiary">
+                                                {{row.name}}
+                                            </span>
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsFleets" [hidden]="true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsFleets;">
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!--End list mobiles-->
+                </mat-tab>
+            </mat-tab-group>
         </div>
     </ng-container>
 </ng-container>
+
+<div class="historic" *ngIf="mapFunctionalitieService.plateHistoric.length > 0" (click)="generateHistoric()">
+    <mat-icon svgIcon="historic"></mat-icon>
+    <label>Historico</label>
+</div>

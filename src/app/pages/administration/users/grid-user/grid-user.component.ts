@@ -34,7 +34,6 @@ export class GridUserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
       this.fetchUsers();
       this.searchInputControl.valueChanges.subscribe(res => {
-          console.log(res);
       });
   }
   /**

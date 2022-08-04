@@ -65,3 +65,11 @@
         }
     }
 }
+
+.closeListMobiles {
+    position: absolute;
+    left: 361px;
+    background: red;
+    z-index: 9999999;
+    top: 40vh;
+}

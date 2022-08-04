@@ -113,7 +113,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      */
     private getPointMap(data): void {
         this.mapFunctionalitieService.goDeleteGeometryPath();
-        this.mapFunctionalitieService.createPunt(data, true);
+        this.mapFunctionalitieService.createPuntControlCenter(data);
     }
     /**
      * @description:Genera los estado de atencion

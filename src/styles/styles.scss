@@ -18,14 +18,23 @@
     border-bottom-color: #ffffff00 !important;
 }
 
-.mat-button-toggle-checked {
-    background-color: #2c384f !important;
+.mat-tab-group .mat-tab-body-content {
+    padding: 10px !important;
 }
 
-.mat-button-toggle-group .mat-button-toggle.mat-button-toggle-checked .mat-button-toggle-label-content {
+.mat-tab-header {
+    margin: auto !important;
+}
+
+.mat-tab-group .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active {
+    background-color: #2c384f !important;
     color: #fff !important;
 }
 
-.cdk-overlay-pane {
-    z-index: 9999 !important;
+.mat-datepicker-actions {
+    display: block !important;
 }
+
+// .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper {
+//     margin: 0 !important;
+// }
