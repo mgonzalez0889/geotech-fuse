@@ -1,6 +1,6 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {MobileManagementModule} from "./mobile-management/mobile-management.module";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { MobileManagementModule } from './mobile-management/mobile-management.module';
 
 const routes: Routes = [
     {
@@ -8,35 +8,56 @@ const routes: Routes = [
         children: [
             {
                 path: 'administration',
-                loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
+                loadChildren: () =>
+                    import('./administration/administration.module').then(
+                        (m) => m.AdministrationModule
+                    ),
             },
             {
                 path: 'settings',
-                loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+                loadChildren: () =>
+                    import('./settings/settings.module').then(
+                        (m) => m.SettingsModule
+                    ),
             },
             {
                 path: 'tracking',
-                loadChildren: () => import('./tracking/tracking.module').then(m => m.TrackingModule)
+                loadChildren: () =>
+                    import('./tracking/tracking.module').then(
+                        (m) => m.TrackingModule
+                    ),
             },
             {
                 path: 'mobile-management',
-                loadChildren: () => MobileManagementModule
+                loadChildren: () => MobileManagementModule,
             },
             {
                 path: 'reports',
-                loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
+                loadChildren: () =>
+                    import('./reports/reports.module').then(
+                        (m) => m.ReportsModule
+                    ),
             },
             {
                 path: 'control-center',
-                loadChildren: () => import('./control-center/control-center.module').then(m => m.ControlCenterModule)
-            }
-        ]
-    }
+                loadChildren: () =>
+                    import('./control-center/control-center.module').then(
+                        (m) => m.ControlCenterModule
+                    ),
+            },
+            {
+                path: 'dispatch',
+                loadChildren: () =>
+                    import('./dispatch/dispatch.module').then(
+                        (m) => m.DispatchModule
+                    ),
+            },
+        ],
+    },
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class DefaultRoutingModule {
-}
+export class DefaultRoutingModule {}

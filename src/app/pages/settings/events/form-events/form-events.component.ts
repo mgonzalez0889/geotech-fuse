@@ -45,9 +45,9 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.getContact();
         this.createEventsForm();
         this.listenObservables();
+        this.getContact();
     }
     /**
      * @description: Trae todos los contactos del cliente
@@ -74,17 +74,61 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelected() {
         const numSelected = this.selection.selected.length;
-        const numRows = this.dataTableContact.data.length;
+        const numRows = this.dataTableContact.data?.length;
         return numSelected === numRows;
     }
     public saveEvent(): void {
+        this.eventForm.disable();
         this.contactsId = [];
         this.selection.selected.forEach((x) => {
             this.contactsId.push(x.id);
         });
         this.eventForm.patchValue({ contact_id: this.contactsId });
-        const data =this.eventForm.getRawValue();
-        console.log(data,'data')
+        const data = this.eventForm.getRawValue();
+        this.eventsService.putEvents(data).subscribe((res) => {
+            this.eventForm.enable();
+            if (res.code === 200) {
+                this.eventsService.behaviorSubjectEventGrid.next({
+                    opened: false,
+                    reload: true,
+                });
+                this.confirmationService.open({
+                    title: 'Editar evento',
+                    message: 'Evento editado con exito!',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        name: 'heroicons_outline:check-circle',
+                        color: 'success',
+                    },
+                });
+            } else {
+                this.confirmationService.open({
+                    title: 'Editar evento',
+                    message:
+                        'El evento no se pudo atender, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                });
+            }
+        });
     }
     /**
      * @description: Funcion boton cancelar
@@ -118,7 +162,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
         this.eventForm = this.fb.group({
             id: [''],
             event_name: ['', [Validators.required]],
-            color: ['', [Validators.required]],
+            color: ['#563d7c', [Validators.required]],
             email: [''],
             page: [''],
             sms: [''],
@@ -135,6 +179,10 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             this.eventsService.behaviorSubjectEventForm.subscribe(({ id }) => {
                 if (id) {
                     this.eventsService.getEvent(id).subscribe((res) => {
+                        console.log(res.contacts, 'res');
+                        // res.contacts.forEach(row => this.selection.select(row));
+
+                        console.log(this.selection, 'this.selection');
                         this.events = res.data;
                         this.eventForm.patchValue(this.events);
                     });

@@ -129,9 +129,7 @@
                             </td>
                         </tr>
                     </table>
-                    <mat-paginator
-                        class=" bg-gray-200"
-                        [pageSizeOptions]="[10]" aria-label="Select page of users">
+                    <mat-paginator class="bg-gray-200" [pageSizeOptions]="[10]" aria-label="Select page of users">
                     </mat-paginator>
                 </div>
                 <div class="flex pb-3">
@@ -140,8 +138,13 @@
                     </button>
                     <!-- Guardar -->
                     <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="eventForm.invalid"
-                        [matTooltip]="'Guardar'" (click)="saveEvent()">
-                        Guardar
+                        [matTooltip]="'Guardar'" [disabled]="eventForm.disabled" (click)="saveEvent()">
+                        <span *ngIf="!eventForm.disabled">
+                            Guardar
+                        </span>
+                        <mat-progress-spinner *ngIf="eventForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                        </mat-progress-spinner>
+
                     </button>
                 </div>
 

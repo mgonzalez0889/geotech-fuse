@@ -23,6 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [FormEventsComponent, GridEventsComponent],
@@ -48,6 +49,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
         NgMultiSelectDropDownModule.forRoot(),
         FormsModule,
         MatSidenavModule,
+        MatProgressSpinnerModule
     ],
 })
 export class EventsModule {}

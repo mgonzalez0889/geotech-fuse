@@ -42,7 +42,7 @@ export class EventsService {
      * @description: Edita un evento
      */
     public putEvents(data: any): Observable<any> {
-        const params = { method: 'update_event' };
+        const params = { method: 'update_owner_event' };
         const id = data.id;
         delete data.id;
         return this._http.put(
