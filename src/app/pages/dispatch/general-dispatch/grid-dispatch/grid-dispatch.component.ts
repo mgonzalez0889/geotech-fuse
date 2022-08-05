@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -32,7 +33,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
         this.listenObservables();
     }
     /**
-     * @description: Trae todos los contactos del cliente
+     * @description: Trae todos los despachos del cliente
      */
     public getDispath(): void {
         this.dispathService.getDispaths().subscribe((res) => {
@@ -54,7 +55,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
         this.dataTableDispath.filter = filterValue.trim().toLowerCase();
     }
     /**
-     * @description: Guarda el ID del contacto para aburirlo en el formulario
+     * @description: Guarda el ID del despacho para aburirlo en el formulario
      */
     public actionsDispath(id: number): void {
         this.opened = true;
@@ -62,6 +63,21 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
             id: id,
             isEdit: false,
         });
+    }
+    /**
+     * @description: Crear un nuevo despacho
+     */
+    public newDispath(): void {
+        this.opened = true;
+        this.dispathService.behaviorSubjectDispathForm.next({
+            newDispath: 'Nuevo despacho',
+        });
+    }
+    /**
+     * @description: Destruye el observable
+     */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
     /**
      * @description: Escucha el observable behavior
@@ -76,20 +92,5 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
                     }
                 }
             );
-    }
-    /**
-     * @description: Crear un nuevo contacto
-     */
-    public newDispath(): void {
-        this.opened = true;
-        this.dispathService.behaviorSubjectDispathForm.next({
-            newDispath: 'Nuevo despacho',
-        });
-    }
-    /**
-     * @description: Destruye el observable
-     */
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
     }
 }

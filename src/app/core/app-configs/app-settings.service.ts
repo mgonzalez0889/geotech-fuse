@@ -160,7 +160,7 @@ export class AppSettingsService {
         },
     };
     /**
-     * @description: End-point contact
+     * @description: End-point despachos
      */
     public dispath = {
         url: {

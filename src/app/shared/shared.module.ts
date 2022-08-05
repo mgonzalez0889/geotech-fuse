@@ -8,6 +8,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSelectModule} from "@angular/material/select";
+import { StartDispatchComponent } from './dialogs/start-dispatch/start-dispatch.component';
 
 @NgModule({
     imports: [
@@ -27,7 +28,8 @@ import {MatSelectModule} from "@angular/material/select";
     ],
     declarations: [
       MessageDialogComponent,
-      ConfirmDeleteComponent
+      ConfirmDeleteComponent,
+      StartDispatchComponent
     ]
 })
 export class SharedModule

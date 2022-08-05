@@ -1,5 +1,5 @@
 <div class="flex flex-col w-full sm:pl-6">
-    <div class="bg-card shadow rounded-2xl h-180">
+    <div class="bg-card shadow rounded-2xl min-h-180">
         <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
             <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
                 <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
@@ -16,8 +16,9 @@
                         <div
                             class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
                             <div
-                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                {{contacts['full_name']?.charAt(0)}}
+                                class="flex items-center justify-center w-full h-full rounded overflow-hidden text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                <mat-icon class="icon-size-14" [svgIcon]="'status_close'"></mat-icon>
+
                             </div>
                         </div>
                         <!-- Actions -->
@@ -28,103 +29,170 @@
                             </button>
                         </div>
                     </div>
-                    <div class="mt-3 text-4xl font-bold truncate">{{contacts['full_name']}}</div>
+                    <div class="mt-3 text-4xl font-bold truncate">{{dispaths['owner_name']}}</div>
                     <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
-                        <ng-container *ngIf="contacts['email']">
+
+                        <ng-container *ngIf="dispaths['spreadsheet']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Correo electrónico'" [svgIcon]="'heroicons_outline:mail'">
-                                </mat-icon>
-                                <div class="ml-6 leading-6">
-                                    <a class="hover:underline text-primary-500" [href]="'mailto:' + contacts['email']"
-                                        target="_blank">
-                                        {{contacts['email']}}
-                                    </a>
-                                </div>
+                                <mat-icon [matTooltip]="'Planilla'">assignment</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['spreadsheet']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="contacts['phone']">
+                        <ng-container>
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Celular'" svgIcon="heroicons_outline:phone"></mat-icon>
-                                <div class="ml-6 leading-6">{{contacts['phone']}}</div>
+                                <mat-icon [matTooltip]="'Origen'">pin_drop</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['source']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="contacts['identification']">
+                        <ng-container>
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Identificación'" svgIcon="heroicons_outline:identification">
-                                </mat-icon>
-                                <div class="ml-6 leading-6">{{contacts['identification']}}</div>
+                                <mat-icon [matTooltip]="'Destino'">pin_drop</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['destiny']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="contacts['address']">
+                        <ng-container>
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Dirección'" [svgIcon]="'heroicons_outline:location-marker'">
+                                <mat-icon [matTooltip]="'Placa'">local_shipping</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['plate']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container>
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Numero de contenedor'">pin</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['container_number']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container>
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Conductor'">person</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['driver_name']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container>
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Identificación del conductor'">badge</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['identification_driver']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container>
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Contacto del conductor'">phone_iphone</mat-icon>
+                                <div class="ml-6 leading-6">{{dispaths['driver_contact']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container>
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Observaciones'" svgIcon="heroicons_solid:menu-alt-2">
                                 </mat-icon>
-                                <div class="ml-6 leading-6">{{contacts['address']}}</div>
+                                <div class="ml-6 leading-6">{{dispaths['details']}}</div>
                             </div>
                         </ng-container>
                     </div>
+                    <div *ngIf="!dispaths['device']"
+                        class="flex items-center justify-end mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+                        <button (click)="startDispatch()" class="ml-2" mat-flat-button [color]="'accent'" [matTooltip]="'Iniciar despacho'">
+                            <span>
+                                Iniciar despacho
+                            </span>
+                        </button>
+                    </div>
                 </ng-container>
                 <ng-container *ngIf="editMode">
-                    <form [formGroup]="contactForm">
+                    <form [formGroup]="dispathForm">
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Nombre completo</mat-label>
+                                <mat-label>Planilla</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">assignment</mat-icon>
+                                <input matInput [formControlName]="'spreadsheet'" [placeholder]="'Planilla'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Cliente</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input matInput [formControlName]="'full_name'" [placeholder]="'Nombre completo'"
-                                    [spellcheck]="false">
+                                <input matInput [formControlName]="'owner_name'" [placeholder]="'Cliente'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Correo electrónico</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:mail'">
-                                </mat-icon>
-                                <input matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'"
-                                    [spellcheck]="false">
+                                <mat-label>Origen</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin_drop</mat-icon>
+                                <input matInput [formControlName]="'source'" [placeholder]="'Origen'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Celular</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:phone'"></mat-icon>
-                                <input type="number" matInput [formControlName]="'phone'" [placeholder]="'Celular'"
-                                    [spellcheck]="false">
+                                <mat-label>Destino</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin_drop</mat-icon>
+                                <input matInput [formControlName]="'destiny'" [placeholder]="'Destino'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Identificación</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:identification'"></mat-icon>
-                                <input matInput [formControlName]="'identification'" [placeholder]="'Identificación'"
-                                    [spellcheck]="false">
+                                <mat-label>Placa</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">local_shipping</mat-icon>
+                                <input matInput [formControlName]="'plate'" [placeholder]="'Placa'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Dirección</mat-label>
+                                <mat-label>Numero de contenedor</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin</mat-icon>
+                                <input matInput [formControlName]="'container_number'"
+                                    [placeholder]="'Numero de contenedor'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Conductor</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+                                <input matInput [formControlName]="'driver_name'" [placeholder]="'Conductor'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Identificación del conductor</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">badge</mat-icon>
+                                <input matInput [formControlName]="'identification_driver'"
+                                    [placeholder]="'Contacto del conductor'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Contacto del conductor</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">phone_iphone</mat-icon>
+                                <input type="number" matInput [formControlName]="'driver_contact'"
+                                    [placeholder]="'Contacto del conductor'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                                <mat-label>Observaciones</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
-                                <input matInput [formControlName]="'address'" [placeholder]="'Dirección'"
-                                    [spellcheck]="false">
+                                    svgIcon="heroicons_solid:menu-alt-2"></mat-icon>
+                                <textarea [formControlName]="'details'" placeholder="Observaciones" matInput
+                                    matTextareaAutosize></textarea>
                             </mat-form-field>
                         </div>
                         <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
                             <!-- Eliminar -->
-                            <button *ngIf="contacts['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
-                                (click)="deleteContact(contacts['id'])">
+                            <button *ngIf="dispaths['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                                (click)="deleteContact(dispaths['id'])">
                                 Eliminar </button>
                             <!-- Cancelar -->
                             <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
                                 Cancelar
                             </button>
                             <!-- Guardar -->
-                            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="contactForm.invalid"
+                            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="dispathForm.invalid"
                                 [matTooltip]="'Guardar'" (click)="onSave()">
-                                Guardar
+                                <span *ngIf="!dispathForm.disabled">
+                                    Guardar
+                                </span>
+                                <mat-progress-spinner *ngIf="dispathForm.disabled" [diameter]="24"
+                                    [mode]="'indeterminate'">
+                                </mat-progress-spinner>
                             </button>
                         </div>
                     </form>
