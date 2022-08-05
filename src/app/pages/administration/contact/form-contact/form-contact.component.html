@@ -124,7 +124,12 @@
                             <!-- Guardar -->
                             <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="contactForm.invalid"
                                 [matTooltip]="'Guardar'" (click)="onSave()">
-                                Guardar
+                                <span *ngIf="!contactForm.disabled">
+                                    Guardar
+                                </span>
+                                <mat-progress-spinner *ngIf="contactForm.disabled" [diameter]="24"
+                                    [mode]="'indeterminate'">
+                                </mat-progress-spinner>
                             </button>
                         </div>
                     </form>

@@ -154,6 +154,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Editar un contacto
      */
     private editContact(data: any): void {
+        this.contactForm.disable();
         let confirmation = this.confirmationService.open({
             title: 'Editar contacto',
             message:
@@ -172,6 +173,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
                 this.contactService.putContacts(data).subscribe((res) => {
+                    this.contactForm.enable();
                     if (res.code === 200) {
                         this.contactService.behaviorSubjectContactGrid.next({
                             reload: true,
@@ -221,7 +223,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Guarda un nuevo contacto
      */
     private newContact(data: any): void {
+        this.contactForm.disable();
         this.contactService.postContacts(data).subscribe((res) => {
+            this.contactForm.enable();
             if (res.code === 200) {
                 this.contactService.behaviorSubjectContactGrid.next({
                     reload: true,

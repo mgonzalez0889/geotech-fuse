@@ -154,9 +154,17 @@ export class AppSettingsService {
     /**
      *@description: End-point geo zonas
      */
-     public show_mobile = {
+    public show_mobile = {
         url: {
-            base: EndPoints.uri('show_mobile')
-        }
+            base: EndPoints.uri('show_mobile'),
+        },
+    };
+    /**
+     * @description: End-point contact
+     */
+    public dispath = {
+        url: {
+            base: EndPoints.uri('dispath'),
+        },
     };
 }
