@@ -22,83 +22,102 @@
                             </div>
                         </div>
                         <!-- Actions -->
-                        <div class="flex items-center ml-auto mb-1">
+                        <div *ngIf="!dispatches['date_end_dispatch']" class="flex items-center ml-auto mb-1">
                             <button mat-stroked-button (click)="editMode = true">
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
                                 <span class="ml-2">Editar</span>
                             </button>
                         </div>
                     </div>
-                    <div class="mt-3 text-4xl font-bold truncate">{{dispaths['owner_name']}}</div>
+                    <div class="mt-3 text-4xl font-bold truncate">{{dispatches['client']}}</div>
                     <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
 
-                        <ng-container *ngIf="dispaths['spreadsheet']">
+                        <ng-container *ngIf="dispatches['spreadsheet']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Planilla'">assignment</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['spreadsheet']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['spreadsheet']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['init_place']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Origen'">pin_drop</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['source']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['init_place']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['end_place']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Destino'">pin_drop</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['destiny']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['end_place']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['plate']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Placa'">local_shipping</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['plate']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['plate']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['container_number']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Numero de contenedor'">pin</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['container_number']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['container_number']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['device']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Dispositivo'">lock</mat-icon>
+                                <div class="ml-6 leading-6">{{dispatches['device']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="dispatches['security_seal']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Sello de seguridad'">private_connectivity</mat-icon>
+                                <div class="ml-6 leading-6">{{dispatches['security_seal']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="dispatches['owner_driver_name']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Conductor'">person</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['driver_name']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['owner_driver_name']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['identification_driver']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Identificación del conductor'">badge</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['identification_driver']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['identification_driver']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['driver_contact']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Contacto del conductor'">phone_iphone</mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['driver_contact']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['driver_contact']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container>
+                        <ng-container *ngIf="dispatches['detail']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Observaciones'" svgIcon="heroicons_solid:menu-alt-2">
                                 </mat-icon>
-                                <div class="ml-6 leading-6">{{dispaths['details']}}</div>
+                                <div class="ml-6 leading-6">{{dispatches['detail']}}</div>
                             </div>
                         </ng-container>
                     </div>
-                    <div *ngIf="!dispaths['device']"
-                        class="flex items-center justify-end mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-                        <button (click)="startDispatch()" class="ml-2" mat-flat-button [color]="'accent'" [matTooltip]="'Iniciar despacho'">
+                    <div class="flex items-center justify-end mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+                        <button *ngIf="!dispatches['device'] && dispatches['id']" (click)="startDispatch()" class="ml-2"
+                            mat-flat-button [color]="'accent'" [matTooltip]="'Iniciar despacho'">
                             <span>
                                 Iniciar despacho
+                            </span>
+                        </button>
+                        <button *ngIf="dispatches['device'] && dispatches['id'] && !dispatches['date_end_dispatch']"
+                            (click)="finishDispatch()" class="ml-2" mat-flat-button [color]="'accent'"
+                            [matTooltip]="'Finalizar despacho'">
+                            <span>
+                                Finalizar despacho
                             </span>
                         </button>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="editMode">
-                    <form [formGroup]="dispathForm">
+                    <form [formGroup]="dispatchForm">
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Planilla</mat-label>
@@ -111,21 +130,21 @@
                                 <mat-label>Cliente</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input matInput [formControlName]="'owner_name'" [placeholder]="'Cliente'" required>
+                                <input matInput [formControlName]="'client'" [placeholder]="'Cliente'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Origen</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin_drop</mat-icon>
-                                <input matInput [formControlName]="'source'" [placeholder]="'Origen'" required>
+                                <input matInput [formControlName]="'init_place'" [placeholder]="'Origen'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Destino</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin_drop</mat-icon>
-                                <input matInput [formControlName]="'destiny'" [placeholder]="'Destino'" required>
+                                <input matInput [formControlName]="'end_place'" [placeholder]="'Destino'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
@@ -137,17 +156,33 @@
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Dispositivo</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">lock</mat-icon>
+                                <input matInput [formControlName]="'device'" [placeholder]="'Dispositivo'">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Sello de seguridad </mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">private_connectivity</mat-icon>
+                                <input matInput [formControlName]="'security_seal'"
+                                    [placeholder]="'Sello de seguridad'">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Numero de contenedor</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin</mat-icon>
                                 <input matInput [formControlName]="'container_number'"
-                                    [placeholder]="'Numero de contenedor'" required>
+                                    [placeholder]="'Numero de contenedor'">
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Conductor</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                                <input matInput [formControlName]="'driver_name'" [placeholder]="'Conductor'" required>
+                                <input matInput [formControlName]="'owner_driver_name'" [placeholder]="'Conductor'"
+                                    required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
@@ -171,26 +206,26 @@
                                 <mat-label>Observaciones</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     svgIcon="heroicons_solid:menu-alt-2"></mat-icon>
-                                <textarea [formControlName]="'details'" placeholder="Observaciones" matInput
+                                <textarea [formControlName]="'detail'" placeholder="Observaciones" matInput
                                     matTextareaAutosize></textarea>
                             </mat-form-field>
                         </div>
                         <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
                             <!-- Eliminar -->
-                            <button *ngIf="dispaths['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
-                                (click)="deleteContact(dispaths['id'])">
+                            <button *ngIf="dispatches['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                                (click)="deleteContact(dispatches['id'])">
                                 Eliminar </button>
                             <!-- Cancelar -->
                             <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
                                 Cancelar
                             </button>
                             <!-- Guardar -->
-                            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="dispathForm.invalid"
+                            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="dispatchForm.invalid"
                                 [matTooltip]="'Guardar'" (click)="onSave()">
-                                <span *ngIf="!dispathForm.disabled">
+                                <span *ngIf="!dispatchForm.disabled">
                                     Guardar
                                 </span>
-                                <mat-progress-spinner *ngIf="dispathForm.disabled" [diameter]="24"
+                                <mat-progress-spinner *ngIf="dispatchForm.disabled" [diameter]="24"
                                     [mode]="'indeterminate'">
                                 </mat-progress-spinner>
                             </button>

@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { DispathService } from 'app/core/services/dispath.service';
-import { StartDispatchComponent } from 'app/shared/dialogs/start-dispatch/start-dispatch.component';
+import { DispatchService } from 'app/core/services/dispatch.service';
+import { StartDispatchComponent } from 'app/pages/dispatch/general-dispatch/start-dispatch/start-dispatch.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,16 +13,16 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./form-dispatch.component.scss'],
 })
 export class FormDispatchComponent implements OnInit, OnDestroy {
-    public dispaths: any = [];
+    public dispatches: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
-    public dispathForm: FormGroup;
+    public dispatchForm: FormGroup;
     public subscription: Subscription;
 
     constructor(
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
-        private dispathService: DispathService,
+        private dispatchService: DispatchService,
         private matDialog: MatDialog
     ) {}
 
@@ -34,31 +34,103 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
      * @description: Valida si es edita o guarda un despacho nuevo
      */
     public onSave(): void {
-        const data = this.dispathForm.getRawValue();
+        const data = this.dispatchForm.getRawValue();
         if (!data.id) {
-            this.newDispath(data);
+            this.newDispatch(data);
         } else {
-            this.editDispath(data);
+            this.editDispatch(data);
         }
     }
     /**
      * @description: Cierra el menu lateral de la derecha
      */
     public closeMenu(): void {
-        this.dispathService.behaviorSubjectDispathGrid.next({
+        this.dispatchService.behaviorSubjectDispatchGrid.next({
             opened: false,
             reload: false,
         });
     }
     /**
-     * @description: Modal para agregar nuevo contacto
+     * @description: Modal para asignar un dispositivo al despacho
      */
     public startDispatch(): void {
         const dialogRef = this.matDialog.open(StartDispatchComponent, {
             width: '455px',
+            data: this.dispatches,
         });
         dialogRef.afterClosed().subscribe((res) => {
             if (res) {
+            }
+        });
+    }
+    /**
+     * @description: Finaliza un despacho
+     */
+    public finishDispatch(): void {
+        const data = {
+            id: this.dispatches['id'],
+            date_end_dispatch: new Date(),
+        };
+        let confirmation = this.confirmationService.open({
+            title: 'Finalizar despacho',
+            message:
+                '¿Está seguro de que desea finalizar este despacho? ¡Esta acción no se puede deshacer!',
+            actions: {
+                confirm: {
+                    label: 'Finalizar',
+                    color: 'accent',
+                },
+            },
+            icon: {
+                name: 'heroicons_outline:pencil',
+                color: 'info',
+            },
+        });
+        confirmation.afterClosed().subscribe((result) => {
+            if (result === 'confirmed') {
+                this.dispatchService.putDispatch(data).subscribe((res) => {
+                    if (res.code === 200) {
+                        this.dispatchService.behaviorSubjectDispatchGrid.next({
+                            reload: true,
+                            opened: false,
+                        });
+                        confirmation = this.confirmationService.open({
+                            title: 'Finalizar despacho',
+                            message: 'Despacho finalizado con exito!',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                name: 'heroicons_outline:check-circle',
+                                color: 'success',
+                            },
+                        });
+                    } else {
+                        confirmation = this.confirmationService.open({
+                            title: 'Finalizar despacho',
+                            message:
+                                'El despacho no se pudo finalizar, favor intente nuevamente.',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                show: true,
+                                name: 'heroicons_outline:exclamation',
+                                color: 'warn',
+                            },
+                        });
+                    }
+                });
             }
         });
     }
@@ -72,20 +144,20 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
      * @description: Inicializa el formulario de despachos
      */
     private createContactForm(): void {
-        this.dispathForm = this.fb.group({
+        this.dispatchForm = this.fb.group({
             id: [''],
             spreadsheet: ['', [Validators.required]],
-            owner_name: ['', [Validators.required]],
-            source: ['', [Validators.required]],
-            destiny: ['', [Validators.required]],
+            client: ['', [Validators.required]],
+            init_place: ['', [Validators.required]],
+            end_place: ['', [Validators.required]],
             plate: ['', [Validators.required]],
             container_number: ['', [Validators.required]],
-            driver_name: ['', [Validators.required]],
+            owner_driver_name: ['', [Validators.required]],
             identification_driver: ['', [Validators.required]],
             driver_contact: ['', [Validators.required]],
-            details: [''],
-            security_seal: ['', [Validators.required]],
-            device: ['', [Validators.required]],
+            detail: [''],
+            security_seal: [{ value: '', disabled: true }],
+            device: [{ value: '', disabled: true }],
         });
     }
     /**
@@ -93,21 +165,23 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription =
-            this.dispathService.behaviorSubjectDispathForm.subscribe(
-                ({ newDispath, id, isEdit }) => {
-                    // this.editMode = isEdit;
-                    if (newDispath) {
-                        this.dispaths = [];
-                        this.dispaths['owner_name'] = newDispath;
-                        if (this.dispathForm) {
-                            this.dispathForm.reset();
+            this.dispatchService.behaviorSubjectDispatchForm.subscribe(
+                ({ newDispatch, id, isEdit }) => {
+                    this.editMode = isEdit;
+                    if (newDispatch) {
+                        this.dispatches = [];
+                        this.dispatches['client'] = newDispatch;
+                        if (this.dispatchForm) {
+                            this.dispatchForm.reset();
                         }
                     }
                     if (id) {
-                        this.dispathService.getDispath(id).subscribe((res) => {
-                            this.dispaths = res.data;
-                            this.dispathForm.patchValue(this.dispaths);
-                        });
+                        this.dispatchService
+                            .getDispatch(id)
+                            .subscribe((res) => {
+                                this.dispatches = res.data;
+                                this.dispatchForm.patchValue(this.dispatches);
+                            });
                     }
                 }
             );
@@ -115,8 +189,8 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     /**
      * @description: Editar un despacho
      */
-    private editDispath(data: any): void {
-        this.dispathForm.disable();
+    private editDispatch(data: any): void {
+        this.dispatchForm.disable();
         let confirmation = this.confirmationService.open({
             title: 'Editar despacho',
             message:
@@ -134,10 +208,10 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.dispathService.putDispath(data).subscribe((res) => {
-                    this.dispathForm.enable();
+                this.dispatchService.putDispatch(data).subscribe((res) => {
+                    this.dispatchForm.enable();
                     if (res.code === 200) {
-                        this.dispathService.behaviorSubjectDispathGrid.next({
+                        this.dispatchService.behaviorSubjectDispatchGrid.next({
                             reload: true,
                             opened: false,
                         });
@@ -184,12 +258,12 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     /**
      * @description: Guarda un nuevo contacto
      */
-    private newDispath(data: any): void {
-        this.dispathForm.disable();
-        this.dispathService.postDispath(data).subscribe((res) => {
-            this.dispathForm.enable();
+    private newDispatch(data: any): void {
+        this.dispatchForm.disable();
+        this.dispatchService.postDispatch(data).subscribe((res) => {
+            this.dispatchForm.enable();
             if (res.code === 200) {
-                this.dispathService.behaviorSubjectDispathGrid.next({
+                this.dispatchService.behaviorSubjectDispatchGrid.next({
                     reload: true,
                     opened: false,
                 });

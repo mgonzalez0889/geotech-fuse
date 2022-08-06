@@ -162,9 +162,9 @@ export class AppSettingsService {
     /**
      * @description: End-point despachos
      */
-    public dispath = {
+    public dispatch = {
         url: {
-            base: EndPoints.uri('dispath'),
+            base: EndPoints.uri('dispatch'),
         },
     };
 }

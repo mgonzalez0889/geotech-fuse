@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DispathService } from 'app/core/services/dispath.service';
+import { DispatchService } from 'app/core/services/dispatch.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,39 +13,59 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./grid-dispatch.component.scss'],
 })
 export class GridDispatchComponent implements OnInit, OnDestroy {
+    public today = new Date();
+    public month = this.today.getMonth();
+    public year = this.today.getFullYear();
+    public day = this.today.getDate();
+    public initialDate: Date = new Date(this.year, this.month, this.day);
+    public finalDate: Date = new Date(this.year, this.month, this.day);
     public subscription: Subscription;
     public opened: boolean = false;
-    public dataTableDispath: MatTableDataSource<any>;
-    public dispathCount: number = 0;
-    public columnsDispath: string[] = [
-        'name',
-        'identification',
-        'address',
-        'email',
-        'cellPhone',
+    public dataTableDispatch: MatTableDataSource<any>;
+    public dispatchCount: number = 0;
+    public columnsDispatch: string[] = [
+        'spreadsheet',
+        'client',
+        'date_init_operation',
+        'plate',
+        'device',
+        'container_number',
+        'init_place',
+        'end_place',
+        'data_driver',
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private dispathService: DispathService) {}
+    constructor(
+        private dispatchService: DispatchService,
+        private dateAdapter: DateAdapter<any>
+    ) {
+        this.dateAdapter.setLocale('es');
+    }
 
     ngOnInit(): void {
-        this.getDispath();
+        this.getDispatch();
         this.listenObservables();
     }
     /**
      * @description: Trae todos los despachos del cliente
      */
-    public getDispath(): void {
-        this.dispathService.getDispaths().subscribe((res) => {
+    public getDispatch(): void {
+        const data = {
+            dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
+            dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
+            status: [0, 1, 2],
+        };
+        this.dispatchService.getDispatches(data).subscribe((res) => {
             if (res.data) {
-                this.dispathCount = res.data.length;
+                this.dispatchCount = res.data.length;
             } else {
-                this.dispathCount = 0;
+                this.dispatchCount = 0;
             }
-            this.dataTableDispath = new MatTableDataSource(res.data);
-            this.dataTableDispath.paginator = this.paginator;
-            this.dataTableDispath.sort = this.sort;
+            this.dataTableDispatch = new MatTableDataSource(res.data);
+            this.dataTableDispatch.paginator = this.paginator;
+            this.dataTableDispatch.sort = this.sort;
         });
     }
     /**
@@ -52,14 +73,14 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
      */
     public filterTable(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        this.dataTableDispath.filter = filterValue.trim().toLowerCase();
+        this.dataTableDispatch.filter = filterValue.trim().toLowerCase();
     }
     /**
      * @description: Guarda el ID del despacho para aburirlo en el formulario
      */
-    public actionsDispath(id: number): void {
+    public actionsDispatch(id: number): void {
         this.opened = true;
-        this.dispathService.behaviorSubjectDispathForm.next({
+        this.dispatchService.behaviorSubjectDispatchForm.next({
             id: id,
             isEdit: false,
         });
@@ -67,10 +88,10 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     /**
      * @description: Crear un nuevo despacho
      */
-    public newDispath(): void {
+    public newDispatch(): void {
         this.opened = true;
-        this.dispathService.behaviorSubjectDispathForm.next({
-            newDispath: 'Nuevo despacho',
+        this.dispatchService.behaviorSubjectDispatchForm.next({
+            newDispatch: 'Nuevo despacho',
         });
     }
     /**
@@ -84,11 +105,11 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription =
-            this.dispathService.behaviorSubjectDispathGrid.subscribe(
+            this.dispatchService.behaviorSubjectDispatchGrid.subscribe(
                 ({ reload, opened }) => {
                     this.opened = opened;
                     if (reload) {
-                        this.getDispath();
+                        this.getDispatch();
                     }
                 }
             );
