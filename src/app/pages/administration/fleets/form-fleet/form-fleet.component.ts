@@ -1,7 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/member-ordering */
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { FleetsService } from 'app/core/services/fleets.service';
+import { MobileService } from 'app/core/services/mobile.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,6 +16,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./form-fleet.component.scss'],
 })
 export class FormFleetComponent implements OnInit, OnDestroy {
+    public selection = new SelectionModel<any>(true, []);
+    public mobilesCount: number = 0;
     public fleetsPlateCount: number = 0;
     public fleetsPlate: any = [];
     public fleets: any = [];
@@ -17,15 +25,21 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     public opened: boolean = true;
     public fleetForm: FormGroup;
     public subscription: Subscription;
+    public dataTableMobies: MatTableDataSource<any>;
+    public columnsMobile: string[] = ['select', 'plate', 'internal_code'];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+
     constructor(
         private fleetService: FleetsService,
         private fb: FormBuilder,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private mobilesService: MobileService
     ) {}
 
     ngOnInit(): void {
-        this.listenObservables();
         this.createContactForm();
+        this.listenObservables();
     }
 
     /**
@@ -116,6 +130,55 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
+
+    /**
+     * @description: Filtrar datos de la tabla
+     */
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataTableMobies.filter = filterValue.trim().toLowerCase();
+    }
+    /**
+     * @description: Si el número de elementos seleccionados coincide con el número total de filas.
+     */
+    public isAllSelected(): any {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataTableMobies.data?.length;
+        return numSelected === numRows;
+    }
+    /**
+     * @description: Selecciona todas las filas si no están todas seleccionadas; de lo contrario borrar la selección.
+     */
+    public toggleAllRows(): any {
+        if (this.isAllSelected()) {
+            this.selection.clear();
+            return;
+        }
+        this.selection.select(...this.dataTableMobies.data);
+    }
+    /**
+     * @description: Obtiene un listado de los vehiculos del cliente
+     */
+    public getMobiles(): void {
+        this.mobilesService.getMobiles().subscribe((res) => {
+            this.selection.clear();
+            if (res.data) {
+                this.mobilesCount = res.data.length;
+                res.data.forEach((row: any) => {
+                    this.fleetsPlate?.forEach((x: any) => {
+                        if (row.plate === x.plate) {
+                            this.selection.select(row);
+                        }
+                    });
+                });
+            } else {
+                this.mobilesCount = 0;
+            }
+            this.dataTableMobies = new MatTableDataSource(res.data);
+            this.dataTableMobies.paginator = this.paginator;
+            this.dataTableMobies.sort = this.sort;
+        });
+    }
     /**
      * @description: Inicializa el formulario de flotas
      */
@@ -123,8 +186,8 @@ export class FormFleetComponent implements OnInit, OnDestroy {
         this.fleetForm = this.fb.group({
             id: [''],
             name: ['', [Validators.required]],
-            description: ['', [Validators.email, Validators.required]],
-            mobiles: ['', [Validators.required]],
+            description: [''],
+            mobiles: [''],
         });
     }
     /**
@@ -137,25 +200,23 @@ export class FormFleetComponent implements OnInit, OnDestroy {
                     console.log(newFleet, payload, isEdit, 'arturo');
                     this.editMode = isEdit;
                     if (newFleet) {
+                        this.fleetsPlate = null;
                         this.fleets = [];
                         this.fleets['name'] = newFleet;
                         if (this.fleetForm) {
                             this.fleetForm.reset();
                         }
                     }
-                    if (payload.id) {
+                    if (payload?.id) {
+                        console.log(payload, 'payloadpayloadpayload');
                         this.fleets = payload;
-                        //this.fleetForm.patchValue(this.fleets);
+                        console.log(this.fleets, 'this.fleets');
+                        this.fleetForm.patchValue(this.fleets);
                         this.fleetService
                             .getFleetsPlatesAssigned(payload.id)
                             .subscribe((res) => {
-                                if (res.data) {
-                                    this.fleetsPlateCount = res.data.length;
-                                } else {
-                                    this.fleetsPlateCount = 0;
-                                }
                                 this.fleetsPlate = res.data;
-                                console.log(this.fleetsPlate['plate'], 'aaaaaaaaaaaaaaaa');
+                                console.log(this.fleetsPlate, 'fleetsPlate');
                             });
                     }
                 }

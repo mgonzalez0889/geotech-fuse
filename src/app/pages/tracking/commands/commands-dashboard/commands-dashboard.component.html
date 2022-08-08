@@ -139,12 +139,12 @@
                     <mat-tab-group [animationDuration]="'0'" (selectedTabChange)="typeOfSelection($event)">
                         <!--Tab Vehiculos-->
                         <mat-tab label="Vehiculo">
-                            <div class="flex border-2 rounded-full p-2">
+                            <div class="flex border-2 rounded-full p-2 overflow-hidden">
                                 <input matInput placeholder="Buscar vehiculo" #searchMobile [(ngModel)]="searchPlate">
                                 <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
                                 </mat-icon>
                             </div>
-                            <mat-selection-list class="h-80">
+                            <mat-selection-list class="h-80 ">
                                 <mat-checkbox *ngIf="!searchPlate" checkboxPosition="before"
                                     (change)="setAll($event.checked,'mobiles')"
                                     [indeterminate]="someComplete('mobiles')" [selected]="allSelectedMobiles">
@@ -193,8 +193,10 @@
                             <div class="flex justify-end">
                                 <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
                                     (click)="sentCommands()" [disabled]="!selectedTypeCommand">
-                                    <mat-icon class="icon-size-5">send</mat-icon>
-                                    <span class="ml-2">Enviar comando</span>
+                                    <mat-icon *ngIf="!show" class="icon-size-5">send</mat-icon>
+                                    <span *ngIf="!show" class="ml-2">Enviar comando</span>
+                                    <mat-progress-spinner *ngIf="show" [diameter]="24" [mode]="'indeterminate'">
+                                    </mat-progress-spinner>
                                 </button>
                             </div>
                         </div>

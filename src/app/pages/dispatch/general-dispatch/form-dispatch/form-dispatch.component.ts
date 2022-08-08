@@ -6,6 +6,7 @@ import { ConfirmationService } from 'app/core/services/confirmation/confirmation
 import { DispatchService } from 'app/core/services/dispatch.service';
 import { StartDispatchComponent } from 'app/pages/dispatch/general-dispatch/start-dispatch/start-dispatch.component';
 import { Subscription } from 'rxjs';
+declare let google: any;
 
 @Component({
     selector: 'app-form-dispatch',
@@ -13,6 +14,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./form-dispatch.component.scss'],
 })
 export class FormDispatchComponent implements OnInit, OnDestroy {
+    public prediction: any;
+    public devices: any = [];
     public dispatches: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
@@ -29,6 +32,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.listenObservables();
         this.createContactForm();
+        this.getDevicesDispatch();
     }
     /**
      * @description: Valida si es edita o guarda un despacho nuevo
@@ -134,6 +138,38 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
             }
         });
     }
+    public searchGoogleApi(): any {
+        if (this.dispatchForm.value.init_place) {
+            const service = new google.maps.places.AutocompleteService();
+            service.getPlacePredictions(
+                {
+                    input: this.dispatchForm.value.init_place,
+                },
+                (predictions: any, status: any) => {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        return;
+                    }
+                    this.prediction = predictions;
+                    console.log('miren aqui la predictions', predictions);
+                }
+            );
+        }
+        if (this.dispatchForm.value.end_place) {
+            const service = new google.maps.places.AutocompleteService();
+            service.getPlacePredictions(
+                {
+                    input: this.dispatchForm.value.end_place,
+                },
+                (predictions: any, status: any) => {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        return;
+                    }
+                    this.prediction = predictions;
+                    console.log('miren aqui la predictions', predictions);
+                }
+            );
+        }
+    }
     /**
      * @description: Destruye el observable
      */
@@ -156,8 +192,17 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
             identification_driver: ['', [Validators.required]],
             driver_contact: ['', [Validators.required]],
             detail: [''],
-            security_seal: [{ value: '', disabled: true }],
-            device: [{ value: '', disabled: true }],
+            state: [0, [Validators.required]],
+            security_seal: ['', [Validators.required]],
+            device: ['', [Validators.required]],
+        });
+    }
+    /**
+     * @description: Buscar los dispositivos aptos para crear un despacho
+     */
+    private getDevicesDispatch(): void {
+        this.dispatchService.getDevicesDispatch().subscribe((res) => {
+            this.devices = res.data;
         });
     }
     /**
@@ -180,6 +225,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                             .getDispatch(id)
                             .subscribe((res) => {
                                 this.dispatches = res.data;
+                                console.log(this.dispatches['status']);
                                 this.dispatchForm.patchValue(this.dispatches);
                             });
                     }

@@ -37,7 +37,7 @@ export class GridFleetComponent implements OnInit, OnDestroy {
      * @description: Guarda el ID del contacto para aburirlo en el formulario
      */
     public actionsFleet(id: any): void {
-        console.log('ssss',id)
+        console.log('ssss', id);
         this.opened = true;
         this.fleetService.behaviorSubjectFleetForm.next({
             payload: id,
@@ -51,6 +51,7 @@ export class GridFleetComponent implements OnInit, OnDestroy {
         this.opened = true;
         this.fleetService.behaviorSubjectFleetForm.next({
             newFleet: 'Nueva flota',
+            payload: null,
         });
     }
     /**

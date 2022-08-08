@@ -30,6 +30,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
         'plate',
         'device',
         'container_number',
+        'state',
         'init_place',
         'end_place',
         'data_driver',

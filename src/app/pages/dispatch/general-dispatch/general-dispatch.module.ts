@@ -24,6 +24,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { StartDispatchComponent } from './start-dispatch/start-dispatch.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
     declarations: [
@@ -54,6 +55,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         MatDatepickerModule,
         FormsModule,
         MatDialogModule,
+        MatAutocompleteModule,
     ],
 })
 export class GeneralDispatchModule {}
