@@ -28,6 +28,11 @@
     </app-historics>
 </ng-container>
 
+<ng-container *ngIf="mapFunctionalitieService.showCommandsPlate">
+    <app-commands>
+    </app-commands>
+</ng-container>
+
 <!--<ng-container *ngIf="showMenuFleet">
     <app-floating-menu-fleet>
     </app-floating-menu-fleet>
@@ -52,8 +57,17 @@
             <span>
                 <mat-icon svgIcon="{{option.name}}"></mat-icon>
             </span>
-            {{click}}
         </li>
+
+        <!-- <div class="change-map">
+            <div class="title">
+                Geomapas
+            </div>
+            <div class="button">
+                <button (click)="mapFunctionalitieService.changeMap('google')">Google maps</button>
+                <button (click)="mapFunctionalitieService.changeMap('hybrid')">Google Hibrido</button>
+            </div>
+        </div> -->
     </ul>
 </div>
 <!--

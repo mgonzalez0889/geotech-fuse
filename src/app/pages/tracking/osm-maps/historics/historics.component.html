@@ -35,7 +35,7 @@
         <ng-container *ngIf="events$ | async as events">
             <mat-form-field appearance="fill" class="fuse-mat-dense w-30">
                 <mat-select multiple placeholder="Eventos" [(ngModel)]="mapFunctionalitieService.events">
-                    <mat-option [value]="event.id" *ngFor="let event of events.data">
+                    <mat-option [value]="event.event_id" *ngFor="let event of events.data">
                         {{event.event_name}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="title" *ngIf="data.data.length > 0">
-                            <mat-checkbox (change)="selectAll($event, data.plate, data.color)">
+                            <mat-checkbox (change)="selectAll($event, data.plate, data.color)" [(ngModel)]="data.selected">
                                 <label style="color: {{data.color}};">{{data.plate}}</label>
                             </mat-checkbox>
                         </div>

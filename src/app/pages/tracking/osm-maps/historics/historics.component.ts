@@ -37,6 +37,7 @@ export class HistoricsComponent implements OnInit {
   }
 
   async generateHistoric() {
+    this.mapFunctionalitieService.goDeleteGeometryPath();
     let data = {
       date_init: moment(this.initialDate).format('DD/MM/YYYY') + ' ' + this.initialHours,
       date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' ' + this.finalHours,
@@ -71,15 +72,13 @@ export class HistoricsComponent implements OnInit {
 
     var diff = fechaFin - fechaInicio;
 
-    console.log(diff / (1000 * 60 * 60 * 24));
-
     if (Number(diff / (1000 * 60 * 60 * 24)) > 30) {
       this.message_dates = true;
     } else {
       this.message_dates = false;
     }
 
-    
+
   }
 
   selectAll(ev, plate, color) {
@@ -95,7 +94,14 @@ export class HistoricsComponent implements OnInit {
       return x.plate === plate;
     });
     this.mapFunctionalitieService.type_geo = 'historic';
-    this.mapFunctionalitieService.createPunt(null, data[0].data, color);
+
+    if (ev.checked === false) {
+      this.mapFunctionalitieService.deleteChecks(data[0].data, 'delete');
+      this.mapFunctionalitieService.map.removeLayer(this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]);
+
+    } else {
+      this.mapFunctionalitieService.createPunt(null, data[0].data, color);
+    }
   }
 
   onChange(ev, item) {
@@ -106,7 +112,6 @@ export class HistoricsComponent implements OnInit {
       this.seleccionado.splice(indx, indx >= 0 ? 1 : 0);
     }
 
-    console.log(this.seleccionado);
     this.mapFunctionalitieService.type_geo = 'historic';
     this.mapFunctionalitieService.createPunt(null, this.seleccionado);
   }

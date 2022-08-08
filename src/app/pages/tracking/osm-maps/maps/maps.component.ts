@@ -26,7 +26,8 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
     optionsIcons: any = [
         {
-            name: 'type-map'
+            name: 'type-map',
+            type: 'change-map'
         },
         {
             name: 'route-map',
@@ -97,6 +98,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
             this.mapFunctionalitieService.moveMarker(data);
         });
+        this.socketIoService.listenin('new_command').subscribe((data: any) => {
+            console.log(data)
+        });
         const time = timer(2000);
         time.subscribe((t) => {
             this.getMobiles();
@@ -156,13 +160,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
             });
     }
 
-    /**
-     * @description: Genera los marcadores de los moviles en el mapa
-     */
-    private setmarker(mobiles: any): void {
-        this.mapFunctionalitieService.setMarkers(mobiles);
-    }
-
     // eslint-disable-next-line @typescript-eslint/member-ordering
     ngAfterViewInit(): void {
         this.mapFunctionalitieService.init();
@@ -171,6 +168,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
     async eventClick(type) {
         switch (type) {
+            case 'change-map':
+                
+                break;
             case 'route':
                 this.mapFunctionalitieService.drawerOpenedChanged();
                 this.mapFunctionalitieService.type_geometry = 'Rutas';

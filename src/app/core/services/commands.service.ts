@@ -10,7 +10,7 @@ export class CommandsService {
     constructor(
         private _http: HttpClient,
         private _appSettings: AppSettingsService
-    ) {}
+    ) { }
 
     /**
      * @description: Trae los tipos de comandos
@@ -19,6 +19,17 @@ export class CommandsService {
         const params = { method: 'index_all_command' };
         return this._http.get(this._appSettings.commands.url.base, { params });
     }
+
+    /**
+     * @description: Trae los comandos enviados de una placa
+     */
+    public getCommandsPlate(data: any): Observable<any> {
+        const params = { method: 'show_command' };
+        return this._http.post(this._appSettings.commands.url.base, data, {
+            params,
+        });
+    }
+
     /**
      * @description: Trae los comandos enviados por el usuario
      */
@@ -31,7 +42,7 @@ export class CommandsService {
     /**
      * @description: Envia comandos
      */
-     public postCommandsSend(data: any): Observable<any> {
+    public postCommandsSend(data: any): Observable<any> {
         const params = { method: 'sent_commands' };
         return this._http.post(this._appSettings.commands.url.base, data, {
             params,
