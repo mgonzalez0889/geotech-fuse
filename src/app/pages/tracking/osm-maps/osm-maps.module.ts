@@ -34,6 +34,7 @@ import { GeotoolsComponent } from './geotools/geotools.component';
 import { MatListModule } from "@angular/material/list";
 import { FormGeometryComponent } from './form-geometry/form-geometry.component';
 import { HistoricsComponent } from './historics/historics.component';
+import { CommandsComponent } from './commands/commands.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { HistoricsComponent } from './historics/historics.component';
     GeotoolsComponent,
     FormGeometryComponent,
     HistoricsComponent,
+    CommandsComponent,
   ],
   imports: [
     CommonModule,

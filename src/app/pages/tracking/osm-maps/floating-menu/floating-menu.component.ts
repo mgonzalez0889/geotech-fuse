@@ -242,16 +242,27 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
         });
 
         if (!row.selected) {
-            let data = [row]
-            this.mapFunctionalitieService.deleteChecks(data);
+            let data = this.mapFunctionalitieService.platesFleet.filter(x => {
+                return x.fleetId = row.id;
+            });
+            this.mapFunctionalitieService.deleteChecks(data[0].data);
+
+            const indx = this.mapFunctionalitieService.platesFleet.findIndex(v => v.fleetId === row.id);
+            this.mapFunctionalitieService.platesFleet.splice(indx, indx >= 0 ? 1 : 0);
         } else {
             this.subscription = this.fleetServices.getFleetsPlateAssignedMap(row.id).subscribe(({ data }) => {
                 console.log(data);
-                this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobiles);
-                this.mapFunctionalitieService.setMarkers(data);
+                if (data.length > 0) {
+                    this.mapFunctionalitieService.platesFleet.push({
+                        fleetId: row.id,
+                        data: data
+                    });
+                    this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobiles);
+                    this.mapFunctionalitieService.setMarkers(data);
+                }
             });
+            console.log(this.mapFunctionalitieService.platesFleet);
         }
-
     }
 
     /**

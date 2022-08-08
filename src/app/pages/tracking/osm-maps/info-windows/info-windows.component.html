@@ -1,80 +1,105 @@
 <div class="infoWindows">
-    <div class="items">
-        <div class="item">
-            <label for="">{{data.plate}}</label>
-            <span>{{data.code}}</span>
+    <div *ngIf="visible === 2">
+        <div class="items">
+            <div class="item">
+                <label for="">{{data.plate}}</label>
+                <span>{{data.code}}</span>
+            </div>
+    
+            <div class="icons">
+                <div class="icon">
+                    <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).statusGps}}"></mat-icon>
+                </div>
+                <div class="icon">
+                    <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).statusSignal}}"></mat-icon>
+                </div>
+                <div class="icon">
+                    <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).status}}"></mat-icon>
+                </div>
+                <div class="icon">
+                    <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).battery}}"></mat-icon>
+                </div>
+            </div>
         </div>
-
-        <div class="icons">
-            <div class="icon">
-                <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).statusGps}}"></mat-icon>
+    
+        <div class="items">
+            <div class="item">
+                <label for="">Ultima trasmisión</label>
+                <span>{{convertDate(data.date_entry)}}</span>
             </div>
-            <div class="icon">
-                <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).statusSignal}}"></mat-icon>
+    
+            <div class="item">
+                <label for="">Velocidad</label>
+                <span>{{data.speed}} Km/h</span>
             </div>
-            <div class="icon">
-                <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).status}}"></mat-icon>
+        </div>
+    
+        <div class="items">
+            <div class="item">
+                <label for="">Ultima posición</label>
+                <span>{{data.address}}</span>
             </div>
-            <div class="icon">
-                <mat-icon svgIcon="{{mapFunctionalitieService.setIconInfoWindows(data).battery}}"></mat-icon>
+        </div>
+    
+        <div class="items-big">
+            <div class="item-big">
+                <mat-icon svgIcon="driver"></mat-icon>
+    
+                <label>Conductor</label>
+                <div class="name">
+                    Jose perez
+                </div>
+                <div class="phone">
+                    3222222222
+                </div>
             </div>
+    
+            <div class="item-big">
+                <mat-icon svgIcon="sheet"></mat-icon>
+    
+                <label>Planilla</label>
+                <div class="name">
+                    0001
+                </div>
+                <div class="phone">
+                    12/02/1992
+                </div>
+            </div>
+        </div>
+    
+        <div class="items">
+            <div class="item">
+                <label>Frecuencia actual</label>
+                <span>5 Minutos</span>
+            </div>
+        </div>
+    
+        <div class="buttons">
+            <button (click)="mapFunctionalitieService.goCommands(data.plate)">Comandos</button>
+            <button (click)="mapFunctionalitieService.goDetail(data.id)">Detalles</button>
         </div>
     </div>
-
-    <div class="items">
-        <div class="item">
-            <label for="">Ultima trasmisión</label>
-            <span>{{convertDate(data.date_entry)}}</span>
+    
+    <div *ngIf="visible === 1">
+        <div class="item-popup">
+            <label>Evento: </label>
+            <br>
+            <span>{{data.event_name}}</span>
         </div>
-
-        <div class="item">
-            <label for="">Velocidad</label>
-            <span>{{data.speed}} Km/h</span>
+        <div class="item-popup">
+            <label>Fecha de transmisión: </label>
+            <br>
+            <span>{{data.date_entry}}</span>
         </div>
-    </div>
-
-    <div class="items">
-        <div class="item">
-            <label for="">Ultima posición</label>
+        <div class="item-popup">
+            <label>Dirección: </label>
+            <br>
             <span>{{data.address}}</span>
         </div>
-    </div>
-
-    <div class="items-big">
-        <div class="item-big">
-            <mat-icon svgIcon="driver"></mat-icon>
-
-            <label>Conductor</label>
-            <div class="name">
-                Jose perez
-            </div>
-            <div class="phone">
-                3222222222
-            </div>
+        <div class="item-popup">
+            <label>Velocidad: </label>
+            <br>
+            <span>{{data.speed}} Km/h</span>
         </div>
-
-        <div class="item-big">
-            <mat-icon svgIcon="sheet"></mat-icon>
-
-            <label>Planilla</label>
-            <div class="name">
-                0001
-            </div>
-            <div class="phone">
-                12/02/1992
-            </div>
-        </div>
-    </div>
-
-    <div class="items">
-        <div class="item">
-            <label>Frecuencia actual</label>
-            <span>5 Minutos</span>
-        </div>
-    </div>
-
-    <div class="buttons">
-        <button>Comandos</button>
-        <button (click)="mapFunctionalitieService.goDetail(data.id)">Detalles</button>
     </div>
 </div>

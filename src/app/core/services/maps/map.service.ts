@@ -20,6 +20,7 @@ export class MapFunctionalitieService {
   public dataSource: any = [];
   public fleets: any[] = [];
   public dataSourceFleets: any = [];
+  public commandsPlate: any = [];
   public markers: any = {};
   public map: L.Map;
   public markerCluster = new MarkerClusterGroup;
@@ -32,6 +33,7 @@ export class MapFunctionalitieService {
   public showOptionsGeoTools: boolean = false;
   public showFormGeomertry: boolean = false;
   public showHistoricPlate: boolean = false;
+  public showCommandsPlate: boolean = false;
 
   drawerMode = 'side';
   drawerOpened = false;
@@ -63,6 +65,38 @@ export class MapFunctionalitieService {
   count: number = 0;
   selectedTypeService;
   historic: any = [];
+  platesFleet: any = [];
+  plate: any;
+
+  public today = new Date();
+  public month = this.today.getMonth();
+  public year = this.today.getFullYear();
+  public day = this.today.getDate();
+  public initialDate: Date = new Date(this.year, this.month, this.day);
+  public finalDate: Date = new Date(this.year, this.month, this.day);
+  googleMaps = L.tileLayer(
+    'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+    {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    }
+  );
+  googleHybrid = L.tileLayer(
+    'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+    {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    }
+  );
+
+  changeMapa = this.googleMaps;
+
+  baseLayers = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'Google Maps': this.googleMaps,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'Google Hibrido': this.googleHybrid,
+  };
 
   constructor(
     private resolver: ComponentFactoryResolver,
@@ -90,40 +124,49 @@ export class MapFunctionalitieService {
   async init() {
     const time = timer(1000);
     time.subscribe((t) => {
-      const googleMaps = L.tileLayer(
-        'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
-        {
-          maxZoom: 20,
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }
-      );
+      // const googleMaps = L.tileLayer(
+      //   'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+      //   {
+      //     maxZoom: 20,
+      //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      //   }
+      // );
 
-      const googleHybrid = L.tileLayer(
-        'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-        {
-          maxZoom: 20,
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }
-      );
+      // const googleHybrid = L.tileLayer(
+      //   'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+      //   {
+      //     maxZoom: 20,
+      //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      //   }
+      // );
 
       this.map = L.map('map', {
         center: [4.658383846282959, -74.09394073486328],
         zoom: 10,
-        layers: [googleMaps],
+        layers: [this.changeMapa],
       });
 
-      const baseLayers = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'Google Maps': googleMaps,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'Google Hibrido': googleHybrid,
-      };
+      // const baseLayers = {
+      //   // eslint-disable-next-line @typescript-eslint/naming-convention
+      //   'Google Maps': googleMaps,
+      //   // eslint-disable-next-line @typescript-eslint/naming-convention
+      //   'Google Hibrido': googleHybrid,
+      // };
       // L.control.layers(baseLayers).addTo(this.map);
 
       // L.control.zoom({
       //   position: 'topright'
       // }).addTo(this.map);
     });
+  }
+
+  changeMap(newMap) {
+    console.log(newMap);
+    if (newMap === 'google') {
+      this.changeMapa = this.googleMaps;
+    } else {
+      this.changeMapa = this.googleHybrid;
+    }
   }
 
   loadAllsMobiles() {
@@ -144,12 +187,21 @@ export class MapFunctionalitieService {
     }
   }
 
-  deleteChecks(data: any) {
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      this.map.removeLayer(this.markers[element.id]);
-      this.markerCluster.clearLayers();
+  deleteChecks(data: any, type?) {
+    if (type === 'delete') {
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        this.map.removeLayer(this.markersPoint[element.id]);
+        this.markerCluster.clearLayers();
+      }
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        this.map.removeLayer(this.markers[element.id]);
+        this.markerCluster.clearLayers();
+      }
     }
+
   }
 
   moveMarker(data) {
@@ -203,7 +255,9 @@ export class MapFunctionalitieService {
         this.getPopup(e, data);
       });
     });
+
     this.map.fitBounds(this.pointLatLens);
+
     this.map.on('click', (e) => {
       if (!this.showMenuMobiles) {
         switch (this.type_geo) {
@@ -278,9 +332,13 @@ export class MapFunctionalitieService {
           this.markersPoint[historic[i].id] = L.marker(
             [x, y],
             {
-              icon: this.setIcon(historic[i], 'historic')
-            }).addTo(this.map)
-            .bindPopup(historic[i].address).openPopup();
+              icon: this.setIcon(historic[i], 'historic', color)
+            }).addTo(this.map);
+
+          this.markersPoint[historic[i].id].on('click', (e: any) => {
+            moment.locale('es');
+            this.getPopup(e, historic[i]);
+          });
 
           this.markersPoint[historic[i].id].options.rotationAngle =
             this.rotationIcon(historic[i]);
@@ -501,7 +559,7 @@ export class MapFunctionalitieService {
   /**
        * @description: Asigna los iconos para el marcador deacuerdo al estado
        */
-  private setIcon(data: any, type?): any {
+  private setIcon(data: any, type?, color?): any {
     const diffDays = moment(new Date()).diff(
       moment(data.date_entry),
       'days'
@@ -509,7 +567,7 @@ export class MapFunctionalitieService {
     let myIcon: L.Icon<L.IconOptions>;
     if (type === 'historic') {
       return (myIcon = L.icon({
-        iconUrl: '../assets/icons/iconMap/arrow.svg',
+        iconUrl: "data:image/svg+xml," + encodeURIComponent('<svg width="48" height="54" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1135_23154)"><path d="M23.9211 6.70219L41.7476 47.2387L23.7281 34.1518L6 44.4789L23.9211 6.70219Z" fill="' + color + '"/><path d="M8.28817 41.9887L23.8866 9.10794L39.344 44.2571L24.3157 33.3427L23.7881 32.9595L23.2247 33.2877L8.28817 41.9887Z" stroke="white" stroke-width="2"/></g><defs><filter id="filter0_d_1135_23154" x="0" y="0.702148" width="47.748" height="52.5366" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset/><feGaussianBlur stdDeviation="3"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.56 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1135_23154"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1135_23154" result="shape"/></filter></defs></svg>'),
         iconSize: [36, 36],
         iconAnchor: [18, 18],
       }));
@@ -566,7 +624,18 @@ export class MapFunctionalitieService {
 
   async goDetail(id) {
     await this.mobileRequestService.getDetailMobile(id);
-    this.showDetailMobile = true
+    this.showDetailMobile = true;
+  }
+
+  async goCommands(plate) {
+    this.plate = plate;
+    const data = {
+      date_init: moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
+      date_end: moment(this.initialDate).format('YYYY-MM-DD') + ' 23:59:59',
+      plate: this.plate
+    };
+    await this.mobileRequestService.getCommandsPlate(data);
+    this.showCommandsPlate = true;
   }
 
   getPosition(): Promise<any> {

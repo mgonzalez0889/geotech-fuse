@@ -89,15 +89,16 @@
                                                 (click)="mapFunctionalitieService.goDetail(element.id)">
                                                 <span>Ver detalle</span>
                                             </button>
-                                            <button mat-menu-item disabled>
+                                            <!-- <button mat-menu-item disabled>
                                                 <span>Configuración</span>
-                                            </button>
-                                            <button mat-menu-item>
+                                            </button> -->
+                                            <button mat-menu-item
+                                            (click)="mapFunctionalitieService.goCommands(element.plate)">
                                                 <span>Comandos</span>
                                             </button>
-                                            <button mat-menu-item>
+                                            <!-- <button mat-menu-item>
                                                 <span>Informes</span>
-                                            </button>
+                                            </button> -->
                                         </mat-menu>
                                     </td>
                                 </ng-container>

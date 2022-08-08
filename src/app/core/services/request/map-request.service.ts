@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { MapService } from '../map.service';
-import { MatTableDataSource } from '@angular/material/table';
 import { MapFunctionalitieService } from '../maps/map.service';
 import { HistoriesService } from '../histories.service';
 
@@ -61,7 +60,8 @@ export class MapRequestService {
               this.mapFunctionalitieService.historic.push({
                 plate: element,
                 color: getRandomColor(),
-                data: data
+                data: data,
+                selected: false
               })
             } else {
               this.mapFunctionalitieService.historic.push({
