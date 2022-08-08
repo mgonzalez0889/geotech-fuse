@@ -160,6 +160,10 @@ export class MapFunctionalitieService {
     });
   }
 
+  convertDate(date) {
+    return moment(date).fromNow();
+  }
+
   changeMap(newMap) {
     console.log(newMap);
     if (newMap === 'google') {

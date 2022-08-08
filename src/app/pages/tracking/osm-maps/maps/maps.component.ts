@@ -98,6 +98,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
             this.mapFunctionalitieService.moveMarker(data);
         });
+        this.socketIoService.listenin('new_command').subscribe((data: any) => {
+            console.log(data)
+        });
         const time = timer(2000);
         time.subscribe((t) => {
             this.getMobiles();

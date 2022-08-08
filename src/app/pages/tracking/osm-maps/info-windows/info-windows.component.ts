@@ -24,11 +24,9 @@ export class InfoWindowsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.mapFunctionalitieService.type_geo);
     this.iconService.loadIcons();
     if (this.mapFunctionalitieService.type_geo === 'historic') {
       this.visible = 1;
-      console.log(this.data);
     } else {
       this.visible = 2;
       this.data = this.mapFunctionalitieService.mobiles.filter(x => {
@@ -36,9 +34,4 @@ export class InfoWindowsComponent implements OnInit {
       })[0];
     }
   }
-
-  convertDate(date) {
-    return moment(date).fromNow();
-  }
-
 }
