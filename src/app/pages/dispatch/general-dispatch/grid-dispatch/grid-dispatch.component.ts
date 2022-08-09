@@ -13,6 +13,10 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./grid-dispatch.component.scss'],
 })
 export class GridDispatchComponent implements OnInit, OnDestroy {
+    public dispatch_cout: number = 0;
+    public pre_dispatch_count: number = 0;
+    public finished_cout: number = 0;
+    public dispatch: any = [];
     public today = new Date();
     public month = this.today.getMonth();
     public year = this.today.getFullYear();
@@ -25,15 +29,16 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     public dispatchCount: number = 0;
     public columnsDispatch: string[] = [
         'spreadsheet',
-        'client',
-        'date_init_operation',
+        'status',
+        'created_at',
+        'date_init_dispatch',
+        'date_end_dispatch',
         'plate',
         'device',
         'container_number',
-        'state',
+        'security_seal',
         'init_place',
         'end_place',
-        'data_driver',
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -59,7 +64,17 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
             status: [0, 1, 2],
         };
         this.dispatchService.getDispatches(data).subscribe((res) => {
+            if (res.count_dispatches) {
+                this.dispatch_cout = res.count_dispatches[1]?.count_status;
+                this.pre_dispatch_count = res.count_dispatches[0]?.count_status;
+                this.finished_cout = res.count_dispatches[2]?.count_status;
+            } else {
+                this.dispatch_cout = 0;
+                this.pre_dispatch_count = 0;
+                this.finished_cout = 0;
+            }
             if (res.data) {
+                res.dispatch = res.data;
                 this.dispatchCount = res.data.length;
             } else {
                 this.dispatchCount = 0;

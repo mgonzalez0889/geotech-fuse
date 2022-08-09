@@ -38,6 +38,11 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
      * @description: Valida si es edita o guarda un despacho nuevo
      */
     public onSave(): void {
+        if (this.dispatchForm.get('status').value === 1) {
+            this.dispatchForm.controls['date_init_dispatch'].setValue(
+                new Date()
+            );
+        }
         const data = this.dispatchForm.getRawValue();
         if (!data.id) {
             this.newDispatch(data);
@@ -58,23 +63,59 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
      * @description: Modal para asignar un dispositivo al despacho
      */
     public startDispatch(): void {
-        const dialogRef = this.matDialog.open(StartDispatchComponent, {
-            width: '455px',
-            data: this.dispatches,
-        });
-        dialogRef.afterClosed().subscribe((res) => {
-            if (res) {
+        this.dispatchForm.disable();
+        this.dispatchForm.controls['status'].setValue(1);
+        if (this.dispatchForm.get('automatic_finish').value === false) {
+            this.dispatchForm.controls['date_init_dispatch'].setValue(
+                new Date()
+            );
+        }
+        const data = this.dispatchForm.getRawValue();
+        this.dispatchService.putDispatch(data).subscribe((res) => {
+            this.dispatchForm.enable();
+            if (res.code === 200) {
+                this.dispatchService.behaviorSubjectDispatchGrid.next({
+                    reload: true,
+                    opened: false,
+                });
+            } else {
+                this.confirmationService.open({
+                    title: 'Editar despacho',
+                    message:
+                        'El despacho no se pudo actualizar, favor intente nuevamente.',
+                    actions: {
+                        cancel: {
+                            label: 'Aceptar',
+                        },
+                        confirm: {
+                            show: false,
+                        },
+                    },
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                });
             }
         });
+
+        // const dialogRef = this.matDialog.open(StartDispatchComponent, {
+        //     width: '455px',
+        //     data: this.dispatches,
+        // });
+        // dialogRef.afterClosed().subscribe((res) => {
+        //     if (res) {
+        //     }
+        // });
     }
     /**
      * @description: Finaliza un despacho
      */
     public finishDispatch(): void {
-        const data = {
-            id: this.dispatches['id'],
-            date_end_dispatch: new Date(),
-        };
+        this.dispatchForm.controls['status'].setValue(2);
+        this.dispatchForm.controls['date_end_dispatch'].setValue(new Date());
+        const data = this.dispatchForm.getRawValue();
         let confirmation = this.confirmationService.open({
             title: 'Finalizar despacho',
             message:
@@ -86,13 +127,15 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                 },
             },
             icon: {
-                name: 'heroicons_outline:pencil',
+                name: 'heroicons_outline:check-circle',
                 color: 'info',
             },
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
+                this.dispatchForm.disable();
                 this.dispatchService.putDispatch(data).subscribe((res) => {
+                    this.dispatchForm.enable();
                     if (res.code === 200) {
                         this.dispatchService.behaviorSubjectDispatchGrid.next({
                             reload: true,
@@ -192,9 +235,12 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
             identification_driver: ['', [Validators.required]],
             driver_contact: ['', [Validators.required]],
             detail: [''],
-            state: [0, [Validators.required]],
+            status: [0, [Validators.required]],
             security_seal: ['', [Validators.required]],
             device: ['', [Validators.required]],
+            automatic_finish: [false],
+            date_init_dispatch: [''],
+            date_end_dispatch: [''],
         });
     }
     /**
@@ -213,6 +259,8 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
             this.dispatchService.behaviorSubjectDispatchForm.subscribe(
                 ({ newDispatch, id, isEdit }) => {
                     this.editMode = isEdit;
+
+                    console.log(this.editMode, 'eeee');
                     if (newDispatch) {
                         this.dispatches = [];
                         this.dispatches['client'] = newDispatch;
@@ -313,7 +361,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                     reload: true,
                     opened: false,
                 });
-                const confirmation = this.confirmationService.open({
+                this.confirmationService.open({
                     title: 'Crear despacho',
                     message: 'Despacho creado con exito!',
                     actions: {
@@ -330,7 +378,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                     },
                 });
             } else {
-                const confirmation = this.confirmationService.open({
+                this.confirmationService.open({
                     title: 'Crear despacho',
                     message:
                         'El despacho no se pudo crear, favor intente nuevamente.',

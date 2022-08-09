@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { StartDispatchComponent } from './start-dispatch/start-dispatch.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [
@@ -56,6 +57,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         FormsModule,
         MatDialogModule,
         MatAutocompleteModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class GeneralDispatchModule {}
