@@ -171,7 +171,6 @@ export class MapFunctionalitieService {
     }
 
     changeMap(newMap) {
-        console.log(newMap);
         if (newMap === 'google') {
             this.changeMapa = this.googleMaps;
         } else {

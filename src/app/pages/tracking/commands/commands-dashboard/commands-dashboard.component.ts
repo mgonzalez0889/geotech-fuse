@@ -53,12 +53,9 @@ export class CommandsDashboardComponent implements OnInit {
         private commandsService: CommandsService,
         private mobilesService: MobileService,
         private fleetService: FleetsService,
-        private dateAdapter: DateAdapter<any>,
         private snackBar: MatSnackBar,
         private confirmationService: ConfirmationService
-    ) {
-        this.dateAdapter.setLocale('es');
-    }
+    ) {}
 
     ngOnInit(): void {
         this.getTypeCommand();
@@ -254,7 +251,6 @@ export class CommandsDashboardComponent implements OnInit {
             }
             this.mobiles.forEach((x) => {
                 x.selected = completed;
-                console.log(x, 'x');
             });
         } else if ('fleets') {
             this.allSelectedFleets = completed;

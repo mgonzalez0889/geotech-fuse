@@ -70,7 +70,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
      */
     private _check(redirectURL: string): Observable<boolean>
     {
-        console.log(redirectURL);
         // Check the authentication status
         return this._authService.check()
                    .pipe(

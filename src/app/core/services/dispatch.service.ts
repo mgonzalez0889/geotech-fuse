@@ -25,7 +25,6 @@ export class DispatchService {
      * @description: Ver todos los despachos
      */
     public getDispatches(data: any): Observable<any> {
-        console.log(data, 'data');
         const params = { method: 'info_all_dispatches' };
         return this._http.post(this._appSettings.dispatch.url.base, data, {
             params,

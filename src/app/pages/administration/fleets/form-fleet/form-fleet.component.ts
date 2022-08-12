@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -8,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MobileService } from 'app/core/services/mobile.service';
+import { OwnerPlateService } from 'app/core/services/owner-plate.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,6 +18,7 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./form-fleet.component.scss'],
 })
 export class FormFleetComponent implements OnInit, OnDestroy {
+    public owner_plate_id: any = [];
     public selection = new SelectionModel<any>(true, []);
     public mobilesCount: number = 0;
     public fleetsPlateCount: number = 0;
@@ -31,6 +34,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(
+        private ownerPlateService: OwnerPlateService,
         private fleetService: FleetsService,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
@@ -46,6 +50,11 @@ export class FormFleetComponent implements OnInit, OnDestroy {
      * @description: Valida si es edita o guarda una nueva flota
      */
     public onSave(): void {
+        this.owner_plate_id = [];
+        this.selection.selected.forEach((x) => {
+            this.owner_plate_id.push(x.id);
+        });
+        this.fleetForm.patchValue({ plates: this.owner_plate_id });
         const data = this.fleetForm.getRawValue();
         if (!data.id) {
             this.newFleet(data);
@@ -78,7 +87,9 @@ export class FormFleetComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
+                this.fleetForm.disable();
                 this.fleetService.deleteFleets(id).subscribe((res) => {
+                    this.fleetForm.enable();
                     if (res.code === 200) {
                         this.fleetService.behaviorSubjectFleetGrid.next({
                             reload: true,
@@ -160,7 +171,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
      * @description: Obtiene un listado de los vehiculos del cliente
      */
     public getMobiles(): void {
-        this.mobilesService.getMobiles().subscribe((res) => {
+        this.ownerPlateService.getOwnerPlates().subscribe((res) => {
             this.selection.clear();
             if (res.data) {
                 this.mobilesCount = res.data.length;
@@ -187,7 +198,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
             id: [''],
             name: ['', [Validators.required]],
             description: [''],
-            mobiles: [''],
+            plates: [''],
         });
     }
     /**
@@ -197,7 +208,6 @@ export class FormFleetComponent implements OnInit, OnDestroy {
         this.subscription =
             this.fleetService.behaviorSubjectFleetForm.subscribe(
                 ({ newFleet, payload, isEdit }) => {
-                    console.log(newFleet, payload, isEdit, 'arturo');
                     this.editMode = isEdit;
                     if (newFleet) {
                         this.fleetsPlate = null;
@@ -208,15 +218,12 @@ export class FormFleetComponent implements OnInit, OnDestroy {
                         }
                     }
                     if (payload?.id) {
-                        console.log(payload, 'payloadpayloadpayload');
                         this.fleets = payload;
-                        console.log(this.fleets, 'this.fleets');
                         this.fleetForm.patchValue(this.fleets);
                         this.fleetService
                             .getFleetsPlatesAssigned(payload.id)
                             .subscribe((res) => {
                                 this.fleetsPlate = res.data;
-                                console.log(this.fleetsPlate, 'fleetsPlate');
                             });
                     }
                 }
@@ -242,8 +249,10 @@ export class FormFleetComponent implements OnInit, OnDestroy {
             },
         });
         confirmation.afterClosed().subscribe((result) => {
+            this.fleetForm.disable();
             if (result === 'confirmed') {
                 this.fleetService.putFleets(data).subscribe((res) => {
+                    this.fleetForm.enable();
                     if (res.code === 200) {
                         this.fleetService.behaviorSubjectFleetGrid.next({
                             reload: true,
@@ -293,13 +302,15 @@ export class FormFleetComponent implements OnInit, OnDestroy {
      * @description: Guarda una nuevo flota
      */
     private newFleet(data: any): void {
+        this.fleetForm.disable();
         this.fleetService.postFleets(data).subscribe((res) => {
+            this.fleetForm.enable();
             if (res.code === 200) {
                 this.fleetService.behaviorSubjectFleetGrid.next({
                     reload: true,
                     opened: false,
                 });
-                const confirmation = this.confirmationService.open({
+                this.confirmationService.open({
                     title: 'Crear una flota',
                     message: 'Flota creada con exito!',
                     actions: {
@@ -316,7 +327,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
                     },
                 });
             } else {
-                const confirmation = this.confirmationService.open({
+                this.confirmationService.open({
                     title: 'Crear una flota',
                     message:
                         'La flota no pudo ser creada, favor intente nuevamente.',

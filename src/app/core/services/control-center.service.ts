@@ -81,6 +81,8 @@ export class ControlCenterService {
      */
     public postAttendAlarm(data: any): Observable<any> {
         const params = { method: 'detail_alarm_attention' };
+        delete data.postponeAlarmHour;
+        delete data.postponeAlarmDate;
         return this._http.post(this._appSettings.controlCenter.url.base, data, {
             params,
         });
@@ -129,6 +131,18 @@ export class ControlCenterService {
         const params = { method: 'show_contact' };
         return this._http.get(
             this._appSettings.contactsControlCenter.url.base + '/' + id,
+            {
+                params,
+            }
+        );
+    }
+    /**
+     * @description: Traer un contacto
+     */
+    public getInitAttention(id: number): Observable<any> {
+        const params = { method: 'init_alarm_attention' };
+        return this._http.get(
+            this._appSettings.controlCenter.url.base + '/' + id,
             {
                 params,
             }

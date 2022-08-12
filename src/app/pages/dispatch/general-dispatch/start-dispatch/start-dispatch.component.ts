@@ -44,7 +44,6 @@ export class StartDispatchComponent implements OnInit {
      */
     private getDevicesDispatch(): void {
         this.dispatchService.getDevicesDispatch().subscribe((res) => {
-            console.log(res.data);
             this.devices = res.data;
         });
     }

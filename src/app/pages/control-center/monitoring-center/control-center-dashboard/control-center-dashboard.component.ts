@@ -120,6 +120,11 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
      * @description: Guarda la data de la alarma para aburir el formulario
      */
     public actionsControlCenter(data: any): void {
+        this.controlCenterService.getInitAttention(data.id).subscribe((res) => {
+            if (res.code === 200) {
+                this.getAllAlarms();
+            }
+        });
         this.opened = true;
         this.dataAlarmSelect = data;
         this.controlCenterService.behaviorSubjectContactForm.next({

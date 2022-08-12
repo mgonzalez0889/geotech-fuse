@@ -193,7 +193,6 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.prediction = predictions;
-                    console.log('miren aqui la predictions', predictions);
                 }
             );
         }
@@ -208,7 +207,6 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.prediction = predictions;
-                    console.log('miren aqui la predictions', predictions);
                 }
             );
         }
@@ -259,8 +257,6 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
             this.dispatchService.behaviorSubjectDispatchForm.subscribe(
                 ({ newDispatch, id, isEdit }) => {
                     this.editMode = isEdit;
-
-                    console.log(this.editMode, 'eeee');
                     if (newDispatch) {
                         this.dispatches = [];
                         this.dispatches['client'] = newDispatch;
@@ -273,7 +269,6 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                             .getDispatch(id)
                             .subscribe((res) => {
                                 this.dispatches = res.data;
-                                console.log(this.dispatches['status']);
                                 this.dispatchForm.patchValue(this.dispatches);
                             });
                     }

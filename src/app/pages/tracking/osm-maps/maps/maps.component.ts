@@ -99,7 +99,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
             this.mapFunctionalitieService.moveMarker(data);
         });
         this.socketIoService.listenin('new_command').subscribe((data: any) => {
-            console.log(data,'respues comando ')
         });
         const time = timer(2000);
         time.subscribe((t) => {

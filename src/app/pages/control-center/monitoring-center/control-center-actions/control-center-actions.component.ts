@@ -8,6 +8,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -25,6 +26,7 @@ import { ModalContactsComponent } from '../modal-contacts/modal-contacts.compone
     styleUrls: ['./control-center-actions.component.scss'],
 })
 export class ControlCenterActionsComponent implements OnInit, OnDestroy {
+    public minDate = new Date();
     public showPostponeAlarm: boolean = false;
     public attendedAlarmsForm: FormGroup;
     public selectedAlarm: any = [];
@@ -60,15 +62,8 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         public controlCenterService: ControlCenterService,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
-        private paginatorIntl: MatPaginatorIntl,
         private matDialog: MatDialog
-    ) {
-        this.paginatorIntl.itemsPerPageLabel = 'Items por página:';
-        this.paginatorIntl.firstPageLabel = 'Página anterior';
-        this.paginatorIntl.previousPageLabel = 'Pagina anterior';
-        this.paginatorIntl.nextPageLabel = 'Siguiente página';
-        this.paginatorIntl.lastPageLabel = 'Última página';
-    }
+    ) {}
 
     ngOnInit(): void {
         this.listenObservables();
@@ -139,7 +134,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
             alarmAttendedId: [''],
             causalName: [''],
             stateAlarmAttend: ['', [Validators.required]],
-            postponeAlarm: [''],
+            postponeAlarmDate: [''],
+            wait_alarm: [''],
+            postponeAlarmHour: [''],
             causalAlarmAttend: ['', [Validators.required]],
             description: ['', [Validators.required]],
         });
@@ -148,9 +145,21 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      * @description: Atiende la alarma
      */
     public attendAlarm(): void {
+        let postponeAlarm = null;
+        if (this.attendedAlarmsForm.get('postponeAlarmDate').value) {
+            postponeAlarm =
+                this.attendedAlarmsForm
+                    .get('postponeAlarmDate')
+                    .value?.toLocaleDateString() +
+                ' ' +
+                this.attendedAlarmsForm.get('postponeAlarmHour').value;
+        } else {
+            postponeAlarm = null;
+        }
         this.attendedAlarmsForm.patchValue({
             alarmAttendedId: [this.selectedAlarm.id],
             causalName: this.selectedAlarm.event_name,
+            wait_alarm: postponeAlarm,
         });
         const data = this.attendedAlarmsForm.getRawValue();
         this.controlCenterService.postAttendAlarm(data).subscribe((res) => {
@@ -237,18 +246,37 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     public validStateAlarmAttend(idEvent: number): void {
         if (idEvent === 6) {
             this.showPostponeAlarm = true;
-            this.attendedAlarmsForm.controls['postponeAlarm'].setValidators(
+            this.attendedAlarmsForm.controls['postponeAlarmDate'].setValidators(
+                Validators.required
+            );
+            this.attendedAlarmsForm.controls['postponeAlarmHour'].setValidators(
                 Validators.required
             );
             this.attendedAlarmsForm
-                .get('postponeAlarm')
+                .get('postponeAlarmDate')
+                .updateValueAndValidity();
+            this.attendedAlarmsForm
+                .get('postponeAlarmHour')
                 .updateValueAndValidity();
         } else {
             this.showPostponeAlarm = false;
-
-            this.attendedAlarmsForm.controls['postponeAlarm'].clearValidators();
+            this.attendedAlarmsForm.controls['postponeAlarmDate'].setValue(
+                null
+            );
+            this.attendedAlarmsForm.controls['postponeAlarmHour'].setValue(
+                null
+            );
+            this.attendedAlarmsForm.controls[
+                'postponeAlarmDate'
+            ].clearValidators();
+            this.attendedAlarmsForm.controls[
+                'postponeAlarmHour'
+            ].clearValidators();
             this.attendedAlarmsForm
-                .get('postponeAlarm')
+                .get('postponeAlarmDate')
+                .updateValueAndValidity();
+            this.attendedAlarmsForm
+                .get('postponeAlarmHour')
                 .updateValueAndValidity();
         }
     }
@@ -350,7 +378,6 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                         }
                         this.getContact();
                     }
-                    console.log(payload, isAttended, 'payload');
                 }
             );
     }
