@@ -135,6 +135,14 @@ export class AppSettingsService {
         },
     };
     /**
+     *@description: End-point Centro de control de clientes
+     */
+    public controlCenterOwner = {
+        url: {
+            base: EndPoints.uri('alarm_owner'),
+        },
+    };
+    /**
      *@description: End-point contactos de Centro de control
      */
     public contactsControlCenter = {

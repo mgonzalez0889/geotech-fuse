@@ -47,7 +47,7 @@
                             <div class="flex border-2 rounded-full p-2 cursor-pointer w-52  ml-3"
                                 (click)="picker.open()">
                                 <div>
-                                    <mat-date-range-input [rangePicker]="picker">
+                                    <mat-date-range-input [rangePicker]="picker" >
                                         <input matStartDate [(ngModel)]="initialDate" placeholder="Fecha inicial">
                                         <input matEndDate [(ngModel)]="finalDate" placeholder="Fecha Final">
                                     </mat-date-range-input>

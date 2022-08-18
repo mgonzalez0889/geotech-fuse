@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { debounceTime, filter, map, takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations/public-api';
+import { OwnersService } from 'app/core/services/owners.service';
+
 
 @Component({
     selector     : 'search',
@@ -30,7 +32,8 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     constructor(
         private _elementRef: ElementRef,
         private _httpClient: HttpClient,
-        private _renderer2: Renderer2
+        private _renderer2: Renderer2,
+        private ownersService: OwnersService
     )
     {
     }
@@ -120,15 +123,25 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
                 filter(value => value && value.length >= this.minLength)
             )
             .subscribe((value) => {
-                this._httpClient.post('api/common/search', {query: value})
+                console.log(value,'a ver');
+                this.ownersService.getOwners().subscribe((res) => {
+                    // Store the result sets
+                    this.resultSets = res;
+
+                    // Execute the event
+                    this.search.next(res);
+                    console.log(res.data,'aaaaa');
+                });
+                /*this._httpClient.post('api/common/search', {query: value})
                     .subscribe((resultSets: any) => {
 
                         // Store the result sets
                         this.resultSets = resultSets;
+                        console.log(this.resultSets,'this.resultSets')
 
                         // Execute the event
                         this.search.next(resultSets);
-                    });
+                    });*/
             });
     }
 
@@ -209,6 +222,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      */
     trackByFn(index: number, item: any): any
     {
+        console.log(index,'index',item,'item');
         return item.id || index;
     }
 }

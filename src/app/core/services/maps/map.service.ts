@@ -307,6 +307,7 @@ export class MapFunctionalitieService {
         });
     }
     createPuntControlCenter(data: any): void {
+        console.log(data.color_event, 'wwww');
         let x;
         let y;
         const myIconUrl =
@@ -318,7 +319,6 @@ export class MapFunctionalitieService {
             );
         x = data.x;
         y = data.y;
-
         this.map.setView([x, y]);
         this.markersPoint[data.id] = L.marker([x, y], {
             icon: L.icon({
@@ -327,6 +327,7 @@ export class MapFunctionalitieService {
                 iconAnchor: [20, 20],
             }),
         });
+        this.markersPoint[data.id].addTo(this.map);
     }
 
     createPunt(data: any, historic?, color?) {

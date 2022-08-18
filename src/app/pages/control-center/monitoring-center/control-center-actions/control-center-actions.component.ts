@@ -39,7 +39,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     public day = this.today.getDate();
     public initialDate: Date = new Date(this.year, this.month, this.day);
     public finalDate: Date = new Date(this.year, this.month, this.day);
-    public dataHisotiric: MatTableDataSource<any>;
+    public dataTableAttendedAlarms: MatTableDataSource<any>;
     public statusAttends = [];
     public causalAttends = [];
     public dataTableContactsControlCenter: MatTableDataSource<any>;
@@ -53,9 +53,23 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         'description',
         'actions',
     ];
+    public columnsAttendedAlarms: string[] = [
+        'plate',
+        'alarm',
+        'address',
+        'date_entry',
+        'attention_date',
+        'reaction_time',
+        'time_attention',
+        'user',
+        'action',
+    ];
 
     @ViewChild(MatPaginator) paginatorContactsControlCenter: MatPaginator;
     @ViewChild(MatSort) sortContactsControlCenter: MatSort;
+
+    @ViewChild(MatPaginator) paginatorAttendedAlarms: MatPaginator;
+    @ViewChild(MatSort) sortAttendedAlarms: MatSort;
     constructor(
         public mapFunctionalitieService: MapFunctionalitieService,
         public historicService: HistoriesService,
@@ -70,6 +84,8 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         this.getAllCausalAttends();
         this.getAllStatusAttends();
         this.createContactForm();
+        this.getReportAlarmsAttens();
+        this.loadMap();
     }
     /**
      * @description: Modal para agregar nuevo contacto
@@ -285,7 +301,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      */
     public onCancel(): void {
         this.isAttended = false;
-        this.loadMap();
+        //this.loadMap();
         if (this.attendedAlarmsForm) {
             this.attendedAlarmsForm.reset();
         }
@@ -371,7 +387,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                     this.selectedAlarm = payload;
                     this.isAttended = isAttended;
                     if (!this.isAttended) {
-                        this.loadMap();
+                        //this.loadMap();
                     } else {
                         if (this.attendedAlarmsForm) {
                             this.attendedAlarmsForm.reset();
@@ -380,6 +396,22 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                     }
                 }
             );
+    }
+    public getReportAlarmsAttens(): void {
+        console.log('entro');
+        const data = {
+            plate: this.selectedAlarm.plate,
+            dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
+            dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
+        };
+        this.controlCenterService
+            .postReportAlarmsAttens(data)
+            .subscribe((res) => {
+                this.dataTableAttendedAlarms = new MatTableDataSource(res.data);
+                this.dataTableAttendedAlarms.paginator =
+                    this.paginatorAttendedAlarms;
+                this.dataTableAttendedAlarms.sort = this.sortAttendedAlarms;
+            });
     }
     /**
      * @description: Destruye el observable

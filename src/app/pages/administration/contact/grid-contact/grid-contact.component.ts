@@ -36,13 +36,13 @@ export class GridContactComponent implements OnInit, OnDestroy {
      * @description: Trae todos los contactos del cliente
      */
     public getContact(): void {
-        this.contactService.getContacts().subscribe((data) => {
-            if (data.data) {
-                this.contactsCount = data.data.length;
+        this.contactService.getContacts().subscribe((res) => {
+            if (res.data) {
+                this.contactsCount = res.data.length;
             } else {
                 this.contactsCount = 0;
             }
-            this.dataTableContact = new MatTableDataSource(data.data);
+            this.dataTableContact = new MatTableDataSource(res.data);
             this.dataTableContact.paginator = this.paginator;
             this.dataTableContact.sort = this.sort;
         });

@@ -35,6 +35,15 @@ export class ControlCenterService {
         });
     }
     /**
+     * @description: Todos las alarmas
+     */
+    public getAllAlarmsOwner(filter: number): Observable<any> {
+        const params = { method: 'index_all_alarms', filterAlarms: filter };
+        return this._http.get(this._appSettings.controlCenterOwner.url.base, {
+            params,
+        });
+    }
+    /**
      * @description: Todos los contactos de centro de control
      */
     public getContactsControlCenter(id: number): Observable<any> {
@@ -147,5 +156,14 @@ export class ControlCenterService {
                 params,
             }
         );
+    }
+    /**
+     * @description: Generar un reporte de alarmas atendidas
+     */
+    public postReportAlarmsAttens(data: any): Observable<any> {
+        const params = { method: 'report_alarms_attens' };
+        return this._http.post(this._appSettings.controlCenter.url.base, data, {
+            params,
+        });
     }
 }
