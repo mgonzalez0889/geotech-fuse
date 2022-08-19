@@ -153,6 +153,24 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
      * @description: Guarda la data de la alarma para aburir el formulario
      */
     public actionsControlCenter(data: any): void {
+        if (this.owner_id_simulator === 1) {
+            this.controlCenterService
+                .getInitAttention(data.id)
+                .subscribe((res) => {
+                    if (res.code === 200) {
+                        this.getAllAlarms();
+                    }
+                });
+        } else {
+            //Centro de control de los clientes
+            this.controlCenterService
+                .getInitAttentionOwner(data.id)
+                .subscribe((res) => {
+                    if (res.code === 200) {
+                        this.getAllAlarms();
+                    }
+                });
+        }
         this.controlCenterService.getInitAttention(data.id).subscribe((res) => {
             if (res.code === 200) {
                 this.getAllAlarms();
@@ -160,6 +178,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
         });
         this.opened = true;
         this.dataAlarmSelect = data;
+        this.dataAlarmSelect['owner_id_simulator'] = this.owner_id_simulator;
         this.controlCenterService.behaviorSubjectContactForm.next({
             payload: this.dataAlarmSelect,
             isAttended: false,

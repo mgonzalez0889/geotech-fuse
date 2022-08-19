@@ -150,6 +150,14 @@ export class AppSettingsService {
             base: EndPoints.uri('control_center_contact'),
         },
     };
+        /**
+     *@description: End-point contactos de Centro de control owner
+     */
+     public contactsControlCenterOwner = {
+        url: {
+            base: EndPoints.uri('control_center_contact_owner'),
+        },
+    };
     /**
      *@description: End-point tipos de contactos Centro de control
      */

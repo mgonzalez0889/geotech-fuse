@@ -18,7 +18,7 @@
             class="w-full h-full px-16 sm:px-18"
             [formControl]="searchControl"
             [matAutocomplete]="matAutocomplete"
-            [placeholder]="'Search for a page or a contaqqqqqqqqqqct'"
+            [placeholder]="'Buscar empresa'"
             (keydown)="onKeydown($event)"
             #barSearchInput>
         <mat-autocomplete
@@ -32,18 +32,24 @@
             </mat-option>
             <ng-container *ngFor="let resultSet of resultSets; trackBy: trackByFn">
                 <mat-optgroup class="flex items-center mt-2 px-2">
-                    <span class="text-sm font-semibold tracking-wider text-secondary">Clientes</span>
+                    <span class="text-sm font-semibold tracking-wider text-secondary">{{resultSet.label.toUpperCase()}}</span>
                 </mat-optgroup>
-                <ng-container *ngFor="let result of resultSet.data; trackBy: trackByFn">
+                <ng-container *ngFor="let result of resultSet.results; trackBy: trackByFn">
                     <mat-option
                         class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
                         [routerLink]="result.link">
                         <!-- Contacts -->
-                        <ng-container >
+                        <ng-container *ngIf="resultSet.id === 'contacts'">
                             <ng-container *ngTemplateOutlet="contactResult; context: {$implicit: result}"></ng-container>
                         </ng-container>
                         <!-- Pages -->
-
+                        <ng-container *ngIf="resultSet.id === 'pages'">
+                            <ng-container *ngTemplateOutlet="pageResult; context: {$implicit: result}"></ng-container>
+                        </ng-container>
+                        <!-- Tasks -->
+                        <ng-container *ngIf="resultSet.id === 'tasks'">
+                            <ng-container *ngTemplateOutlet="taskResult; context: {$implicit: result}"></ng-container>
+                        </ng-container>
                     </mat-option>
                 </ng-container>
             </ng-container>

@@ -64,11 +64,19 @@ export class ModalContactsComponent implements OnInit {
             description: [''],
         });
         if (this.infoContact.id) {
-            this.controlCenterService
-                .getContact(this.infoContact.id)
-                .subscribe((res) => {
-                    this.contactForm.patchValue(res.data);
-                });
+            if (this.infoContact.owner_id_simulator === 1) {
+                this.controlCenterService
+                    .getContact(this.infoContact.id)
+                    .subscribe((res) => {
+                        this.contactForm.patchValue(res.data);
+                    });
+            } else {
+                this.controlCenterService
+                    .getContactOwner(this.infoContact.id)
+                    .subscribe((res) => {
+                        this.contactForm.patchValue(res.data);
+                    });
+            }
         }
         this.contactForm.patchValue({
             owner_id: this.infoContact.owner_id,
@@ -78,88 +86,176 @@ export class ModalContactsComponent implements OnInit {
      * @description: Editar un contacto
      */
     private editContact(data: any): void {
-        this.controlCenterService.putContacts(data).subscribe((res) => {
-            if (res.code === 200) {
-                this.confirmationService.open({
-                    title: 'Editar contacto',
-                    message: 'Contacto editado con exito!',
-                    actions: {
-                        cancel: {
-                            label: 'Aceptar',
+        if (this.infoContact.owner_id_simulator === 1) {
+            this.controlCenterService.putContacts(data).subscribe((res) => {
+                if (res.code === 200) {
+                    this.confirmationService.open({
+                        title: 'Editar contacto',
+                        message: 'Contacto editado con exito!',
+                        actions: {
+                            cancel: {
+                                label: 'Aceptar',
+                            },
+                            confirm: {
+                                show: false,
+                            },
                         },
-                        confirm: {
-                            show: false,
+                        icon: {
+                            name: 'heroicons_outline:check-circle',
+                            color: 'success',
                         },
-                    },
-                    icon: {
-                        name: 'heroicons_outline:check-circle',
-                        color: 'success',
-                    },
+                    });
+                } else {
+                    this.confirmationService.open({
+                        title: 'Editar contacto',
+                        message:
+                            'El contacto no se pudo actualizar, favor intente nuevamente.',
+                        actions: {
+                            cancel: {
+                                label: 'Aceptar',
+                            },
+                            confirm: {
+                                show: false,
+                            },
+                        },
+                        icon: {
+                            show: true,
+                            name: 'heroicons_outline:exclamation',
+                            color: 'warn',
+                        },
+                    });
+                }
+            });
+        } else {
+            this.controlCenterService
+                .putContactsOwner(data)
+                .subscribe((res) => {
+                    if (res.code === 200) {
+                        this.confirmationService.open({
+                            title: 'Editar contacto',
+                            message: 'Contacto editado con exito!',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                name: 'heroicons_outline:check-circle',
+                                color: 'success',
+                            },
+                        });
+                    } else {
+                        this.confirmationService.open({
+                            title: 'Editar contacto',
+                            message:
+                                'El contacto no se pudo actualizar, favor intente nuevamente.',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                show: true,
+                                name: 'heroicons_outline:exclamation',
+                                color: 'warn',
+                            },
+                        });
+                    }
                 });
-            } else {
-                this.confirmationService.open({
-                    title: 'Editar contacto',
-                    message:
-                        'El contacto no se pudo actualizar, favor intente nuevamente.',
-                    actions: {
-                        cancel: {
-                            label: 'Aceptar',
-                        },
-                        confirm: {
-                            show: false,
-                        },
-                    },
-                    icon: {
-                        show: true,
-                        name: 'heroicons_outline:exclamation',
-                        color: 'warn',
-                    },
-                });
-            }
-        });
+        }
     }
     /**
      * @description: Guarda un nuevo contacto
      */
     private newContact(data: any): void {
-        this.controlCenterService.postContacts(data).subscribe((res) => {
-            if (res.code === 200) {
-                this.confirmationService.open({
-                    title: 'Crear contacto',
-                    message: 'Contacto creado con exito!',
-                    actions: {
-                        cancel: {
-                            label: 'Aceptar',
+        if (this.infoContact.owner_id_simulator === 1) {
+            this.controlCenterService.postContacts(data).subscribe((res) => {
+                if (res.code === 200) {
+                    this.confirmationService.open({
+                        title: 'Crear contacto',
+                        message: 'Contacto creado con exito!',
+                        actions: {
+                            cancel: {
+                                label: 'Aceptar',
+                            },
+                            confirm: {
+                                show: false,
+                            },
                         },
-                        confirm: {
-                            show: false,
+                        icon: {
+                            name: 'heroicons_outline:check-circle',
+                            color: 'success',
                         },
-                    },
-                    icon: {
-                        name: 'heroicons_outline:check-circle',
-                        color: 'success',
-                    },
+                    });
+                } else {
+                    this.confirmationService.open({
+                        title: 'Crear contacto',
+                        message:
+                            'El contacto no se pudo crear, favor intente nuevamente.',
+                        actions: {
+                            cancel: {
+                                label: 'Aceptar',
+                            },
+                            confirm: {
+                                show: false,
+                            },
+                        },
+                        icon: {
+                            show: true,
+                            name: 'heroicons_outline:exclamation',
+                            color: 'warn',
+                        },
+                    });
+                }
+            });
+        } else {
+            this.controlCenterService
+                .postContactsOwner(data)
+                .subscribe((res) => {
+                    if (res.code === 200) {
+                        this.confirmationService.open({
+                            title: 'Crear contacto',
+                            message: 'Contacto creado con exito!',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                name: 'heroicons_outline:check-circle',
+                                color: 'success',
+                            },
+                        });
+                    } else {
+                        this.confirmationService.open({
+                            title: 'Crear contacto',
+                            message:
+                                'El contacto no se pudo crear, favor intente nuevamente.',
+                            actions: {
+                                cancel: {
+                                    label: 'Aceptar',
+                                },
+                                confirm: {
+                                    show: false,
+                                },
+                            },
+                            icon: {
+                                show: true,
+                                name: 'heroicons_outline:exclamation',
+                                color: 'warn',
+                            },
+                        });
+                    }
                 });
-            } else {
-                this.confirmationService.open({
-                    title: 'Crear contacto',
-                    message:
-                        'El contacto no se pudo crear, favor intente nuevamente.',
-                    actions: {
-                        cancel: {
-                            label: 'Aceptar',
-                        },
-                        confirm: {
-                            show: false,
-                        },
-                    },
-                    icon: {
-                        show: true,
-                        name: 'heroicons_outline:exclamation',
-                        color: 'warn',
-                    },
-                });
-            }
-        });
+        }
     }
 }
