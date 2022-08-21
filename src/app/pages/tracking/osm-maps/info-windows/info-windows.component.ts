@@ -10,7 +10,7 @@ import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 })
 export class InfoWindowsComponent implements OnInit {
   data: any;
-
+  visible: number;
   onRefreshData = new EventEmitter();
   // refreshData() {
   //   this.onRefreshData.emit(this.data);
@@ -20,18 +20,18 @@ export class InfoWindowsComponent implements OnInit {
     public mapFunctionalitieService: MapFunctionalitieService,
     private iconService: IconService
   ) {
-    
+
   }
 
   ngOnInit(): void {
     this.iconService.loadIcons();
-    this.data = this.mapFunctionalitieService.mobiles.filter(x=> {
-      return x.id === this.data.id
-    })[0];
+    if (this.mapFunctionalitieService.type_geo === 'historic') {
+      this.visible = 1;
+    } else {
+      this.visible = 2;
+      this.data = this.mapFunctionalitieService.mobiles.filter(x => {
+        return x.id === this.data.id
+      })[0];
+    }
   }
-
-  convertDate(date) {
-    return moment(date).fromNow();
-  }
-
 }

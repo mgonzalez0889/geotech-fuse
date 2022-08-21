@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -5,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ControlCenterService } from 'app/core/services/control-center.service';
+import { UsersService } from 'app/core/services/users.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,6 +15,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./control-center-dashboard.component.scss'],
 })
 export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
+    public owner_id_simulator: number;
+    public alarms: any = [];
     public subscription: Subscription;
     public filterAlarms: number = 0;
     public notAttended: number = 0;
@@ -36,21 +40,36 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
         'date_entry',
     ];
 
-    constructor(private controlCenterService: ControlCenterService) {}
+    constructor(
+        private controlCenterService: ControlCenterService,
+        private usersService: UsersService
+    ) {}
 
     ngOnInit(): void {
-        this.getAllAlarms();
+        this.getInfoUser();
         this.listenObservables();
     }
-
-    /** Whether the number of selected elements matches the total number of rows. */
+    /**
+     * @description: Trae la informacion del usuario
+     */
+    public getInfoUser(): void {
+        this.usersService.getInfoUser().subscribe((res) => {
+            this.owner_id_simulator = res.data.owner_id_simulator;
+            this.getAllAlarms();
+        });
+    }
+    /**
+     * @description Si el número de elementos seleccionados coincide con el número total de filas.
+     */
     public isAllSelected(): any {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataAlarms?.data.length;
         return numSelected === numRows;
     }
 
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    /**
+     * @description  Selects all rows if they are not all selected; otherwise clear selection.
+     */
     public toggleAllRows(): void {
         if (this.isAllSelected()) {
             this.selection.clear();
@@ -67,29 +86,43 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
             row.position + 1
         }`;
     }
-
     /**
      * @description: Trae tolas las alarmas
      */
     private getAllAlarms(): void {
-        this.controlCenterService
-            .getAllAlarms(this.filterAlarms)
-            .subscribe((data) => {
-                if (data.count_status_alarms) {
-                    this.notAttended = data.count_status_alarms[0]?.count_state;
-                    this.silenced = data.count_status_alarms[1]?.count_state;
-                    this.onTrack = data.count_status_alarms[2]?.count_state;
-                    this.inRecovery = data.count_status_alarms[3]?.count_state;
-                } else {
-                    this.notAttended = 0;
-                    this.silenced = 0;
-                    this.onTrack = 0;
-                    this.inRecovery = 0;
-                }
-                this.dataAlarms = new MatTableDataSource(data.data);
-                this.dataAlarms.paginator = this.paginator;
-                this.dataAlarms.sort = this.sort;
-            });
+        //Centro de control de geotech (ve todas las alarmas)
+        if (this.owner_id_simulator === 1) {
+            this.controlCenterService
+                .getAllAlarms(this.filterAlarms)
+                .subscribe((res) => {
+                    this.getAlarms(res);
+                });
+        } else {
+            //Centro de control de los clientes
+            this.controlCenterService
+                .getAllAlarmsOwner(this.filterAlarms)
+                .subscribe((res) => {
+                    this.getAlarms(res);
+                });
+        }
+    }
+
+    private getAlarms(data: any): void {
+        if (data.count_status_alarms) {
+            this.notAttended = data.count_status_alarms[0]?.count_state;
+            this.silenced = data.count_status_alarms[1]?.count_state;
+            this.onTrack = data.count_status_alarms[2]?.count_state;
+            this.inRecovery = data.count_status_alarms[3]?.count_state;
+        } else {
+            this.notAttended = 0;
+            this.silenced = 0;
+            this.onTrack = 0;
+            this.inRecovery = 0;
+        }
+        this.alarms = data.data;
+        this.dataAlarms = new MatTableDataSource(data.data);
+        this.dataAlarms.paginator = this.paginator;
+        this.dataAlarms.sort = this.sort;
     }
     /**
      * @description: Escucha el observable behavior
@@ -120,8 +153,32 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
      * @description: Guarda la data de la alarma para aburir el formulario
      */
     public actionsControlCenter(data: any): void {
+        if (this.owner_id_simulator === 1) {
+            this.controlCenterService
+                .getInitAttention(data.id)
+                .subscribe((res) => {
+                    if (res.code === 200) {
+                        this.getAllAlarms();
+                    }
+                });
+        } else {
+            //Centro de control de los clientes
+            this.controlCenterService
+                .getInitAttentionOwner(data.id)
+                .subscribe((res) => {
+                    if (res.code === 200) {
+                        this.getAllAlarms();
+                    }
+                });
+        }
+        this.controlCenterService.getInitAttention(data.id).subscribe((res) => {
+            if (res.code === 200) {
+                this.getAllAlarms();
+            }
+        });
         this.opened = true;
         this.dataAlarmSelect = data;
+        this.dataAlarmSelect['owner_id_simulator'] = this.owner_id_simulator;
         this.controlCenterService.behaviorSubjectContactForm.next({
             payload: this.dataAlarmSelect,
             isAttended: false,

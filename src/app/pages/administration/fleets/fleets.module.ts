@@ -20,6 +20,8 @@ import { GridMobileFleetAssinedComponent } from './grid-mobile-fleet-assined/gri
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [
@@ -46,6 +48,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatSidenavModule,
         MatSortModule,
         MatTooltipModule,
+        MatListModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class FleetsModule {}

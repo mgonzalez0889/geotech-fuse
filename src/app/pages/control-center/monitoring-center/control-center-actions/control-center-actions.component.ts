@@ -1,13 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
-import {
-    AfterViewInit,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -25,6 +20,16 @@ import { ModalContactsComponent } from '../modal-contacts/modal-contacts.compone
     styleUrls: ['./control-center-actions.component.scss'],
 })
 export class ControlCenterActionsComponent implements OnInit, OnDestroy {
+    @ViewChild('paginatorContactsControlCenter')
+    paginatorContactsControlCenter: MatPaginator;
+    @ViewChild('sortContactsControlCenter') sortContactsControlCenter: MatSort;
+
+    @ViewChild('paginatorAttendedAlarms')
+    paginatorAttendedAlarms: MatPaginator;
+    @ViewChild('sortAttendedAlarms') sortAttendedAlarms: MatSort;
+
+    public owner_id_simulator: number;
+    public minDate = new Date();
     public showPostponeAlarm: boolean = false;
     public attendedAlarmsForm: FormGroup;
     public selectedAlarm: any = [];
@@ -37,7 +42,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     public day = this.today.getDate();
     public initialDate: Date = new Date(this.year, this.month, this.day);
     public finalDate: Date = new Date(this.year, this.month, this.day);
-    public dataHisotiric: MatTableDataSource<any>;
+    public dataTableAttendedAlarms: MatTableDataSource<any>;
     public statusAttends = [];
     public causalAttends = [];
     public dataTableContactsControlCenter: MatTableDataSource<any>;
@@ -51,30 +56,34 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         'description',
         'actions',
     ];
+    public columnsAttendedAlarms: string[] = [
+        'plate',
+        'alarm',
+        'date_entry_alarm',
+        'date_init_alarm',
+        'reaction_time',
+        'date_end_alarm',
+        'time_attention',
+        'user',
+        'action',
+    ];
 
-    @ViewChild(MatPaginator) paginatorContactsControlCenter: MatPaginator;
-    @ViewChild(MatSort) sortContactsControlCenter: MatSort;
     constructor(
         public mapFunctionalitieService: MapFunctionalitieService,
         public historicService: HistoriesService,
         public controlCenterService: ControlCenterService,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
-        private paginatorIntl: MatPaginatorIntl,
         private matDialog: MatDialog
-    ) {
-        this.paginatorIntl.itemsPerPageLabel = 'Items por página:';
-        this.paginatorIntl.firstPageLabel = 'Página anterior';
-        this.paginatorIntl.previousPageLabel = 'Pagina anterior';
-        this.paginatorIntl.nextPageLabel = 'Siguiente página';
-        this.paginatorIntl.lastPageLabel = 'Última página';
-    }
+    ) {}
 
     ngOnInit(): void {
         this.listenObservables();
         this.getAllCausalAttends();
         this.getAllStatusAttends();
         this.createContactForm();
+        this.getReportAlarmsAttens();
+        this.loadMap();
     }
     /**
      * @description: Modal para agregar nuevo contacto
@@ -84,11 +93,14 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
             width: '455px',
             data: {
                 owner_id: this.selectedAlarm.owner_id,
+                owner_id_simulator: this.owner_id_simulator,
             },
         });
         dialogRef.afterClosed().subscribe((res) => {
             if (res) {
-                this.getContact();
+                setTimeout(() => {
+                    this.getContact();
+                }, 6000);
             }
         });
     }
@@ -100,6 +112,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
             width: '455px',
             data: {
                 id: id,
+                owner_id_simulator: this.owner_id_simulator,
             },
         });
         dialogRef.afterClosed().subscribe((res) => {
@@ -139,7 +152,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
             alarmAttendedId: [''],
             causalName: [''],
             stateAlarmAttend: ['', [Validators.required]],
-            postponeAlarm: [''],
+            postponeAlarmDate: [''],
+            wait_alarm: [''],
+            postponeAlarmHour: [''],
             causalAlarmAttend: ['', [Validators.required]],
             description: ['', [Validators.required]],
         });
@@ -147,77 +162,117 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     /**
      * @description: Atiende la alarma
      */
-    public attendAlarm(): void {
+    public attendAlarms(): void {
+        let postponeAlarm = null;
+        if (this.attendedAlarmsForm.get('postponeAlarmDate').value) {
+            postponeAlarm =
+                this.attendedAlarmsForm
+                    .get('postponeAlarmDate')
+                    .value?.toLocaleDateString() +
+                ' ' +
+                this.attendedAlarmsForm.get('postponeAlarmHour').value;
+        } else {
+            postponeAlarm = null;
+        }
         this.attendedAlarmsForm.patchValue({
             alarmAttendedId: [this.selectedAlarm.id],
             causalName: this.selectedAlarm.event_name,
+            wait_alarm: postponeAlarm,
         });
         const data = this.attendedAlarmsForm.getRawValue();
-        this.controlCenterService.postAttendAlarm(data).subscribe((res) => {
-            if (res.code === 200) {
-                this.controlCenterService.behaviorSubjectContactGrid.next({
-                    opened: false,
-                    reload: true,
+        if (this.owner_id_simulator === 1) {
+            this.controlCenterService.postAttendAlarm(data).subscribe((res) => {
+                this.attendAlarm(res);
+            });
+        } else {
+            this.controlCenterService
+                .postAttendAlarmOwner(data)
+                .subscribe((res) => {
+                    this.attendAlarm(res);
                 });
-                this.confirmationService.open({
-                    title: 'Atención de alarma',
-                    message: 'Alarma atendida con exito!',
-                    actions: {
-                        cancel: {
-                            label: 'Aceptar',
-                        },
-                        confirm: {
-                            show: false,
-                        },
+        }
+    }
+    private attendAlarm(data: any): void {
+        if (data.code === 200) {
+            this.controlCenterService.behaviorSubjectContactGrid.next({
+                opened: false,
+                reload: true,
+            });
+            this.confirmationService.open({
+                title: 'Atención de alarma',
+                message: 'Alarma atendida con exito!',
+                actions: {
+                    cancel: {
+                        label: 'Aceptar',
                     },
-                    icon: {
-                        name: 'heroicons_outline:check-circle',
-                        color: 'success',
+                    confirm: {
+                        show: false,
                     },
-                });
-            } else {
-                this.confirmationService.open({
-                    title: 'Atención de alarma',
-                    message:
-                        'La alarma no se pudo atender, favor intente nuevamente.',
-                    actions: {
-                        cancel: {
-                            label: 'Aceptar',
-                        },
-                        confirm: {
-                            show: false,
-                        },
+                },
+                icon: {
+                    name: 'heroicons_outline:check-circle',
+                    color: 'success',
+                },
+            });
+        } else {
+            this.confirmationService.open({
+                title: 'Atención de alarma',
+                message:
+                    'La alarma no se pudo atender, favor intente nuevamente.',
+                actions: {
+                    cancel: {
+                        label: 'Aceptar',
                     },
-                    icon: {
-                        show: true,
-                        name: 'heroicons_outline:exclamation',
-                        color: 'warn',
+                    confirm: {
+                        show: false,
                     },
-                });
-            }
-        });
+                },
+                icon: {
+                    show: true,
+                    name: 'heroicons_outline:exclamation',
+                    color: 'warn',
+                },
+            });
+        }
     }
     /**
      * @description: Trae todos los contactos del cliente
      */
     public getContact(): void {
         this.dataTableContactsControlCenter = null;
-        this.controlCenterService
-            .getContactsControlCenter(this.selectedAlarm.owner_id)
-            .subscribe((res) => {
-                if (res.data) {
-                    this.contactsCount = res.data.length;
-                } else {
-                    this.contactsCount = 0;
-                }
-                this.dataTableContactsControlCenter = new MatTableDataSource(
-                    res.data
-                );
-                this.dataTableContactsControlCenter.paginator =
-                    this.paginatorContactsControlCenter;
-                this.dataTableContactsControlCenter.sort =
-                    this.sortContactsControlCenter;
-            });
+        if (this.owner_id_simulator === 1) {
+            this.controlCenterService
+                .getContactsControlCenter(this.selectedAlarm.owner_id)
+                .subscribe((res) => {
+                    if (res.data) {
+                        this.contactsCount = res.data.length;
+                    } else {
+                        this.contactsCount = 0;
+                    }
+                    this.dataTableContactsControlCenter =
+                        new MatTableDataSource(res.data);
+                    this.dataTableContactsControlCenter.paginator =
+                        this.paginatorContactsControlCenter;
+                    this.dataTableContactsControlCenter.sort =
+                        this.sortContactsControlCenter;
+                });
+        } else {
+            this.controlCenterService
+                .getContactsControlCenterOwner(this.selectedAlarm.owner_id)
+                .subscribe((res) => {
+                    if (res.data) {
+                        this.contactsCount = res.data.length;
+                    } else {
+                        this.contactsCount = 0;
+                    }
+                    this.dataTableContactsControlCenter =
+                        new MatTableDataSource(res.data);
+                    this.dataTableContactsControlCenter.paginator =
+                        this.paginatorContactsControlCenter;
+                    this.dataTableContactsControlCenter.sort =
+                        this.sortContactsControlCenter;
+                });
+        }
     }
     /**
      * @description: Cierra el menu lateral de la derecha
@@ -237,18 +292,37 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     public validStateAlarmAttend(idEvent: number): void {
         if (idEvent === 6) {
             this.showPostponeAlarm = true;
-            this.attendedAlarmsForm.controls['postponeAlarm'].setValidators(
+            this.attendedAlarmsForm.controls['postponeAlarmDate'].setValidators(
+                Validators.required
+            );
+            this.attendedAlarmsForm.controls['postponeAlarmHour'].setValidators(
                 Validators.required
             );
             this.attendedAlarmsForm
-                .get('postponeAlarm')
+                .get('postponeAlarmDate')
+                .updateValueAndValidity();
+            this.attendedAlarmsForm
+                .get('postponeAlarmHour')
                 .updateValueAndValidity();
         } else {
             this.showPostponeAlarm = false;
-
-            this.attendedAlarmsForm.controls['postponeAlarm'].clearValidators();
+            this.attendedAlarmsForm.controls['postponeAlarmDate'].setValue(
+                null
+            );
+            this.attendedAlarmsForm.controls['postponeAlarmHour'].setValue(
+                null
+            );
+            this.attendedAlarmsForm.controls[
+                'postponeAlarmDate'
+            ].clearValidators();
+            this.attendedAlarmsForm.controls[
+                'postponeAlarmHour'
+            ].clearValidators();
             this.attendedAlarmsForm
-                .get('postponeAlarm')
+                .get('postponeAlarmDate')
+                .updateValueAndValidity();
+            this.attendedAlarmsForm
+                .get('postponeAlarmHour')
                 .updateValueAndValidity();
         }
     }
@@ -257,7 +331,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      */
     public onCancel(): void {
         this.isAttended = false;
-        this.loadMap();
+        //this.loadMap();
         if (this.attendedAlarmsForm) {
             this.attendedAlarmsForm.reset();
         }
@@ -265,7 +339,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     /**
      * @description: Elimina el contacto
      */
-    public deleteContact(id: number): void {
+    public deleteContacts(id: number): void {
         let confirmation = this.confirmationService.open({
             title: 'Eliminar contacto',
             message:
@@ -278,50 +352,61 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.controlCenterService
-                    .deleteContacts(id)
-                    .subscribe((res) => {
-                        if (res.code === 200) {
-                            this.getContact();
-                            confirmation = this.confirmationService.open({
-                                title: 'Eliminar contacto',
-                                message: 'Contacto eliminado con exito!',
-                                actions: {
-                                    cancel: {
-                                        label: 'Aceptar',
-                                    },
-                                    confirm: {
-                                        show: false,
-                                    },
-                                },
-                                icon: {
-                                    name: 'heroicons_outline:exclamation',
-                                    color: 'warn',
-                                },
-                            });
-                        } else {
-                            confirmation = this.confirmationService.open({
-                                title: 'Eliminar contacto',
-                                message:
-                                    'El contacto no se pudo eliminar, favor intente nuevamente.',
-                                actions: {
-                                    cancel: {
-                                        label: 'Aceptar',
-                                    },
-                                    confirm: {
-                                        show: false,
-                                    },
-                                },
-                                icon: {
-                                    show: true,
-                                    name: 'heroicons_outline:exclamation',
-                                    color: 'warn',
-                                },
-                            });
-                        }
-                    });
+                if (this.owner_id_simulator === 1) {
+                    this.controlCenterService
+                        .deleteContacts(id)
+                        .subscribe((res) => {
+                            this.deleteContact(res);
+                        });
+                } else {
+                    this.controlCenterService
+                        .deleteContactsOwner(id)
+                        .subscribe((res) => {
+                            this.deleteContact(res);
+                        });
+                }
             }
         });
+    }
+    private deleteContact(data: any): void {
+        if (data.code === 200) {
+            this.getContact();
+            this.confirmationService.open({
+                title: 'Eliminar contacto',
+                message: 'Contacto eliminado con exito!',
+                actions: {
+                    cancel: {
+                        label: 'Aceptar',
+                    },
+                    confirm: {
+                        show: false,
+                    },
+                },
+                icon: {
+                    name: 'heroicons_outline:exclamation',
+                    color: 'warn',
+                },
+            });
+        } else {
+            this.confirmationService.open({
+                title: 'Eliminar contacto',
+                message:
+                    'El contacto no se pudo eliminar, favor intente nuevamente.',
+                actions: {
+                    cancel: {
+                        label: 'Aceptar',
+                    },
+                    confirm: {
+                        show: false,
+                    },
+                },
+                icon: {
+                    show: true,
+                    name: 'heroicons_outline:exclamation',
+                    color: 'warn',
+                },
+            });
+        }
     }
     /**
      * @description: Para cargar el mapa
@@ -342,17 +427,58 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                 ({ payload, isAttended }) => {
                     this.selectedAlarm = payload;
                     this.isAttended = isAttended;
+                    this.owner_id_simulator =
+                        this.selectedAlarm['owner_id_simulator'];
+                    // this.owner_id_simulator = this.isAttended.owner_id_simulator
                     if (!this.isAttended) {
-                        this.loadMap();
+                        //this.loadMap();
                     } else {
                         if (this.attendedAlarmsForm) {
                             this.attendedAlarmsForm.reset();
                         }
                         this.getContact();
                     }
-                    console.log(payload, isAttended, 'payload');
                 }
             );
+    }
+    public getReportAlarmsAttens(): void {
+        const data = {
+            plate: this.selectedAlarm.plate,
+            dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
+            dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
+        };
+        if (this.owner_id_simulator === 1) {
+            this.controlCenterService
+                .postReportAlarmsAttens(data)
+                .subscribe((res) => {
+                    this.dataTableAttendedAlarms = new MatTableDataSource(
+                        res.data
+                    );
+                    this.dataTableAttendedAlarms.paginator =
+                        this.paginatorAttendedAlarms;
+                    this.dataTableAttendedAlarms.sort = this.sortAttendedAlarms;
+                    console.log(
+                        this.dataTableAttendedAlarms.filteredData,
+                        'this.dataTableAttendedAlarms'
+                    );
+                });
+        } else {
+            //Centro de control de los clientes
+            this.controlCenterService
+                .postReportAlarmsAttensOwner(data)
+                .subscribe((res) => {
+                    this.dataTableAttendedAlarms = new MatTableDataSource(
+                        res.data
+                    );
+                    this.dataTableAttendedAlarms.paginator =
+                        this.paginatorAttendedAlarms;
+                    this.dataTableAttendedAlarms.sort = this.sortAttendedAlarms;
+                    console.log(
+                        this.dataTableAttendedAlarms,
+                        'this.dataTableAttendedAlarms'
+                    );
+                });
+        }
     }
     /**
      * @description: Destruye el observable

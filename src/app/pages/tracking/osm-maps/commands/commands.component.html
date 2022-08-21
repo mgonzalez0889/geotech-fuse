@@ -1,0 +1,53 @@
+<div class="commands-plate">
+    <div class="title-historic">
+        <div class="title">
+            Comandos
+        </div>
+        <div class="close" (click)="mapFunctionalitieService.showCommandsPlate = false">
+            <img style="height: 20px; width: 20px;" src="./assets/icons/iconMap/close-blue.svg">
+        </div>
+    </div>
+
+    <div class="plate">
+        {{mapFunctionalitieService.plate}}
+    </div>
+
+    <div class="commands">
+        <div class="send-commands">
+            <mat-form-field appearance="fill" class="fuse-mat-dense w-90">
+                <mat-select [(ngModel)]="selectedTypeCommand" placeholder="Selecciones un comando">
+                    <mat-option *ngFor="let command of typeCommands" [value]="command.id">
+                        {{command.description_command}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="sentCommands()"
+                style="margin-left: 10px;">
+                <mat-icon class="icon-size-5">send</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="list-commands">
+        <div class="title-list">
+            Comandos enviados
+        </div>
+        <div class="item-list" *ngFor="let item of mobileRequestService.commandsPlate">
+            <div class="header-item">
+                <div class="description">
+                    <label>{{item.name_command}}</label>
+                    <br>
+                    <span>{{convertDate(item.date_send)}}</span>
+                </div>
+
+                <img src="./assets/icons/iconMap/pendiente.svg" *ngIf="item.state === 'PENDIENTE'">
+
+                <img src="./assets/icons/iconMap/fallido.svg" *ngIf="item.state === 'FALLIDO'">
+
+                <img src="./assets/icons/iconMap/confirmado.svg" *ngIf="item.state === 'CONFIRMADO'">
+
+                <img src="./assets/icons/iconMap/waiting.svg" *ngIf="item.state === 'WAITING'">
+            </div>
+        </div>
+    </div>
+</div>

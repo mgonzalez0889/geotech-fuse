@@ -1,5 +1,5 @@
 <div class="flex flex-col w-full sm:pl-6">
-    <div class="bg-card shadow rounded-2xl h-180">
+    <div class="bg-card shadow rounded-2xl min-h-180">
         <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
             <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
                 <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
@@ -124,7 +124,12 @@
                             <!-- Guardar -->
                             <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="contactForm.invalid"
                                 [matTooltip]="'Guardar'" (click)="onSave()">
-                                Guardar
+                                <span *ngIf="!contactForm.disabled">
+                                    Guardar
+                                </span>
+                                <mat-progress-spinner *ngIf="contactForm.disabled" [diameter]="24"
+                                    [mode]="'indeterminate'">
+                                </mat-progress-spinner>
                             </button>
                         </div>
                     </form>

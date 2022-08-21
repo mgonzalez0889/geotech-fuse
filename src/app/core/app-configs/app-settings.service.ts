@@ -135,11 +135,27 @@ export class AppSettingsService {
         },
     };
     /**
+     *@description: End-point Centro de control de clientes
+     */
+    public controlCenterOwner = {
+        url: {
+            base: EndPoints.uri('alarm_owner'),
+        },
+    };
+    /**
      *@description: End-point contactos de Centro de control
      */
     public contactsControlCenter = {
         url: {
             base: EndPoints.uri('control_center_contact'),
+        },
+    };
+        /**
+     *@description: End-point contactos de Centro de control owner
+     */
+     public contactsControlCenterOwner = {
+        url: {
+            base: EndPoints.uri('control_center_contact_owner'),
         },
     };
     /**
@@ -154,9 +170,17 @@ export class AppSettingsService {
     /**
      *@description: End-point geo zonas
      */
-     public show_mobile = {
+    public show_mobile = {
         url: {
-            base: EndPoints.uri('show_mobile')
-        }
+            base: EndPoints.uri('show_mobile'),
+        },
+    };
+    /**
+     * @description: End-point despachos
+     */
+    public dispatch = {
+        url: {
+            base: EndPoints.uri('dispatch'),
+        },
     };
 }

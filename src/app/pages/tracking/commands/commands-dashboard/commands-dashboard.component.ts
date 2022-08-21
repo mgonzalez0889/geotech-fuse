@@ -16,6 +16,7 @@ import { ConfirmationService } from 'app/core/services/confirmation/confirmation
     styleUrls: ['./commands-dashboard.component.scss'],
 })
 export class CommandsDashboardComponent implements OnInit {
+    public show: boolean;
     public today = new Date();
     public month = this.today.getMonth();
     public year = this.today.getFullYear();
@@ -52,12 +53,9 @@ export class CommandsDashboardComponent implements OnInit {
         private commandsService: CommandsService,
         private mobilesService: MobileService,
         private fleetService: FleetsService,
-        private dateAdapter: DateAdapter<any>,
         private snackBar: MatSnackBar,
         private confirmationService: ConfirmationService
-    ) {
-        this.dateAdapter.setLocale('es');
-    }
+    ) {}
 
     ngOnInit(): void {
         this.getTypeCommand();
@@ -85,17 +83,17 @@ export class CommandsDashboardComponent implements OnInit {
             dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
             dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
         };
-        this.commandsService.postSearchCommandsSend(date).subscribe((data) => {
-            if (data.data_count) {
-                this.send = data.data_count[1]?.count_state;
-                this.expired = data.data_count[2]?.count_state;
-                this.pending = data.data_count[0]?.count_state;
+        this.commandsService.postSearchCommandsSend(date).subscribe((res) => {
+            if (res.data_count) {
+                this.send = res.data_count[1]?.count_state;
+                this.expired = res.data_count[2]?.count_state;
+                this.pending = res.data_count[0]?.count_state;
             } else {
                 this.send = 0;
                 this.expired = 0;
                 this.pending = 0;
             }
-            this.dataCommandsSent = new MatTableDataSource(data.data);
+            this.dataCommandsSent = new MatTableDataSource(res.data);
             this.dataCommandsSent.paginator = this.paginator;
             this.dataCommandsSent.sort = this.sort;
         });
@@ -183,10 +181,12 @@ export class CommandsDashboardComponent implements OnInit {
             });
             confirmation.afterClosed().subscribe((result) => {
                 if (result === 'confirmed') {
+                    this.show = true;
                     this.commandsService
                         .postCommandsSend(commands)
                         .subscribe((data) => {
                             if (data.code === 200) {
+                                this.show = false;
                                 confirmation = this.confirmationService.open({
                                     title: 'Enviar comando',
                                     message: 'Comando enviado con exito!',
@@ -251,7 +251,6 @@ export class CommandsDashboardComponent implements OnInit {
             }
             this.mobiles.forEach((x) => {
                 x.selected = completed;
-                console.log(x, 'x');
             });
         } else if ('fleets') {
             this.allSelectedFleets = completed;

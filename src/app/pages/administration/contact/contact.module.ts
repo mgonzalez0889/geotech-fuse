@@ -22,34 +22,31 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [
-    FormContactComponent,
-    GridContactComponent
-  ],
-  imports: [
-    CommonModule,
-    ContactRoutingModule,
-    MatFormFieldModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSortModule,
-    MatSlideToggleModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatDividerModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatTooltipModule,
-    MatSnackBarModule,
-    MatSidenavModule,
-    MatPaginatorModule,
-    MatTableModule
-  ]
+    declarations: [FormContactComponent, GridContactComponent],
+    imports: [
+        CommonModule,
+        ContactRoutingModule,
+        MatFormFieldModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSortModule,
+        MatSlideToggleModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatDividerModule,
+        MatCheckboxModule,
+        MatRadioModule,
+        MatTooltipModule,
+        MatSnackBarModule,
+        MatSidenavModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatProgressSpinnerModule,
+    ],
 })
-export class ContactModule { }
+export class ContactModule {}

@@ -170,7 +170,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
                             .getContact(id)
                             .subscribe((data) => {
                                 this.contacts = data.data;
-                                console.log(this.contacts,'this.contacts')
                                 this.contactForm.patchValue(this.contacts);
                             });
                     }

@@ -45,8 +45,6 @@ export class NavigationService
     {
         return this._httpClient.get<Navigation>('api/common/navigation').pipe(
             tap((navigation) => {
-                console.log('MENUUUU');
-                console.log(navigation);
                 this._navigation.next(navigation);
             })
         );
@@ -62,7 +60,6 @@ export class NavigationService
         };
         return this._httpClient.get<Navigation>(this._appSettings.menuOptions.url.optionsFather, {params}).pipe(
             tap((navigation) => {
-                // console.log(navigation)
                 navigations = {
                     default: navigation,
                     compact: navigation,

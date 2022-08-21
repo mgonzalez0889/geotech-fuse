@@ -10,7 +10,6 @@ import { ConfirmationService } from 'app/core/services/confirmation/confirmation
 import { ContactService } from 'app/core/services/contact.service';
 import { EventsService } from 'app/core/services/events.service';
 import { Subscription } from 'rxjs';
-import { contacts } from '../../../../mock-api/apps/chat/data';
 
 @Component({
     selector: 'app-form-events',
@@ -47,19 +46,26 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.createEventsForm();
         this.listenObservables();
-        this.getContact();
     }
     /**
      * @description: Trae todos los contactos del cliente
      */
-    public getContact(): void {
-        this.contactService.getContacts().subscribe((data) => {
-            if (data.data) {
-                this.contactsCount = data.data.length;
+    public getContact(contac?: any): void {
+        this.contactService.getContacts().subscribe((res) => {
+            this.selection.clear();
+            if (res.data) {
+                this.contactsCount = res.data.length;
+                res.data.forEach((row: any) => {
+                    contac.forEach((x: any) => {
+                        if (row.id === x.id) {
+                            this.selection.select(row);
+                        }
+                    });
+                });
             } else {
                 this.contactsCount = 0;
             }
-            this.dataTableContact = new MatTableDataSource(data.data);
+            this.dataTableContact = new MatTableDataSource(res.data);
             this.dataTableContact.paginator = this.paginator;
             this.dataTableContact.sort = this.sort;
         });
@@ -71,12 +77,27 @@ export class FormEventsComponent implements OnInit, OnDestroy {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataTableContact.filter = filterValue.trim().toLowerCase();
     }
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
+    /**
+     * @description: Si el número de elementos seleccionados coincide con el número total de filas.
+     */
+    public isAllSelected(): any {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataTableContact.data?.length;
         return numSelected === numRows;
     }
+    /**
+     * @description: Selecciona todas las filas si no están todas seleccionadas; de lo contrario borrar la selección.
+     */
+    public toggleAllRows(): any {
+        if (this.isAllSelected()) {
+            this.selection.clear();
+            return;
+        }
+        this.selection.select(...this.dataTableContact.data);
+    }
+    /**
+     * @description: Guarda los eventos
+     */
     public saveEvent(): void {
         this.eventForm.disable();
         this.contactsId = [];
@@ -139,16 +160,6 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             reload: false,
         });
     }
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    toggleAllRows() {
-        if (this.isAllSelected()) {
-            this.selection.clear();
-            return;
-        }
-
-        this.selection.select(...this.dataTableContact.data);
-    }
     /**
      * @description: Destruye el observable
      */
@@ -179,10 +190,7 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             this.eventsService.behaviorSubjectEventForm.subscribe(({ id }) => {
                 if (id) {
                     this.eventsService.getEvent(id).subscribe((res) => {
-                        console.log(res.contacts, 'res');
-                        // res.contacts.forEach(row => this.selection.select(row));
-
-                        console.log(this.selection, 'this.selection');
+                        this.getContact(res.contacts);
                         this.events = res.data;
                         this.eventForm.patchValue(this.events);
                     });

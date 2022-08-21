@@ -1,98 +1,60 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormControl} from "@angular/forms";
-import {Observable, Subject, Subscription} from "rxjs";
-import {UsersService} from "../../../../core/services/users.service";
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {debounceTime, switchMap, takeUntil} from "rxjs/operators";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {ConfirmDeleteComponent} from "../../../../shared/dialogs/confirm-delete/confirm-delete.component";
-import {MatTableDataSource} from "@angular/material/table";
-import {FormUserComponent} from "../form-user/form-user.component";
-import {FuseLoadingService} from "../../../../../@fuse/services/loading";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
+import { UsersService } from '../../../../core/services/users.service';
 
 @Component({
-  selector: 'app-grid-user',
-  templateUrl: './grid-user.component.html',
-  styleUrls: ['./grid-user.component.scss'],
-  encapsulation  : ViewEncapsulation.None,
-  animations     : fuseAnimations
+    selector: 'app-grid-user',
+    templateUrl: './grid-user.component.html',
+    styleUrls: ['./grid-user.component.scss'],
 })
 export class GridUserComponent implements OnInit, OnDestroy {
-  searchInputControl: FormControl = new FormControl();
-  public users$: Observable<any>;
-  public show: boolean = false;
-  public subscription$: Subscription;
-  public dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
-  public displayedColumns: string[] = ['user_login', 'full_name', 'profile', 'email', 'actions'];
-    // 'full_name', 'profile', 'email'
-  constructor(
-      private usersService: UsersService,
-      public dialog: MatDialog,
-      private _fuseLoadingService: FuseLoadingService
-  ) { }
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    public subscription: Subscription;
+    public opened: boolean = false;
+    public dataTableUser: MatTableDataSource<any>;
+    public usersCount: number = 0;
+    public columnsUser: string[] = [
+        'user_login',
+        'full_name',
+        'profile',
+        'email',
+    ];
 
-  ngOnInit(): void {
-      this.fetchUsers();
-      this.searchInputControl.valueChanges.subscribe(res => {
-      });
-  }
-  /**
-   * @description: Abre el formulario
-   */
-  public openForm(): void {
-      const dialogRef = this.dialog.open(FormUserComponent, {
-          data: {
-              type: 'NEW',
-              isEdit: false
-          },
-          minWidth: '30%',
-          maxWidth: '10vw'
-      });
-      dialogRef.afterClosed().toPromise();
-      //this.show = true;
-      this.usersService.behaviorSubjectUser$.next({type: 'NEW', isEdit: false});
-  }
-  public closeForm(value): void {
-      this.show = value;
-  }
-  /**
-   * @description: Edita un usuario
-   */
-  public onEdit(id: number): void {
-      this.show = true;
-      this.getUser(id);
-  }
-  public onDelete(id: number): void {
-      const dialog = new MatDialogConfig();
-      dialog.data = id;
-      dialog.width = '30%';
-      dialog.maxWidth = '30%';
+    constructor(private usersService: UsersService) {}
 
-      const dialogRef = this.dialog.open(ConfirmDeleteComponent, dialog);
+    ngOnInit(): void {
+        this.getUsers();
+    }
 
-      dialogRef.afterClosed().toPromise().then(() => this.fetchUsers());
-  }
-  /**
-   * @description:  Listado de todos los usuarios
-   */
-  private fetchUsers(): void {
-      this.users$ = this.usersService.getUsers();
-  }
-  /**
-   * @description: Trae un usuario desde el services
-   */
-  private getUser(id: number): void {
-      this.usersService.getUser(id).subscribe(({data}) => {
-          this.usersService.behaviorSubjectUser$.next({type: 'EDIT', id, isEdit: true, payload: data});
-      });
-  }
-  /**
-   * @description: Destruye los observables
-   */
-  ngOnDestroy(): void {
-    // this.subscription$.unsubscribe();
-  }
-
-
-
+    /**
+     * @description: Destruye los observables
+     */
+    ngOnDestroy(): void {}
+    /**
+     * @description: Trae todos los usuarios del cliente
+     */
+    public getUsers(): void {
+        this.usersService.getUsers().subscribe((res) => {
+            console.log(res, 'user');
+            if (res.data) {
+                this.usersCount = res.data.length;
+            } else {
+                this.usersCount = 0;
+            }
+            this.dataTableUser = new MatTableDataSource(res.data);
+            this.dataTableUser.paginator = this.paginator;
+            this.dataTableUser.sort = this.sort;
+        });
+    }
+    /**
+     * @description: Filtrar datos de la tabla
+     */
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataTableUser.filter = filterValue.trim().toLowerCase();
+    }
 }

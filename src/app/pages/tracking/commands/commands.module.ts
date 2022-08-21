@@ -19,6 +19,7 @@ import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { PipeFilterPipe } from 'app/pages/tracking/commands/commands-dashboard/filter-fleet.pipe';
 import { PipeFilterPlatePipe } from 'app/pages/tracking/commands/commands-dashboard/filter-plate.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [
@@ -43,6 +44,7 @@ import { PipeFilterPlatePipe } from 'app/pages/tracking/commands/commands-dashbo
         MatCheckboxModule,
         MatListModule,
         FormsModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class CommandsModule {}
