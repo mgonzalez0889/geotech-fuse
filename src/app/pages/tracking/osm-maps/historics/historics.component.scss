@@ -25,34 +25,33 @@
         }
     }
 
-    .filter-historic {
+    .filters {
         display: flex;
-        justify-content: space-between;
-        align-items: start;
+        justify-content: end;
 
-        .date-picker {
-            width: 250px;
+        .export,
+        .filtrar {
             display: flex;
-            border: 2px solid rgba(0, 0, 0, 0.2);
-            padding: 6px 30px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 24px;
             border-radius: 50px;
-        }
+            margin-right: 10px;
+            color: #fff;
+            cursor: pointer;
 
-        .search-historic {
-            background: #2c384f;
-            padding: 10px;
-            border-radius: 50px;
-
-            img {
-                width: 20px;
-                height: 20px;
+            mat-icon {
+                color: #fff;
             }
         }
-    }
 
-    .message_dates {
-        text-align: center;
-        color: #ea4335;
+        .filtrar {
+            background: #2196f3;
+        }
+
+        .export {
+            background: #1d6f42;
+        }
     }
 
     .data-historic {
@@ -94,29 +93,17 @@
                         }
 
                         .card-description {
-                            width: 300px;
                             font-size: 13px;
                             .name-event {
                                 font-size: 14px;
                                 font-weight: 700;
                                 color: #2c384f;
-                                display: flex;
                             }
-                        }
 
-                        .card-map {
-                            width: 90px;
-                            padding: 5px;
-                            background: #2c384f;
-                            text-align: center;
-                            align-items: center;
-                            border-radius: 5px;
-                            color: #fff;
-                            font-size: 13px;
-
-                            img {
-                                display: block;
-                                margin: 5px auto;
+                            .address-event {
+                                a {
+                                    white-space: initial !important;
+                                }
                             }
                         }
                     }

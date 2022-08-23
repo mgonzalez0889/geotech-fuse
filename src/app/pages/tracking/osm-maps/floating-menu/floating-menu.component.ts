@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MobilesInterface } from '../../../../core/interfaces/mobiles.interface';
-import { MatDialog } from "@angular/material/dialog";
 import {
     FormDialogSelectHistorialComponent
 } from "../form-dialog-select-historial/form-dialog-select-historial.component";
@@ -19,6 +18,8 @@ import { MapRequestService } from 'app/core/services/request/map-request.service
 import { HistoriesService } from 'app/core/services/histories.service';
 import moment from 'moment';
 import { FleetsService } from 'app/core/services/fleets.service';
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { FormReportComponent } from '../form-report/form-report.component';
 
 @Component({
     selector: 'app-floating-menu',
@@ -308,17 +309,10 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     }
 
     async generateHistoric() {
-        let data = {
-            date_init: moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
-            date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
-            plates: this.mapFunctionalitieService.plateHistoric,
-            events: [8],
-            limit: 999,
-            page: 1,
-            fleet_presence: 0
-        }
-        await this.mapRequestService.getHistoric(data);
-        this.mapFunctionalitieService.showHistoricPlate = true;
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        this.dialog.open(FormReportComponent, dialogConfig);
     }
 
 

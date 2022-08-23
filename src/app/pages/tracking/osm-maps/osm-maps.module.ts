@@ -35,6 +35,7 @@ import { MatListModule } from "@angular/material/list";
 import { FormGeometryComponent } from './form-geometry/form-geometry.component';
 import { HistoricsComponent } from './historics/historics.component';
 import { CommandsComponent } from './commands/commands.component';
+import { FormReportComponent } from './form-report/form-report.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { CommandsComponent } from './commands/commands.component';
     FormGeometryComponent,
     HistoricsComponent,
     CommandsComponent,
+    FormReportComponent,
   ],
   imports: [
     CommonModule,

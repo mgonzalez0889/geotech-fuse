@@ -25,10 +25,10 @@ export class MapsComponent implements OnInit, AfterViewInit {
     public dataSource: any = [];
 
     optionsIcons: any = [
-        {
-            name: 'type-map',
-            type: 'change-map'
-        },
+        // {
+        //     name: 'type-map',
+        //     type: 'change-map'
+        // },
         {
             name: 'route-map',
             type: 'route'
@@ -168,7 +168,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
     async eventClick(type) {
         switch (type) {
-            case 'change-map':
+            case 'settings-map':
 
                 break;
             case 'route':
@@ -202,6 +202,11 @@ export class MapsComponent implements OnInit, AfterViewInit {
         } else {
             this.mapFunctionalitieService.goAddGeometry();
         }
+    }
+
+    setCluster(ev) {
+        console.log(ev.checked)
+        this.mapFunctionalitieService.verCluster = ev.checked
     }
 }
 

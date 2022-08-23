@@ -19,6 +19,8 @@ export class IconService {
     this.iconRegistry.addSvgIcon('status_gps_gray', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_gps_gray.svg'));
     this.iconRegistry.addSvgIcon('status_open_color', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_open_color.svg'));
     this.iconRegistry.addSvgIcon('status_close_color', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_close_color.svg'));
+    this.iconRegistry.addSvgIcon('circle-off', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/circle-off.svg'));
+    this.iconRegistry.addSvgIcon('circle-on', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/circle-on.svg'));
     this.iconRegistry.addSvgIcon('signal_level_green', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_green.svg'));
     this.iconRegistry.addSvgIcon('signal_level_orange', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_orange.svg'));
     this.iconRegistry.addSvgIcon('signal_level_red', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_red.svg'));
