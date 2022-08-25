@@ -4,6 +4,9 @@ import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { MapRequestService } from 'app/core/services/request/map-request.service';
 import moment from 'moment';
 import { Observable, Subscription } from "rxjs";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { FormReportComponent } from '../form-report/form-report.component';
+import { SettingsService } from 'app/core/services/settings.service';
 
 @Component({
   selector: 'app-historics',
@@ -29,7 +32,9 @@ export class HistoricsComponent implements OnInit {
   constructor(
     public mapFunctionalitieService: MapFunctionalitieService,
     public mapRequestService: MapRequestService,
-    private _eventsService: EventsService
+    private _eventsService: EventsService,
+    public dialog: MatDialog,
+    public settingService: SettingsService
   ) { }
 
   ngOnInit(): void {
@@ -78,7 +83,6 @@ export class HistoricsComponent implements OnInit {
       this.message_dates = false;
     }
 
-
   }
 
   selectAll(ev, plate, color) {
@@ -114,6 +118,13 @@ export class HistoricsComponent implements OnInit {
 
     this.mapFunctionalitieService.type_geo = 'historic';
     this.mapFunctionalitieService.createPunt(null, this.seleccionado);
+  }
+
+  filters() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    this.dialog.open(FormReportComponent, dialogConfig);
   }
 
 }

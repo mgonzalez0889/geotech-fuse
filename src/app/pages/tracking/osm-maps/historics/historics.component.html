@@ -8,66 +8,38 @@
         </div>
     </div>
 
-    <div class="filter-historic">
-        <div class="date-picker" (click)="picker.open()">
-            <div>
-                <mat-date-range-input [rangePicker]="picker">
-                    <input matStartDate [(ngModel)]="initialDate" placeholder="Fecha inicial">
-                    <input matEndDate [(ngModel)]="finalDate" placeholder="Fecha Final">
-                </mat-date-range-input>
-                <mat-date-range-picker #picker>
-                    <mat-datepicker-actions>
-                        <div class="inputs" style="display: flex; justify-content: space-between; padding: 10px;">
-                            <input type="time" matInput [(ngModel)]="initialHours">
-                            <input type="time" matInput [(ngModel)]="finalHours">
-                        </div>
-                        <div class="buttons" style="display: flex; justify-content: space-around;">
-                            <button mat-button matDatepickerCancel>Cancelar</button>
-                            <button mat-raised-button [color]="'accent'" matDatepickerApply (click)="setFilter()">Ok</button>
-                        </div>
-                    </mat-datepicker-actions>
-                </mat-date-range-picker>
+    <div class="data-historic">
+        <div class="filters">
+            <div class="export" (click)="settingService.JSONToCSVConvertor(this.mapFunctionalitieService.historic, true, 'Historic')">
+                Exportar
+                <mat-icon svgIcon="download"></mat-icon>
             </div>
-            <mat-icon class="icon-size-5" matSuffix svgIcon="feather:calendar">
-            </mat-icon>
+
+            <div class="filtrar" (click)="filters()">
+                Filtros
+                <mat-icon svgIcon="filter_alt"></mat-icon>
+            </div>
         </div>
 
-        <ng-container *ngIf="events$ | async as events">
-            <mat-form-field appearance="fill" class="fuse-mat-dense w-30">
-                <mat-select multiple placeholder="Eventos" [(ngModel)]="mapFunctionalitieService.events">
-                    <mat-option [value]="event.event_id" *ngFor="let event of events.data">
-                        {{event.event_name}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </ng-container>
-
-        <button (click)="generateHistoric()" class="search-historic" [disabled]="message_dates">
-            <img src="./assets/icons/iconMap/search-white.svg" alt="">
-        </button>
-    </div>
-
-    <div class="message_dates" [hidden]="!message_dates">
-        El rango de fechas no puede ser mayor a un mes.
-    </div>
-
-    <div class="data-historic">
         <div class="result-plate">
             <div class="head-result" *ngFor="let data of this.mapFunctionalitieService.historic">
-                <div  style="cursor: pointer;">
+                <div style="cursor: pointer;">
                     <div class="title-result">
                         <div class="title" *ngIf="data.data.length <= 0">
                             {{data.plate}}
                         </div>
 
                         <div class="title" *ngIf="data.data.length > 0">
-                            <mat-checkbox (change)="selectAll($event, data.plate, data.color)" [(ngModel)]="data.selected">
+                            <mat-checkbox (change)="selectAll($event, data.plate, data.color)"
+                                [(ngModel)]="data.selected">
                                 <label style="color: {{data.color}};">{{data.plate}}</label>
                             </mat-checkbox>
                         </div>
                         <div class="close">
                             <img style="height: 12px; width: 15px; cursor: pointer;"
                                 src="./assets/icons/iconMap/arrow-bottom.svg"
-                                [ngClass]="seletedHistoric === data.plate ? 'rotate' : ''" (click)="data.data.length > 0 ? viewHistoric(data.plate) : ''">
+                                [ngClass]="seletedHistoric === data.plate ? 'rotate' : ''"
+                                (click)="data.data.length > 0 ? viewHistoric(data.plate) : ''">
                         </div>
                     </div>
 
@@ -84,30 +56,30 @@
                     <div class="cards">
                         <div class="card" *ngFor="let event of data.data">
                             <div class="card-icon">
-                                <mat-checkbox (change)="onChange($event, event)" [(ngModel)]="event.selected"></mat-checkbox>
+                                <mat-checkbox (change)="onChange($event, event)" [(ngModel)]="event.selected">
+                                </mat-checkbox>
                             </div>
 
                             <div class="card-description">
                                 <div class="name-event">
-                                    <img style="height: 23px; width: 28px;"
-                                        src="./assets/icons/iconMap/marker_position.svg">
-                                    {{event.event_name}}
+                                    <b>Evento:</b> {{event.event_name}}
                                 </div>
 
                                 <div class="date-event">
-                                    {{convertDate(event.date_entry)}}
+                                    <b>Fecha de transmisión:</b> {{convertDate(event.date_entry)}}
                                 </div>
 
                                 <div class="address-event">
-                                    {{event.address}}
+                                    <a class="pr-6 whitespace-nowrap" [matTooltip]="'Ver en el  mapa'"
+                                        href="https://maps.google.com/?q={{event['x']}},{{event['y']}}" target="_blank">
+                                        <b>Dirección:</b> {{event.address}} <mat-icon class="icon-size-4">open_in_new
+                                        </mat-icon>
+                                    </a>
                                 </div>
-                            </div>
 
-                            <div class="card-map">
-                                Ver en
-                                <br>
-                                mapa
-                                <img style="height: 13; width: 15px;" src="./assets/icons/iconMap/map.svg">
+                                <div class="speed-event">
+                                    <b>Velocidad:</b> {{event.speed}}
+                                </div>
                             </div>
                         </div>
                     </div>

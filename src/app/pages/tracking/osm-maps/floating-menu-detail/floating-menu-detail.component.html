@@ -60,28 +60,29 @@
             <div class="cards">
                 <div class="card" *ngFor="let event of this.mobileRequestService.lastEvents">
                     <div class="card-icon">
-                        <img style="height: 23px; width: 28px;" src="./assets/icons/iconMap/marker_position.svg">
+                        <mat-checkbox (change)="onChange($event, event)" [(ngModel)]="event.selected"></mat-checkbox>
                     </div>
 
                     <div class="card-description">
                         <div class="name-event">
-                            {{event.name}}
+                            <b>Evento:</b> {{event.name}}
                         </div>
 
                         <div class="date-event">
-                            {{event.date_entry}}
+                            <b>Fecha de transmisión:</b> {{convertDate(event.date_entry)}}
                         </div>
 
                         <div class="address-event">
-                            {{event.address}}
+                            <a class="pr-6 whitespace-nowrap" [matTooltip]="'Ver en el  mapa'"
+                                href="https://maps.google.com/?q={{event['x']}},{{event['y']}}"
+                                target="_blank">
+                                <b>Dirección:</b> {{event.address}} <mat-icon class="icon-size-4">open_in_new</mat-icon>
+                            </a>
                         </div>
-                    </div>
 
-                    <div class="card-map">
-                        Ver en
-                        <br>
-                        mapa
-                        <img style="height: 13; width: 15px;" src="./assets/icons/iconMap/map.svg">
+                        <div class="speed-event">
+                            <b>Velocidad:</b> {{event.speed}}
+                        </div>
                     </div>
                 </div>
             </div>

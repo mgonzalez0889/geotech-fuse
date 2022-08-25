@@ -44,7 +44,7 @@
 <!-- ----------------------------------------------------------------------------------------------------- -->
 <!-- Settings drawer - Remove this to remove the drawer and its button -->
 <!-- ----------------------------------------------------------------------------------------------------- -->
-<div
+<!-- <div
     *ngIf="authService._authenticated"
     class="fixed flex items-center justify-center right-0 w-10 h-10 shadow-lg rounded-l-lg z-999 cursor-pointer bg-red-600 bg-opacity-90 print:hidden"
     style="top: 275px"
@@ -73,10 +73,10 @@
             <div class="ml-3 text-2xl font-semibold tracking-tight">Settings</div>
         </div>
 
-        <div class="flex flex-col p-6">
+        <div class="flex flex-col p-6"> -->
 
             <!-- Theme -->
-            <div class="text-md font-semibold text-secondary">THEME</div>
+            <!-- <div class="text-md font-semibold text-secondary">THEME</div>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
                 <ng-container *ngFor="let theme of themes">
                     <div
@@ -95,13 +95,13 @@
                 </ng-container>
             </div>
 
-            <hr class="my-8">
+            <hr class="my-8"> -->
 
             <!-- Scheme -->
-            <div class="text-md font-semibold text-secondary">SCHEME</div>
-            <div class="grid grid-cols-3 gap-3 justify-items-start mt-6">
+            <!-- <div class="text-md font-semibold text-secondary">SCHEME</div>
+            <div class="grid grid-cols-3 gap-3 justify-items-start mt-6"> -->
                 <!-- Auto -->
-                <div
+                <!-- <div
                     class="flex items-center py-3 pl-5 pr-6 rounded-full cursor-pointer ring-inset ring-primary bg-hover"
                     [class.ring-2]="config.scheme === 'auto'"
                     [matTooltip]="'Automatically sets the scheme based on user\'s operating system\'s color scheme preference using \'prefer-color-scheme\' media query.'"
@@ -116,9 +116,9 @@
                         [class.text-secondary]="config.scheme !== 'auto'">
                         Auto
                     </div>
-                </div>
+                </div> -->
                 <!-- Dark -->
-                <div
+                <!-- <div
                     class="flex items-center py-3 pl-5 pr-6 rounded-full cursor-pointer ring-inset ring-primary bg-hover"
                     [class.ring-2]="config.scheme === 'dark'"
                     (click)="setScheme('dark')">
@@ -132,9 +132,9 @@
                         [class.text-secondary]="config.scheme !== 'dark'">
                         Dark
                     </div>
-                </div>
+                </div> -->
                 <!-- Light -->
-                <div
+                <!-- <div
                     class="flex items-center py-3 pl-5 pr-6 rounded-full cursor-pointer ring-inset ring-primary bg-hover"
                     [class.ring-2]="config.scheme === 'light'"
                     (click)="setScheme('light')">
@@ -151,14 +151,14 @@
                 </div>
             </div>
 
-            <hr class="my-8">
+            <hr class="my-8"> -->
 
             <!-- Layout -->
-            <div class="text-md font-semibold text-secondary">LAYOUT</div>
-            <div class="grid grid-cols-3 gap-3 mt-6">
+            <!-- <div class="text-md font-semibold text-secondary">LAYOUT</div>
+            <div class="grid grid-cols-3 gap-3 mt-6"> -->
 
                 <!-- Empty -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('empty')">
                     <div
@@ -171,10 +171,10 @@
                         [class.text-primary]="config.layout === 'empty'">
                         Empty
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Classic -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('classic')">
                     <div
@@ -205,10 +205,10 @@
                         [class.text-primary]="config.layout === 'classic'">
                         Classic
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Classy -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('classy')">
                     <div
@@ -242,10 +242,10 @@
                         [class.text-primary]="config.layout === 'classy'">
                         Classy
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Compact -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('compact')">
                     <div
@@ -275,10 +275,10 @@
                         [class.text-primary]="config.layout === 'compact'">
                         Compact
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Dense -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('dense')">
                     <div
@@ -308,10 +308,10 @@
                         [class.text-primary]="config.layout === 'dense'">
                         Dense
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Futuristic -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('futuristic')">
                     <div
@@ -342,10 +342,10 @@
                         [class.text-primary]="config.layout === 'futuristic'">
                         Futuristic
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Thin -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('thin')">
                     <div
@@ -379,10 +379,10 @@
                     </div>
                 </div>
 
-                <div class="col-span-2"></div>
+                <div class="col-span-2"></div> -->
 
                 <!-- Centered -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('centered')">
                     <div
@@ -409,10 +409,10 @@
                         [class.text-primary]="config.layout === 'centered'">
                         Centered
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Enterprise -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('enterprise')">
                     <div
@@ -441,10 +441,10 @@
                         [class.text-primary]="config.layout === 'enterprise'">
                         Enterprise
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Material -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('material')">
                     <div
@@ -473,10 +473,10 @@
                         [class.text-primary]="config.layout === 'material'">
                         Material
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Modern -->
-                <div
+                <!-- <div
                     class="flex flex-col cursor-pointer"
                     (click)="setLayout('modern')">
                     <div
@@ -511,4 +511,4 @@
 
     </div>
 
-</fuse-drawer>
+</fuse-drawer> -->

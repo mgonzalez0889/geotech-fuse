@@ -64,9 +64,18 @@
                 Geomapas
             </div>
             <div class="button">
-                <button (click)="mapFunctionalitieService.changeMap('google')">Google maps</button>
-                <button (click)="mapFunctionalitieService.changeMap('hybrid')">Google Hibrido</button>
+                <button (click)="mapFunctionalitieService.changeMap('Google Maps')">Google maps</button>
+                <button (click)="mapFunctionalitieService.changeMapHybrid('Google Hibrido')">Google Hibrido</button>
             </div>
+        </div> -->
+
+        <!-- <div class="settings-map">
+            <mat-checkbox (change)="setCluster($event)" [checked]="mapFunctionalitieService.verCluster">
+                Ver cluster
+            </mat-checkbox>
+            <mat-checkbox>
+                Ver label
+            </mat-checkbox>
         </div> -->
     </ul>
 </div>
