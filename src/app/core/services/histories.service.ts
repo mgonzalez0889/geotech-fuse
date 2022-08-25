@@ -27,6 +27,15 @@ export class HistoriesService {
         const params = {method: 'create_historic'};
         return this._http.post(this._appSettings.histories.url.base, data, {params});
     }
+
+    /**
+     * @description: Obtiene el listado de historico trip
+     */
+     public getHistoriesTrip(data: any): Observable<any> {
+        const params = {method: 'create_historic_trip'};
+        return this._http.post(this._appSettings.histories.url.base, data, {params});
+    }
+
     /**
      * @description: Obtiene el historico por vehiculo con paginacion
      */

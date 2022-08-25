@@ -63,7 +63,7 @@ export class HistoricsComponent implements OnInit {
     }
   }
 
-  convertDate(date) {
+  convertDateHour(date) {
     return moment(this.initialDate).format('DD/MM/YYYY hh:mm:ss');
   }
 
@@ -71,19 +71,19 @@ export class HistoricsComponent implements OnInit {
     this.events$ = this._eventsService.getEvents();
   }
 
-  setFilter() {
-    var fechaInicio = new Date(moment(this.initialDate).format('YYYY-MM-DD')).getTime();
-    var fechaFin = new Date(moment(this.finalDate).format('YYYY-MM-DD')).getTime();
+  // setFilter() {
+  //   var fechaInicio = new Date(moment(this.initialDate).format('YYYY-MM-DD')).getTime();
+  //   var fechaFin = new Date(moment(this.finalDate).format('YYYY-MM-DD')).getTime();
 
-    var diff = fechaFin - fechaInicio;
+  //   var diff = fechaFin - fechaInicio;
 
-    if (Number(diff / (1000 * 60 * 60 * 24)) > 30) {
-      this.message_dates = true;
-    } else {
-      this.message_dates = false;
-    }
+  //   if (Number(diff / (1000 * 60 * 60 * 24)) > 30) {
+  //     this.message_dates = true;
+  //   } else {
+  //     this.message_dates = false;
+  //   }
 
-  }
+  // }
 
   selectAll(ev, plate, color) {
     for (let j = 0; j < this.mapFunctionalitieService.historic.length; j++) {
@@ -120,11 +120,11 @@ export class HistoricsComponent implements OnInit {
     this.mapFunctionalitieService.createPunt(null, this.seleccionado);
   }
 
-  filters() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    this.dialog.open(FormReportComponent, dialogConfig);
-  }
+  // filters() {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.autoFocus = true;
+  //   this.dialog.open(FormReportComponent, dialogConfig);
+  // }
 
 }

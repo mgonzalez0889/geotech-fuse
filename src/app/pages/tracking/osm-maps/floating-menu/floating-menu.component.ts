@@ -219,10 +219,10 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
             }
             return x;
         });
-        let marker = this.mapFunctionalitieService.mobiles.filter(function (x) {
+        this.mapFunctionalitieService.mobile_set = this.mapFunctionalitieService.mobiles.filter(function (x) {
             return x.selected == true;
         });
-        this.mapFunctionalitieService.receiveData('checked', marker)
+        this.mapFunctionalitieService.receiveData('checked', this.mapFunctionalitieService.mobile_set)
 
         if (value.selected) {
             this.mapFunctionalitieService.plateHistoric.push(
@@ -259,7 +259,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
                         data: data
                     });
                     this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobiles);
-                    this.mapFunctionalitieService.setMarkers(data);
+                    this.mapFunctionalitieService.setMarkers(data, this.mapFunctionalitieService.verCluster, this.mapFunctionalitieService.verLabel);
                 }
             });
             console.log(this.mapFunctionalitieService.platesFleet);
