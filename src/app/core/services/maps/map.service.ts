@@ -22,6 +22,7 @@ import { functions } from 'lodash';
 export class MapFunctionalitieService {
     public pointLatLens: any = [];
     public mobiles: any[] = [];
+    public mobile_set: any[] = [];
     public geometrys: any[] = [];
     public dataSource: any = [];
     public fleets: any[] = [];
@@ -73,6 +74,7 @@ export class MapFunctionalitieService {
     count: number = 0;
     selectedTypeService;
     historic: any = [];
+    historicTrip: any = [];
     platesFleet: any = [];
     plate: any;
 
@@ -127,7 +129,7 @@ export class MapFunctionalitieService {
         this.showOptionsGeoTools = !this.showOptionsGeoTools;
 
         if (!this.showOptionsGeoTools) {
-            this.setMarkers(this.mobiles);
+            this.setMarkers(this.mobiles, this.verCluster, this.verLabel);
         } else {
             this.deleteChecks(this.mobiles);
         }
@@ -144,41 +146,55 @@ export class MapFunctionalitieService {
                 zoomControl: false,
             });
 
-            this.layerControl = L.control
-                .layers(this.baseLayers)
-                .addTo(this.map);
-            L.control
-                .zoom({
-                    position: 'topright',
-                })
-                .addTo(this.map);
+            this.layerControl = L.control.layers(this.baseLayers).addTo(this.map);
+
+            // L.control.zoom({
+            //   position: 'topright'
+            // }).addTo(this.map);
         });
     }
 
-    convertDate(date) {
+    convertDateHour(date) {
         moment.locale('es');
         return moment(date).fromNow();
     }
 
     changeMap(newMap) {
         console.log(newMap);
-        if (newMap === 'google') {
-            this.changeMapa = this.googleMaps;
-        } else {
-            this.changeMapa = this.googleHybrid;
-        }
+        this.baseLayers['Google Maps'].addTo(this.map);
+        console.log(this.baseLayers);
+        // let map = {
+        //     newMap
+        // }
+        // if (newMap === 'google') {
+
+        // } else {
+        //     this.changeMapa = this.googleHybrid;
+        // }
+    }
+
+    changeMapHybrid(newMap) {
+        this.baseLayers['Google Hibrido'].addTo(this.map);
+        // let map = {
+        //     newMap
+        // }
+        // if (newMap === 'google') {
+
+        // } else {
+        //     this.changeMapa = this.googleHybrid;
+        // }
     }
 
     loadAllsMobiles() {
         this.deleteChecks(this.mobiles);
-        this.setMarkers(this.mobiles);
+        this.setMarkers(this.mobiles, this.verCluster, this.verLabel);
     }
 
     receiveData(type: string, data: any) {
         if (type === 'checked') {
             if (data.length) {
-                this.deleteChecks(data);
-                this.setMarkers(data);
+                this.deleteChecks(this.mobiles);
+                this.setMarkers(data, this.verCluster, this.verLabel);
             } else {
                 this.loadAllsMobiles();
             }
@@ -231,7 +247,7 @@ export class MapFunctionalitieService {
         });
     }
 
-    setMarkers(mobiles: any[]): any {
+    setMarkers(mobiles: any, verCluster, verLabel): any {
         mobiles.forEach((value: any, index: number) => {
             const data = mobiles[index];
             this.markers[data.id] = new L.Marker([data.x, data.y], {
@@ -239,7 +255,7 @@ export class MapFunctionalitieService {
             });
 
             // Validamos estado de label
-            if (this.verLabel) {
+            if (verLabel) {
                 this.markers[data.id].bindTooltip(data.plate, {
                     permanent: true,
                     direction: 'bottom',
@@ -253,7 +269,7 @@ export class MapFunctionalitieService {
                 });
             }
 
-            if (this.verCluster) {
+            if (verCluster) {
                 this.markers[data.id].addTo(this.markerCluster);
                 this.markerCluster.addTo(this.map);
             } else {
@@ -312,6 +328,7 @@ export class MapFunctionalitieService {
             }
         });
     }
+
     createPuntControlCenter(data: any): void {
         console.log(data.color_event, 'wwww');
         let x;
@@ -391,11 +408,7 @@ export class MapFunctionalitieService {
                     });
 
                     this.markersPoint[historic[i].id] = L.marker([x, y], {
-                        icon: this.setIcon(
-                            historic[i],
-                            'historic',
-                            historic[i].color
-                        ),
+                        icon: this.setIcon(historic[i], 'historic', historic[i].color),
                     }).addTo(this.clusterHistoric);
                     // this.markerCluster.addTo(clusterHistoric);
                     this.clusterHistoric.addTo(this.map);

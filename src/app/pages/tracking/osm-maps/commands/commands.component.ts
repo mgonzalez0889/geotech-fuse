@@ -47,7 +47,7 @@ export class CommandsComponent implements OnInit {
     });
   }
 
-  convertDate(date) {
+  convertDateHour(date) {
     return moment(date).format("DD/MM/YYYY HH:mm:ss");
   }
 

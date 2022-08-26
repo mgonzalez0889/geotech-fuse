@@ -83,6 +83,55 @@ export class MapRequestService {
     })
   }
 
+  async getHistoricTrip(data: any) {
+    return new Promise((resolve, reject) => {
+      this._historicService.getHistoriesTrip(data)
+        .subscribe((res: any) => {
+          resolve(res);
+          this.mapFunctionalitieService.historicTrip = [];
+          let historicTrip = res;
+
+          for (let i = 0; i < this.mapFunctionalitieService.plateHistoric.length; i++) {
+            const element = this.mapFunctionalitieService.plateHistoric[i];
+
+            let encontrado = historicTrip.plates.filter(x => {
+              return x.plate == element;
+            })
+
+            let data = [];
+            let trips = [];
+            let stops = [];
+            if (encontrado.length > 0) {
+              data = historicTrip.data.filter(x => {
+                return x.plate == element;
+              });
+
+              trips = historicTrip.trips.filter(x => {
+                return x.plate == element;
+              });
+
+              this.mapFunctionalitieService.historicTrip.push({
+                plate: element,
+                color: getRandomColor(),
+                ...data[0],
+                trips: trips,
+                selected: false,
+                tiene_data: true
+              });
+            } else {
+              this.mapFunctionalitieService.historicTrip.push({
+                plate: element,
+                tiene_data: false
+              })
+            }
+          }
+          console.log(this.mapFunctionalitieService.historicTrip);
+        }, async (err) => {
+          reject(err);
+        })
+    })
+  }
+
   async saveGeometry(type: string, data: any) {
     return new Promise((resolve, reject) => {
       this.mapService.postGeometry(type, data)

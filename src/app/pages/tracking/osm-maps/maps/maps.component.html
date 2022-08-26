@@ -69,14 +69,7 @@
             </div>
         </div> -->
 
-        <!-- <div class="settings-map">
-            <mat-checkbox (change)="setCluster($event)" [checked]="mapFunctionalitieService.verCluster">
-                Ver cluster
-            </mat-checkbox>
-            <mat-checkbox>
-                Ver label
-            </mat-checkbox>
-        </div> -->
+
     </ul>
 </div>
 <!--
@@ -99,5 +92,19 @@
         <div class="item-title">
             {{options.name}}
         </div>
+    </div>
+</div>
+
+<div class="settings-map">
+    <div class="item">
+        <mat-checkbox (change)="setCluster($event)" [checked]="mapFunctionalitieService.verCluster">
+            Ver cluster
+        </mat-checkbox>
+    </div>
+
+    <div class="item">
+        <mat-checkbox (change)="setLabel($event)" [checked]="mapFunctionalitieService.verLabel">
+            Ver label
+        </mat-checkbox>
     </div>
 </div>

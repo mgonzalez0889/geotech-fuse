@@ -18,4 +18,13 @@ export class OwnersService {
         const params = { method: 'index_all_owner' };
         return this._http.get(this._appSettings.owners.url.base, { params });
     }
+    /**
+     * @description: Buscador de  owner
+     */
+    public getOwnersFilter(data: any): Observable<any> {
+        const params = { method: 'show_all_owner_simulator' };
+        return this._http.get(this._appSettings.owners.url.base + '/' + data, {
+            params,
+        });
+    }
 }

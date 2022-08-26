@@ -16,7 +16,13 @@ import {
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, filter, map, takeUntil } from 'rxjs/operators';
+import {
+    debounceTime,
+    filter,
+    map,
+    takeUntil,
+    startWith,
+} from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { OwnersService } from 'app/core/services/owners.service';
 
@@ -105,7 +111,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        this.getOwners();
+        //this.getOwners();
         // this.filteredOptions = this.searchControl.valueChanges.pipe(
         //     startWith(''),
         //     map((value) => this._filter(value || ''))
@@ -131,17 +137,26 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
                 filter((value) => value && value.length >= this.minLength)
             )
             .subscribe((value) => {
-                this._httpClient
-                    .post('api/common/search', { query: value })
-                    .subscribe((resultSets: any) => {
-                        // Store the result sets
-                        this.resultSets = resultSets;
-                        this.resultSets.forEach((element) => {
-                            element.results.forEach((element2) => {});
-                        });
-                        // Execute the event
-                        this.search.next(resultSets);
+                this.ownersService
+                    .getOwnersFilter(value)
+                    .subscribe((res: any) => {
+                        this.resultSets = res.data;
+                        console.log(this.resultSets, 'res geo');
+                        this.search.next(res.data);
                     });
+
+                // this._httpClient
+                //     .post('api/common/search', { query: value })
+                //     .subscribe((resultSets: any) => {
+                //         console.log(resultSets, 'resultSets fuse');
+                //         // Store the result sets
+                //         const resultSets2 = resultSets;
+                //         resultSets2.forEach((element) => {
+                //             element.results.forEach((element2) => {});
+                //         });
+                //         // Execute the event
+                //         //this.search.next(resultSets);
+                //     });
             });
     }
 
@@ -231,6 +246,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
      * @description: Filtro de busqueda de los clientes
      */
     private _filter(value: string): string[] {
+        console.log(value, 'aaaaaa');
         const filterValue = value.toLowerCase();
         return this.owners.filter((option) =>
             option.toLowerCase().includes(filterValue)
