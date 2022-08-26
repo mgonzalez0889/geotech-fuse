@@ -87,7 +87,7 @@ export const appRoutes: Route[] = [
         },
         children: [
             {
-                path: 'default',
+                path: 'app',
                 loadChildren: () => import('./pages/default.module').then(m => m.DefaultModule)
             }
         ]

@@ -41,9 +41,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
             name: 'point-map',
             type: 'punt'
         },
-        {
-            name: 'settings-map'
-        }
+        // {
+        //     name: 'settings-map'
+        // }
     ]
 
     optionsGeo: any = [
@@ -99,6 +99,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
             this.mapFunctionalitieService.moveMarker(data);
         });
         this.socketIoService.listenin('new_command').subscribe((data: any) => {
+            console.log(data,'respues comando ')
         });
         const time = timer(2000);
         time.subscribe((t) => {
@@ -114,14 +115,12 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.subscription = this.mobilesService
             .getMobiles()
             .subscribe((data) => {
-                this.mapFunctionalitieService.mobiles = data.data;
-                this.mapFunctionalitieService.mobiles.map((x) => {
+                this.mapFunctionalitieService.mobiles = data.data.map((x) => {
                     x['selected'] = false;
                     return x;
                 });
                 this.mapFunctionalitieService.dataSource = new MatTableDataSource(this.mapFunctionalitieService.mobiles);
-                // this.setmarker(data.data);
-                this.mapFunctionalitieService.setMarkers(data.data);
+                this.mapFunctionalitieService.setMarkers(data.data, this.mapFunctionalitieService.verCluster, this.mapFunctionalitieService.verLabel);
 
                 let alls = {
                     class_mobile_id: 0,
@@ -204,8 +203,27 @@ export class MapsComponent implements OnInit, AfterViewInit {
     }
 
     setCluster(ev) {
-        console.log(ev.checked)
-        this.mapFunctionalitieService.verCluster = ev.checked
+        if (this.mapFunctionalitieService.mobile_set.length) {
+            this.mapFunctionalitieService.verCluster = ev.checked;
+            this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobile_set);
+            this.mapFunctionalitieService.setMarkers(this.mapFunctionalitieService.mobile_set, this.mapFunctionalitieService.verCluster, this.mapFunctionalitieService.verLabel);
+        } else {
+            this.mapFunctionalitieService.verCluster = ev.checked;
+            this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobiles);
+            this.mapFunctionalitieService.setMarkers(this.mapFunctionalitieService.mobiles, this.mapFunctionalitieService.verCluster, this.mapFunctionalitieService.verLabel);
+        }
+    }
+
+    setLabel(ev) {
+        if (this.mapFunctionalitieService.mobile_set.length) {
+            this.mapFunctionalitieService.verLabel = ev.checked;
+            this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobile_set);
+            this.mapFunctionalitieService.setMarkers(this.mapFunctionalitieService.mobile_set, this.mapFunctionalitieService.verCluster, this.mapFunctionalitieService.verLabel);
+        } else {
+            this.mapFunctionalitieService.verLabel = ev.checked;
+            this.mapFunctionalitieService.deleteChecks(this.mapFunctionalitieService.mobiles);
+            this.mapFunctionalitieService.setMarkers(this.mapFunctionalitieService.mobiles, this.mapFunctionalitieService.verCluster, this.mapFunctionalitieService.verLabel);
+        }
     }
 }
 

@@ -110,6 +110,115 @@
                 }
             }
         }
+
+        .trip {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            .cabecera-trip {
+                font-size: 13px;
+                color: #2c384f;
+            }
+
+            .body-trip {
+                display: flex;
+                .body-left {
+                    width: 10vh;
+                    text-align: center;
+                    padding: 5px;
+                    font-size: 1.1vh;
+
+                    .checkbox {
+                        padding: 1.5vh;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        input[type="checkbox"] {
+                            position: relative;
+                            cursor: pointer;
+                            width: 17px;
+                            height: 17px;
+                        }
+
+                        input[type="checkbox"]:before {
+                            content: "";
+                            display: block;
+                            position: absolute;
+                            width: 17px;
+                            height: 17px;
+                            top: 0;
+                            left: 0;
+                            background-color: white;
+                            border: 2px solid #2c384f;
+                            border-radius: 3px;
+                        }
+
+                        input[type="checkbox"]:checked:before {
+                            content: "";
+                            display: block;
+                            position: absolute;
+                            width: 17px;
+                            height: 17px;
+                            top: 0;
+                            left: 0;
+                            background-color: #2c384f;
+                        }
+
+                        input[type="checkbox"]:checked:after {
+                            content: "";
+                            display: block;
+                            width: 5px;
+                            height: 10px;
+                            border: solid white;
+                            border-width: 0 2px 2px 0;
+                            -webkit-transform: rotate(45deg);
+                            -ms-transform: rotate(45deg);
+                            transform: rotate(45deg);
+                            position: absolute;
+                            top: 2px;
+                            left: 6px;
+                        }
+                    }
+                }
+
+                .body-center {
+                    width: 1.5vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 10px 0;
+
+                    .circle {
+                        width: 12px;
+                        height: 12px;
+                        background: #e0e0e0;
+                        border-radius: 50px;
+                        margin: auto;
+                    }
+
+                    .line {
+                        width: 2px;
+                        background: #e0e0e0;
+                        height: 65px;
+                        margin: 5px auto;
+                    }
+                }
+
+                .body-right {
+                    padding: 5px 10px;
+                    font-size: 1.1vh;
+
+                    .address-init,
+                    .address-end {
+                        height: 25px;
+                    }
+
+                    .events {
+                        padding: 15px 0;
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -37,7 +37,7 @@
                 <div class="description">
                     <label>{{item.name_command}}</label>
                     <br>
-                    <span>{{convertDate(item.date_send)}}</span>
+                    <span>{{convertDateHour(item.date_send)}}</span>
                 </div>
 
                 <img src="./assets/icons/iconMap/pendiente.svg" *ngIf="item.state === 'PENDIENTE'">
