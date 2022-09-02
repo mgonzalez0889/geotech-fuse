@@ -20,6 +20,7 @@ import { functions } from 'lodash';
     providedIn: 'root',
 })
 export class MapFunctionalitieService {
+    public markerCluster = L.markerClusterGroup();
     public pointLatLens: any = [];
     public mobiles: any[] = [];
     public mobile_set: any[] = [];
@@ -30,7 +31,6 @@ export class MapFunctionalitieService {
     public commandsPlate: any = [];
     public markers: any = {};
     public map: L.Map;
-    public markerCluster = new MarkerClusterGroup();
     public type_service: any = [];
 
     // Mostrar y ocultar componentes de mapa (Menu mobiles, geotools, historico, comandos)

@@ -77,4 +77,13 @@ export class UsersService {
         const params = { method: 'info_user' };
         return this._http.get(this._appSettings.user.url.base, { params });
     }
+    /**
+     * @description: Cambia el owner Id simulator
+     */
+    public putUserOwnerSimulator(data: any): Observable<any> {
+        const params = { method: 'update_owner_id_simulator' };
+        return this._http.get(this._appSettings.user.url.base + '/' + data.id, {
+            params,
+        });
+    }
 }

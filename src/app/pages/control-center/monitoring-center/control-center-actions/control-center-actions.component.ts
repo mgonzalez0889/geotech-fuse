@@ -340,7 +340,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      * @description: Elimina el contacto
      */
     public deleteContacts(id: number): void {
-        let confirmation = this.confirmationService.open({
+        const confirmation = this.confirmationService.open({
             title: 'Eliminar contacto',
             message:
                 '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',

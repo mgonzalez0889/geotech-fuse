@@ -25,6 +25,8 @@ import {
 } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { OwnersService } from 'app/core/services/owners.service';
+import { UsersService } from 'app/core/services/users.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'search',
@@ -53,7 +55,9 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
         private _elementRef: ElementRef,
         private _httpClient: HttpClient,
         private _renderer2: Renderer2,
-        private ownersService: OwnersService
+        private ownersService: OwnersService,
+        private usersService: UsersService,
+        private router: Router
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -111,12 +115,6 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        //this.getOwners();
-        // this.filteredOptions = this.searchControl.valueChanges.pipe(
-        //     startWith(''),
-        //     map((value) => this._filter(value || ''))
-        // );
-
         // Subscribe to the search field value changes
         this.searchControl.valueChanges
             .pipe(
@@ -141,22 +139,8 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
                     .getOwnersFilter(value)
                     .subscribe((res: any) => {
                         this.resultSets = res.data;
-                        console.log(this.resultSets, 'res geo');
                         this.search.next(res.data);
                     });
-
-                // this._httpClient
-                //     .post('api/common/search', { query: value })
-                //     .subscribe((resultSets: any) => {
-                //         console.log(resultSets, 'resultSets fuse');
-                //         // Store the result sets
-                //         const resultSets2 = resultSets;
-                //         resultSets2.forEach((element) => {
-                //             element.results.forEach((element2) => {});
-                //         });
-                //         // Execute the event
-                //         //this.search.next(resultSets);
-                //     });
             });
     }
 
@@ -230,26 +214,17 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
-    // -----------------------------------------------------------------------------------------------------
-    // @ Cambios GEOTECH
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * @description: Trae todos los clientes
+     * @description: Emular cliente
      */
-    private getOwners(): void {
-        this.ownersService.getOwners().subscribe((res) => {
-            this.owners = res.data;
+    public simulatorOwner(data: any): void {
+        this.usersService.putUserOwnerSimulator(data).subscribe((res) => {
+            if (res.code === 200) {
+                this.router.navigate(['dashboard']);
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
         });
-    }
-    /**
-     * @description: Filtro de busqueda de los clientes
-     */
-    private _filter(value: string): string[] {
-        console.log(value, 'aaaaaa');
-        const filterValue = value.toLowerCase();
-        return this.owners.filter((option) =>
-            option.toLowerCase().includes(filterValue)
-        );
     }
 }
