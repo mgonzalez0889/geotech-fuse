@@ -18,7 +18,8 @@
             </mat-optgroup>
             <ng-container *ngFor="let resultSet of resultSets; trackBy: trackByFn">
                 <mat-option
-                    class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover">
+                    class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+                    (click)="simulatorOwner(resultSet)">
                     <!-- Clientes -->
                     <ng-container>
                         <ng-container *ngTemplateOutlet="ownerResult; context: {$implicit: resultSet}">

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Navigation } from 'app/core/navigation/navigation.types';
-import {AppSettingsService} from "../app-configs/app-settings.service";
+import { AppSettingsService } from '../app-configs/app-settings.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
-export class NavigationService
-{
-    private _navigation: ReplaySubject<Navigation> = new ReplaySubject<Navigation>(1);
+export class NavigationService {
+    private _navigation: ReplaySubject<Navigation> =
+        new ReplaySubject<Navigation>(1);
 
     /**
      * Constructor
@@ -18,9 +18,7 @@ export class NavigationService
     constructor(
         private _httpClient: HttpClient,
         private _appSettings: AppSettingsService
-    )
-    {
-    }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -29,8 +27,7 @@ export class NavigationService
     /**
      * Getter for navigation
      */
-    get navigation$(): Observable<Navigation>
-    {
+    get navigation$(): Observable<Navigation> {
         return this._navigation.asObservable();
     }
 
@@ -41,7 +38,7 @@ export class NavigationService
     /**
      * Get all navigation data
      */
-  /*  get(): Observable<Navigation>
+    /*  get(): Observable<Navigation>
     {
         return this._httpClient.get<Navigation>('api/common/navigation').pipe(
             tap((navigation) => {
@@ -49,25 +46,28 @@ export class NavigationService
             })
         );
     }*/
-    get(): Observable<Navigation>
-    {
-        const params = {method: 'show_menu_user'};
+    get(): Observable<Navigation> {
+        const params = { method: 'show_menu_user' };
         let navigations: any = {
             compact: [],
             default: [],
             futuristic: [],
-            horizontal: []
+            horizontal: [],
         };
-        return this._httpClient.get<Navigation>(this._appSettings.menuOptions.url.optionsFather, {params}).pipe(
-            tap((navigation) => {
-                navigations = {
-                    default: navigation,
-                    compact: navigation,
-                    futuristic: navigation,
-                    horizontal: navigation
-                };
-                this._navigation.next(navigations);
-            }),
-        );
+        return this._httpClient
+            .get<Navigation>(this._appSettings.menuOptions.url.optionsFather, {
+                params,
+            })
+            .pipe(
+                tap((navigation) => {
+                    navigations = {
+                        default: navigation,
+                        compact: navigation,
+                        futuristic: navigation,
+                        horizontal: navigation,
+                    };
+                    this._navigation.next(navigations);
+                })
+            );
     }
 }

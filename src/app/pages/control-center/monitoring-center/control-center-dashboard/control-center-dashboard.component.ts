@@ -54,6 +54,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
      */
     public getInfoUser(): void {
         this.usersService.getInfoUser().subscribe((res) => {
+            console.log(res,'a ver ');
             this.owner_id_simulator = res.data.owner_id_simulator;
             this.getAllAlarms();
         });
@@ -98,6 +99,8 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
                     this.getAlarms(res);
                 });
         } else {
+            console.log('entro');
+
             //Centro de control de los clientes
             this.controlCenterService
                 .getAllAlarmsOwner(this.filterAlarms)
