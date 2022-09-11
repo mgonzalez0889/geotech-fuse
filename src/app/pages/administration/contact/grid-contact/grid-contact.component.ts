@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +11,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./grid-contact.component.scss'],
 })
 export class GridContactComponent implements OnInit, OnDestroy {
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
     public subscription: Subscription;
     public opened: boolean = false;
     public dataTableContact: MatTableDataSource<any>;
@@ -23,8 +24,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
         'email',
         'cellPhone',
     ];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
 
     constructor(private contactService: ContactService) {}
 
@@ -65,20 +64,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
         });
     }
     /**
-     * @description: Escucha el observable behavior
-     */
-    private listenObservables(): void {
-        this.subscription =
-            this.contactService.behaviorSubjectContactGrid.subscribe(
-                ({ reload, opened }) => {
-                    this.opened = opened;
-                    if (reload) {
-                        this.getContact();
-                    }
-                }
-            );
-    }
-    /**
      * @description: Crear un nuevo contacto
      */
     public newContact(): void {
@@ -92,5 +77,19 @@ export class GridContactComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+    /**
+     * @description: Escucha el observable behavior
+     */
+    private listenObservables(): void {
+        this.subscription =
+            this.contactService.behaviorSubjectContactGrid.subscribe(
+                ({ reload, opened }) => {
+                    this.opened = opened;
+                    if (reload) {
+                        this.getContact();
+                    }
+                }
+            );
     }
 }

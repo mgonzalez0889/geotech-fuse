@@ -9,6 +9,7 @@ import * as L from 'leaflet';
 import { MarkerClusterGroup } from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-rotatedmarker';
+import 'leaflet.fullscreen';
 import { timer } from 'rxjs';
 import 'leaflet.marker.slideto';
 import { InfoWindowsComponent } from 'app/pages/tracking/osm-maps/info-windows/info-windows.component';
@@ -139,6 +140,10 @@ export class MapFunctionalitieService {
         const time = timer(1000);
         time.subscribe((t) => {
             this.map = L.map('map', {
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                    position: 'topright'
+                  },
                 center: [4.658383846282959, -74.09394073486328],
                 zoom: 10,
                 layers: [this.googleMaps],

@@ -39,6 +39,7 @@ export class LanguagesComponent implements OnInit, OnDestroy
         // Get the available languages from transloco
         this.availableLangs = this._translocoService.getAvailableLangs();
 
+
         // Subscribe to language changes
         this._translocoService.langChanges$.subscribe((activeLang) => {
 
@@ -52,7 +53,7 @@ export class LanguagesComponent implements OnInit, OnDestroy
         // Set the country iso codes for languages for flags
         this.flagCodes = {
             'en': 'us',
-            'tr': 'tr'
+            'es': 'co'
         };
     }
 

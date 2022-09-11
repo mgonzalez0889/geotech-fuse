@@ -28,7 +28,14 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     public dataAlarms: MatTableDataSource<any>;
     public selection = new SelectionModel<any>(true, []);
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('management') management: MatPaginator;
+    @ViewChild('silencedd') silencedd: MatPaginator;
+    @ViewChild('all') all: MatPaginator;
+
+    @ViewChild('SortAll') SortAll: MatSort;
+    @ViewChild('SortSilencedd') SortSilencedd: MatSort;
+    @ViewChild('SortManagement') SortManagement: MatSort;
+
     @ViewChild(MatSort) sort: MatSort;
     public columnsAlarms: string[] = [
         'event_name',
@@ -48,13 +55,15 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getInfoUser();
         this.listenObservables();
+        setInterval(() => {
+            this.getAllAlarms();
+        }, 20000);
     }
     /**
      * @description: Trae la informacion del usuario
      */
     public getInfoUser(): void {
         this.usersService.getInfoUser().subscribe((res) => {
-            console.log(res,'a ver ');
             this.owner_id_simulator = res.data.owner_id_simulator;
             this.getAllAlarms();
         });
@@ -88,7 +97,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
         }`;
     }
     /**
-     * @description: Trae tolas las alarmas
+     * @description: Trae todas las alarmas
      */
     private getAllAlarms(): void {
         //Centro de control de geotech (ve todas las alarmas)
@@ -124,8 +133,22 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
         }
         this.alarms = data.data;
         this.dataAlarms = new MatTableDataSource(data.data);
-        this.dataAlarms.paginator = this.paginator;
-        this.dataAlarms.sort = this.sort;
+        switch (this.filterAlarms) {
+            case 0:
+                this.dataAlarms.paginator = this.management;
+                this.dataAlarms.sort = this.SortManagement;
+
+                break;
+            case 1:
+                this.dataAlarms.paginator = this.silencedd;
+                this.dataAlarms.sort = this.SortSilencedd;
+
+                break;
+            case 2:
+                this.dataAlarms.paginator = this.all;
+                this.dataAlarms.sort = this.SortAll;
+                break;
+        }
     }
     /**
      * @description: Escucha el observable behavior

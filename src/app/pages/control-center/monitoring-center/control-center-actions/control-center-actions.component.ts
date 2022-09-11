@@ -4,6 +4,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
+import * as L from 'leaflet';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,11 +24,11 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     @ViewChild('paginatorContactsControlCenter')
     paginatorContactsControlCenter: MatPaginator;
     @ViewChild('sortContactsControlCenter') sortContactsControlCenter: MatSort;
-
     @ViewChild('paginatorAttendedAlarms')
     paginatorAttendedAlarms: MatPaginator;
     @ViewChild('sortAttendedAlarms') sortAttendedAlarms: MatSort;
-
+    public map: L.Map;
+    public markersPoint = {};
     public owner_id_simulator: number;
     public minDate = new Date();
     public showPostponeAlarm: boolean = false;
@@ -125,8 +126,27 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      * @description: Pinta en el mapa el lugar donde fue la alarma
      */
     private getPointMap(data): void {
-        this.mapFunctionalitieService.goDeleteGeometryPath();
-        this.mapFunctionalitieService.createPuntControlCenter(data);
+        for (const point in this.markersPoint) {
+            this.map.removeLayer(this.markersPoint[point]);
+        }
+        const myIconUrl =
+            'data:image/svg+xml,' +
+            encodeURIComponent(
+                '<svg width="14" height="19" viewBox="0 0 14 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 19C5.73693 17.9227 4.56619 16.7416 3.5 15.4691C1.9 13.5581 8.83662e-07 10.712 8.83662e-07 8.00005C-0.00141728 5.1676 1.70425 2.61344 4.32107 1.52945C6.93789 0.445455 9.95007 1.04529 11.952 3.04905C13.2685 4.35966 14.0059 6.14244 14 8.00005C14 10.712 12.1 13.5581 10.5 15.4691C9.43382 16.7416 8.26307 17.9227 7 19ZM7 5.00005C5.92821 5.00005 4.93782 5.57185 4.40193 6.50005C3.86603 7.42825 3.86603 8.57185 4.40193 9.50005C4.93782 10.4283 5.92821 11.0001 7 11.0001C8.65686 11.0001 10 9.6569 10 8.00005C10 6.3432 8.65686 5.00005 7 5.00005Z" fill="' +
+                    data.color_event +
+                    '"/></svg>'
+            );
+        const x = data.x;
+        const y = data.y;
+        this.map.setView([x, y]);
+        this.markersPoint[data.id] = L.marker([x, y], {
+            icon: L.icon({
+                iconUrl: myIconUrl,
+                iconSize: [36, 40],
+                iconAnchor: [18, 40],
+            }),
+        });
+        this.markersPoint[data.id].addTo(this.map);
     }
     /**
      * @description:Genera los estado de atencion
@@ -331,7 +351,6 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      */
     public onCancel(): void {
         this.isAttended = false;
-        //this.loadMap();
         if (this.attendedAlarmsForm) {
             this.attendedAlarmsForm.reset();
         }
@@ -412,11 +431,33 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
      * @description: Para cargar el mapa
      */
     private loadMap(): void {
-        this.mapFunctionalitieService.init();
-        const time = timer(1000);
-        time.subscribe((t) => {
-            this.getPointMap(this.selectedAlarm);
+        const GoogleMaps = L.tileLayer(
+            'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+            {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            }
+        );
+        const GoogleHybrid = L.tileLayer(
+            'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+            {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            }
+        );
+        this.map = L.map('map', {
+            fullscreenControl: true,
+            center: [11.004313, -74.808137],
+            zoom: 10,
+            layers: [GoogleMaps],
+            attributionControl: false,
         });
+        const baseLayers = {
+            'Google Maps': GoogleMaps,
+            'Google Hibrido': GoogleHybrid,
+        };
+        L.control.layers(baseLayers).addTo(this.map);
+        this.getPointMap(this.selectedAlarm);
     }
     /**
      * @description: Escucha el observable behavior y busca al contacto
@@ -431,7 +472,11 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                         this.selectedAlarm['owner_id_simulator'];
                     // this.owner_id_simulator = this.isAttended.owner_id_simulator
                     if (!this.isAttended) {
-                        //this.loadMap();
+                        const time = timer(1000);
+                        time.subscribe((t) => {
+                            this.getPointMap(this.selectedAlarm);
+                        });
+                        this.getReportAlarmsAttens();
                     } else {
                         if (this.attendedAlarmsForm) {
                             this.attendedAlarmsForm.reset();
@@ -457,10 +502,6 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                     this.dataTableAttendedAlarms.paginator =
                         this.paginatorAttendedAlarms;
                     this.dataTableAttendedAlarms.sort = this.sortAttendedAlarms;
-                    console.log(
-                        this.dataTableAttendedAlarms.filteredData,
-                        'this.dataTableAttendedAlarms'
-                    );
                 });
         } else {
             //Centro de control de los clientes
@@ -473,10 +514,6 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
                     this.dataTableAttendedAlarms.paginator =
                         this.paginatorAttendedAlarms;
                     this.dataTableAttendedAlarms.sort = this.sortAttendedAlarms;
-                    console.log(
-                        this.dataTableAttendedAlarms,
-                        'this.dataTableAttendedAlarms'
-                    );
                 });
         }
     }
