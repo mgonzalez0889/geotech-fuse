@@ -119,10 +119,10 @@ export class GridUserOptionProfileComponent implements OnInit, OnDestroy {
    */
   private listenObservable(): void {
       let idProfile: number;
-      this.subscription = this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id}) => {
-          idProfile = id;
-          this.getUserProfileOption(id);
-      });
+    //   this.subscription = this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id}) => {
+    //       idProfile = id;
+    //       this.getUserProfileOption(id);
+    //   });
       this.subscription = this.userProfileOptionsService.behaviorSubjectUserProfile$.subscribe(({isEdit,}) => {
           switch (isEdit) {
               case false :

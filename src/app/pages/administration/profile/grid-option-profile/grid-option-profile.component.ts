@@ -121,10 +121,10 @@ export class GridOptionProfileComponent implements OnInit {
    * @description: Escucha el observable behavior seleccio
    */
   private listenObservables(): void {
-      this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id, payload}) => {
-          // this.fetchProfile(id);
-          this.profile = payload.name;
-          this.form.controls.user_profile_id.setValue(id);
-      });
+    //   this.menuOptionService.behaviorSelectedMenuOption$.subscribe(({id, payload}) => {
+    //       // this.fetchProfile(id);
+    //       this.profile = payload.name;
+    //       this.form.controls.user_profile_id.setValue(id);
+    //   });
   }
 }

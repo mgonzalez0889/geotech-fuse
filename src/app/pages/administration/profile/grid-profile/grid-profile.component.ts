@@ -55,7 +55,7 @@ export class GridProfileComponent implements OnInit {
    */
   public onOptionProfile(profile: any): void {
       this.show = 'OPTIONS';
-      this.menuOptionService.behaviorSelectedMenuOption$.next({id: profile.id, payload: profile});
+      //this.menuOptionService.behaviorSelectedMenuOption$.next({id: profile.id, payload: profile});
   }
   /**
    * @description: Abre el formulario de plate
