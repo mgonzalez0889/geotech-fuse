@@ -97,7 +97,7 @@
                                         <mat-label>Tipo de opcion</mat-label>
                                         <mat-icon matPrefix class="hidden sm:flex icon-size-5">format_list_bulleted
                                         </mat-icon>
-                                        <mat-select [formControl]="option.get('type')">
+                                        <mat-select required [formControl]="option.get('type')">
                                             <mat-option *ngFor="let type of typeOptions" [value]="type.type">
                                                 {{type.option}}
                                             </mat-option>
@@ -106,7 +106,7 @@
                                     <div *ngIf="option.controls.type.value === 'basic'">
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                             <mat-label *ngIf="first">Icono</mat-label>
-                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">insert_emoticon
+                                            <mat-icon matPrefix class="hidden sm:flex">insert_emoticon
                                             </mat-icon>
                                             <input matInput [formControl]="option.get('icon')" [placeholder]="'Icono'">
                                         </mat-form-field>
@@ -126,7 +126,8 @@
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                             <mat-label *ngIf="first">Ruta</mat-label>
                                             <mat-icon matPrefix class="hidden sm:flex icon-size-5">route</mat-icon>
-                                            <input matInput [formControl]="option.get('link')" [placeholder]="'Ruta'">
+                                            <input [required]="option.controls.type.value === 'basic'" matInput
+                                                [formControl]="option.get('link')" [placeholder]="'Ruta'">
                                         </mat-form-field>
                                         <section>
                                             <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
@@ -138,7 +139,8 @@
                                             <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                                 <mat-label *ngIf="first">Titulo para la etiqueta</mat-label>
                                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
-                                                <input matInput [formControl]="option.get('badgeTitle')"
+                                                <input [required]="option.controls.badgeSelect.value" matInput
+                                                    [formControl]="option.get('badgeTitle')"
                                                     [placeholder]="'Titulo para la etiqueta'">
                                             </mat-form-field>
                                             <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
@@ -184,15 +186,15 @@
                                     <div *ngIf="option.controls.type.value === 'collapsable'">
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                             <mat-label *ngIf="first">Icono</mat-label>
-                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">insert_emoticon
+                                            <mat-icon matPrefix class="hidden sm:flex">insert_emoticon
                                             </mat-icon>
                                             <input matInput [formControl]="option.get('icon')" [placeholder]="'Icono'">
                                         </mat-form-field>
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                             <mat-label *ngIf="first">Titulo</mat-label>
                                             <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
-                                            <input matInput [formControl]="option.get('title')"
-                                                [placeholder]="'Titulo'">
+                                            <input [required]="option.controls.type.value === 'collapsable'" matInput
+                                                [formControl]="option.get('title')" [placeholder]="'Titulo'">
                                         </mat-form-field>
 
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
@@ -211,7 +213,8 @@
                                             <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                                 <mat-label *ngIf="first">Titulo para la etiqueta</mat-label>
                                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
-                                                <input matInput [formControl]="option.get('badgeTitle')"
+                                                <input [required]="option.controls.badgeSelect.value" matInput
+                                                    [formControl]="option.get('badgeTitle')"
                                                     [placeholder]="'Titulo para la etiqueta'">
                                             </mat-form-field>
                                             <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
@@ -251,7 +254,7 @@
                                             <div *ngIf="optionChildren.controls.type.value === 'basic'">
                                                 <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
                                                     <mat-label *ngIf="firstChildren">Icono</mat-label>
-                                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5">
+                                                    <mat-icon matPrefix class="hidden sm:flex">
                                                         insert_emoticon</mat-icon>
                                                     <input matInput [formControl]="optionChildren.get('icon')"
                                                         [placeholder]="'Icono'">
@@ -260,7 +263,8 @@
                                                     <mat-label *ngIf="firstChildren">Titulo</mat-label>
                                                     <mat-icon matPrefix class="hidden sm:flex icon-size-5">title
                                                     </mat-icon>
-                                                    <input matInput [formControl]="optionChildren.get('title')"
+                                                    <input [required]="optionChildren.controls.type.value === 'basic'"
+                                                        matInput [formControl]="optionChildren.get('title')"
                                                         [placeholder]="'Titulo'">
                                                 </mat-form-field>
                                                 <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
@@ -274,7 +278,8 @@
                                                     <mat-label *ngIf="firstChildren">Ruta</mat-label>
                                                     <mat-icon matPrefix class="hidden sm:flex icon-size-5">route
                                                     </mat-icon>
-                                                    <input matInput [formControl]="optionChildren.get('link')"
+                                                    <input [required]="optionChildren.controls.type.value === 'basic'"
+                                                        matInput [formControl]="optionChildren.get('link')"
                                                         [placeholder]="'Ruta'">
                                                 </mat-form-field>
                                                 <section>
@@ -289,7 +294,8 @@
                                                         </mat-label>
                                                         <mat-icon matPrefix class="hidden sm:flex icon-size-5">title
                                                         </mat-icon>
-                                                        <input matInput [formControl]="optionChildren.get('badgeTitle')"
+                                                        <input [required]="optionChildren.controls.badgeSelect.value"
+                                                            matInput [formControl]="optionChildren.get('badgeTitle')"
                                                             [placeholder]="'Titulo para la etiqueta'">
                                                     </mat-form-field>
                                                     <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
