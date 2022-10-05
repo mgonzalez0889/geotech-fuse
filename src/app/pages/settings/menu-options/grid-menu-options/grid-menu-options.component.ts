@@ -13,11 +13,11 @@ import { Subscription } from 'rxjs';
 export class GridMenuOptionsComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    public dataTableMenu: MatTableDataSource<any>;
+    public columnsMenu: string[] = ['name', 'description'];
     public subscription: Subscription;
     public opened: boolean = false;
-    public dataTableMenu: MatTableDataSource<any>;
     public menuCount: number = 0;
-    public columnsMenu: string[] = ['name', 'description'];
     constructor(private menuOptionsService: MenuOptionsService) {}
 
     ngOnInit(): void {
@@ -32,12 +32,10 @@ export class GridMenuOptionsComponent implements OnInit, OnDestroy {
         this.dataTableMenu.filter = filterValue.trim().toLowerCase();
     }
     /**
-     * @description: Trae todos los contactos del cliente
+     * @description: Trae todos las opciones del menu
      */
     public getMenuOption(): void {
         this.menuOptionsService.getMenuOptionsNew().subscribe((res) => {
-            console.log(res,'arturo');
-
             if (res.data) {
                 this.menuCount = res.data.length;
             } else {
@@ -59,12 +57,12 @@ export class GridMenuOptionsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * @description: Guarda el ID del contacto para aburirlo en el formulario
+     * @description: Guarda la data del menu para aburirlo en el formulario
      */
-    public actionsMenu(id: number): void {
+    public actionsMenu(data: any): void {
         this.opened = true;
         this.menuOptionsService.behaviorSubjectMenuForm.next({
-            id: id,
+            payload: data,
             isEdit: false,
         });
     }

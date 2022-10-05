@@ -71,7 +71,7 @@ export class MenuOptionsService {
      * @description: Edita una opcion de menu
      */
     public putMenuOption(data: any): Observable<any> {
-        const params = { method: 'update_option' };
+        const params = { method: 'update_option_new' };
         const id = data.id;
         delete data.id;
         return this._http.put(

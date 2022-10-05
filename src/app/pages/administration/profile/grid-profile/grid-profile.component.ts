@@ -1,105 +1,85 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {Observable} from "rxjs";
-import {ProfilesService} from "../../../../core/services/profiles.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MenuOptionsService} from "../../../../core/services/menu-options.service";
-import {UserProfilePlateService} from "../../../../core/services/user-profile-plate.service";
-import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
-import {HelperService} from "../../../../core/services/helper.service";
-import {DialogAlertEnum} from "../../../../core/interfaces/fuse-confirmation-config";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ProfilesService } from 'app/core/services/profiles.service';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-grid-profile',
-  templateUrl: './grid-profile.component.html',
-  styleUrls: ['./grid-profile.component.scss']
+    selector: 'app-grid-profile',
+    templateUrl: './grid-profile.component.html',
+    styleUrls: ['./grid-profile.component.scss'],
 })
-export class GridProfileComponent implements OnInit {
-  searchInputControl: FormControl = new FormControl();
-  public profile$: Observable<any>;
-  public show: string = 'PROFILES';
-  constructor(
-      private profileService: ProfilesService,
-      private _snackBar: MatSnackBar,
-      private menuOptionService: MenuOptionsService,
-      private userProfilePlate: UserProfilePlateService,
-      private ownerPlateService: OwnerPlateService,
-      private helperService: HelperService
-  ) { }
+export class GridProfileComponent implements OnInit, OnDestroy {
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    public dataTableProfile: MatTableDataSource<any>;
+    public columnsProfile: string[] = ['name', 'description'];
+    public subscription: Subscription;
+    public opened: boolean = false;
+    public profileCount: number = 0;
+    constructor(private profileService: ProfilesService) {}
 
-  ngOnInit(): void {
-      this.fetchProfile();
-  }
-  /**
-   * @description: Abre el formulario perfil
-   */
-  public openForm(): void {
-      this.show = 'FORM';
-      this.profileService.behaviorSubjectProfile$.next({type: 'NEW', isEdit: false});
-  }
-  /**
-   * @description: Cierra el formulario
-   */
-  public closeForm(value): void {
-      this.show = value;
-  }
-  /**
-   * @description: Edita un perfil
-   */
-  public onEdit(id: number): void {
-      this.show = 'FORM';
-      this.getProfile(id);
-  }
-  /**
-   * @description:
-   */
-  public onOptionProfile(profile: any): void {
-      this.show = 'OPTIONS';
-      //this.menuOptionService.behaviorSelectedMenuOption$.next({id: profile.id, payload: profile});
-  }
-  /**
-   * @description: Abre el formulario de plate
-   */
-  public onFormPlate(profile: any): void {
-      this.show = 'FORM-PLATE';
-      this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({id: profile.id, payload: profile});
-  }
-  public onDelete(id: number): void {
-      this.helperService.showDialogAlertOption({
-          title: 'Eliminar registro',
-          text: '¿Desea eliminar el perfil?',
-          type: DialogAlertEnum.question,
-          showCancelButton: true,
-          textCancelButton: 'No',
-          textConfirButton: 'Si'
-      }).then(
-          (result) => {
-              if (result.value) {
-                  this.deleteProfile(id);
-              }
-          }
-      );
-  }
-  /**
-   * @description: Listado de perfiles
-   */
-  private fetchProfile(): void {
-      this.profile$ = this.profileService.getProfiles();
-  }
-  /**
-   * @description: Trae un usuario desde el services profile
-   */
-  private getProfile(id: number): void {
-      this.profileService.getProfile(id).subscribe(({data}) => {
-          this.profileService.behaviorSubjectProfile$.next({type: 'EDIT', id, isEdit: true, payload: data});
-      });
-  }
-  /**
-   * @description: Deshabilita un perfil
-   */
-  private deleteProfile(id: number): void {
-      this.profileService.deleteProfile(id).subscribe(({data}) => {
-          this._snackBar.open('Perfil eliminado con exito', '', {duration: 4000});
-      });
-  }
+    ngOnInit(): void {
+        this.getProfiles();
+        this.listenObservables();
+    }
+    /**
+     * @description: Filtrar datos de la tabla
+     */
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataTableProfile.filter = filterValue.trim().toLowerCase();
+    }
+    public getProfiles(): void {
+        this.profileService.getProfiles().subscribe((res) => {
+            if (res.data) {
+                this.profileCount = res.data.length;
+            } else {
+                this.profileCount = 0;
+            }
+            this.dataTableProfile = new MatTableDataSource(res.data);
+            this.dataTableProfile.paginator = this.paginator;
+            this.dataTableProfile.sort = this.sort;
+        });
+    }
+    /**
+     * @description: Crear un nuevo perfil
+     */
+    public newMenu(): void {
+        this.opened = true;
+        this.profileService.behaviorSubjectProfileForm.next({
+            newProfile: 'Nuevo perfil',
+        });
+    }
+    /**
+     * @description: Guarda la data del menu para aburirlo en el formulario
+     */
+    public actionsMenu(data: any): void {
+        this.opened = true;
+        this.profileService.behaviorSubjectProfileForm.next({
+            payload: data,
+            isEdit: false,
+        });
+    }
+    /**
+     * @description: Destruye el observable
+     */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+    /**
+     * @description: Escucha el observable behavior
+     */
+    private listenObservables(): void {
+        this.subscription =
+            this.profileService.behaviorSubjectProfileGrid.subscribe(
+                ({ reload, opened }) => {
+                    this.opened = opened;
+                    if (reload) {
+                        this.getProfiles();
+                    }
+                }
+            );
+    }
 }

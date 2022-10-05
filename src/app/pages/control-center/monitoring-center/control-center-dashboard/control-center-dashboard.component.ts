@@ -87,15 +87,6 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
         }
         this.selection.select(...this.dataAlarms.data);
     }
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: any): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-        }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
-            row.position + 1
-        }`;
-    }
     /**
      * @description: Trae todas las alarmas
      */
@@ -108,8 +99,6 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
                     this.getAlarms(res);
                 });
         } else {
-            console.log('entro');
-
             //Centro de control de los clientes
             this.controlCenterService
                 .getAllAlarmsOwner(this.filterAlarms)

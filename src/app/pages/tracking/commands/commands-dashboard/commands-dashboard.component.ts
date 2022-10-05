@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommandsService } from 'app/core/services/commands.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,13 +9,14 @@ import { MobileService } from 'app/core/services/mobile.service';
 import { DateAdapter, MatOption } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-commands-dashboard',
     templateUrl: './commands-dashboard.component.html',
     styleUrls: ['./commands-dashboard.component.scss'],
 })
-export class CommandsDashboardComponent implements OnInit {
+export class CommandsDashboardComponent implements OnInit, OnDestroy {
     public show: boolean;
     public today = new Date();
     public month = this.today.getMonth();
@@ -38,6 +39,9 @@ export class CommandsDashboardComponent implements OnInit {
     public selectedFleets = [];
     public mobiles: any = [];
     public fleets: any = [];
+    public subscription: Subscription;
+    public intervallTimer = interval(20000);
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     public columnsCommands: string[] = [
@@ -62,9 +66,9 @@ export class CommandsDashboardComponent implements OnInit {
         this.getSentCommands();
         this.getFleets();
         this.getMobiles();
-        setInterval(() => {
-            this.getSentCommands();
-        }, 20000);
+        this.subscription = this.intervallTimer.subscribe(() =>
+            this.getSentCommands()
+        );
     }
 
     /**
@@ -281,5 +285,11 @@ export class CommandsDashboardComponent implements OnInit {
                 !this.allSelectedFleets
             );
         }
+    }
+    /**
+     * @description: Destruye el observable
+     */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

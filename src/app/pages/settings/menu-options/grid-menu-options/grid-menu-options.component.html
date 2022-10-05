@@ -67,7 +67,7 @@
                                         </td>
                                     </ng-container>
                                     <tr mat-header-row *matHeaderRowDef="columnsMenu"></tr>
-                                    <tr mat-row (click)="actionsMenu(row.id)"
+                                    <tr mat-row (click)="actionsMenu(row)"
                                         *matRowDef="let row; columns: columnsMenu;">
                                     </tr>
                                     <!-- Fila que se muestra cuando no hay datos coincidentes.. -->

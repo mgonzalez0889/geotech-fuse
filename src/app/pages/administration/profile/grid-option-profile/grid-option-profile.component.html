@@ -1,8 +1,7 @@
-<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-y-auto bg-card dark:bg-transparent" cdkScrollable>
+<!-- <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-y-auto bg-card dark:bg-transparent" cdkScrollable>
     <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-6 px-6 md:px-8 border-b">
         <div class="text-3xl font-extrabold tracking-tight">Gestión de opciones {{profile}}</div>
     </div>
-    <!--Form-->
     <mat-tab-group class="sm:px-2 sm:mt-2" [animationDuration]="'0'">
         <mat-tab label="Opciones" >
             <form [formGroup]="form">
@@ -59,7 +58,6 @@
                 <ng-container >
                     <ng-container>
                         <div class="grid">
-                            <!--Header-->
                             <div
                                 class="grid-option-profile z-10 sticky top-0 grid gap-2 py-3 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
                             >
@@ -85,19 +83,15 @@
                                 </div>
 
                             </div>
-                            <!--Rows-->
                             <ng-container *ngIf="optionsMenu$ | async as options; else noOption">
                                 <ng-container *ngFor="let option of options.data">
                                     <div class="grid-option-profile grid items-center gap-5 py-3 px-6 md:px-8 border-b">
-                                        <!--Nombre-->
                                         <div class="hidden md:block" >
                                             {{option.title}}
                                         </div>
-                                        <!--Descipcion-->
                                         <div class="hidden md:block" >
                                             {{option.option_description}}
                                         </div>
-                                        <!--Ubicacion-->
                                         <div class="hidden md:block" >
                                             {{option.option_ubication}}
                                         </div>
@@ -132,7 +126,7 @@
             <app-grid-user-option-profile></app-grid-user-option-profile>
         </mat-tab>
     </mat-tab-group>
-</div>
+</div> -->
 <!--
 <div class="flex flex-col p-4 ">
     <form [formGroup]="form">

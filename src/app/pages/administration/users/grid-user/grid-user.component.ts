@@ -39,7 +39,6 @@ export class GridUserComponent implements OnInit, OnDestroy {
      */
     public getUsers(): void {
         this.usersService.getUsers().subscribe((res) => {
-            console.log(res, 'user');
             if (res.data) {
                 this.usersCount = res.data.length;
             } else {

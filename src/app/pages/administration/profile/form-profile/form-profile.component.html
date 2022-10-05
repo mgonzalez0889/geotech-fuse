@@ -1,53 +1,266 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
-    <!-- Main -->
-    <div class="flex-auto p-4 sm:p-4">
-
-<!--        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
-            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                <a (click)="onClose()" mat-icon-button>
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                </a>
-                <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
+<div class="flex flex-col w-full sm:pl-6">
+    <div class="bg-card shadow rounded-2xl min-h-180">
+        <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
+            <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+                <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+                    <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
             </div>
-        </div>-->
-           <div class="flex items-center h-16 px-4 sm:px-6 py-2 border-b">
-                    <a
-                        (click)="onClose()"
-                        mat-icon-button>
-                        <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                    </a>
-                    <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
-                </div>
-
-        <!--Main-->
-        <div class="flex-auto mt-4 sm:mt-6">
-            <div class="w-full max-w-screen-xl mx-auto">
-                <!--Home-->
-                <form [formGroup]="form" class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden">
-                    <div class="flex flex-col p-8 ">
-                        <mat-form-field class="fuse-mat-dense flex-auto">
-                            <mat-label>Nombre</mat-label>
-                            <input matInput formControlName="name">
-                        </mat-form-field>
-                        <mat-form-field class="fuse-mat-textarea flex-auto">
-                            <mat-label>Descripción</mat-label>
-                            <textarea matInput formControlName="description" [rows]="3"></textarea>
-                        </mat-form-field>
+        </div>
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+                <!-- Avatar and actions -->
+                <ng-container *ngIf="!editMode">
+                    <div class="flex flex-auto items-end -mt-16">
+                        <!-- Avatar -->
+                        <div
+                            class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                            <div
+                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                {{profiles['name']?.charAt(0)}}
+                            </div>
+                        </div>
+                        <!-- Actions -->
+                        <div class="flex items-center ml-auto mb-1">
+                            <button mat-stroked-button (click)="editMode = true">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                <span class="ml-2">Editar</span>
+                            </button>
+                        </div>
                     </div>
-                    <div
-                        class="flex items-center justify-between border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
-                        <button mat-flat-button [color]="'warn'"
-                                (click)="onClose()"
-                        >
+                    <div class="mt-3 text-4xl font-bold truncate">{{profiles['name']}}</div>
+                    <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                        <ng-container *ngIf="profiles['description']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Descripción'">subtitles</mat-icon>
+                                <div class="ml-6 leading-6">{{profiles['description']}}</div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+                <div [hidden]="!editMode">
+                    <form [formGroup]="profileForm">
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Nombre</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
+                                <input matInput [formControlName]="'name'" [placeholder]="'Nombre'">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Descripción</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles
+                                </mat-icon>
+                                <input matInput [formControlName]="'description'" [placeholder]="'Descripción'">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-radio-group (change)="typeOfSelection($event)" [formControlName]="'typeOfSelection'">
+                                <mat-radio-button [value]=0>Vehiculos</mat-radio-button>
+                                <mat-radio-button [value]=1 class="ml-4">Flotas</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <!-- Seleccion de vehiculos -->
+                        <div [hidden]="profileForm.controls.typeOfSelection.value === 1">
+                            <div class="flex flex-wrap items-center -m-1.5 mt-6">
+                                <ng-container *ngIf="profileForm.controls.plates.value">
+                                    <ng-container
+                                        *ngFor="let plate of (profileForm.controls.plates.value | fuseFindByKey:'id':plates)">
+                                        <div
+                                            class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                            <span class="text-md font-medium whitespace-nowrap">{{plate.plate}}</span>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                                <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
+                                    (click)="openPlatesPanel()" #platesPanelOrigin>
+                                    <ng-container *ngIf="profileForm.controls.plates.value.length">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
+                                        </mat-icon>
+                                        <span class="ml-1.5 text-md font-medium whitespace-nowrap">Editar</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!profileForm.controls.plates.value.length">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'">
+                                        </mat-icon>
+                                        <span class="ml-1.5 text-md font-medium whitespace-nowrap">Agregar
+                                            vehículo</span>
+                                    </ng-container>
+                                    <ng-template #platesPanel>
+                                        <div class="w-60 rounded border shadow-md bg-card">
+                                            <div class="flex items-center m-3 mr-2">
+                                                <div class="flex items-center">
+                                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'">
+                                                    </mat-icon>
+                                                    <div class="ml-2">
+                                                        <input class="w-full min-w-0 py-1 border-0" type="text"
+                                                            placeholder="Buscar" (input)="filterPlates($event)"
+                                                            [maxLength]="30">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col max-h-64 py-2 border-t overflow-y-auto">
+                                                <!-- Tags -->
+                                                <ng-container>
+                                                    <ng-container *ngFor="let plate of filteredPlates">
+                                                        <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
+                                                            (click)="togglePlates(plate)" matRipple>
+                                                            <mat-checkbox
+                                                                class="flex items-center h-10 min-h-10 pointer-events-none"
+                                                                [checked]="profileForm.controls.plates.value.includes(plate.id)"
+                                                                [color]="'accent'" [disableRipple]="true">
+                                                            </mat-checkbox>
+                                                            <div class="ml-1">{{plate.plate}}</div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Seleccion de flotas -->
+                        <div [hidden]="profileForm.controls.typeOfSelection.value === 0">
+                            <div class="flex flex-wrap items-center -m-1.5 mt-6">
+                                <ng-container *ngIf="profileForm.controls.plates.value">
+                                    <ng-container
+                                        *ngFor="let fleet of (profileForm.controls.fleets.value | fuseFindByKey:'id':fleets)">
+                                        <div
+                                            class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                            <span class="text-md font-medium whitespace-nowrap">{{fleet.name}}</span>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                                <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
+                                    (click)="openFleetsPanel()" #fleetsPanelOrigin>
+                                    <ng-container *ngIf="profileForm.controls.fleets.value.length">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
+                                        </mat-icon>
+                                        <span class="ml-1.5 text-md font-medium whitespace-nowrap">Editar</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!profileForm.controls.fleets.value.length">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'">
+                                        </mat-icon>
+                                        <span class="ml-1.5 text-md font-medium whitespace-nowrap">Agregar
+                                            flotas</span>
+                                    </ng-container>
+                                    <ng-template #fleetsPanel>
+                                        <div class="w-60 rounded border shadow-md bg-card">
+                                            <div class="flex items-center m-3 mr-2">
+                                                <div class="flex items-center">
+                                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'">
+                                                    </mat-icon>
+                                                    <div class="ml-2">
+                                                        <input class="w-full min-w-0 py-1 border-0" type="text"
+                                                            placeholder="Buscar" (input)="filterFleets($event)"
+                                                            [maxLength]="30">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col max-h-64 py-2 border-t overflow-y-auto">
+                                                <!-- Tags -->
+                                                <ng-container>
+                                                    <ng-container *ngFor="let fleet of filteredFleets">
+                                                        <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
+                                                            (click)="toggleFleets(fleet)" matRipple>
+                                                            <mat-checkbox
+                                                                class="flex items-center h-10 min-h-10 pointer-events-none"
+                                                                [checked]="profileForm.controls.fleets.value.includes(fleet.id)"
+                                                                [color]="'accent'" [disableRipple]="true">
+                                                            </mat-checkbox>
+                                                            <div class="ml-1">{{fleet.name}}</div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="mt-4">
+                            <mat-form-field  class="fuse-mat-no-subscript w-full">
+                                <mat-label>Comandos</mat-label>
+                                <mat-select [formControlName]="'commands'" multiple>
+                                    <mat-option *ngFor="let command of typeCommands" [value]="command.id">
+                                        {{command.description_command | titlecase}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+
+                        <!-- <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto"> -->
+                        <div class="flex flex-wrap items-center -m-1.5 mt-6 overflow-y-auto">
+                            <!-- Tabla-->
+                            <table mat-table [dataSource]="dataTableOption" matSort class="w-full">
+                                <!-- Checkbox Column -->
+                                <ng-container matColumnDef="select">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                        </mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)">
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                <!-- title Column -->
+                                <ng-container matColumnDef="title">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Titulo </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <span class="pr-6 whitespace-nowrap">
+                                            {{row.title}} </span>
+                                    </td>
+                                </ng-container>
+                                <!-- subtitle Column -->
+                                <ng-container matColumnDef="subtitle">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <span class="pr-6 whitespace-nowrap">
+                                            {{row.subtitle}} </span>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="columnsOption"></tr>
+                                <tr mat-row (click)="actionsMenu(row);selection.toggle(row)"
+                                    *matRowDef="let row; columns: columnsOption;">
+                                </tr>
+                                <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="2">No hay datos que coincidan con la busqueda:
+                                        "{{input?.value}}"
+                                    </td>
+                                </tr>
+                            </table>
+                            <mat-paginator class="sm:inset-x-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
+                                [pageSizeOptions]="[10,20,50]">
+                            </mat-paginator>
+                        </div>
+                    </form>
+                    <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+                        <!-- Eliminar -->
+                        <button *ngIf="profiles['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                            (click)="deleteContact(profiles['id'])">
+                            Eliminar </button>
+                        <!-- Cancelar -->
+                        <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
                             Cancelar
                         </button>
-                        <button class="px-6 ml-3"
-                                mat-flat-button [color]="'primary'"
-                                (click)="onSave()">
-                            Guardar
+                        <!-- Guardar -->
+                        <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="profileForm.invalid"
+                            [matTooltip]="'Guardar'" (click)="onSave()">
+                            <span *ngIf="!profileForm.disabled">
+                                Guardar
+                            </span>
+                            <mat-progress-spinner *ngIf="profileForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                            </mat-progress-spinner>
                         </button>
                     </div>
-                </form>
+
+                </div>
             </div>
         </div>
     </div>
