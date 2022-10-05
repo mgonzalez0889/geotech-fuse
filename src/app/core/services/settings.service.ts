@@ -8,7 +8,6 @@ export class SettingsService {
   constructor() { }
 
   JSONToCSVConvertor(JSONData, ShowLabel, nameFile) {
-    console.log(JSONData);
     //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
     var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
     var CSV = '';

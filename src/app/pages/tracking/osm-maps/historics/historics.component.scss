@@ -111,27 +111,108 @@
             }
         }
 
+        .stop {
+            border-bottom: 0.5px solid #e0e0e0;
+            display: flex;
+
+            .icon-stop {
+                padding: 0 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+
+                .line-stop {
+                    width: 2px;
+                    height: -webkit-fill-available;
+                }
+
+                span {
+                    width: 35px;
+                    height: 35px;
+                    padding: 5px;
+                    border-radius: 50px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    label {
+                        font-size: 19px;
+                        color: #fff;
+                        font-weight: bold;
+                    }
+                }
+            }
+
+            .body-stop {
+                padding: 10px;
+                font-size: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+
+        .cabecera-trip {
+            font-size: 15px;
+            color: #2c384f;
+            font-weight: 800;
+        }
+
         .trip {
-            padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
-            .cabecera-trip {
-                font-size: 13px;
-                color: #2c384f;
+            border-bottom: 0.5px solid #e0e0e0;
+            display: flex;
+
+            .icon-trip {
+                padding: 0 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+
+                .line-trip {
+                    width: 2px;
+                    height: -webkit-fill-available;
+                }
+
+                span {
+                    width: 35px;
+                    height: 35px;
+                    padding: 5px;
+                    border-radius: 50px;
+
+                    img {
+                        height: 100%;
+                    }
+                }
             }
 
             .body-trip {
+                padding: 10px;
                 display: flex;
+
                 .body-left {
-                    width: 10vh;
+                    width: 80px;
                     text-align: center;
                     padding: 5px;
-                    font-size: 1.1vh;
+                    font-size: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .date-hour {
+                        height: 25px;
+                    }
 
                     .checkbox {
-                        padding: 1.5vh;
+                        padding: 20px;
                         display: flex;
                         justify-content: center;
                         align-items: center;
+
+                        span {
+                            color: transparent;
+                        }
 
                         input[type="checkbox"] {
                             position: relative;
@@ -182,7 +263,7 @@
                 }
 
                 .body-center {
-                    width: 1.5vh;
+                    width: 20px;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -206,7 +287,7 @@
 
                 .body-right {
                     padding: 5px 10px;
-                    font-size: 1.1vh;
+                    font-size: 10px;
 
                     .address-init,
                     .address-end {

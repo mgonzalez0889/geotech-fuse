@@ -53,20 +53,24 @@ export class FormReportComponent implements OnInit {
   }
 
   async onSelect() {
+    this.mapFunctionalitieService.type_historic = 'historic';
+    
     let data = {
-      date_init: moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
-      date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
+      date_init: moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
+      date_end: moment(this.finalDate).format('YYYY-MM-DD') + ' 23:59:59',
       plates: this.mapFunctionalitieService.plateHistoric,
       events: [8],
-      limit: 999,
+      limit: 999999999,
       page: 1,
-      fleet_presence: 0
+      validationFleet: 0
     }
+
     let dataTrip = {
-      date_init: moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
-      date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
+      date_init: moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
+      date_end: moment(this.finalDate).format('YYYY-MM-DD') + ' 23:59:59',
       plates: this.mapFunctionalitieService.plateHistoric
     }
+
     await this.mapRequestService.getHistoric(data);
     await this.mapRequestService.getHistoricTrip(dataTrip);
     this.mapFunctionalitieService.showHistoricPlate = true;

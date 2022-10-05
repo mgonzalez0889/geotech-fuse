@@ -3,18 +3,20 @@ import {
     ComponentFactoryResolver,
     Injector,
     ApplicationRef,
+    ViewChild,
 } from '@angular/core';
 import moment from 'moment';
 import * as L from 'leaflet';
 import { MarkerClusterGroup } from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-rotatedmarker';
-import { timer } from 'rxjs';
+import 'leaflet-routing-machine';
 import 'leaflet.marker.slideto';
+import 'leaflet-hotline';
+import { timer } from 'rxjs';
 import { InfoWindowsComponent } from 'app/pages/tracking/osm-maps/info-windows/info-windows.component';
 import { MobilesService } from '../mobiles/mobiles.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { functions } from 'lodash';
 
 @Injectable({
     providedIn: 'root',
@@ -58,6 +60,7 @@ export class MapFunctionalitieService {
     dataInfoWindows: any;
     type_geometry: string;
     type_geo: string = '';
+    type_historic: string = '';
     punts_geometry: any = [];
     paint_punts: any = [];
     coordinates = [];
@@ -70,6 +73,7 @@ export class MapFunctionalitieService {
     longitud: null;
     plateHistoric = [];
     events = [];
+    dataSourceReport: MatTableDataSource<any>;
 
     count: number = 0;
     selectedTypeService;
@@ -98,8 +102,6 @@ export class MapFunctionalitieService {
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         }
     );
-
-    // streets = L.tileLayer(mapboxUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mapboxAttribution});
 
     changeMapa = this.googleMaps;
 
@@ -146,43 +148,30 @@ export class MapFunctionalitieService {
                 zoomControl: false,
             });
 
-            this.layerControl = L.control.layers(this.baseLayers).addTo(this.map);
-
-            // L.control.zoom({
-            //   position: 'topright'
-            // }).addTo(this.map);
+            this.layerControl = L.control
+                .layers(this.baseLayers)
+                .addTo(this.map);
         });
+    }
+
+    convertDate(date) {
+        moment.locale('es');
+        return moment(date).format('DD/MM/YYYY');
+    }
+
+    convertHourDate(date) {
+        moment.locale('es');
+        return moment(date).format('DD/MM/YYYY HH:mm:ss');
+    }
+
+    convertHour(date) {
+        moment.locale('es');
+        return moment(date).format('HH:mm');
     }
 
     convertDateHour(date) {
         moment.locale('es');
         return moment(date).fromNow();
-    }
-
-    changeMap(newMap) {
-        console.log(newMap);
-        this.baseLayers['Google Maps'].addTo(this.map);
-        console.log(this.baseLayers);
-        // let map = {
-        //     newMap
-        // }
-        // if (newMap === 'google') {
-
-        // } else {
-        //     this.changeMapa = this.googleHybrid;
-        // }
-    }
-
-    changeMapHybrid(newMap) {
-        this.baseLayers['Google Hibrido'].addTo(this.map);
-        // let map = {
-        //     newMap
-        // }
-        // if (newMap === 'google') {
-
-        // } else {
-        //     this.changeMapa = this.googleHybrid;
-        // }
     }
 
     loadAllsMobiles() {
@@ -220,7 +209,6 @@ export class MapFunctionalitieService {
     }
 
     moveMarker(data) {
-        // const marker = new DriftMarker([10, 10]);
         if (this.markers.hasOwnProperty(data.id_mobile)) {
             this.markers[data.id_mobile].slideTo([data.x, data.y], {
                 duration: 2000,
@@ -269,6 +257,7 @@ export class MapFunctionalitieService {
                 });
             }
 
+            // Validamos estado de cluster
             if (verCluster) {
                 this.markers[data.id].addTo(this.markerCluster);
                 this.markerCluster.addTo(this.map);
@@ -305,9 +294,6 @@ export class MapFunctionalitieService {
                         var latlng = this.map.mouseEventToLatLng(
                             e.originalEvent
                         );
-                        // if (this.markersPoint[id] != undefined) {
-                        //   this.map.removeLayer(this.markersPoint[id]);
-                        // }
                         this.goDeleteGeometryPath();
                         this.map.setView([latlng.lat, latlng.lng]);
                         this.markersPoint[id] = L.marker(
@@ -330,7 +316,6 @@ export class MapFunctionalitieService {
     }
 
     createPuntControlCenter(data: any): void {
-        console.log(data.color_event, 'wwww');
         let x;
         let y;
         const myIconUrl =
@@ -353,7 +338,127 @@ export class MapFunctionalitieService {
         this.markersPoint[data.id].addTo(this.map);
     }
 
-    createPunt(data: any, historic?, color?) {
+    createHistoric(type, historic, color) {
+        if (type === 'punt') {
+            let myIconUrl =
+                'data:image/svg+xml,' +
+                encodeURIComponent(
+                    '<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_94_339)"><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" fill="' +
+                        color +
+                        '"/><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" stroke="white" stroke-width="0.5"/></g><circle cx="15" cy="12" r="7" fill="white"/><path d="M18.25 12.0311L13 15.0622L13 9L18.25 12.0311Z" fill="#006AA3"/><defs><filter id="filter0_d_94_339" x="-0.25" y="-3.25" width="30.5" height="33.536" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset/><feGaussianBlur stdDeviation="3"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_94_339"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_94_339" result="shape"/></filter></defs></svg>'
+                );
+            let myIconUrl2 =
+                'data:image/svg+xml,' +
+                encodeURIComponent(
+                    '<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_94_338)"><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" fill="' +
+                        color +
+                        '"/><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" stroke="white" stroke-width="0.5"/></g><circle cx="15" cy="12" r="7" fill="white"/><rect x="11.4286" y="12.2857" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="12.8572" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="14.2857" y="9.42859" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="14.2857" y="12.2857" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="15.7143" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="10" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="11.4286" y="9.42859" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="12.8572" y="8" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="15.7143" y="8" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="17.1428" y="9.42859" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="18.5714" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="17.1428" y="12.2857" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="15.7143" y="13.7143" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="12.8572" y="13.7143" width="1.42857" height="1.42857" fill="#006AA3"/><defs><filter id="filter0_d_94_338" x="-0.25" y="-3.25" width="30.5" height="33.536" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset/><feGaussianBlur stdDeviation="3"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_94_338"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_94_338" result="shape"/></filter></defs></svg>'
+                );
+            // this.map.setView([historic.x_inicial, historic.y_inicial], 10);
+            this.markersPoint[-1] = L.marker(
+                [historic.x_inicial, historic.y_inicial],
+                {
+                    icon: L.icon({
+                        iconUrl: myIconUrl,
+                        iconSize: [60, 60],
+                        iconAnchor: [30, 30],
+                    }),
+                }
+            );
+
+            this.markersPoint[-2] = L.marker(
+                [historic.x_final, historic.y_final],
+                {
+                    icon: L.icon({
+                        iconUrl: myIconUrl2,
+                        iconSize: [60, 60],
+                        iconAnchor: [30, 30],
+                    }),
+                }
+            );
+
+            this.markersPoint[-1].addTo(this.map);
+            this.markersPoint[-2].addTo(this.map);
+        } else {
+            this.paint_punts = [];
+            this.clusterHistoric = L.markerClusterGroup({
+                iconCreateFunction: function (cluster) {
+                    var marker = cluster.getAllChildMarkers();
+                    var html =
+                        '<div class="svg-icon abstract-tracker-marker" title="" style="transform: rotate(' +
+                        marker[marker.length - 1].options.rotationAngle +
+                        'deg) scale(1); transform-origin: center center;">          <img src="' +
+                        marker[marker.length - 1].options.icon.options.iconUrl +
+                        '" width="24px" height="24px"></div>';
+                    return L.divIcon({
+                        html: html,
+                        className: '',
+                        iconSize: L.point(24, 24),
+                        iconAnchor: L.point(12, 12),
+                    });
+                },
+            });
+            // let waypoints = [];
+            for (let i = 0; i < historic.length; i++) {
+                const element = historic[i];
+                let x = element.x;
+                let y = element.y;
+                this.paint_punts.push({
+                    lat: x,
+                    lng: y,
+                });
+                // waypoints.push(new L.LatLng(x, y));
+                this.markersPoint[historic[i].id] = L.marker([x, y], {
+                    icon: this.setIcon(historic[i], 'historic', color),
+                });
+                this.markersPoint[historic[i].id].addTo(this.clusterHistoric);
+                this.clusterHistoric.addTo(this.map);
+
+                this.markersPoint[historic[i].id].on('click', (e: any) => {
+                    moment.locale('es');
+                    this.getPopup(e, historic[i]);
+                });
+
+                this.markersPoint[historic[i].id].options.rotationAngle =
+                    this.rotationIconHistoric(historic[i]);
+            }
+
+            // console.log(waypoints);
+            this.map.setView(
+                [this.paint_punts[0].lat, this.paint_punts[0].lng],
+                12
+            );
+            // L.Routing.control({
+            //     waypoints: waypoints,
+            //     plan: L.Routing.plan(waypoints, {
+            //         createMarker: function (i, wp, n) {
+            //             if (i == 0 || i == n - 1) {
+            //                 return L.marker(wp.latLng, {
+            //                     draggable: false // prevent users from changing waypoint position
+            //                 });
+            //             } else {
+            //                 return false;
+            //             }
+            //         }
+            //     }),
+            //     routeWhileDragging: false,
+            //     fitSelectedRoutes: false,
+            //     addWaypoints: false
+            // }).addTo(this.map);
+
+            this.punt_geometry[historic[0].id] = new L.Polyline(
+                this.paint_punts,
+                {
+                    color: color,
+                    weight: 6,
+                }
+            );
+
+            this.punt_geometry[historic[0].id].addTo(this.map);
+        }
+    }
+
+    createPunt(data: any) {
         let shape;
         switch (this.type_geo) {
             case 'route':
@@ -378,63 +483,6 @@ export class MapFunctionalitieService {
                 });
 
                 this.punt_geometry[data.id].addTo(this.map);
-                break;
-            case 'historic':
-                this.paint_punts = [];
-                this.clusterHistoric = L.markerClusterGroup({
-                    iconCreateFunction: function (cluster) {
-                        var marker = cluster.getAllChildMarkers();
-                        var html =
-                            '<div class="svg-icon abstract-tracker-marker" title="" style="transform: rotate(' +
-                            marker[marker.length - 1].options.rotationAngle +
-                            'deg) scale(1); transform-origin: center center;">          <img src="' +
-                            marker[marker.length - 1].options.icon.options
-                                .iconUrl +
-                            '"></div>';
-                        return L.divIcon({
-                            html: html,
-                            className: '',
-                            iconSize: L.point(32, 32),
-                        });
-                    },
-                });
-                for (let i = 0; i < historic.length; i++) {
-                    const element = historic[i];
-                    let x = element.x;
-                    let y = element.y;
-                    this.paint_punts.push({
-                        lat: x,
-                        lng: y,
-                    });
-
-                    this.markersPoint[historic[i].id] = L.marker([x, y], {
-                        icon: this.setIcon(historic[i], 'historic', historic[i].color),
-                    }).addTo(this.clusterHistoric);
-                    // this.markerCluster.addTo(clusterHistoric);
-                    this.clusterHistoric.addTo(this.map);
-
-                    this.markersPoint[historic[i].id].on('click', (e: any) => {
-                        moment.locale('es');
-                        this.getPopup(e, historic[i]);
-                    });
-
-                    this.markersPoint[historic[i].id].options.rotationAngle =
-                        this.rotationIconHistoric(historic[i]);
-                }
-                this.map.setView(
-                    [this.paint_punts[0].lat, this.paint_punts[0].lng],
-                    12
-                );
-
-                this.punt_geometry[historic[0].id] = L.polyline(
-                    this.paint_punts,
-                    {
-                        color: color,
-                        weight: 6,
-                    }
-                );
-
-                this.punt_geometry[historic[0].id].addTo(this.map);
                 break;
             case 'zone':
                 shape = JSON.parse(data.shape);
@@ -657,10 +705,10 @@ export class MapFunctionalitieService {
                     encodeURIComponent(
                         '<svg width="16" height="31" viewBox="0 0 16 31" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.34146 0.880403C8.28621 0.656155 8.08457 0.498922 7.85362 0.500006C7.62268 0.501089 7.42252 0.660209 7.36938 0.884965L0.513413 29.885C0.457854 30.12 0.578199 30.3611 0.7994 30.458C1.0206 30.5549 1.27944 30.4798 1.41449 30.2796L7.86444 20.7191L14.591 30.2875C14.7293 30.4844 14.9882 30.5547 15.2071 30.4551C15.4261 30.3554 15.543 30.114 15.4855 29.8804L8.34146 0.880403Z" fill="' +
                             color +
-                            '" stroke="black" stroke-linejoin="round"/></svg>'
+                            '" stroke="white" stroke-linejoin="round"/></svg>'
                     ),
-                iconSize: [36, 36],
-                iconAnchor: [18, 18],
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
             }));
         } else {
             if (diffDays >= 1 || isNaN(diffDays)) {

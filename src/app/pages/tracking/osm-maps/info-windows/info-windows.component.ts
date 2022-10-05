@@ -20,7 +20,6 @@ export class InfoWindowsComponent implements OnInit {
     public mapFunctionalitieService: MapFunctionalitieService,
     private iconService: IconService
   ) {
-
   }
 
   ngOnInit(): void {

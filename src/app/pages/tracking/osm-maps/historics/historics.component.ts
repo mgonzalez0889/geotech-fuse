@@ -41,18 +41,30 @@ export class HistoricsComponent implements OnInit {
     this.getEvents();
   }
 
-  async generateHistoric() {
+  async generateHistoric(ev, trip) {
+    this.mapFunctionalitieService.type_historic = 'trip';
+
     this.mapFunctionalitieService.goDeleteGeometryPath();
     let data = {
-      date_init: moment(this.initialDate).format('DD/MM/YYYY') + ' ' + this.initialHours,
-      date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' ' + this.finalHours,
-      plates: this.mapFunctionalitieService.plateHistoric,
-      events: this.mapFunctionalitieService.events,
-      limit: 999,
+      date_init: moment(trip.fecha_inicial).format('DD/MM/YYYY HH:mm:ss'),
+      date_end: moment(trip.fecha_final).format('DD/MM/YYYY HH:mm:ss'),
+      plates: trip.plate,
+      events: -1,
+      limit: 99999999,
       page: 1,
       fleet_presence: 0
     }
-    await this.mapRequestService.getHistoric(data);
+
+    this.mapFunctionalitieService.type_geo = 'historic';
+    let response = await this.mapRequestService.getHistoric(data);
+
+    if (ev.target.checked === false) {
+      this.mapFunctionalitieService.deleteChecks(response, 'delete');
+      // this.mapFunctionalitieService.map.removeLayer(this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]);
+    } else {
+      this.mapFunctionalitieService.createHistoric(null, response, trip.color);
+      this.mapFunctionalitieService.createHistoric('punt', trip, trip.color);
+    }
   }
 
   viewHistoric(plate) {
@@ -70,20 +82,6 @@ export class HistoricsComponent implements OnInit {
   private getEvents(): void {
     this.events$ = this._eventsService.getEvents();
   }
-
-  // setFilter() {
-  //   var fechaInicio = new Date(moment(this.initialDate).format('YYYY-MM-DD')).getTime();
-  //   var fechaFin = new Date(moment(this.finalDate).format('YYYY-MM-DD')).getTime();
-
-  //   var diff = fechaFin - fechaInicio;
-
-  //   if (Number(diff / (1000 * 60 * 60 * 24)) > 30) {
-  //     this.message_dates = true;
-  //   } else {
-  //     this.message_dates = false;
-  //   }
-
-  // }
 
   selectAll(ev, plate, color) {
     for (let j = 0; j < this.mapFunctionalitieService.historic.length; j++) {
@@ -104,7 +102,7 @@ export class HistoricsComponent implements OnInit {
       this.mapFunctionalitieService.map.removeLayer(this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]);
 
     } else {
-      this.mapFunctionalitieService.createPunt(null, data[0].data, color);
+      this.mapFunctionalitieService.createHistoric(null, data[0].data, color);
     }
   }
 
@@ -117,14 +115,6 @@ export class HistoricsComponent implements OnInit {
     }
 
     this.mapFunctionalitieService.type_geo = 'historic';
-    this.mapFunctionalitieService.createPunt(null, this.seleccionado);
+    // this.mapFunctionalitieService.createPunt(null, this.seleccionado);
   }
-
-  // filters() {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.autoFocus = true;
-  //   this.dialog.open(FormReportComponent, dialogConfig);
-  // }
-
 }

@@ -1,12 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { MobileService } from "../../../../core/services/mobile.service";
-import { Observable, Subscription } from "rxjs";
-import { EventsService } from "../../../../core/services/events.service";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { HistoriesService } from "../../../../core/services/histories.service";
-import { FleetsService } from "../../../../core/services/fleets.service";
-import { MatRadioChange } from "@angular/material/radio";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MobileService } from '../../../../core/services/mobile.service';
+import { Observable, Subscription } from 'rxjs';
+import { EventsService } from '../../../../core/services/events.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { HistoriesService } from '../../../../core/services/histories.service';
+import { FleetsService } from '../../../../core/services/fleets.service';
+import { MatRadioChange } from '@angular/material/radio';
 import moment from 'moment';
 
 export interface CalendarSettings {
@@ -35,9 +35,6 @@ export class FormReportComponent implements OnInit {
     public initialDate: Date = new Date(this.year, this.month, this.day);
     public finalDate: Date = new Date(this.year, this.month, this.day);
     plates: [];
-    flotas: [];
-    eventos: [];
-    validationFleet;
 
     constructor(
         public dialogRef: MatDialogRef<FormReportComponent>,
@@ -47,18 +44,17 @@ export class FormReportComponent implements OnInit {
         private fb: FormBuilder,
         private _historicService: HistoriesService,
         private _fleetsServices: FleetsService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
-        this.getEvents();
+        this.getMobiles();
     }
 
     /**
      * @description: Obtiene los eventos
      */
-    private getEvents(): void {
-        this.events$ = this._eventsService.getEvents();
+    private getMobiles(): void {
+        this.mobiles$ = this._mobileService.getMobiles();
     }
 
     /**
@@ -66,32 +62,13 @@ export class FormReportComponent implements OnInit {
      */
     public onSelect(): void {
         let data = {
-            date_init: moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
+            date_init:
+                moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
             date_end: moment(this.finalDate).format('YYYY-MM-DD') + ' 23:59:59',
             plates: this.plates,
-            events: this.eventos,
-            fleets: this.flotas,
-            limit: 999999999,
-            page: 1,
-            validationFleet: Number(this.validationFleet)
-        }
-        this._historicService.behaviorSubjectDataForms.next({ payload: data });
-    }
-
-    /**
-     * @description: Manejador de estados Moviles / Flotas
-     */
-    public onchange(event: MatRadioChange): void {
-        if (event.value == 1) {
-            this.select = true;
-            this.mobiles$ = this._mobileService.getMobiles();
-            this.flotas = [];
-            this.validationFleet = 0;
-        } else {
-            this.select = false;
-            this.fleets$ = this._fleetsServices.getFleets();
-            this.plates = [];
-            this.validationFleet = 1;
-        }
+        };
+        this._historicService.behaviorSubjectDataFormsTrip.next({
+            payload: data,
+        });
     }
 }

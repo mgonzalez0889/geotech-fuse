@@ -38,3 +38,7 @@
 // .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper {
 //     margin: 0 !important;
 // }
+
+.leaflet-pane, .leaflet-top {
+    z-index: 10 !important;
+}

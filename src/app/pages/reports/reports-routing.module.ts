@@ -8,6 +8,10 @@ const routes: Routes = [
             {
                 path:'general-report',
                 loadChildren: () => import('./general-report/general-report.module').then(m => m.GeneralReportModule)
+            },
+            {
+                path:'consolidator',
+                loadChildren: () => import('./consolidator/consolidator.module').then(m => m.ConsolidatorModule)
             }
         ]
     }
