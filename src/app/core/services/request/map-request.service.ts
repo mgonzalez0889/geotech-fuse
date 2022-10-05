@@ -40,41 +40,45 @@ export class MapRequestService {
     return new Promise((resolve, reject) => {
       this._historicService.getHistories(data)
         .subscribe((res: any) => {
-          resolve(res);
-          this.mapFunctionalitieService.historic = [];
-          let historic = res;
+          if (this.mapFunctionalitieService.type_historic === 'historic') {
+            resolve(res);
+            this.mapFunctionalitieService.historic = [];
+            let historic = res;
 
-          for (let i = 0; i < this.mapFunctionalitieService.plateHistoric.length; i++) {
-            const element = this.mapFunctionalitieService.plateHistoric[i];
+            for (let i = 0; i < this.mapFunctionalitieService.plateHistoric.length; i++) {
+              const element = this.mapFunctionalitieService.plateHistoric[i];
 
-            let encontrado = historic.plates.filter(x => {
-              return x.plate == element;
-            })
-
-            let data = [];
-            if (encontrado.length > 0) {
-              data = historic.data.filter(x => {
+              let encontrado = historic.plates.filter(x => {
                 return x.plate == element;
-              });
-
-              this.mapFunctionalitieService.historic.push({
-                plate: element,
-                color: getRandomColor(),
-                data: data,
-                selected: false
               })
-            } else {
-              this.mapFunctionalitieService.historic.push({
-                plate: element,
-                data: data
+
+              let data = [];
+              if (encontrado.length > 0) {
+                data = historic.data.filter(x => {
+                  return x.plate == element;
+                });
+
+                this.mapFunctionalitieService.historic.push({
+                  plate: element,
+                  color: getRandomColor(),
+                  data: data,
+                  selected: false
+                })
+              } else {
+                this.mapFunctionalitieService.historic.push({
+                  plate: element,
+                  data: data
+                })
+              }
+            }
+
+            for (let j = 0; j < this.mapFunctionalitieService.historic.length; j++) {
+              this.mapFunctionalitieService.historic[j].data.map(x => {
+                return x["selected"] = false;
               })
             }
-          }
-
-          for (let j = 0; j < this.mapFunctionalitieService.historic.length; j++) {
-            this.mapFunctionalitieService.historic[j].data.map(x => {
-              return x["selected"] = false;
-            })
+          } else {
+            resolve(res.data);
           }
 
         }, async (err) => {
@@ -99,16 +103,25 @@ export class MapRequestService {
             })
 
             let data = [];
-            let trips = [];
-            let stops = [];
+            let trip = [];
             if (encontrado.length > 0) {
               data = historicTrip.data.filter(x => {
                 return x.plate == element;
               });
 
-              trips = historicTrip.trips.filter(x => {
+              trip = historicTrip.trips.filter(x => {
                 return x.plate == element;
               });
+
+              let trips = []
+              for (let j = 0; j < trip.length; j++) {
+                const element = trip[j];
+                trips.push({
+                  ...element,
+                  item: j + 1,
+                  color: getRandomColor()
+                })
+              }
 
               this.mapFunctionalitieService.historicTrip.push({
                 plate: element,
@@ -125,7 +138,6 @@ export class MapRequestService {
               })
             }
           }
-          console.log(this.mapFunctionalitieService.historicTrip);
         }, async (err) => {
           reject(err);
         })
@@ -145,10 +157,9 @@ export class MapRequestService {
 }
 
 function getRandomColor(): any {
-  var letters = "0123456789ABCDEF";
-  var color = "#";
+  var color = '#';
   for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
+    color += Math.floor(Math.random() * 10);
   }
   return color;
 }

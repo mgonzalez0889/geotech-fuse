@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GeneralReportRoutingModule } from './general-report-routing.module';
+import { ConsolidatorRoutingModule } from './consolidator-routing.module';
 import { FormReportComponent } from './form-report/form-report.component';
 import { GridReportComponent } from './grid-report/grid-report.component';
 import { MatTableModule } from '@angular/material/table';
@@ -19,12 +19,17 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { DetailGridReportComponent } from './detail-grid-report/detail-grid-report.component';
 
 @NgModule({
-    declarations: [FormReportComponent, GridReportComponent],
+    declarations: [
+        FormReportComponent,
+        GridReportComponent,
+        DetailGridReportComponent,
+    ],
     imports: [
         CommonModule,
-        GeneralReportRoutingModule,
+        ConsolidatorRoutingModule,
         MatTableModule,
         MatIconModule,
         MatButtonModule,
@@ -42,5 +47,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         NgxPaginationModule,
         MatPaginatorModule,
     ],
+    exports: [DetailGridReportComponent],
 })
-export class GeneralReportModule {}
+export class ConsolidatorModule {}

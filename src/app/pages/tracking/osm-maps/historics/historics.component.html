@@ -13,31 +13,28 @@
             <mat-tab label="Historico">
                 <div *ngFor="let data of mapFunctionalitieService.historicTrip">
                     <div style="cursor: pointer;">
-                        <div class="trip">
-                            <div class="cabecera-trip">
-                                <div class="plate">
-                                    {{data.plate}}
-                                </div>
+                        <div class="cabecera-trip">
+                            <div class="plate">
+                                {{data.plate}}
                             </div>
+                        </div>
+                        <div class="trip">
                             <div class="not-found" *ngIf="!data.tiene_data">
                                 No se encontraron resultados.
                             </div>
                             <div class="body-trip" *ngIf="data.tiene_data">
                                 <div class="body-left">
-                                    <div class="hour-init">
+                                    <div class="date-hour">
                                         <strong>{{mapFunctionalitieService.convertHour(data.fecha_inicial)}}</strong>
-                                    </div>
-                                    <div class="date-init">
                                         {{mapFunctionalitieService.convertDate(data.fecha_inicial)}}
                                     </div>
                                     <div class="checkbox">
-                                        <input type="checkbox" (change)="selectAll($event, data.plate, data.color)"
-                                            [(ngModel)]="data.selected">
+                                        <!-- <input type="checkbox" (change)="selectAll($event, data.plate, data.color)"
+                                            [(ngModel)]="data.selected"> -->
+                                        <span>space</span>
                                     </div>
-                                    <div class="hour-end">
+                                    <div class="date-hour">
                                         <strong>{{mapFunctionalitieService.convertHour(data.fecha_final)}}</strong>
-                                    </div>
-                                    <div class="date-end">
                                         {{mapFunctionalitieService.convertDate(data.fecha_inicial)}}
                                     </div>
                                 </div>
@@ -77,12 +74,96 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="close">
-                                <img style="height: 12px; width: 15px; cursor: pointer;"
-                                    src="./assets/icons/iconMap/arrow-bottom.svg"
-                                    [ngClass]="seletedHistoric === data.plate ? 'rotate' : ''"
-                                    (click)="data.data.length > 0 ? viewHistoric(data.plate) : ''">
-                            </div> -->
+
+                        <div class="detail-trip" *ngFor="let data_trip of data.trips; first as isFirts; last as isLast">
+                            <!-- Mostramos las paradas -->
+                            <div class="stop" *ngIf="data_trip.tipo === 'stop'">
+                                <div class="icon-stop">
+                                    <div class="line-stop" [style.background-color]="isFirts ? 'transparent' : '#006AA3'">
+                                    </div>
+                                    <span style="background: #006AA3;">
+                                        <label>P</label>
+                                    </span>
+                                    <div class="line-stop" style="background: #006AA3;" [style.background-color]="isLast ? 'transparent' : '#006AA3'">
+                                    </div>
+                                </div>
+                                <div class="body-stop">
+                                    <div class="address-stop">
+                                        {{data_trip.direccion_inicial}}
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                    </div>
+
+                                    <div class="time-stop">
+                                        {{data_trip.tiempo}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mostramos los viajes -->
+                            <div class="trip" *ngIf="data_trip.tipo === 'trip'">
+                                <div class="icon-trip">
+                                    <div class="line-trip" [style.background-color]="isFirts ? 'transparent' : data_trip.color">
+                                    </div>
+                                    <span style="background: {{data_trip.color}};">
+                                        <img src="assets/icons/iconMap/route_trip.svg" alt="">
+                                    </span>
+                                    <div class="line-trip" [style.background-color]="isLast ? 'transparent' : data_trip.color">
+                                    </div>
+                                </div>
+
+                                <div class="body-trip">
+                                    <div class="body-left">
+                                        <div class="date-hour">
+                                            <strong>{{mapFunctionalitieService.convertHour(data_trip.fecha_inicial)}}</strong>
+                                            {{mapFunctionalitieService.convertDate(data_trip.fecha_inicial)}}
+                                        </div>
+                                        <div class="checkbox">
+                                            <input type="checkbox"
+                                                (change)="generateHistoric($event, data_trip)"
+                                                [(ngModel)]="data_trip.selected">
+                                        </div>
+                                        <div class="date-hour">
+                                            <strong>{{mapFunctionalitieService.convertHour(data_trip.fecha_final)}}</strong>
+                                            {{mapFunctionalitieService.convertDate(data_trip.fecha_inicial)}}
+                                        </div>
+                                    </div>
+
+                                    <div class="body-center">
+                                        <div class="circle">
+
+                                        </div>
+
+                                        <div class="line">
+
+                                        </div>
+
+                                        <div class="circle">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="body-right">
+                                        <div class="address-init">
+                                            {{data_trip.direccion_inicial}}
+                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                        </div>
+
+                                        <div class="events">
+                                            <div class="odometer">
+                                                {{data_trip.odometer}} km
+                                            </div>
+                                            <div class="horometer">
+                                                {{data_trip.tiempo}}
+                                            </div>
+                                        </div>
+
+                                        <div class="address-end">
+                                            {{data_trip.direccion_final}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </mat-tab>

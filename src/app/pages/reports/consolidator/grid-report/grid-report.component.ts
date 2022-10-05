@@ -7,42 +7,51 @@ import { Subscription } from 'rxjs';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import moment from 'moment';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
+import { ReportsService } from 'app/core/services/reports.service';
+import { SettingsService } from 'app/core/services/settings.service';
 
 @Component({
     selector: 'app-grid-report',
     templateUrl: './grid-report.component.html',
     styleUrls: ['./grid-report.component.scss'],
 })
-export class GridReportComponent implements OnInit, OnDestroy {
+export class GridReportComponent implements OnInit {
     public displayedColumns: string[] = [
         'plate',
-        'date_event',
-        'event_name',
-        'address',
-        'x',
-        'y',
-        'speed',
-        'battery',
-        'vew_map',
+        'fecha_inicial',
+        'direccion_inicial',
+        'fecha_final',
+        'direccion_final',
+        'viajes',
+        'tiempo',
+        'paradas',
+        'paradas_tiempo',
+        'ver_detalle',
     ];
     public subscription$: Subscription;
-    public dataSource: MatTableDataSource<any>;
+    public dataSourceConsolidator: MatTableDataSource<any>;
+    public dataSourceTrips: MatTableDataSource<any>;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('paginatorConsolidator') paginatorConsolidator: MatPaginator;
+    @ViewChild('paginatorTrips') paginatorTrips: MatPaginator;
     titleReport: string;
+    private dataReport: any[] = [];
+    public dataConsolidator: any = {};
+    detailTrip: boolean = false;
 
     constructor(
         public dialog: MatDialog,
         private _historicService: HistoriesService,
-        public mapFunctionalitieService: MapFunctionalitieService
+        public mapFunctionalitieService: MapFunctionalitieService,
+        private reportService: ReportsService,
+        public settingsService: SettingsService
     ) {}
 
     ngOnInit(): void {
         this.listenObservablesReport();
         this.messageExceedTime = true;
-
-        this.titleReport = 'Historico y eventos';
+        this.titleReport = 'Consolidado de viajes';
     }
 
     /**
@@ -60,7 +69,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
      */
     private listenObservablesReport(): void {
         this.subscription$ =
-            this._historicService.behaviorSubjectDataForms.subscribe(
+            this._historicService.behaviorSubjectDataFormsTrip.subscribe(
                 ({ payload }) => {
                     if (payload) {
                         var fechaInicio = new Date(
@@ -72,26 +81,38 @@ export class GridReportComponent implements OnInit, OnDestroy {
                         if (Number(diff / (1000 * 60 * 60 * 24)) < 91) {
                             this.messageExceedTime = true;
                             this.subscription$ = this._historicService
-                                .getHistories(payload)
+                                .getHistoriesTrip(payload)
                                 .subscribe((res) => {
                                     if (res.code === 400) {
                                         this.messageNoReport = false;
-                                        this.dataSource = null;
+                                        this.dataSourceConsolidator = null;
                                     } else {
+                                        this.dataReport = res.trips;
                                         this.messageNoReport = true;
-                                        this.dataSource =
+                                        this.dataSourceConsolidator =
                                             new MatTableDataSource(res.data);
-                                        this.dataSource.paginator =
-                                            this.paginator;
+                                        this.dataSourceConsolidator.paginator =
+                                            this.paginatorConsolidator;
+                                        // console.log(this.dataSource);
                                     }
                                 });
                         }
                     } else {
-                        this.dataSource = null;
+                        this.dataSourceConsolidator = null;
                         this.messageExceedTime = false;
                     }
                 }
             );
+    }
+
+    goDetail(data: any) {
+        this.detailTrip = true;
+        let trips = this.dataReport.filter((x) => {
+            return x.plate === data.plate;
+        });
+        this.dataConsolidator = data;
+        this.dataSourceTrips = new MatTableDataSource(trips);
+        this.dataSourceTrips.paginator = this.paginatorTrips;
     }
 
     /**
@@ -99,17 +120,17 @@ export class GridReportComponent implements OnInit, OnDestroy {
      */
     public listenObservablesExport(): void {
         this.subscription$ =
-            this._historicService.behaviorSubjectDataForms.subscribe(
+            this._historicService.behaviorSubjectDataFormsTrip.subscribe(
                 ({ payload }) => {
                     if (payload.radioButton == 1) {
                         this._historicService
-                            .getHistoricExportMovile(payload)
+                            .getHistoriesTrip(payload)
                             .subscribe((res) => {
                                 this.downloadReport(res.data);
                             });
                     } else {
                         this._historicService
-                            .getHistoricExportFleet(payload)
+                            .getHistoriesTrip(payload)
                             .subscribe((res) => {
                                 this.downloadReport(res.data);
                             });
@@ -122,47 +143,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
      * @description: Exportar .CSV
      */
     private downloadReport(res: any): void {
-        let plate: string = '';
-        const historic: any = [];
-        for (const data1 of res) {
-            plate = data1.plate;
-            data1.historic_report.map((x) => {
-                x['plate'] = plate;
-                return x;
-            });
-            data1.historic_report.forEach((m) => {
-                historic.push(m);
-            });
-        }
-        const data = historic.map((row) => ({
-            Placa: row.plate,
-            Fecha: row.date_event,
-            Evento: row.event_name,
-            Direccion: row.address,
-            Latitud: row.x,
-            Longitud: row.y,
-            Velocidad: row.speed,
-            Bateria: row.battery,
-        }));
-        let values;
-        const csv: any = [];
-        const csvTemp: any = [];
-        const headers = Object.keys(data[0]);
-        csvTemp.push(headers.join(','));
-        for (const row of data) {
-            values = headers.map((header) => row[header]);
-            csvTemp.push(values.join(','));
-        }
-        csv.push(csvTemp.join('\n'));
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('hidden', '');
-        a.setAttribute('href', url);
-        a.setAttribute('download', 'Report.csv');
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        
     }
 
     /**
