@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {GridReportComponent} from "./grid-report/grid-report.component";
+import { GridReportComponent } from './grid-report/grid-report.component';
 
 const routes: Routes = [
     {
         path: '',
-        component:GridReportComponent
-    }
+        component: GridReportComponent,
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class GeneralReportRoutingModule { }
+export class GeneralReportRoutingModule {}

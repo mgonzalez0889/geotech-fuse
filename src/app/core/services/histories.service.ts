@@ -108,7 +108,7 @@ export class HistoriesService {
     public subscribe(payload, show): void {
         const { payload: pl, show: isShow } =
             this.subjectDataHistories.getValue();
-        if (pl == payload && isShow == show) {
+        if (pl === payload && isShow === show) {
             return;
         }
         this.subjectDataHistories.next({ payload, show });
@@ -119,6 +119,7 @@ export class HistoriesService {
     public resetValuesDataHistories(): void {
         this.subjectDataHistories.next({ payload: '', show: false });
     }
+
     /**
      * @description: Establece por defecto el observable behaviorSubject
      */

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -14,6 +15,7 @@ import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
     styleUrls: ['./grid-report.component.scss'],
 })
 export class GridReportComponent implements OnInit, OnDestroy {
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     public displayedColumns: string[] = [
         'plate',
         'date_event',
@@ -29,7 +31,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     public dataSource: MatTableDataSource<any>;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     titleReport: string;
 
     constructor(
@@ -41,7 +42,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.listenObservablesReport();
         this.messageExceedTime = true;
-
         this.titleReport = 'Historico y eventos';
     }
 
@@ -63,14 +63,29 @@ export class GridReportComponent implements OnInit, OnDestroy {
             this._historicService.behaviorSubjectDataForms.subscribe(
                 ({ payload }) => {
                     if (payload) {
-                        var fechaInicio = new Date(
-                            payload?.date_init
-                        ).getTime();
-                        var fechaFin = new Date(payload?.date_end).getTime();
+                        console.log(
+                            moment(payload.date_init).format('DD/MM/YYYY') +
+                                ' 00:00:00',
+                            'arturo'
+                        );
 
-                        var diff = fechaFin - fechaInicio;
+                        const dateStart = new Date(payload.date_init).getTime();
+                        const dateEnd = new Date(payload.date_end).getTime();
+                        const diff = dateStart - dateEnd;
+
                         if (Number(diff / (1000 * 60 * 60 * 24)) < 91) {
                             this.messageExceedTime = true;
+
+                            payload.date_init =
+                                moment(payload.date_init).format('DD/MM/YYYY') +
+                                ' 00:00:00';
+
+                            payload.date_end =
+                                moment(payload.date_end).format('DD/MM/YYYY') +
+                                ' 23:59:00';
+
+                            console.log(payload);
+
                             this.subscription$ = this._historicService
                                 .getHistories(payload)
                                 .subscribe((res) => {
@@ -79,6 +94,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                                         this.dataSource = null;
                                     } else {
                                         this.messageNoReport = true;
+
                                         this.dataSource =
                                             new MatTableDataSource(res.data);
                                         this.dataSource.paginator =
@@ -101,7 +117,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
         this.subscription$ =
             this._historicService.behaviorSubjectDataForms.subscribe(
                 ({ payload }) => {
-                    if (payload.radioButton == 1) {
+                    if (payload.radioButton === 1) {
                         this._historicService
                             .getHistoricExportMovile(payload)
                             .subscribe((res) => {

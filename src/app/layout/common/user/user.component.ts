@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -15,6 +16,22 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { UsersService } from 'app/core/services/users.service';
 
+interface IUserInfo {
+    id: number;
+    owner: number;
+    user_login: string;
+    address: string;
+    email: string;
+    full_name: string;
+    lenguage: string;
+    owner_id_simulator: number;
+    phone: string;
+    status: boolean;
+    time_zone: string;
+    user_profile_id: number;
+    owner_name: string;
+}
+
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
@@ -28,7 +45,7 @@ export class UserComponent implements OnInit, OnDestroy {
     /* eslint-enable @typescript-eslint/naming-convention */
 
     @Input() showAvatar: boolean = true;
-    public infoUser: any;
+    public infoUser: IUserInfo;
     user: User;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();

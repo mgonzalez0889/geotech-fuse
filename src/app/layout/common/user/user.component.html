@@ -23,14 +23,14 @@
 <mat-menu [xPosition]="'before'" #userActions="matMenu">
     <button mat-menu-item>
         <mat-icon [svgIcon]="'heroicons_outline:office-building'"></mat-icon>
-        <span class="truncate leading-normal">{{infoUser.owner_name}}</span>
+        <span class="truncate leading-normal">{{infoUser?.owner_name}}</span>
     </button>
     <mat-divider class="my-2"></mat-divider>
     <button mat-menu-item>
         <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
         <span class="flex flex-col">
-            <span class="truncate leading-normal">{{infoUser.full_name}}</span>
-            <span class="truncate leading-normal text-sm text-secondary">{{infoUser.email}}</span>
+            <span class="truncate leading-normal">{{infoUser?.full_name}}</span>
+            <span class="truncate leading-normal text-sm text-secondary">{{infoUser?.email}}</span>
         </span>
     </button>
     <!-- <button mat-menu-item>
