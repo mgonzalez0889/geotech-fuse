@@ -13,12 +13,14 @@ export class HistoriesService {
     // behavior reporte historico y eventos
     public behaviorSubjectDataGrid: BehaviorSubject<{ payload?: any }> =
         new BehaviorSubject({ payload: '' });
+
     public behaviorSubjectDataForms: BehaviorSubject<{ payload?: any }> =
         new BehaviorSubject({ payload: '' });
 
     // behavior reporte de viajes
     public behaviorSubjectDataGridTrip: BehaviorSubject<{ payload?: any }> =
         new BehaviorSubject({ payload: '' });
+
     public behaviorSubjectDataFormsTrip: BehaviorSubject<{ payload?: any }> =
         new BehaviorSubject({ payload: '' });
 
@@ -26,6 +28,7 @@ export class HistoriesService {
         payload?: any;
         show?: boolean;
     }> = new BehaviorSubject<any>({ payload: '', show: false });
+
     public subjectDataSelected: BehaviorSubject<{
         payload: any;
         select: boolean;
@@ -33,6 +36,7 @@ export class HistoriesService {
         payload: '',
         select: false,
     });
+
     public subjectDataSelectedDetail: BehaviorSubject<{
         payload: any;
         select: boolean;
@@ -40,6 +44,7 @@ export class HistoriesService {
         payload: '',
         select: false,
     });
+
     public eventShowModal$ = new EventEmitter<any>();
     public modalShowSelected$ = new EventEmitter<any>();
     public floatingMenuFleet$ = new EventEmitter<any>();

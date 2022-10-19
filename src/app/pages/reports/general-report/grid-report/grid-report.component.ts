@@ -29,6 +29,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
     ];
     public subscription$: Subscription;
     public dataSource: MatTableDataSource<any>;
+    public dataSendTimeLine: any;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
     titleReport: string;
@@ -45,6 +46,18 @@ export class GridReportComponent implements OnInit, OnDestroy {
         this.titleReport = 'Historico y eventos';
     }
 
+    ngOnDestroy(): void {
+        this.subscription$.unsubscribe();
+    }
+
+    public viewReportTimeLine(): void {
+        let queryParams: string = '?';
+        Object.entries(this.dataSendTimeLine).forEach(([key, value]) => {
+            queryParams += `${key}=${value}&`;
+        });
+        window.open(`/app/reports/general-report/time-line${queryParams}`);
+    }
+
     /**
      * @description: Apertura del cuadro de dialogo
      */
@@ -56,6 +69,30 @@ export class GridReportComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * @description: Escucha el observable behavior y valida si genera el reporte por flota o vehiculo
+     */
+    public listenObservablesExport(): void {
+        this.subscription$ =
+            this._historicService.behaviorSubjectDataForms.subscribe(
+                ({ payload }) => {
+                    if (+payload.radioButton === 1) {
+                        this._historicService
+                            .getHistoricExportMovile(payload)
+                            .subscribe((res) => {
+                                this.downloadReport(res.data);
+                            });
+                    } else {
+                        this._historicService
+                            .getHistoricExportFleet(payload)
+                            .subscribe((res) => {
+                                this.downloadReport(res.data);
+                            });
+                    }
+                }
+            );
+    }
+
+    /**
      * @description: Escucha el observable behavior y realiza llamada a la API para generar reporte
      */
     private listenObservablesReport(): void {
@@ -63,12 +100,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
             this._historicService.behaviorSubjectDataForms.subscribe(
                 ({ payload }) => {
                     if (payload) {
-                        console.log(
-                            moment(payload.date_init).format('DD/MM/YYYY') +
-                                ' 00:00:00',
-                            'arturo'
-                        );
-
                         const dateStart = new Date(payload.date_init).getTime();
                         const dateEnd = new Date(payload.date_end).getTime();
                         const diff = dateStart - dateEnd;
@@ -84,6 +115,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                                 moment(payload.date_end).format('DD/MM/YYYY') +
                                 ' 23:59:00';
 
+                            this.dataSendTimeLine = payload;
                             console.log(payload);
 
                             this.subscription$ = this._historicService
@@ -111,30 +143,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * @description: Escucha el observable behavior y valida si genera el reporte por flota o vehiculo
-     */
-    public listenObservablesExport(): void {
-        this.subscription$ =
-            this._historicService.behaviorSubjectDataForms.subscribe(
-                ({ payload }) => {
-                    if (payload.radioButton === 1) {
-                        this._historicService
-                            .getHistoricExportMovile(payload)
-                            .subscribe((res) => {
-                                this.downloadReport(res.data);
-                            });
-                    } else {
-                        this._historicService
-                            .getHistoricExportFleet(payload)
-                            .subscribe((res) => {
-                                this.downloadReport(res.data);
-                            });
-                    }
-                }
-            );
-    }
-
-    /**
      * @description: Exportar .CSV
      */
     private downloadReport(res: any): void {
@@ -150,7 +158,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 historic.push(m);
             });
         }
-        const data = historic.map((row) => ({
+        const data = historic.map((row: any) => ({
             Placa: row.plate,
             Fecha: row.date_event,
             Evento: row.event_name,
@@ -166,7 +174,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
         const headers = Object.keys(data[0]);
         csvTemp.push(headers.join(','));
         for (const row of data) {
-            values = headers.map((header) => row[header]);
+            values = headers.map((header: any) => row[header]);
             csvTemp.push(values.join(','));
         }
         csv.push(csvTemp.join('\n'));
@@ -179,12 +187,5 @@ export class GridReportComponent implements OnInit, OnDestroy {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-    }
-
-    /**
-     * @description: Destruye las subscripciones
-     */
-    ngOnDestroy(): void {
-        this.subscription$.unsubscribe();
     }
 }
