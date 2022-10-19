@@ -24,7 +24,8 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
   public selection = new SelectionModel<any>(true, []);
   public arrayLength: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  public userProfileId: number = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.id;
+  public userProfileId: number = 0;
+ // public userProfileId: number = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.id;
   constructor(
       private userProfilePlateService: UserProfilePlateService,
       private _snackBar: MatSnackBar,
@@ -99,11 +100,11 @@ export class GridPlateOptionComponent implements OnInit, OnDestroy {
    * @description: Elimina un registro de la grilla
    */
   private deleteUserProfilePlate(id: number): void {
-      this.subscription = this.userProfilePlateService.deleteUserProfilePlate(id).subscribe(res => {
-          this._snackBar.open('Registro eliminado con exito', '', {duration: 4000});
-          this.userProfilePlateService.behaviorSubjectUserProfilePlate$.next({isEdit: false});
-          this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({isEdit: false});
-      });
+    //   this.subscription = this.userProfilePlateService.deleteUserProfilePlate(id).subscribe(res => {
+    //       this._snackBar.open('Registro eliminado con exito', '', {duration: 4000});
+    //       this.userProfilePlateService.behaviorSubjectUserProfilePlate$.next({isEdit: false});
+    //       this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({isEdit: false});
+    //   });
   }
    /**
     * @description: Escucha el observables

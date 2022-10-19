@@ -40,11 +40,11 @@
         "leaflet": "^1.8.0",
         "leaflet-drift-marker": "^2.0.0",
         "leaflet-fullscreen": "^1.0.2",
-        "leaflet-marker-rotation": "^0.4.0",
-        "leaflet.fullscreen": "^2.4.0",
         "leaflet-hotline": "^0.4.0",
+        "leaflet-marker-rotation": "^0.4.0",
         "leaflet-routing-machine": "^3.2.12",
         "leaflet-timedimension": "^1.1.1",
+        "leaflet.fullscreen": "^2.4.0",
         "leaflet.marker.slideto": "^0.3.0",
         "leaflet.markercluster": "^1.5.3",
         "lodash-es": "4.17.21",
@@ -63,6 +63,7 @@
         "socket.io-client": "^4.5.1",
         "tslib": "^2.3.0",
         "web-animations-js": "2.3.2",
+        "xlsx": "^0.18.5",
         "zone.js": "0.11.4"
     },
     "devDependencies": {

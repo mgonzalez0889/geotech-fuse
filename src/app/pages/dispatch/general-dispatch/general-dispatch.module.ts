@@ -26,6 +26,7 @@ import { StartDispatchComponent } from './start-dispatch/start-dispatch.componen
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
     declarations: [
@@ -58,6 +59,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         MatDialogModule,
         MatAutocompleteModule,
         MatProgressSpinnerModule,
+        MatMenuModule
     ],
 })
 export class GeneralDispatchModule {}

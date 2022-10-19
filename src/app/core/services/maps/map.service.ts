@@ -35,6 +35,7 @@ export class MapFunctionalitieService {
     public markers: any = {};
     public map: L.Map;
     public type_service: any = [];
+    public showForm: boolean = true;
 
     // Mostrar y ocultar componentes de mapa (Menu mobiles, geotools, historico, comandos)
     public showMenuMobiles: boolean = true;
@@ -144,13 +145,13 @@ export class MapFunctionalitieService {
             this.map = L.map('map', {
                 fullscreenControl: true,
                 fullscreenControlOptions: {
-                    position: 'topright'
-                  },
+                    position: 'topright',
+                },
                 center: [4.658383846282959, -74.09394073486328],
                 zoom: 10,
                 layers: [this.googleMaps],
                 attributionControl: false,
-                zoomControl: false,
+                zoomControl: true,
             });
 
             this.layerControl = L.control
@@ -213,7 +214,7 @@ export class MapFunctionalitieService {
         }
     }
 
-    moveMarker(data) {
+    moveMarker(data: any): void {
         if (this.markers.hasOwnProperty(data.id_mobile)) {
             this.markers[data.id_mobile].slideTo([data.x, data.y], {
                 duration: 2000,
@@ -344,6 +345,8 @@ export class MapFunctionalitieService {
     }
 
     createHistoric(type, historic, color) {
+        console.log(historic,'joseeeee');
+
         if (type === 'punt') {
             let myIconUrl =
                 'data:image/svg+xml,' +
@@ -428,7 +431,6 @@ export class MapFunctionalitieService {
                     this.rotationIconHistoric(historic[i]);
             }
 
-            // console.log(waypoints);
             this.map.setView(
                 [this.paint_punts[0].lat, this.paint_punts[0].lng],
                 12
@@ -606,6 +608,12 @@ export class MapFunctionalitieService {
 
     goAddGeometry() {
         this.showFormGeomertry = true;
+        this.showForm = true;
+        this.showOptionsGeoTools = false;
+    }
+    goImportGeometry() {
+        this.showForm = false;
+        this.showFormGeomertry = true;
         this.showOptionsGeoTools = false;
     }
 
@@ -697,7 +705,7 @@ export class MapFunctionalitieService {
     /**
      * @description: Asigna los iconos para el marcador deacuerdo al estado
      */
-    private setIcon(data: any, type?, color?): any {
+    public setIcon(data: any, type?, color?): any {
         const diffDays = moment(new Date()).diff(
             moment(data.date_entry),
             'days'
@@ -782,9 +790,9 @@ export class MapFunctionalitieService {
         this.plate = plate;
         const data = {
             date_init:
-                moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
+                moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
             date_end:
-                moment(this.initialDate).format('YYYY-MM-DD') + ' 23:59:59',
+                moment(this.initialDate).format('DD/MM/YYYY') + ' 23:59:59',
             plate: this.plate,
         };
         await this.mobileRequestService.getCommandsPlate(data);

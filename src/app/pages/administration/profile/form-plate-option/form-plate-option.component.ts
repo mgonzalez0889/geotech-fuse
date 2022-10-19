@@ -30,11 +30,13 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
   public dataSource: any = [];
   public subscription: Subscription;
   public selection = new SelectionModel<any>(true, []);
-  public userProfileId: number = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.id;
+  //public userProfileId: number = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.id;
+  public userProfileId=0;
   public arrayLength: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
-  public profile: string = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.payload.name;
+  //public profile: string = this.ownerPlateService.behaviorSubjectUserOwnerPlate$.value.payload.name;
+  public profile = "";
   constructor(
       private profileService: ProfilesService,
       private userProfilePlateService: UserProfilePlateService,
@@ -96,15 +98,15 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
    * @description: Escucha el observable de ownerPlate behavior
    */
   private listenObservables(): void {
-      this.subscription = this.ownerPlateService.behaviorSubjectUserOwnerPlate$
-      .pipe(delay(1000))
-      .subscribe(({isEdit}) => {
-          switch (isEdit) {
-              case false :
-                  this.getPlates(this.userProfileId);
-                  break;
-          }
-      });
+    //   this.subscription = this.ownerPlateService.behaviorSubjectUserOwnerPlate$
+    //   .pipe(delay(1000))
+    //   .subscribe(({isEdit}) => {
+    //       switch (isEdit) {
+    //           case false :
+    //               this.getPlates(this.userProfileId);
+    //               break;
+    //       }
+    //   });
   }
   /**
    * @description: Carga todas las placas
@@ -123,7 +125,7 @@ export class FormPlateOptionComponent implements OnInit, AfterViewInit, OnDestro
       this.subscription = this.userProfilePlateService.postUserProfilePlate(data).subscribe(res => {
           this._snackBar.open('Registro creado con exito', '', {duration: 4000});
           this.userProfilePlateService.behaviorSubjectUserProfilePlate$.next({isEdit: false});
-          this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({isEdit: false});
+          //this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({isEdit: false});
       });
   }
 

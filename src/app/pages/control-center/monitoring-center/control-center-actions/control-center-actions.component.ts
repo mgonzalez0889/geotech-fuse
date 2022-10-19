@@ -70,7 +70,6 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     ];
 
     constructor(
-        public mapFunctionalitieService: MapFunctionalitieService,
         public historicService: HistoriesService,
         public controlCenterService: ControlCenterService,
         private fb: FormBuilder,

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ContactService } from 'app/core/services/contact.service';
+import { IconService } from 'app/core/services/icons/icon.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,18 +15,38 @@ export class FormContactComponent implements OnInit, OnDestroy {
     public contacts: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
+    public countries: any = [];
     public contactForm: FormGroup;
     public subscription: Subscription;
     constructor(
         private contactService: ContactService,
         private fb: FormBuilder,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private iconService: IconService
     ) {}
 
     ngOnInit(): void {
+        this.iconService.getCountries().subscribe((res) => {
+            this.countries = res;
+        });
         this.listenObservables();
         this.createContactForm();
+
+        // this.iconService.countries$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((codes: Country[]) => {
+        //         this.countries = codes;
+
+        //         // Mark for check
+        //         this._changeDetectorRef.markForCheck();
+        //     });
     }
+    getCountryByIso(code: string): any {
+        if (code) {
+            return this.countries.find((country) => country.code === code);
+        }
+    }
+
     /**
      * @description: Valida si es edita o guarda un contacto nuevo
      */
@@ -124,6 +146,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
             phone: ['', [Validators.required]],
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
+            indicative: ['+57', [Validators.required]],
         });
     }
     /**
@@ -139,6 +162,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                         this.contacts['full_name'] = newContact;
                         if (this.contactForm) {
                             this.contactForm.reset();
+                            this.contactForm.controls['indicative'].setValue(
+                                '+57'
+                            );
                         }
                     }
                     if (id) {

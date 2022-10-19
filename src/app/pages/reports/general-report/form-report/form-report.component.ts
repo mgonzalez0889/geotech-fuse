@@ -1,12 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { MobileService } from "../../../../core/services/mobile.service";
-import { Observable, Subscription } from "rxjs";
-import { EventsService } from "../../../../core/services/events.service";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { HistoriesService } from "../../../../core/services/histories.service";
-import { FleetsService } from "../../../../core/services/fleets.service";
-import { MatRadioChange } from "@angular/material/radio";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MobileService } from '../../../../core/services/mobile.service';
+import { Observable, Subscription } from 'rxjs';
+import { EventsService } from '../../../../core/services/events.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { HistoriesService } from '../../../../core/services/histories.service';
+import { FleetsService } from '../../../../core/services/fleets.service';
+import { MatRadioChange } from '@angular/material/radio';
 import moment from 'moment';
 
 export interface CalendarSettings {
@@ -47,8 +47,7 @@ export class FormReportComponent implements OnInit {
         private fb: FormBuilder,
         private _historicService: HistoriesService,
         private _fleetsServices: FleetsService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.getEvents();
@@ -66,15 +65,16 @@ export class FormReportComponent implements OnInit {
      */
     public onSelect(): void {
         let data = {
-            date_init: moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
-            date_end: moment(this.finalDate).format('YYYY-MM-DD') + ' 23:59:59',
+            date_init:
+                moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
+            date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
             plates: this.plates,
             events: this.eventos,
             fleets: this.flotas,
             limit: 999999999,
             page: 1,
-            validationFleet: Number(this.validationFleet)
-        }
+            validationFleet: Number(this.validationFleet),
+        };
         this._historicService.behaviorSubjectDataForms.next({ payload: data });
     }
 

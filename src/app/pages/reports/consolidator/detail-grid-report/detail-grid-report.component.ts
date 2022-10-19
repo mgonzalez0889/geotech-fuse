@@ -10,7 +10,6 @@ export class DetailGridReportComponent implements OnInit {
     constructor(public reportService: ReportsService) {}
 
     ngOnInit(): void {
-        console.log(this.reportService.data);
         // this.reportService.trips$.subscribe(trip => {
         //   console.log(trip);
         // });

@@ -150,10 +150,10 @@ export class AppSettingsService {
             base: EndPoints.uri('control_center_contact'),
         },
     };
-        /**
+    /**
      *@description: End-point contactos de Centro de control owner
      */
-     public contactsControlCenterOwner = {
+    public contactsControlCenterOwner = {
         url: {
             base: EndPoints.uri('control_center_contact_owner'),
         },
@@ -181,6 +181,14 @@ export class AppSettingsService {
     public dispatch = {
         url: {
             base: EndPoints.uri('dispatch'),
+        },
+    };
+    /**
+     * @description: End-point conductor
+     */
+    public driver = {
+        url: {
+            base: EndPoints.uri('owner_driver'),
         },
     };
 }
