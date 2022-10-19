@@ -50,6 +50,9 @@ export class GridReportComponent implements OnInit, OnDestroy {
         this.subscription$.unsubscribe();
     }
 
+    /**
+     * @description: parseamos la data del form y la enviamos por query por la ruta de time line
+     */
     public viewReportTimeLine(): void {
         let queryParams: string = '?';
         Object.entries(this.dataSendTimeLine).forEach(([key, value]) => {
