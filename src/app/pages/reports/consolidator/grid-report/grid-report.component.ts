@@ -4,8 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormReportComponent } from '../form-report/form-report.component';
 import { HistoriesService } from '../../../../core/services/histories.service';
 import { Subscription } from 'rxjs';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import moment from 'moment';
+import { MatPaginator } from '@angular/material/paginator';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { ReportsService } from 'app/core/services/reports.service';
 import { SettingsService } from 'app/core/services/settings.service';
@@ -15,7 +14,9 @@ import { SettingsService } from 'app/core/services/settings.service';
     templateUrl: './grid-report.component.html',
     styleUrls: ['./grid-report.component.scss'],
 })
-export class GridReportComponent implements OnInit {
+export class GridReportComponent implements OnInit, OnDestroy {
+    @ViewChild('paginatorConsolidator') paginatorConsolidator: MatPaginator;
+    @ViewChild('paginatorTrips') paginatorTrips: MatPaginator;
     public displayedColumns: string[] = [
         'plate',
         'fecha_inicial',
@@ -33,12 +34,11 @@ export class GridReportComponent implements OnInit {
     public dataSourceTrips: MatTableDataSource<any>;
     public messageExceedTime: boolean = true;
     public messageNoReport: boolean = false;
-    @ViewChild('paginatorConsolidator') paginatorConsolidator: MatPaginator;
-    @ViewChild('paginatorTrips') paginatorTrips: MatPaginator;
-    titleReport: string;
-    private dataReport: any[] = [];
     public dataConsolidator: any = {};
+
+    titleReport: string;
     detailTrip: boolean = false;
+    private dataReport: any[] = [];
 
     constructor(
         public dialog: MatDialog,
@@ -52,6 +52,10 @@ export class GridReportComponent implements OnInit {
         this.listenObservablesReport();
         this.messageExceedTime = true;
         this.titleReport = 'Consolidado de viajes';
+    }
+
+    ngOnDestroy(): void {
+        this.subscription$.unsubscribe();
     }
 
     /**
@@ -142,14 +146,5 @@ export class GridReportComponent implements OnInit {
     /**
      * @description: Exportar .CSV
      */
-    private downloadReport(res: any): void {
-        
-    }
-
-    /**
-     * @description: Destruye las subscripciones
-     */
-    ngOnDestroy(): void {
-        this.subscription$.unsubscribe();
-    }
+    private downloadReport(res: any): void {}
 }

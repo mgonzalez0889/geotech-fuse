@@ -1,13 +1,13 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MobileService } from '../../../../core/services/mobile.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EventsService } from '../../../../core/services/events.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { HistoriesService } from '../../../../core/services/histories.service';
 import { FleetsService } from '../../../../core/services/fleets.service';
 import { MatRadioChange } from '@angular/material/radio';
-import moment from 'moment';
 
 export interface CalendarSettings {
     dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD' | 'll';
@@ -21,30 +21,35 @@ export interface CalendarSettings {
     styleUrls: ['./form-report.component.scss'],
 })
 export class FormReportComponent implements OnInit {
-    public form: FormGroup;
     public select: boolean;
     public fleets$: Observable<any>;
     public events$: Observable<any>;
     public mobiles$: Observable<any>;
-    public today = new Date();
-    public month = this.today.getMonth();
-    public year = this.today.getFullYear();
-    public day = this.today.getDate();
     public initialHours: string = '00:00:00';
     public finalHours: string = '23:59:00';
-    public initialDate: Date = new Date(this.year, this.month, this.day);
-    public finalDate: Date = new Date(this.year, this.month, this.day);
+    public initialDate: Date = new Date();
+    public finalDate: Date = new Date();
     plates: [];
     flotas: [];
     eventos: [];
-    validationFleet;
+
+    selectTrasport: string = '';
+    listTrasport: { name: string; text: string }[] = [
+        {
+            name: 'mobiles',
+            text: 'Moviles',
+        },
+        {
+            name: 'fleet',
+            text: 'Flota',
+        },
+    ];
 
     constructor(
         public dialogRef: MatDialogRef<FormReportComponent>,
         @Inject(MAT_DIALOG_DATA) public message: any,
         private _mobileService: MobileService,
         private _eventsService: EventsService,
-        private fb: FormBuilder,
         private _historicService: HistoriesService,
         private _fleetsServices: FleetsService
     ) {}
@@ -64,34 +69,43 @@ export class FormReportComponent implements OnInit {
      * @description: Genera el reporte
      */
     public onSelect(): void {
+<<<<<<< HEAD
         let data = {
             date_init:
                 moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
             date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
+=======
+        const data = {
+            date_init: this.initialDate,
+            date_end: this.finalDate,
+>>>>>>> abf9d1203d7ffecee644d477d87face0594ee915
             plates: this.plates,
             events: this.eventos,
             fleets: this.flotas,
             limit: 999999999,
             page: 1,
+<<<<<<< HEAD
             validationFleet: Number(this.validationFleet),
+=======
+            validationFleet: Number(this.selectTrasport),
+>>>>>>> abf9d1203d7ffecee644d477d87face0594ee915
         };
         this._historicService.behaviorSubjectDataForms.next({ payload: data });
     }
 
     /**
-     * @description: Manejador de estados Moviles / Flotas
+     * @description se carga la informacion en el mat-select dependiendo del tipo de trasporte
      */
-    public onchange(event: MatRadioChange): void {
-        if (event.value == 1) {
+    public onChangeTrasport({ value }: MatRadioChange): void {
+        if (value === 'mobiles') {
             this.select = true;
             this.mobiles$ = this._mobileService.getMobiles();
             this.flotas = [];
-            this.validationFleet = 0;
-        } else {
+        } else if (value === 'fleet') {
             this.select = false;
             this.fleets$ = this._fleetsServices.getFleets();
             this.plates = [];
-            this.validationFleet = 1;
         }
+        this.selectTrasport = value;
     }
 }
