@@ -69,26 +69,15 @@ export class FormReportComponent implements OnInit {
      * @description: Genera el reporte
      */
     public onSelect(): void {
-<<<<<<< HEAD
-        let data = {
-            date_init:
-                moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
-            date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
-=======
         const data = {
             date_init: this.initialDate,
             date_end: this.finalDate,
->>>>>>> abf9d1203d7ffecee644d477d87face0594ee915
             plates: this.plates,
             events: this.eventos,
             fleets: this.flotas,
             limit: 999999999,
             page: 1,
-<<<<<<< HEAD
-            validationFleet: Number(this.validationFleet),
-=======
             validationFleet: Number(this.selectTrasport),
->>>>>>> abf9d1203d7ffecee644d477d87face0594ee915
         };
         this._historicService.behaviorSubjectDataForms.next({ payload: data });
     }
