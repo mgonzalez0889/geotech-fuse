@@ -15,7 +15,7 @@
         <div class="flex flex-shrink-0 items-center justify-center w-9 h-9 rounded-full overflow-hidden bg-primary-100">
             <div
                 class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-lg font-bold leading-none bg-gray-200 text-gray-600">
-                {{infoUser.full_name.charAt(0)}}
+                {{infoUser?.full_name.charAt(0)}}
             </div>
         </div>
     </span>
@@ -23,14 +23,14 @@
 <mat-menu [xPosition]="'before'" #userActions="matMenu">
     <button mat-menu-item>
         <mat-icon [svgIcon]="'heroicons_outline:office-building'"></mat-icon>
-        <span class="truncate leading-normal">{{infoUser.owner_name}}</span>
+        <span class="truncate leading-normal">{{infoUser?.owner_name}}</span>
     </button>
     <mat-divider class="my-2"></mat-divider>
     <button mat-menu-item>
         <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
         <span class="flex flex-col">
-            <span class="truncate leading-normal">{{infoUser.full_name}}</span>
-            <span class="truncate leading-normal text-sm text-secondary">{{infoUser.email}}</span>
+            <span class="truncate leading-normal">{{infoUser?.full_name}}</span>
+            <span class="truncate leading-normal text-sm text-secondary">{{infoUser?.email}}</span>
         </span>
     </button>
     <!-- <button mat-menu-item>

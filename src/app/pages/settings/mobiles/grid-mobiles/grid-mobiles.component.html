@@ -64,7 +64,7 @@
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Conductor </th>
                                         <td mat-cell *matCellDef="let row">
                                             <span class="pr-6 whitespace-nowrap">
-                                                {{row.driver_name}}
+                                                {{row.name | titlecase}}
                                             </span>
                                         </td>
                                     </ng-component>

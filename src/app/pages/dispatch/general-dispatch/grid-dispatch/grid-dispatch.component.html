@@ -76,10 +76,33 @@
                                     <span class="ml-2">Nuevo despacho</span>
                                 </button>
                             </div>
+                            <div [hidden]="!infoDispatch" class="pl-6">
+                                <!--
+                                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
+                                    (click)="downloadDispatch()" [matTooltip]="'Descargar'">
+                                    <mat-icon class="icon-size-5">file_download</mat-icon>
+                                </button> -->
+                                <button class="fuse-mat-button-rounded" mat-flat-button [matMenuTriggerFor]="menu"
+                                    [color]="'accent'" [matTooltip]="'Descargar'">
+                                    <mat-icon class="icon-size-5">file_download</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click)="downloadDispatch('CSV')">CSV</button>
+                                    <button mat-menu-item (click)="downloadDispatch('EXCEL')">EXCEL</button>
+                                </mat-menu>
+                            </div>
                         </div>
                         <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
                             <!-- Tabla-->
                             <table mat-table [dataSource]="dataTableDispatch" matSort class="w-full">
+                                <!-- spreadsheet Column -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> No.</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <span class="pr-6 whitespace-nowrap">
+                                            {{row.id}} </span>
+                                    </td>
+                                </ng-container>
                                 <!-- spreadsheet Column -->
                                 <ng-container matColumnDef="spreadsheet">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Planilla</th>

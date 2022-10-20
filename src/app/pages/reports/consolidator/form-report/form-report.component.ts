@@ -63,8 +63,8 @@ export class FormReportComponent implements OnInit {
     public onSelect(): void {
         let data = {
             date_init:
-                moment(this.initialDate).format('YYYY-MM-DD') + ' 00:00:00',
-            date_end: moment(this.finalDate).format('YYYY-MM-DD') + ' 23:59:59',
+                moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
+            date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
             plates: this.plates,
         };
         this._historicService.behaviorSubjectDataFormsTrip.next({

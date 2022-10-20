@@ -10,10 +10,87 @@
                 <div #map id="map" class="h-64 rounded-2xl">
                 </div>
             </div>
-            <div class="px-6">
-
-
-
+            <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+                <div class="w-full max-w-3xl">
+                    <div class="flex items-center my-3">
+                        <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
+                            Información del vehículo
+                        </div>
+                        <div class="flex items-center ml-auto">
+                            <button mat-stroked-button (click)="editMode = true">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                <span class="ml-2">Editar</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col mt-4 pt-6 border-t space-y-6">
+                        <ng-container *ngIf="mobiles['plate']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Placa'">local_shipping</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['plate']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['internal_code']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Codigo interno'">pin</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['internal_code']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['brand']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Marca'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['brand']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['color']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Color'">lens</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['color']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['type_machine']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Tipo de vehiculo'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['type_machine']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['plate']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Placa'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['plate']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['mobile_model']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Modelo'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['mobile_model']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['capacity']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Numero de pasajeros'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['capacity']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['chassis_number']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Numero de chasis'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['chassis_number']}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mobiles['engine_number']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Placa'">branding_watermark</mat-icon>
+                                <div class="ml-6 leading-6">{{mobiles['engine_number']}}</div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="flex items-center my-4 border-b">
+                        <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
+                            Información del conductor
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div [hidden]="!editMode">

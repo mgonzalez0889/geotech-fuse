@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { DispatchService } from 'app/core/services/dispatch.service';
-import { StartDispatchComponent } from 'app/pages/dispatch/general-dispatch/start-dispatch/start-dispatch.component';
+import { DriverService } from 'app/core/services/driver.service';
 import { Subscription } from 'rxjs';
 declare let google: any;
 
@@ -21,19 +21,23 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     public opened: boolean = true;
     public dispatchForm: FormGroup;
     public subscription: Subscription;
+    public drivers: any = [];
 
     constructor(
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
         private dispatchService: DispatchService,
-        private matDialog: MatDialog
+        private matDialog: MatDialog,
+        private driverService: DriverService
     ) {}
 
     ngOnInit(): void {
         this.listenObservables();
         this.createContactForm();
         this.getDevicesDispatch();
+        this.getDriver();
     }
+
     /**
      * @description: Valida si es edita o guarda un despacho nuevo
      */
@@ -229,16 +233,15 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
             end_place: ['', [Validators.required]],
             plate: ['', [Validators.required]],
             container_number: ['', [Validators.required]],
-            owner_driver_name: ['', [Validators.required]],
-            identification_driver: ['', [Validators.required]],
-            driver_contact: ['', [Validators.required]],
             detail: [''],
+            owner_driver_id: [''],
             status: [0, [Validators.required]],
             security_seal: ['', [Validators.required]],
             device: ['', [Validators.required]],
             automatic_finish: [false],
             date_init_dispatch: [''],
             date_end_dispatch: [''],
+            declaration_number: [''],
         });
     }
     /**
@@ -247,6 +250,14 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     private getDevicesDispatch(): void {
         this.dispatchService.getDevicesDispatch().subscribe((res) => {
             this.devices = res.data;
+        });
+    }
+    /**
+     * @description: Buscar los dispositivos aptos para crear un despacho
+     */
+    private getDriver(): void {
+        this.driverService.getDrivers().subscribe((res) => {
+            this.drivers = res.data;
         });
     }
     /**

@@ -29,7 +29,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="mt-3 text-4xl font-bold   break-all">{{dispatches['client']}}</div>
+                    <div class="mt-3 text-4xl font-bold  break-all">{{dispatches['client']}}</div>
                     <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
                         <ng-container *ngIf="dispatches['spreadsheet']">
                             <div class="flex sm:items-center">
@@ -50,7 +50,8 @@
                         <ng-container *ngIf="dispatches['created_at']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Fecha de creación'">today</mat-icon>
-                                <div class="break-all ml-6 leading-6">{{dispatches['created_at'] | date: 'dd/MM/yyyy hh:mm:ss'}}
+                                <div class="break-all ml-6 leading-6">
+                                    {{dispatches['created_at'] | date: 'dd/MM/yyyy hh:mm:ss'}}
                                 </div>
                             </div>
                         </ng-container>
@@ -109,7 +110,8 @@
                         <ng-container *ngIf="dispatches['device_description']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Dispositivo'">lock</mat-icon>
-                                <div class="uppercase break-all ml-6 leading-6">{{dispatches['device_description']}}</div>
+                                <div class="uppercase break-all ml-6 leading-6">{{dispatches['device_description']}}
+                                </div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="dispatches['security_seal']">
@@ -118,22 +120,22 @@
                                 <div class="uppercase break-all ml-6 leading-6">{{dispatches['security_seal']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="dispatches['owner_driver_name']">
+                        <ng-container *ngIf="dispatches['name']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Conductor'">person</mat-icon>
-                                <div class="break-all ml-6 leading-6">{{dispatches['owner_driver_name']}}</div>
+                                <div class="break-all ml-6 leading-6">{{dispatches['name']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="dispatches['identification_driver']">
+                        <ng-container *ngIf="dispatches['identification']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Identificación del conductor'">badge</mat-icon>
-                                <div class="break-all ml-6 leading-6">{{dispatches['identification_driver']}}</div>
+                                <div class="break-all ml-6 leading-6">{{dispatches['identification']}}</div>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="dispatches['driver_contact']">
+                        <ng-container *ngIf="dispatches['phone']">
                             <div class="flex sm:items-center">
                                 <mat-icon [matTooltip]="'Contacto del conductor'">phone_iphone</mat-icon>
-                                <div class="break-all ml-6 leading-6">{{dispatches['driver_contact']}}</div>
+                                <div class="break-all ml-6 leading-6">{{dispatches['phone']}}</div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="dispatches['detail']">
@@ -151,7 +153,7 @@
                                 Iniciar despacho
                             </span>
                             <mat-progress-spinner *ngIf="dispatchForm.disabled" [diameter]="24"
-                                    [mode]="'indeterminate'">
+                                [mode]="'indeterminate'">
                             </mat-progress-spinner>
                         </button>
                         <button *ngIf="dispatches['status'] ===1" (click)="finishDispatch()" class="ml-2"
@@ -160,7 +162,7 @@
                                 Finalizar despacho
                             </span>
                             <mat-progress-spinner *ngIf="dispatchForm.disabled" [diameter]="24"
-                                    [mode]="'indeterminate'">
+                                [mode]="'indeterminate'">
                             </mat-progress-spinner>
                         </button>
                     </div>
@@ -172,6 +174,14 @@
                                 <mat-label>Planilla</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">assignment</mat-icon>
                                 <input matInput [formControlName]="'spreadsheet'" [placeholder]="'Planilla'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Número de declaración</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">tag</mat-icon>
+                                <input matInput [formControlName]="'declaration_number'"
+                                    [placeholder]="'Número de declaración'">
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
@@ -227,9 +237,20 @@
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Conductor</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+                                <mat-select [formControlName]="'owner_driver_id'">
+                                    <mat-option *ngFor="let driver of drivers" [value]="driver.id">
+                                        {{driver.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Dispositivo</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">lock</mat-icon>
-                                <mat-select [formControlName]="'device'" required>
+                                <mat-select [formControlName]="'device'">
                                     <mat-option *ngFor="let device of devices" [value]="device.id">
                                         {{device.plate}}
                                     </mat-option>
@@ -250,30 +271,6 @@
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">pin</mat-icon>
                                 <input matInput [formControlName]="'container_number'"
                                     [placeholder]="'Numero de contenedor'" required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Conductor</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                                <input matInput [formControlName]="'owner_driver_name'" [placeholder]="'Conductor'"
-                                    required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Identificación del conductor</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">badge</mat-icon>
-                                <input matInput [formControlName]="'identification_driver'"
-                                    [placeholder]="'Contacto del conductor'" required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Contacto del conductor</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">phone_iphone</mat-icon>
-                                <input type="number" matInput [formControlName]="'driver_contact'"
-                                    [placeholder]="'Contacto del conductor'" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">

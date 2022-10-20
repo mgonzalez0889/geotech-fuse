@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MobileService } from 'app/core/services/mobile.service';
 import { OwnerPlateService } from 'app/core/services/owner-plate.service';
 import { Subscription } from 'rxjs';
 
@@ -26,10 +25,7 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
         'type_mobile',
     ];
 
-    constructor(
-        private ownerPlateService: OwnerPlateService,
-        private mobileService: MobileService
-    ) {}
+    constructor(private ownerPlateService: OwnerPlateService) {}
 
     ngOnInit(): void {
         this.getMobiles();
@@ -62,7 +58,7 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
      */
     public actionsContact(id: number): void {
         this.opened = true;
-        this.mobileService.behaviorSubjectMobileForm.next({
+        this.ownerPlateService.behaviorSubjectMobileForm.next({
             id: id,
             isEdit: false,
         });
@@ -78,7 +74,7 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription =
-            this.mobileService.behaviorSubjectMobileGrid.subscribe(
+            this.ownerPlateService.behaviorSubjectMobileGrid.subscribe(
                 ({ reload, opened }) => {
                     this.opened = opened;
                     if (reload) {

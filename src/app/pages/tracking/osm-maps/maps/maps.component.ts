@@ -40,6 +40,10 @@ export class MapsComponent implements OnInit, AfterViewInit {
             name: 'point-map',
             type: 'punt',
         },
+        {
+            name: 'map',
+            type: 'owner_map',
+        },
         // {
         //     name: 'settings-map'
         // }
@@ -65,6 +69,11 @@ export class MapsComponent implements OnInit, AfterViewInit {
             icon: 'geo-save',
             name: 'Agregar',
             type: 4,
+        },
+        {
+            icon: 'geo-save',
+            name: 'Importar',
+            type: 5,
         },
     ];
 
@@ -142,8 +151,9 @@ export class MapsComponent implements OnInit, AfterViewInit {
         this.socketIoService.listenin('new_position').subscribe((data: any) => {
             this.mapFunctionalitieService.moveMarker(data);
         });
-        this.socketIoService.listenin('new_command').subscribe((data: any) => {
-        });
+        this.socketIoService
+            .listenin('new_command')
+            .subscribe((data: any) => {});
         const time = timer(2000);
         time.subscribe((t) => {
             this.getMobiles();
@@ -153,7 +163,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
     /**
      * @description: Obtengo las flotas y vehiculos del cliente
      */
-    private getMobiles(): void {
+    getMobiles(): void {
         // vehiculos del cliente
         this.subscription = this.mobilesService
             .getMobiles()
@@ -253,16 +263,24 @@ export class MapsComponent implements OnInit, AfterViewInit {
                 this.mapFunctionalitieService.type_geo = type;
                 (await this.mapRequestService.getGeometry(type + 's')) || [];
                 break;
+            case 'owner_map':
+                this.mapFunctionalitieService.drawerOpenedChanged();
+                this.mapFunctionalitieService.type_geometry = 'Capas de mapas';
+                this.mapFunctionalitieService.type_geo = type;
+                (await this.mapRequestService.getGeometry(type + 's')) || [];
+                break;
         }
     }
 
-    eventOptionGeotools(type) {
+    eventOptionGeotools(type): any {
         if (type === 1) {
             this.mapFunctionalitieService.goCancelToGeometry();
         } else if (type === 2) {
             this.mapFunctionalitieService.goBackToGeometry();
         } else if (type === 3) {
             this.mapFunctionalitieService.goDeleteGeometryPath();
+        } else if (type === 5) {
+            this.mapFunctionalitieService.goImportGeometry();
         } else {
             this.mapFunctionalitieService.goAddGeometry();
         }

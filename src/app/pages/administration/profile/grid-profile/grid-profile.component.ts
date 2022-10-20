@@ -31,6 +31,9 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataTableProfile.filter = filterValue.trim().toLowerCase();
     }
+    /**
+     * @description: Buscar los perfiles de ese cliente
+     */
     public getProfiles(): void {
         this.profileService.getProfiles().subscribe((res) => {
             if (res.data) {

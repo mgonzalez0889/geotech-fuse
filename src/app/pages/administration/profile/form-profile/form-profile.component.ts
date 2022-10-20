@@ -22,11 +22,28 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+} from '@angular/animations';
 
 @Component({
     selector: 'app-form-profile',
     templateUrl: './form-profile.component.html',
     styleUrls: ['./form-profile.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition(
+                'expanded <=> collapsed',
+                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ),
+        ]),
+    ],
 })
 export class FormProfileComponent implements OnInit, OnDestroy {
     @ViewChild(MatSort) private sort: MatSort;
@@ -37,6 +54,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     @ViewChild('fleetsPanelOrigin') private fleetsPanelOrigin: ElementRef;
     public dataTableOption: MatTableDataSource<any>;
     public columnsOption: string[] = ['select', 'title', 'subtitle'];
+    public columnsToDisplayWithExpand = [...this.columnsOption, 'expand'];
     public profiles: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
@@ -47,6 +65,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     public fleets: any = [];
     public filteredFleets: any = [];
     public optionMenu: any = [];
+    public expandedElement = this.optionMenu;
     public typeCommands: any;
     private platesPanelOverlayRef: OverlayRef;
     private selection = new SelectionModel<any>(true, []);
@@ -287,19 +306,30 @@ export class FormProfileComponent implements OnInit, OnDestroy {
         this.profileForm.get('fleets').value.unshift(fleet.id);
         this.changeDetectorRef.markForCheck();
     }
+    /**
+     * @description: Si el número de elementos seleccionados coincide con el número total de filas.
+     */
     public isAllSelected(): any {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataTableOption.data.length;
         return numSelected === numRows;
     }
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    /**
+     * @description: Selecciona todas las filas si no están todas seleccionadas; de lo contrario borrar la selección.
+     */
     public toggleAllRows(): void {
         if (this.isAllSelected()) {
             this.selection.clear();
             return;
         }
         this.selection.select(...this.dataTableOption.data);
+    }
+    /**
+     * @description: Filtrar datos de la tabla
+     */
+    public filterTable(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataTableOption.filter = filterValue.trim().toLowerCase();
     }
     /**
      * @description: Destruye el observable

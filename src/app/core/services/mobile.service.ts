@@ -9,15 +9,6 @@ import { MobilesInterface } from '../interfaces/mobiles.interface';
     providedIn: 'root',
 })
 export class MobileService {
-    public behaviorSubjectMobileForm: BehaviorSubject<{
-        payload?: any;
-        id?: number;
-        isEdit?: boolean;
-    }> = new BehaviorSubject(null);
-    public behaviorSubjectMobileGrid: BehaviorSubject<{
-        reload?: boolean;
-        opened?: boolean;
-    }> = new BehaviorSubject({ reload: false, opened: false });
     constructor(
         private _http: HttpClient,
         private _appSettings: AppSettingsService
