@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProfilesService } from 'app/core/services/profiles.service';
 import { Subscription } from 'rxjs';
+import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
 
 @Component({
     selector: 'app-grid-profile',
@@ -11,13 +9,25 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./grid-profile.component.scss'],
 })
 export class GridProfileComponent implements OnInit, OnDestroy {
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    public dataTableProfile: MatTableDataSource<any>;
-    public columnsProfile: string[] = ['name', 'description'];
-    public subscription: Subscription;
+    public titlePage: string = 'Gestion de perfiles';
+    public subTitlepage: string = '';
     public opened: boolean = false;
+    public subscription: Subscription;
     public profileCount: number = 0;
+    public dataFilter: string = '';
+    public columnsProfile: string[] = ['name', 'description'];
+    public profileData: any[] = [];
+    public optionsTable: IOptionTable[] = [
+        {
+            name: 'name',
+            text: 'Nombre',
+        },
+        {
+            name: 'description',
+            text: 'Descripción',
+        },
+    ];
+
     constructor(private profileService: ProfilesService) {}
 
     ngOnInit(): void {
@@ -29,21 +39,19 @@ export class GridProfileComponent implements OnInit, OnDestroy {
      */
     public filterTable(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        this.dataTableProfile.filter = filterValue.trim().toLowerCase();
+        this.dataFilter = filterValue.trim().toLowerCase();
     }
     /**
      * @description: Buscar los perfiles de ese cliente
      */
     public getProfiles(): void {
         this.profileService.getProfiles().subscribe((res) => {
-            if (res.data) {
-                this.profileCount = res.data.length;
-            } else {
-                this.profileCount = 0;
-            }
-            this.dataTableProfile = new MatTableDataSource(res.data);
-            this.dataTableProfile.paginator = this.paginator;
-            this.dataTableProfile.sort = this.sort;
+            this.subTitlepage = res.data
+                ? `${res.data.length} perfiles`
+                : 'Sin perfiles';
+
+            this.profileCount = res.data ? res.data.length : 0;
+            this.profileData = res.data;
         });
     }
     /**
@@ -58,7 +66,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     /**
      * @description: Guarda la data del menu para aburirlo en el formulario
      */
-    public actionsMenu(data: any): void {
+    public actionSelectTable(data: any): void {
         this.opened = true;
         this.profileService.behaviorSubjectProfileForm.next({
             payload: data,

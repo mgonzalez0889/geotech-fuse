@@ -9,6 +9,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ComponentsModule } from './components/components.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     imports: [
@@ -21,8 +24,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         MatIconModule,
         MatSelectModule,
         MatFormFieldModule,
+        ComponentsModule,
+        MatSidenavModule,
+        MatTableModule,
     ],
-    exports: [CommonModule, FormsModule, ReactiveFormsModule],
+    exports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ComponentsModule,
+        MatSidenavModule,
+        MatTableModule,
+    ],
     declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })
 export class SharedModule {}
