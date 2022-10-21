@@ -7,6 +7,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { DataTablePipe } from './table/data-table.pipe';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [HeaderPageComponent, TableComponent, DataTablePipe],
@@ -16,6 +18,8 @@ import { DataTablePipe } from './table/data-table.pipe';
         MatPaginatorModule,
         MatSortModule,
         MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
     ],
     exports: [HeaderPageComponent, TableComponent],
 })

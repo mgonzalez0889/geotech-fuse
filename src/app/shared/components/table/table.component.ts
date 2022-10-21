@@ -10,7 +10,10 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { IOptionTable } from '../../../core/interfaces/components/table.interface';
+import {
+    IButtonTable,
+    IOptionTable,
+} from '../../../core/interfaces/components/table.interface';
 
 @Component({
     selector: 'app-table',
@@ -24,6 +27,8 @@ export class TableComponent implements OnChanges {
     @Input() dataColumn: string[] = [];
     @Input() dataOptionTable: IOptionTable[] = [];
     @Input() dataFilter: string = '';
+    @Input() buttonTable: IButtonTable;
+    @Output() emitActionButton = new EventEmitter<any>();
     @Output() emitSelectRow = new EventEmitter<any>();
 
     public dataSource: MatTableDataSource<any>;
@@ -39,5 +44,9 @@ export class TableComponent implements OnChanges {
 
     public actionSelectRow(row: any): void {
         this.emitSelectRow.emit(row);
+    }
+
+    public actionButtonRow(row: any): void {
+        this.emitActionButton.emit(row);
     }
 }

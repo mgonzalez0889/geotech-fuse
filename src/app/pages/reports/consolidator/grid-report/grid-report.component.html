@@ -1,385 +1,44 @@
-<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
-	<ng-container>
-		<div
-			class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-6 px-6 md:px-8 border-b">
-			<!-- Titulo   -->
-			<div class="text-3xl font-extrabold tracking-tight">
-				{{ titleReport }}
-			</div>
-			<div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-				<!-- Boton generar reporte -->
-				<button *ngIf="messageNoReport" mat-mini-fab color="primary" aria-label="Example icon button with a menu icon"
-					(click)="
-                        settingsService.JSONToCSVConvertor(
-                            dataSourceConsolidator.filteredData, true, 'ConsolidadoViajes'
-                        )
-                    ">
-					<mat-icon>sim_card_download</mat-icon>
-				</button>
-				<button class="ml-4" mat-flat-button [color]="'primary'" (click)="onReport()">
-					<mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-					<span class="ml-2 mr-1">Generar reporte</span>
-				</button>
-			</div>
+<div class="flex flex-col flex-auto w-full">
+	<div class="flex flex-wrap w-full mx-auto p-6 gap-6">
+
+		<div class="w-full">
+			<app-header-page [title]="this.titlePage"></app-header-page>
 		</div>
-	</ng-container>
-	<div [hidden]="detailTrip">
-		<div class="flex flex-col flex-auto overflow-y-auto">
-			<!--Tabla-->
-			<table mat-table [dataSource]="dataSourceConsolidator" class="mat-elevation-z8">
-				<!-- Placa Column -->
-				<ng-container matColumnDef="plate">
-					<th mat-header-cell *matHeaderCellDef>Placa</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.plate }}
-					</td>
-				</ng-container>
-				<!-- Fecha Column -->
-				<ng-container matColumnDef="fecha_inicial">
-					<th mat-header-cell *matHeaderCellDef>Fecha inicial</th>
-					<td mat-cell *matCellDef="let element">
-						{{
-						mapFunctionalitieService.convertHourDate(
-						element.fecha_inicial
-						)
-						}}
-					</td>
-				</ng-container>
-				<!-- Evento Column -->
-				<ng-container matColumnDef="direccion_inicial">
-					<th mat-header-cell *matHeaderCellDef>Dirección Inicial</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.direccion_inicial }}
-					</td>
-				</ng-container>
-				<!-- Fecha Column -->
-				<ng-container matColumnDef="fecha_final">
-					<th mat-header-cell *matHeaderCellDef>Fecha final</th>
-					<td mat-cell *matCellDef="let element">
-						{{
-						mapFunctionalitieService.convertHourDate(
-						element.fecha_final
-						)
-						}}
-					</td>
-				</ng-container>
-				<!-- Dirección Column -->
-				<ng-container matColumnDef="direccion_final">
-					<th mat-header-cell *matHeaderCellDef>Dirección Final</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.direccion_final }}
-					</td>
-				</ng-container>
-				<!-- Latitud Column -->
-				<ng-container matColumnDef="viajes">
-					<th mat-header-cell *matHeaderCellDef>N° de Viajes</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.viajes }}
-					</td>
-				</ng-container>
-				<!-- Longitud Column -->
-				<ng-container matColumnDef="tiempo">
-					<th mat-header-cell *matHeaderCellDef>Tiempo de viajes</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.tiempo }}
-					</td>
-				</ng-container>
-				<!-- Velocidad Column -->
-				<ng-container matColumnDef="paradas">
-					<th mat-header-cell *matHeaderCellDef>N° de paradas</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.paradas }}
-					</td>
-				</ng-container>
 
-				<ng-container matColumnDef="paradas_tiempo">
-					<th mat-header-cell *matHeaderCellDef>Tiempo de paradas</th>
-					<td mat-cell *matCellDef="let element">
-						{{ element.paradas_tiempo }}
-					</td>
-				</ng-container>
-
-				<ng-container matColumnDef="ver_detalle">
-					<th mat-header-cell *matHeaderCellDef>Ver detalle</th>
-					<td mat-cell *matCellDef="let element">
-						<button (click)="goDetail(element)">ver viajes</button>
-					</td>
-				</ng-container>
-				<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-				<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-			</table>
-			<!-- Mensaje cuando excede  el reporte en mas de 90 dias -->
-			<mat-card class="p-8 m-8 text-center" *ngIf="!messageExceedTime">
-				<mat-card-title>Aviso</mat-card-title>
-				<mat-card-content>
-					<p>
-						El reporte solicitado cubre un rango de fecha de más de
-						90 días; en ese caso puede solicitarlo a través de
-						nuestros canales de atención al cliente.
-					</p>
-					<p>Telefono: +57 386 0000</p>
-					<p>
-						Direccion: Carrera 55 #100-51 Centro Empresarial Blue
-						Gardens, Barranquilla, Atlántico
-					</p>
-					<p>Correo: Servicioalcliente@geotech.com.co</p>
-				</mat-card-content>
-			</mat-card>
-			<!-- Mensaje cuando no se encuentran dantos en la api de reporte -->
-			<mat-card class="p-8 m-8 text-center" *ngIf="!messageNoReport">
-				<mat-card-title>Aviso</mat-card-title>
-				<mat-card-content>
-					<p>Lo sentimos, no se encontraron datos</p>
-				</mat-card-content>
-			</mat-card>
-			<mat-paginator #paginatorConsolidator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-				aria-label="Select page of periodic elements">
-			</mat-paginator>
+		<div *ngIf="this.detailDataReport"
+			class="relative flex flex-col flex-auto  bg-card rounded-2xl shadow overflow-hidden">
+			<app-detail-grid-report [detailData]="this.detailDataReport" (emitClose)="this.detailDataReport = null">
+			</app-detail-grid-report>
 		</div>
-	</div>
 
-	<div [hidden]="!detailTrip">
-		<div>
-			<!-- Detalle de el viaje principal -->
-			<div class="detailConsolidator">
-				<div class="title">
-					<div class="plate">
-						<strong>{{ dataConsolidator.plate }}</strong>
-					</div>
-					<div class="close" (click)="detailTrip = false">
-						<img style="height: 20px; width: 20px" src="./assets/icons/iconMap/close-blue.svg" />
-					</div>
-				</div>
 
-				<div class="items">
-					<div class="item">
-						<strong>Fecha inicial: </strong>
-						<span>{{
-							mapFunctionalitieService.convertHourDate(
-							dataConsolidator.fecha_inicial
-							)
-							}}</span>
-					</div>
+		<div class="flex flex-wrap w-full py-2">
+			<div class="w-full overflow-hidden">
+				<mat-drawer-container class="flex-auto h-auto md:min-h-180">
+					<mat-drawer #drawer mode="side" position="end" class="w-full md:w-128 bg-gray-100 border-none">
 
-					<div class="item">
-						<strong>Dirección incial: </strong>
-						<span>{{ dataConsolidator.direccion_inicial }}</span>
-					</div>
+					</mat-drawer>
+					<mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+						<div class="flex border-b p-6">
+							<div class="pl-6">
+								<button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.onReport()">
+									<mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+									<span class="ml-2">Generar reporte</span>
+								</button>
+							</div>
+						</div>
 
-					<div class="item">
-						<strong>Fecha final: </strong>
-						<span>{{
-							mapFunctionalitieService.convertHourDate(
-							dataConsolidator.fecha_final
-							)
-							}}</span>
-					</div>
+						<div>
+							<app-table [dataColumn]="this.displayedColumns" [dataRow]="this.consolidatorData"
+								[dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption"
+								(emitActionButton)="this.viewDetailReport($event)">
+							</app-table>
+						</div>
 
-					<div class="item">
-						<strong>Dirección final: </strong>
-						<span>{{ dataConsolidator.direccion_final }}</span>
-					</div>
-				</div>
+					</mat-drawer-content>
 
-				<div class="items">
-					<div class="item">
-						<strong>N° de Viajes: </strong>
-						<span>{{ dataConsolidator.viajes }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Tiempo de viajes: </strong>
-						<span>{{ dataConsolidator.tiempo }}</span>
-					</div>
-
-					<div class="item">
-						<strong>N° de Paradas: </strong>
-						<span>{{ dataConsolidator.paradas }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Tiempo de paradas: </strong>
-						<span>{{ dataConsolidator.paradas_tiempo }}</span>
-					</div>
-				</div>
-
-				<div class="items">
-					<div class="item">
-						<strong>Odometro: </strong>
-						<span>{{ dataConsolidator.odometer }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Horometro: </strong>
-						<span>{{ dataConsolidator.horometer }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Ralentí: </strong>
-						<span>{{ dataConsolidator.ralenti }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Combustible: </strong>
-						<span>{{ dataConsolidator.fuel_consumed }}</span>
-					</div>
-				</div>
-
-				<div class="items">
-					<div class="item">
-						<strong>Promedio de odometro: </strong>
-						<span>{{ dataConsolidator.avg_odometer }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Promedio de horometro: </strong>
-						<span>{{ dataConsolidator.avg_horometer }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Promedio de ralentí: </strong>
-						<span>{{ dataConsolidator.avg_ralenti }}</span>
-					</div>
-
-					<div class="item">
-						<strong>Promedio de combustible: </strong>
-						<span>{{ dataConsolidator.avg_fuel_consumed }}</span>
-					</div>
-				</div>
-			</div>
-			<!-- Mensaje cuando no se encuentran dantos en la api de reporte -->
-			<mat-card class="p-8 m-8 text-center" *ngIf="!this.dataSourceTrips?.filteredData.length">
-				<mat-card-title>Aviso</mat-card-title>
-				<mat-card-content>
-					<p>Lo sentimos, no se encontraron datos</p>
-				</mat-card-content>
-			</mat-card>
-			<!-- Tabla de viajes -->
-			<div class="flex flex-col flex-auto overflow-y-auto">
-				<!--Tabla-->
-				<table mat-table [dataSource]="dataSourceTrips" class="mat-elevation-z8">
-					<!-- Placa Column -->
-					<ng-container matColumnDef="plate">
-						<th mat-header-cell *matHeaderCellDef>Placa</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">{{
-								element.plate
-								}}</span>
-						</td>
-					</ng-container>
-					<!-- Fecha Column -->
-					<ng-container matColumnDef="fecha_inicial">
-						<th mat-header-cell *matHeaderCellDef>Fecha inicial</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{
-								mapFunctionalitieService.convertHourDate(
-								element.fecha_inicial
-								)
-								}}
-							</span>
-						</td>
-					</ng-container>
-					<!-- Evento Column -->
-					<ng-container matColumnDef="direccion_inicial">
-						<th mat-header-cell *matHeaderCellDef>
-							Dirección Inicial
-						</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{ element.direccion_inicial }}</span>
-						</td>
-					</ng-container>
-					<!-- Fecha Column -->
-					<ng-container matColumnDef="fecha_final">
-						<th mat-header-cell *matHeaderCellDef>Fecha final</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{
-								mapFunctionalitieService.convertHourDate(
-								element.fecha_final
-								)
-								}}</span>
-						</td>
-					</ng-container>
-					<!-- Dirección Column -->
-					<ng-container matColumnDef="direccion_final">
-						<th mat-header-cell *matHeaderCellDef>
-							Dirección Final
-						</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{ element.direccion_final }}</span>
-						</td>
-					</ng-container>
-					<!-- Latitud Column -->
-					<ng-container matColumnDef="viajes">
-						<th mat-header-cell *matHeaderCellDef>N° de Viajes</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{ element.viajes }}</span>
-						</td>
-					</ng-container>
-					<!-- Longitud Column -->
-					<ng-container matColumnDef="tiempo">
-						<th mat-header-cell *matHeaderCellDef>
-							Tiempo de viajes
-						</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{ element.tiempo }}</span>
-						</td>
-					</ng-container>
-					<!-- Velocidad Column -->
-					<ng-container matColumnDef="paradas">
-						<th mat-header-cell *matHeaderCellDef>N° de paradas</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{ element.paradas }}</span>
-						</td>
-					</ng-container>
-
-					<ng-container matColumnDef="paradas_tiempo">
-						<th mat-header-cell *matHeaderCellDef>
-							Tiempo de paradas
-						</th>
-						<td mat-cell *matCellDef="let element">
-							<span class="pr-6 whitespace-nowrap">
-								{{ element.paradas_tiempo }}</span>
-						</td>
-					</ng-container>
-
-					<ng-container matColumnDef="ver_detalle">
-						<th mat-header-cell *matHeaderCellDef>Ver detalle</th>
-						<td mat-cell *matCellDef="let element">
-							<button (click)="goDetail(element)">
-								ver viajes
-							</button>
-						</td>
-					</ng-container>
-					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-					<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-				</table>
-				<mat-paginator #paginatorTrips [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-					aria-label="Select page of periodic elements">
-				</mat-paginator>
+				</mat-drawer-container>
 			</div>
 		</div>
 	</div>
 </div>
-<!-- 
-<div class="flex flex-col flex-auto w-full">
-	<div class="flex flex-wrap w-full mx-auto p-6">
-
-		<div class="w-full">
-			<app-header-page></app-header-page>
-		</div>
-
-
-		<div class="flex flex-wrap w-full py-6">
-			<div class="w-full overflow-hidden">
-
-			</div>
-		</div>
-	</div>
-</div> -->

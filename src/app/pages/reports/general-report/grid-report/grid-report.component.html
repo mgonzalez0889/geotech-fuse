@@ -25,7 +25,8 @@
 
 						<div>
 							<app-table [dataColumn]="this.displayedColumns" [dataRow]="this.historicData"
-								[dataOptionTable]="this.optionsTable">
+								[dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption"
+								(emitActionButton)="this.viewMap($event)">
 							</app-table>
 						</div>
 

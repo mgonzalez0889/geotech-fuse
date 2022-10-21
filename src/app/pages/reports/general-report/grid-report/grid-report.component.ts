@@ -5,6 +5,7 @@ import { HistoriesService } from 'app/core/services/histories.service';
 import moment from 'moment';
 import { Subscription } from 'rxjs';
 import { FormReportComponent } from '../form-report/form-report.component';
+import { IButtonTable } from '../../../../core/interfaces/components/table.interface';
 
 @Component({
     selector: 'app-grid-report',
@@ -16,7 +17,11 @@ export class GridReportComponent implements OnInit, OnDestroy {
     public historicData: any[] = [];
     public subscription$: Subscription;
     public messageNoReport: boolean = false;
-
+    public dataSendTimeLine: any;
+    public buttonTableOption: IButtonTable = {
+        icon: 'feather:map',
+        text: 'ver mapa',
+    };
     public optionsTable: IOptionTable[] = [
         {
             name: 'plate',
@@ -60,9 +65,9 @@ export class GridReportComponent implements OnInit, OnDestroy {
         },
     ];
 
-    public displayedColumns: string[] = this.optionsTable.map(
-        ({ name }) => name
-    );
+    public displayedColumns: string[] = this.optionsTable
+        .map(({ name }) => name)
+        .concat('action');
 
     constructor(
         public dialog: MatDialog,
@@ -75,6 +80,18 @@ export class GridReportComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription$.unsubscribe();
+    }
+
+    viewMap(data: any): void {
+        window.open(`https://maps.google.com/?q=${data.x},${data.y}`);
+    }
+
+    public viewReportTimeLine(): void {
+        let queryParams: string = '?';
+        Object.entries(this.dataSendTimeLine).forEach(([key, value]) => {
+            queryParams += `${key}=${value}&`;
+        });
+        window.open(`/app/reports/general-report/time-line${queryParams}`);
     }
 
     public onReport(): void {

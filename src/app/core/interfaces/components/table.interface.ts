@@ -4,6 +4,11 @@ export interface IOptionTable {
     typeField: 'text' | 'percentage' | 'date';
 }
 
+export interface IButtonTable {
+    icon: string;
+    text: string;
+}
+
 export type PipeDataTable = {
     [key: string]: (value: any) => string;
 };

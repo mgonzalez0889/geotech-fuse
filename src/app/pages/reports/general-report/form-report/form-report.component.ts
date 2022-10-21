@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MobileService } from '../../../../core/services/mobile.service';
@@ -8,6 +7,7 @@ import { EventsService } from '../../../../core/services/events.service';
 import { HistoriesService } from '../../../../core/services/histories.service';
 import { FleetsService } from '../../../../core/services/fleets.service';
 import { MatRadioChange } from '@angular/material/radio';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export interface CalendarSettings {
     dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD' | 'll';
@@ -21,6 +21,7 @@ export interface CalendarSettings {
     styleUrls: ['./form-report.component.scss'],
 })
 export class FormReportComponent implements OnInit {
+    public formReport: FormGroup = this.formBuilder.group({});
     public select: boolean;
     public fleets$: Observable<any>;
     public events$: Observable<any>;
@@ -51,18 +52,20 @@ export class FormReportComponent implements OnInit {
         private _mobileService: MobileService,
         private _eventsService: EventsService,
         private _historicService: HistoriesService,
-        private _fleetsServices: FleetsService
+        private _fleetsServices: FleetsService,
+        private formBuilder: FormBuilder
     ) {}
 
     ngOnInit(): void {
-        this.getEvents();
+        this.events$ = this._eventsService.getEvents();
     }
 
-    /**
-     * @description: Obtiene los eventos
-     */
-    private getEvents(): void {
-        this.events$ = this._eventsService.getEvents();
+    public buildForm(): void {
+        this.formReport = this.formBuilder.group({
+            date_init: [new Date(), [Validators.required]],
+            date_end: [new Date(), [Validators.required]],
+            plates: [[]],
+        });
     }
 
     /**
