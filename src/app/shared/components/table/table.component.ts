@@ -3,7 +3,6 @@ import {
     EventEmitter,
     Input,
     OnChanges,
-    OnInit,
     Output,
     SimpleChanges,
     ViewChild,
@@ -32,8 +31,6 @@ export class TableComponent implements OnChanges {
     constructor() {}
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(this.dataRow);
-
         this.dataSource = new MatTableDataSource(this.dataRow);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -41,7 +38,6 @@ export class TableComponent implements OnChanges {
     }
 
     public actionSelectRow(row: any): void {
-        console.log(row);
         this.emitSelectRow.emit(row);
     }
 }

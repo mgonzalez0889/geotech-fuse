@@ -8,6 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { ReportsService } from 'app/core/services/reports.service';
 import { SettingsService } from 'app/core/services/settings.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-grid-report',
@@ -68,6 +69,16 @@ export class GridReportComponent implements OnInit, OnDestroy {
         this.dialog.open(FormReportComponent, dialogConfig);
     }
 
+    goDetail(data: any): void {
+        this.detailTrip = true;
+        const trips = this.dataReport.filter(
+            (x: any) => x.plate === data.plate
+        );
+        this.dataConsolidator = data;
+        this.dataSourceTrips = new MatTableDataSource(trips);
+        this.dataSourceTrips.paginator = this.paginatorTrips;
+    }
+
     /**
      * @description: Escucha el observable behavior y realiza llamada a la API para generar reporte
      */
@@ -76,13 +87,17 @@ export class GridReportComponent implements OnInit, OnDestroy {
             this._historicService.behaviorSubjectDataFormsTrip.subscribe(
                 ({ payload }) => {
                     if (payload) {
-                        var fechaInicio = new Date(
-                            payload?.date_init
-                        ).getTime();
-                        var fechaFin = new Date(payload?.date_end).getTime();
-
-                        var diff = fechaFin - fechaInicio;
+                        const dateStart = new Date(payload.date_init).getTime();
+                        const dateEnd = new Date(payload.date_end).getTime();
+                        const diff = dateStart - dateEnd;
                         if (Number(diff / (1000 * 60 * 60 * 24)) < 91) {
+                            payload.date_init =
+                                moment(payload.date_init).format('DD/MM/YYYY') +
+                                ' 00:00:00';
+
+                            payload.date_end =
+                                moment(payload.date_end).format('DD/MM/YYYY') +
+                                ' 23:59:00';
                             this.messageExceedTime = true;
                             this.subscription$ = this._historicService
                                 .getHistoriesTrip(payload)
@@ -104,40 +119,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
                     } else {
                         this.dataSourceConsolidator = null;
                         this.messageExceedTime = false;
-                    }
-                }
-            );
-    }
-
-    goDetail(data: any) {
-        this.detailTrip = true;
-        let trips = this.dataReport.filter((x) => {
-            return x.plate === data.plate;
-        });
-        this.dataConsolidator = data;
-        this.dataSourceTrips = new MatTableDataSource(trips);
-        this.dataSourceTrips.paginator = this.paginatorTrips;
-    }
-
-    /**
-     * @description: Escucha el observable behavior y valida si genera el reporte por flota o vehiculo
-     */
-    public listenObservablesExport(): void {
-        this.subscription$ =
-            this._historicService.behaviorSubjectDataFormsTrip.subscribe(
-                ({ payload }) => {
-                    if (payload.radioButton == 1) {
-                        this._historicService
-                            .getHistoriesTrip(payload)
-                            .subscribe((res) => {
-                                this.downloadReport(res.data);
-                            });
-                    } else {
-                        this._historicService
-                            .getHistoriesTrip(payload)
-                            .subscribe((res) => {
-                                this.downloadReport(res.data);
-                            });
                     }
                 }
             );

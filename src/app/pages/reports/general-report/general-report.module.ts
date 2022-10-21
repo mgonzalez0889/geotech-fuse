@@ -19,7 +19,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ComponentsModule } from 'app/shared/components/components.module';
 import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({

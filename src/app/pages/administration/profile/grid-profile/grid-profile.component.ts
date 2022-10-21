@@ -21,10 +21,12 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         {
             name: 'name',
             text: 'Nombre',
+            typeField: 'text',
         },
         {
             name: 'description',
             text: 'Descripción',
+            typeField: 'text',
         },
     ];
 

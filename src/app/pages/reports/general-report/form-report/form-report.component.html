@@ -8,8 +8,17 @@
                 <input matStartDate placeholder="Desde" [(ngModel)]="initialDate" />
                 <input matEndDate placeholder="Hasta" [(ngModel)]="finalDate" />
             </mat-date-range-input>
+
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
+            <mat-date-range-picker #picker>
+                <!-- <mat-datepicker-actions>
+                    <div class="inputs" style="display: flex; justify-content: space-between; padding: 10px;">
+                        <input type="time" matInput [(ngModel)]="initialHours">
+                        <input type="time" matInput [(ngModel)]="finalHours">
+                    </div>
+
+                </mat-datepicker-actions> -->
+            </mat-date-range-picker>
         </mat-form-field>
         <mat-label class="mb-3" mat-dialog-title>Buscar por:</mat-label>
         <mat-radio-group [(ngModel)]="selectTrasport" class="mb-3">

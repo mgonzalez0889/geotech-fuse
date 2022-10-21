@@ -20,6 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { DetailGridReportComponent } from './detail-grid-report/detail-grid-report.component';
+import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { DetailGridReportComponent } from './detail-grid-report/detail-grid-repo
         MatDividerModule,
         NgxPaginationModule,
         MatPaginatorModule,
+        SharedModule,
     ],
     exports: [DetailGridReportComponent],
 })

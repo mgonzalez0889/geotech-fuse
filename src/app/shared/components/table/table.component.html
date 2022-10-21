@@ -7,7 +7,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text}} </th>
         <td mat-cell *matCellDef="let row">
           <span class="pr-6 whitespace-nowrap">
-            {{row[dataOption.name]}} </span>
+            {{ row[dataOption.name] | dataTable:dataOption.typeField }}
+          </span>
         </td>
       </ng-container>
 

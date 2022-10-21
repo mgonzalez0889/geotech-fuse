@@ -13,54 +13,56 @@ import { FormReportComponent } from '../form-report/form-report.component';
 })
 export class GridReportComponent implements OnInit, OnDestroy {
     public titlePage: string = 'Historico y eventos';
-    public subTitlepage: string = 'Sin historico';
     public historicData: any[] = [];
     public subscription$: Subscription;
     public messageNoReport: boolean = false;
-    public displayedColumns: string[] = [
-        'plate',
-        'date_entry',
-        'event_name',
-        'address',
-        'x',
-        'y',
-        'speed',
-        'battery',
-    ];
+
     public optionsTable: IOptionTable[] = [
         {
             name: 'plate',
             text: 'Placa',
+            typeField: 'text',
         },
         {
             name: 'date_entry',
             text: 'Fecha',
+            typeField: 'date',
         },
         {
             name: 'event_name',
             text: 'Evento',
+            typeField: 'text',
         },
         {
             name: 'address',
             text: 'Dirección',
+            typeField: 'text',
         },
         {
             name: 'x',
             text: 'Latitud',
+            typeField: 'text',
         },
         {
             name: 'y',
             text: 'Longitud',
+            typeField: 'text',
         },
         {
             name: 'speed',
             text: 'Velocidad',
+            typeField: 'text',
         },
         {
             name: 'battery',
             text: 'Batería',
+            typeField: 'percentage',
         },
     ];
+
+    public displayedColumns: string[] = this.optionsTable.map(
+        ({ name }) => name
+    );
 
     constructor(
         public dialog: MatDialog,
