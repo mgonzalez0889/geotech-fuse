@@ -1,39 +1,59 @@
 <div class="flex flex-col flex-auto w-full">
-	<div class="flex flex-wrap w-full mx-auto p-6">
+  <div class="flex flex-wrap w-full mx-auto p-6">
 
-		<div class="w-full">
-			<app-header-page [title]="this.titlePage"></app-header-page>
-		</div>
+    <div class="w-full">
+      <app-header-page [title]="this.titlePage"></app-header-page>
+    </div>
 
 
-		<div class="flex flex-wrap w-full py-6">
-			<div class="w-full overflow-hidden">
-				<mat-drawer-container class="flex-auto h-auto md:min-h-180">
-					<mat-drawer #drawer mode="side" position="end" class="w-full md:w-128 bg-gray-100 border-none">
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer mode="side" position="end" class="w-full md:w-128 bg-gray-100 border-none">
 
-					</mat-drawer>
-					<mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
 
-						<div class="flex border-b p-6">
-							<div class="pl-6">
-								<button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.onReport()">
-									<mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-									<span class="ml-2">Generar reporte</span>
-								</button>
-							</div>
-						</div>
+            <div class="flex border-b p-6 gap-4">
+              <button mat-mini-fab [color]="'accent'">
+                <mat-icon svgIcon="sim_card_download"></mat-icon>
+              </button>
+              <button mat-mini-fab [color]="'accent'" (click)="this.viewReportTimeLine()">
+                <mat-icon [svgIcon]="'feather:map'"></mat-icon>
+              </button>
+              <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.onReport()">
+                <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                <span class="ml-2">Generar reporte</span>
+              </button>
+            </div>
 
-						<div>
-							<app-table [dataColumn]="this.displayedColumns" [dataRow]="this.historicData"
-								[dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption"
-								(emitActionButton)="this.viewMap($event)">
-							</app-table>
-						</div>
+            <div>
+              <app-table [dataColumn]="this.displayedColumns" [dataRow]="this.historicData"
+                [dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption">
+              </app-table>
+            </div>
 
-					</mat-drawer-content>
+          </mat-drawer-content>
 
-				</mat-drawer-container>
-			</div>
-		</div>
-	</div>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- <mat-card class="p-8 m-8 text-center" *ngIf="!messageExceedTime">
+  <mat-card-title>Aviso</mat-card-title>
+  <mat-card-content>
+    <p>
+      El reporte solicitado cubre un rango de fecha de más de 90 días;
+      en ese caso puede solicitarlo a través de nuestros canales de
+      atención al cliente.
+    </p>
+    <p>Telefono: +57 386 0000</p>
+    <p>
+      Direccion: Carrera 55 #100-51 Centro Empresarial Blue Gardens,
+      Barranquilla, Atlántico
+    </p>
+    <p>Correo: Servicioalcliente@geotech.com.co</p>
+  </mat-card-content>
+</mat-card> -->

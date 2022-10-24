@@ -1,44 +1,43 @@
 <div class="flex flex-col flex-auto w-full">
-	<div class="flex flex-wrap w-full mx-auto p-6 gap-6">
+  <div class="flex flex-wrap w-full mx-auto p-6 gap-6">
 
-		<div class="w-full">
-			<app-header-page [title]="this.titlePage"></app-header-page>
-		</div>
+    <div class="w-full">
+      <app-header-page [title]="this.titlePage"></app-header-page>
+    </div>
 
-		<div *ngIf="this.detailDataReport"
-			class="relative flex flex-col flex-auto  bg-card rounded-2xl shadow overflow-hidden">
-			<app-detail-grid-report [detailData]="this.detailDataReport" (emitClose)="this.detailDataReport = null">
-			</app-detail-grid-report>
-		</div>
+    <div *ngIf="this.detailDataReport"
+      class="relative flex flex-col flex-auto  bg-card rounded-2xl shadow overflow-hidden">
+      <app-detail-grid-report [detailData]="this.detailDataReport" (emitClose)="this.closeDetailReport()">
+      </app-detail-grid-report>
+    </div>
 
 
-		<div class="flex flex-wrap w-full py-2">
-			<div class="w-full overflow-hidden">
-				<mat-drawer-container class="flex-auto h-auto md:min-h-180">
-					<mat-drawer #drawer mode="side" position="end" class="w-full md:w-128 bg-gray-100 border-none">
+    <div class="flex flex-wrap w-full py-2">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer mode="side" position="end" class="w-full md:w-128 bg-gray-100 border-none">
 
-					</mat-drawer>
-					<mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
-						<div class="flex border-b p-6">
-							<div class="pl-6">
-								<button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.onReport()">
-									<mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-									<span class="ml-2">Generar reporte</span>
-								</button>
-							</div>
-						</div>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+            <div class="flex border-b p-6">
+              <div class="pl-6">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.onReport()">
+                  <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                  <span class="ml-2">Generar reporte</span>
+                </button>
+              </div>
+            </div>
 
-						<div>
-							<app-table [dataColumn]="this.displayedColumns" [dataRow]="this.consolidatorData"
-								[dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption"
-								(emitActionButton)="this.viewDetailReport($event)">
-							</app-table>
-						</div>
+            <div>
+              <app-table [dataColumn]="this.displayedColumns" [dataRow]="this.tableData"
+                [dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption">
+              </app-table>
+            </div>
 
-					</mat-drawer-content>
+          </mat-drawer-content>
 
-				</mat-drawer-container>
-			</div>
-		</div>
-	</div>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
 </div>

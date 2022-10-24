@@ -1,52 +1,45 @@
 import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    SimpleChanges,
-    ViewChild,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-    IButtonTable,
-    IOptionTable,
-} from '../../../core/interfaces/components/table.interface';
+import { IOptionTable, IButtonOptions } from '../../../core/interfaces/components/table.interface';
+
 
 @Component({
-    selector: 'app-table',
-    templateUrl: './table.component.html',
-    styleUrls: ['./table.component.scss'],
+  selector: 'app-table',
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnChanges {
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    @Input() dataRow: any[] = [];
-    @Input() dataColumn: string[] = [];
-    @Input() dataOptionTable: IOptionTable[] = [];
-    @Input() dataFilter: string = '';
-    @Input() buttonTable: IButtonTable;
-    @Output() emitActionButton = new EventEmitter<any>();
-    @Output() emitSelectRow = new EventEmitter<any>();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @Input() dataRow: any[] = [];
+  @Input() dataColumn: string[] = [];
+  @Input() dataOptionTable: IOptionTable[] = [];
+  @Input() dataFilter: string = '';
+  @Input() buttonTable: IButtonOptions<any>;
+  @Output() emitSelectRow = new EventEmitter<any>();
 
-    public dataSource: MatTableDataSource<any>;
+  public dataSource: MatTableDataSource<any>;
 
-    constructor() {}
+  constructor() { }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        this.dataSource = new MatTableDataSource(this.dataRow);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.dataSource.filter = this.dataFilter;
-    }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dataSource = new MatTableDataSource(this.dataRow);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.filter = this.dataFilter;
+  }
 
-    public actionSelectRow(row: any): void {
-        this.emitSelectRow.emit(row);
-    }
-
-    public actionButtonRow(row: any): void {
-        this.emitActionButton.emit(row);
-    }
+  public actionSelectRow(row: any): void {
+    this.emitSelectRow.emit(row);
+  }
 }
