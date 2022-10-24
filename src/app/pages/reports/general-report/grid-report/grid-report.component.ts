@@ -17,6 +17,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public historicData: any[] = [];
   public subscription$: Subscription;
   public dataSendTimeLine: any;
+  public opened: boolean = false;
 
   public buttonTableOption: IButtonOptions<any> = {
     icon: 'feather:map',
@@ -94,12 +95,10 @@ export class GridReportComponent implements OnInit, OnDestroy {
     window.open(`/app/reports/general-report/time-line${queryParams}`);
   }
 
-  public onReport(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    this.dialog.open(FormReportComponent, dialogConfig);
+  public showForm(): void {
+    this.opened = true;
   }
+
 
   private listenObservablesReport(): void {
     this.subscription$ =

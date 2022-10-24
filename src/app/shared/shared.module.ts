@@ -12,30 +12,33 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ComponentsModule } from './components/components.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatIconModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        ComponentsModule,
-        MatSidenavModule,
-        MatTableModule,
-    ],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ComponentsModule,
-        MatSidenavModule,
-        MatTableModule,
-    ],
-    declarations: [MessageDialogComponent, ConfirmDeleteComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ComponentsModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatTooltipModule
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ComponentsModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatTooltipModule
+  ],
+  declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })
-export class SharedModule {}
+export class SharedModule { }

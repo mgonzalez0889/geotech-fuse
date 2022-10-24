@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MobileService } from '../../../../core/services/mobile.service';
+import moment from 'moment';
 import { Observable } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { MobileService } from '../../../../core/services/mobile.service';
 import { EventsService } from '../../../../core/services/events.service';
 import { HistoriesService } from '../../../../core/services/histories.service';
 import { FleetsService } from '../../../../core/services/fleets.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import moment from 'moment';
 import { IBodyHistoric } from '../../../../core/interfaces/form/report-historic.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-form-report',
@@ -17,6 +17,7 @@ import { IBodyHistoric } from '../../../../core/interfaces/form/report-historic.
   styleUrls: ['./form-report.component.scss'],
 })
 export class FormReportComponent implements OnInit {
+  @Output() emitCloseForm = new EventEmitter<void>();
   public formReport: FormGroup = this.formBuilder.group({});
   public select: boolean;
   public fleets$: Observable<any>;
@@ -24,8 +25,8 @@ export class FormReportComponent implements OnInit {
   public mobiles$: Observable<any>;
   public plates: any[] = [];
   public flotas: any[] = [];
-  public selectTrasport: string = '';
-
+  public selectTrasport: string = 'mobiles';
+  public editMode: boolean = false;
   listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
@@ -38,13 +39,13 @@ export class FormReportComponent implements OnInit {
   ];
 
   constructor(
-    public dialogRef: MatDialogRef<FormReportComponent>,
-    @Inject(MAT_DIALOG_DATA) public message: any,
+
     private _mobileService: MobileService,
     private _eventsService: EventsService,
     private _historicService: HistoriesService,
     private _fleetsServices: FleetsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar,
   ) {
     this.buildForm();
   }
@@ -52,6 +53,8 @@ export class FormReportComponent implements OnInit {
   ngOnInit(): void {
     this.events$ = this._eventsService.getEvents();
   }
+
+
 
   public buildForm(): void {
     this.formReport = this.formBuilder.group({
