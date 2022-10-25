@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import moment from 'moment';
-import { Observable } from 'rxjs';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MobileService } from '../../../../core/services/mobile.service';
 import { EventsService } from '../../../../core/services/events.service';
 import { HistoriesService } from '../../../../core/services/histories.service';
@@ -9,25 +9,27 @@ import { FleetsService } from '../../../../core/services/fleets.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IBodyHistoric } from '../../../../core/interfaces/form/report-historic.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { takeUntil } from 'rxjs/operators';
+import { MatOption } from '@angular/material/core';
 
 @Component({
   selector: 'app-form-report',
   templateUrl: './form-report.component.html',
   styleUrls: ['./form-report.component.scss'],
 })
-export class FormReportComponent implements OnInit {
+export class FormReportComponent implements OnInit, OnDestroy {
   @Output() emitCloseForm = new EventEmitter<void>();
+  @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
+  @ViewChild('allSelectedFleets') private allSelectedFleets: MatOption;
+  @ViewChild('allSelectedEvents') private allSelectedEvents: MatOption;
+
   public formReport: FormGroup = this.formBuilder.group({});
-  public select: boolean;
-  public fleets$: Observable<any>;
-  public events$: Observable<any>;
-  public mobiles$: Observable<any>;
+  public events: any[] = [];
   public plates: any[] = [];
-  public flotas: any[] = [];
-  public selectTrasport: string = 'mobiles';
+  public fleets: any[] = [];
+  public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
   public editMode: boolean = false;
-  listTrasport: { name: string; text: string }[] = [
+  public listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
       text: 'Moviles',
@@ -38,31 +40,42 @@ export class FormReportComponent implements OnInit {
     },
   ];
 
-  constructor(
+  private unsubscribe$ = new Subject<void>();
 
+  constructor(
     private _mobileService: MobileService,
     private _eventsService: EventsService,
     private _historicService: HistoriesService,
     private _fleetsServices: FleetsService,
     private formBuilder: FormBuilder,
-    private _snackBar: MatSnackBar,
   ) {
     this.buildForm();
   }
 
   ngOnInit(): void {
-    this.events$ = this._eventsService.getEvents();
+    this._eventsService.getEvents().pipe(takeUntil(this.unsubscribe$)).subscribe(
+      ({ data }) => this.events = [...data]
+    );
+    this._mobileService.getMobiles().pipe(takeUntil(this.unsubscribe$)).subscribe(
+      ({ data }) => this.plates = [...data]
+    );
+    this._fleetsServices.getFleets().pipe(takeUntil(this.unsubscribe$)).subscribe(
+      ({ data }) => this.fleets = [...data]
+    );
   }
 
-
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   public buildForm(): void {
     this.formReport = this.formBuilder.group({
       date_init: [new Date(), [Validators.required]],
       date_end: [new Date(), [Validators.required]],
-      plates: [[]],
+      plates: [[], [Validators.required]],
       fleets: [[]],
-      events: [[]],
+      events: [[], [Validators.required]],
       limit: [999999],
       page: [1],
       validationFleet: [0]
@@ -70,6 +83,7 @@ export class FormReportComponent implements OnInit {
   }
 
   public onSubmit(): void {
+
     const formReportValues: IBodyHistoric = this.formReport.value;
 
     const dateStart = new Date(formReportValues.date_init).getTime();
@@ -87,7 +101,7 @@ export class FormReportComponent implements OnInit {
         ' 23:59:00';
 
       this._historicService.behaviorSubjectDataForms.next({ payload: { ...formReportValues, date_init: converDateInit, date_end: converDateEnd } });
-
+      this.editMode = false;
     }
   }
 
@@ -96,14 +110,45 @@ export class FormReportComponent implements OnInit {
    */
   public onChangeTrasport({ value }: MatRadioChange): void {
     if (value === 'mobiles') {
-      this.select = true;
-      this.mobiles$ = this._mobileService.getMobiles();
-      this.flotas = [];
+      this.formReport.controls['fleets'].patchValue([]);
+      this.formReport.controls['fleets'].clearValidators();
+      this.formReport.controls['plates'].setValidators([Validators.required]);
     } else if (value === 'fleet') {
-      this.select = false;
-      this.fleets$ = this._fleetsServices.getFleets();
-      this.plates = [];
+      this.formReport.controls['plates'].patchValue([]);
+      this.formReport.controls['plates'].clearValidators();
+      this.formReport.controls['fleets'].setValidators([Validators.required]);
     }
+    this.formReport.controls['plates'].updateValueAndValidity();
+    this.formReport.controls['fleets'].updateValueAndValidity();
     this.selectTrasport = value;
+  }
+
+
+  allSelectionMobiles(): void {
+    if (this.allSelectedMobiles.selected) {
+      this.formReport.controls['plates']
+        .patchValue([...this.plates.map(item => item.plate), 0]);
+    } else {
+      this.formReport.controls['plates'].patchValue([]);
+    }
+  }
+
+  allSelectionFleets(): void {
+    if (this.allSelectedFleets.selected) {
+      this.formReport.controls['fleets']
+        .patchValue([...this.fleets.map(item => item.id), 0]);
+    } else {
+      this.formReport.controls['fleets'].patchValue([]);
+    }
+  }
+
+  allSelectionEvents(): void {
+    if (this.allSelectedEvents.selected) {
+      this.formReport.controls['events']
+        .patchValue([...this.events.map(item => item.event_id), 0]);
+    } else {
+      this.formReport.controls['events'].patchValue([]);
+    }
+
   }
 }

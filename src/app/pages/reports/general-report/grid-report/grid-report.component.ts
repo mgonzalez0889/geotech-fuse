@@ -1,10 +1,8 @@
-import moment from 'moment';
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/table.interface';
 import { HistoriesService } from 'app/core/services/histories.service';
-import { FormReportComponent } from '../form-report/form-report.component';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -95,11 +93,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     window.open(`/app/reports/general-report/time-line${queryParams}`);
   }
 
-  public showForm(): void {
-    this.opened = true;
-  }
-
-
   private listenObservablesReport(): void {
     this.subscription$ =
       this._historicService.behaviorSubjectDataForms
@@ -108,10 +101,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           ({ payload }) => {
-            console.log(payload);
-
             this.dataSendTimeLine = payload;
-
             this.subscription$ = this._historicService
               .getHistories(payload)
               .subscribe((res) => {

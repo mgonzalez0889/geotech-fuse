@@ -61,8 +61,6 @@ export class NavigationService {
       })
       .pipe(
         tap((navigation) => {
-          console.log(navigation);
-
           navigations = {
             default: navigation,
             compact: navigation,
