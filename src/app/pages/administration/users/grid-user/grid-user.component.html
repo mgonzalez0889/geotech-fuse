@@ -10,7 +10,7 @@
         <mat-drawer-container class="flex-auto h-auto md:min-h-180">
           <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
             class="w-full md:w-128 bg-gray-100 border-none">
-            <app-form-user></app-form-user>
+            <app-form-user [listUsers]="this.userData" (emitCloseForm)="this.opened = false"></app-form-user>
           </mat-drawer>
 
           <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
@@ -20,7 +20,7 @@
                 <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
               </div>
               <div class="pl-6">
-                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.opened = true">
                   <mat-icon class="icon-size-5">add</mat-icon>
                   <span class="ml-2">Agregar usuario</span>
                 </button>

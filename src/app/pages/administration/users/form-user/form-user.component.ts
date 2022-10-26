@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   Component,
-  EventEmitter, Inject,
+  EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -8,49 +10,61 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfilesService } from '../../../../core/services/profiles.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { UsersService } from '../../../../core/services/users.service';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseValidators } from '../../../../../@fuse/validators';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { IconService } from 'app/core/services/icons/icon.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-user',
   templateUrl: './form-user.component.html',
   styleUrls: ['./form-user.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  // encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 export class FormUserComponent implements OnInit, OnDestroy {
+  @Input() listUsers: any[] = [];
   @Output() emitCloseForm = new EventEmitter<void>();
   public formUser: FormGroup;
-  public profile$: Observable<any>;
-  public subscription$: Subscription;
-  public titleForm: string;
   public editPassword: boolean = false;
+  public hidePassword: boolean = false;
   public fieldPassword: boolean;
+  public editMode: boolean = false;
+  public countries: any = [];
+  public titleForm: string = '';
+  public profile$: Observable<any>;
+  public validUsername: boolean = false;
+  private unsubscribe$ = new Subject<void>();
+
 
   constructor(
     private fb: FormBuilder,
     private profileService: ProfilesService,
     private userService: UsersService,
     private _snackBar: MatSnackBar,
-
-
-  ) {
-  }
+    private iconService: IconService
+  ) { }
 
   ngOnInit(): void {
-    this.createForm();
-    this.getProfile();
-    this.listenObservables();
+    this.iconService.getCountries().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
+      this.countries = res;
+
+    });
+
+    this.profile$ = this.profileService.getProfiles();
+
+    this.buildForm();
   }
 
-  /**
-   * @description: Metodo para guardar y editar usuario
-   */
-  public onSave(): void {
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  public onSubmit(): void {
     if (this.formUser.valid) {
       const data = this.formUser.getRawValue();
       if (!data.id) {
@@ -63,50 +77,52 @@ export class FormUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * @description: Cierra formulario
-   */
-  public onClose(): void {
-    // this.onShow.emit(false);
+  getCountryByIso(code: string): any {
+    if (code) {
+      return this.countries.find((country) => country.code === code);
+    }
   }
 
   /**
    * @description: Definicion del formulario reactivo
    */
-  private createForm(): void {
+  private buildForm(): void {
     this.formUser = this.fb.group({
-      id: undefined,
-      user_login: [''],
+      user_login: ['', [Validators.required]],
       password_digest: ['', [Validators.required]],
       confirm_password: ['', [Validators.required]],
-      encrypted_password: [''],
-      full_name: [''],
+      user_profile_id: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      indicative: ['+57', [Validators.required]],
+      full_name: ['', [Validators.required]],
       status: [true],
-      owner_id: ['1'],
-      user_profile_id: [''],
-      email: [''],
-      phone: [''],
-      address: [''],
-      enable_pass: ['']
+      phone: ['', [Validators.required]],
+      address: ['', [Validators.required]],
     },
       {
         validators: FuseValidators.mustMatch('password_digest', 'confirm_password')
       }
     );
+
+    this.formUser.controls['user_login'].valueChanges.subscribe((data: any) => {
+      console.log(data);
+
+      this.validUsername = this.listUsers.some(({ user_login }) => user_login === data);
+      console.log(this.validUsername);
+      // if (this.validUsername) {
+      //   this.formUser.controls['user_login;
+
+      // }
+
+    });
   }
 
-  /**
-   * @description: Trae todos los perfiles
-   */
-  private getProfile(): void {
-    this.profile$ = this.profileService.getProfiles();
-  }
 
   /**
    * @description: Crea un nuevo usuario
    */
   private newUser(data: any): void {
-    this.subscription$ = this.userService.postUser(data).subscribe((res) => {
+    this.userService.postUser(data).subscribe((res) => {
       this._snackBar.open('Se ha creado el nuevo usuario', 'CERRAR', { duration: 4000 });
     });
   }
@@ -115,7 +131,7 @@ export class FormUserComponent implements OnInit, OnDestroy {
    * @description: Edita un usuario
    **/
   private editUser(data: any): void {
-    this.subscription$ = this.userService.putUser(data).subscribe((res) => {
+    this.userService.putUser(data).subscribe((res) => {
       this._snackBar.open('Usuario actualizado con exito', 'CERRAR', { duration: 4000 });
     });
   }
@@ -124,7 +140,7 @@ export class FormUserComponent implements OnInit, OnDestroy {
    * @description: Escucha el observable behavior
    */
   private listenObservables(): void {
-    this.subscription$ = this.userService.behaviorSubjectUser$.subscribe(({ type, isEdit, payload }) => {
+    this.userService.behaviorSubjectUser$.subscribe(({ type, isEdit, payload }) => {
       if (isEdit && type == 'EDIT') {
         this.formUser.patchValue(payload);
         this.titleForm = `Editar usuario ${payload.user_login}`;
@@ -149,11 +165,5 @@ export class FormUserComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @description: Destruye las subscripciones
-   */
-  ngOnDestroy(): void {
-    this.subscription$.unsubscribe();
-  }
 
 }
