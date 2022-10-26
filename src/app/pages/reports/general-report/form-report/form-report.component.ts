@@ -69,19 +69,9 @@ export class FormReportComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  public buildForm(): void {
-    this.formReport = this.formBuilder.group({
-      date_init: [new Date(), [Validators.required]],
-      date_end: [new Date(), [Validators.required]],
-      plates: [[], [Validators.required]],
-      fleets: [[]],
-      events: [[], [Validators.required]],
-      limit: [999999],
-      page: [1],
-      validationFleet: [0]
-    });
-  }
-
+  /**
+   * @description: se ejecuta cuenta se de click en el boton de guardar y se valida el rango de fecha
+   */
   public onSubmit(): void {
 
     const formReportValues: IBodyHistoric = this.formReport.value;
@@ -106,7 +96,10 @@ export class FormReportComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description se carga la informacion en el mat-select dependiendo del tipo de trasporte
+   * @description
+   * se ejecuta con el evento del componente matRadio,
+   * y dependiendo del tipo de trasporte selecciondo le agregamos
+   * y quitamos validacion de requerido en el formulario
    */
   public onChangeTrasport({ value }: MatRadioChange): void {
     if (value === 'mobiles') {
@@ -123,7 +116,9 @@ export class FormReportComponent implements OnInit, OnDestroy {
     this.selectTrasport = value;
   }
 
-
+  /**
+   * @description: seleccionar muchos de moviles
+   */
   allSelectionMobiles(): void {
     if (this.allSelectedMobiles.selected) {
       this.formReport.controls['plates']
@@ -133,6 +128,9 @@ export class FormReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description: seleccionar muchos de flotas
+   */
   allSelectionFleets(): void {
     if (this.allSelectedFleets.selected) {
       this.formReport.controls['fleets']
@@ -142,6 +140,9 @@ export class FormReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description: seleccionar muchos de eventos
+   */
   allSelectionEvents(): void {
     if (this.allSelectedEvents.selected) {
       this.formReport.controls['events']
@@ -150,5 +151,21 @@ export class FormReportComponent implements OnInit, OnDestroy {
       this.formReport.controls['events'].patchValue([]);
     }
 
+  }
+
+  /**
+   * @description: Construimos el formulario
+   */
+  private buildForm(): void {
+    this.formReport = this.formBuilder.group({
+      date_init: [new Date(), [Validators.required]],
+      date_end: [new Date(), [Validators.required]],
+      plates: [[], [Validators.required]],
+      fleets: [[]],
+      events: [[], [Validators.required]],
+      limit: [999999],
+      page: [1],
+      validationFleet: [0]
+    });
   }
 }

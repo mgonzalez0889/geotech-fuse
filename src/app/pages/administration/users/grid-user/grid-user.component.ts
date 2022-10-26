@@ -1,59 +1,67 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UsersService } from '../../../../core/services/users.service';
+import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
 
 @Component({
-    selector: 'app-grid-user',
-    templateUrl: './grid-user.component.html',
-    styleUrls: ['./grid-user.component.scss'],
+  selector: 'app-grid-user',
+  templateUrl: './grid-user.component.html',
+  styleUrls: ['./grid-user.component.scss'],
 })
 export class GridUserComponent implements OnInit, OnDestroy {
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    public subscription: Subscription;
-    public opened: boolean = false;
-    public dataTableUser: MatTableDataSource<any>;
-    public usersCount: number = 0;
-    public columnsUser: string[] = [
-        'user_login',
-        'full_name',
-        'profile',
-        'email',
-    ];
 
-    constructor(private usersService: UsersService) {}
+  public opened: boolean = false;
+  public titlePage: string = 'Usuarios';
+  public subTitlePage: string = '';
+  public userData: any[] = [];
+  public optionsTable: IOptionTable[] = [
+    {
+      name: 'user_login',
+      text: 'Usuario',
+      typeField: 'text'
+    },
+    {
+      name: 'full_name',
+      text: 'Nombre',
+      typeField: 'text'
+    },
+    {
+      name: 'profile',
+      text: 'Perfil',
+      typeField: 'text'
+    },
+    {
+      name: 'email',
+      text: 'Correo electrónico',
+      typeField: 'text',
+      classTailwind: 'hover:underline text-primary-500'
+    }
+  ];
 
-    ngOnInit(): void {
-        this.getUsers();
-    }
 
-    /**
-     * @description: Destruye los observables
-     */
-    ngOnDestroy(): void {}
-    /**
-     * @description: Trae todos los usuarios del cliente
-     */
-    public getUsers(): void {
-        this.usersService.getUsers().subscribe((res) => {
-            if (res.data) {
-                this.usersCount = res.data.length;
-            } else {
-                this.usersCount = 0;
-            }
-            this.dataTableUser = new MatTableDataSource(res.data);
-            this.dataTableUser.paginator = this.paginator;
-            this.dataTableUser.sort = this.sort;
-        });
-    }
-    /**
-     * @description: Filtrar datos de la tabla
-     */
-    public filterTable(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataTableUser.filter = filterValue.trim().toLowerCase();
-    }
+  public displayedColumns: string[] = [...this.optionsTable.map(({ name }) => name)];
+  private subscription$: Subscription;
+
+  constructor(private usersService: UsersService) { }
+
+  ngOnInit(): void {
+    this.subscription$ = this.usersService.getUsers().subscribe(({ data }) => {
+      this.subTitlePage = data
+        ? `${data.length} Usuarios`
+        : 'Sin usuarios';
+      this.userData = [...data];
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription$?.unsubscribe();
+  }
+
+  /**
+   * @description: Filtrar datos de la tabla
+   */
+  public filterTable(event: Event): void {
+    // const filterValue = (event.target as HTMLInputElement).value;
+    // this.dataTableUser.filter = filterValue.trim().toLowerCase();
+  }
 }

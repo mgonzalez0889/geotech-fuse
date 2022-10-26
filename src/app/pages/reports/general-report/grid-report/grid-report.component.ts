@@ -17,6 +17,9 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public dataSendTimeLine: any;
   public opened: boolean = false;
 
+  /**
+   * @description: Json para renderizar un boton en la tabla
+   */
   public buttonTableOption: IButtonOptions<any> = {
     icon: 'feather:map',
     text: 'ver mapa',
@@ -25,6 +28,9 @@ export class GridReportComponent implements OnInit, OnDestroy {
     },
   };
 
+  /**
+   * @description: Array con la configuracion de los campos en la tabla
+   */
   public optionsTable: IOptionTable[] = [
     {
       name: 'plate',
@@ -85,6 +91,9 @@ export class GridReportComponent implements OnInit, OnDestroy {
     this.subscription$.unsubscribe();
   }
 
+  /**
+   * @description: se parsea la informacion del reporte y se envia por parametros a otra pagina
+   */
   public viewReportTimeLine(): void {
     let queryParams: string = '?';
     Object.entries(this.dataSendTimeLine).forEach(([key, value]) => {
@@ -93,6 +102,9 @@ export class GridReportComponent implements OnInit, OnDestroy {
     window.open(`/app/reports/general-report/time-line${queryParams}`);
   }
 
+  /**
+   * @description: escuchamos cuando se haga el envio de informacion del formulario
+   */
   private listenObservablesReport(): void {
     this.subscription$ =
       this._historicService.behaviorSubjectDataForms

@@ -15,13 +15,14 @@
     <div class="flex flex-wrap w-full py-2">
       <div class="w-full overflow-hidden">
         <mat-drawer-container class="flex-auto h-auto md:min-h-180">
-          <mat-drawer #drawer mode="side" position="end" class="w-full md:w-128 bg-gray-100 border-none">
-
+          <mat-drawer #drawer mode="side" position="end" [(opened)]="opened"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <app-form-report (emitCloseForm)="this.opened = false"></app-form-report>
           </mat-drawer>
           <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
             <div class="flex border-b p-6">
               <div class="pl-6">
-                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.onReport()">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.opened = true">
                   <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                   <span class="ml-2">Generar reporte</span>
                 </button>

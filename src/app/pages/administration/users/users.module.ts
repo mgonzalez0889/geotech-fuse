@@ -23,31 +23,33 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
-    declarations: [FormUserComponent, GridUserComponent],
-    imports: [
-        CommonModule,
-        UsersRoutingModule,
-        MatFormFieldModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSortModule,
-        MatSlideToggleModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatDividerModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        MatTooltipModule,
-        MatSnackBarModule,
-        MatTableModule,
-        MatDialogModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        MatSidenavModule,
-    ],
+  declarations: [FormUserComponent, GridUserComponent],
+  imports: [
+    CommonModule,
+    UsersRoutingModule,
+    MatFormFieldModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSortModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDividerModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatTableModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    SharedModule
+  ],
 })
-export class UsersModule {}
+export class UsersModule { }

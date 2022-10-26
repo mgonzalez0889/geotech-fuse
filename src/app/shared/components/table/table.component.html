@@ -5,7 +5,7 @@
     <table mat-table [dataSource]="this.dataSource" matSort class="w-full">
       <ng-container [matColumnDef]="dataOption.name" *ngFor="let dataOption of this.dataOptionTable">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text}} </th>
-        <td mat-cell *matCellDef="let row">
+        <td [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row">
           <span class="pr-6 whitespace-nowrap">
             {{ row[dataOption.name] | dataTable:dataOption.typeField }}
           </span>

@@ -1,8 +1,6 @@
-import moment from 'moment';
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { FormReportComponent } from '../form-report/form-report.component';
+import { MatDialog } from '@angular/material/dialog';
 import { HistoriesService } from '../../../../core/services/histories.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { IButtonOptions } from '../../../../core/interfaces/components/table.interface';
@@ -25,6 +23,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public detailDataReport: any;
   public optionsTable: IOptionTable[] = [];
   public displayedColumns: string[] = [];
+  public opened: boolean = false;
 
   public buttonTableOption: IButtonOptions<any> = {
     icon: 'heroicons_solid:eye',
@@ -143,12 +142,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
     this.tableData = this.consolidatorData;
   }
 
-  public onReport(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    this.dialog.open(FormReportComponent, dialogConfig);
-  }
 
   private extractNameOption(): string[] {
     return this.optionsTable.map(({ name }) => name)
@@ -163,25 +156,15 @@ export class GridReportComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           ({ payload }) => {
-            const dateStart = new Date(payload.date_init).getTime();
-            const dateEnd = new Date(payload.date_end).getTime();
-            const diff = dateStart - dateEnd;
-            if (Number(diff / (1000 * 60 * 60 * 24)) < 91) {
-              payload.date_init =
-                moment(payload.date_init).format('DD/MM/YYYY') +
-                ' 00:00:00';
 
-              payload.date_end =
-                moment(payload.date_end).format('DD/MM/YYYY') +
-                ' 23:59:00';
-              this.subscription$ = this._historicService
-                .getHistoriesTrip(payload)
-                .subscribe((res) => {
-                  this.consolidatorData = res.data;
-                  this.tableData = res.data;
-                  this.tripsReportData = res.trips;
-                });
-            }
+
+            this.subscription$ = this._historicService
+              .getHistoriesTrip(payload)
+              .subscribe((res) => {
+                this.consolidatorData = res.data;
+                this.tableData = res.data;
+                this.tripsReportData = res.trips;
+              });
 
           }
         );

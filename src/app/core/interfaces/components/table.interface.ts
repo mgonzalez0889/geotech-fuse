@@ -2,6 +2,7 @@ export interface IOptionTable {
   name: string;
   text: string;
   typeField: 'text' | 'percentage' | 'date';
+  classTailwind?: string;
 }
 
 export interface IButtonOptions<T> {
