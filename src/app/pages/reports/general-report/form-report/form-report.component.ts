@@ -22,13 +22,11 @@ export class FormReportComponent implements OnInit, OnDestroy {
   @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
   @ViewChild('allSelectedFleets') private allSelectedFleets: MatOption;
   @ViewChild('allSelectedEvents') private allSelectedEvents: MatOption;
-
   public formReport: FormGroup = this.formBuilder.group({});
   public events: any[] = [];
   public plates: any[] = [];
   public fleets: any[] = [];
   public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
-  public editMode: boolean = false;
   public listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
@@ -75,7 +73,6 @@ export class FormReportComponent implements OnInit, OnDestroy {
   public onSubmit(): void {
 
     const formReportValues: IBodyHistoric = this.formReport.value;
-
     const dateStart = new Date(formReportValues.date_init).getTime();
     const dateEnd = new Date(formReportValues.date_end).getTime();
 
@@ -83,16 +80,22 @@ export class FormReportComponent implements OnInit, OnDestroy {
 
     if (Number(diff / (1000 * 60 * 60 * 24)) < 91) {
       const converDateInit =
-        moment(formReportValues.date_init).format('DD/MM/YYYY') +
-        ' 00:00:00';
+        moment(formReportValues.date_init).format('DD/MM/YYYY')
+        + ' ' + formReportValues.timeInit;
 
       const converDateEnd =
-        moment(formReportValues.date_end).format('DD/MM/YYYY') +
-        ' 23:59:00';
+        moment(formReportValues.date_end).format('DD/MM/YYYY')
+        + ' ' + formReportValues.timeEnd;
+
+
+      delete formReportValues.timeInit;
+      delete formReportValues.timeEnd;
 
       this._historicService.behaviorSubjectDataForms.next({ payload: { ...formReportValues, date_init: converDateInit, date_end: converDateEnd } });
-      this.editMode = false;
     }
+
+    this.emitCloseForm.emit();
+    this.formReport.reset();
   }
 
   /**
@@ -150,7 +153,6 @@ export class FormReportComponent implements OnInit, OnDestroy {
     } else {
       this.formReport.controls['events'].patchValue([]);
     }
-
   }
 
   /**
@@ -158,8 +160,10 @@ export class FormReportComponent implements OnInit, OnDestroy {
    */
   private buildForm(): void {
     this.formReport = this.formBuilder.group({
-      date_init: [new Date(), [Validators.required]],
-      date_end: [new Date(), [Validators.required]],
+      date_init: ['', [Validators.required]],
+      date_end: ['', [Validators.required]],
+      timeInit: ['00:00:00', [Validators.required]],
+      timeEnd: ['23:59:00', [Validators.required]],
       plates: [[], [Validators.required]],
       fleets: [[]],
       events: [[], [Validators.required]],

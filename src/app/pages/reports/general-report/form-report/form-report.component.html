@@ -4,7 +4,7 @@
 
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button matTooltip="Cerrar" (click)="this.emitCloseForm.emit(); this.editMode = false">
+        <button mat-icon-button matTooltip="Cerrar" (click)="this.emitCloseForm.emit();">
           <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
       </div>
@@ -12,108 +12,94 @@
 
     <div class="relative flex flex-col flex-auto items-center p-4 pt-0 sm:p-12 sm:pt-0">
       <div class="w-full max-w-3xl">
-        <div [hidden]="editMode">
-          <div class="flex flex-auto items-end -mt-16">
-            <!-- Avatar -->
-            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
-              <div
-                class="flex items-center justify-center w-full h-full rounded overflow-hidden text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'" class="icon-size-14"></mat-icon>
-              </div>
-            </div>
-            <!-- Actions -->
-            <div class="flex items-center ml-auto mb-1">
-              <button mat-stroked-button (click)="editMode = true">
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                <span class="ml-2">Editar</span>
-              </button>
-            </div>
+
+
+        <!-- <h1 class="text-3xl font-bold truncate">Generar Reporte</h1> -->
+
+        <form [formGroup]="this.formReport" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 mt-6">
+
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Seleccione el rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Desde" formControlName="date_init" />
+              <input matEndDate placeholder="Hasta" formControlName="date_end" />
+            </mat-date-range-input>
+
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker>
+              <mat-date-range-picker-actions>
+                <div class="flex flex-col gap-2">
+                  <div class="flex justify-around">
+                    <input type="time" matInput formControlName="timeInit">
+                    <input type="time" matInput formControlName="timeEnd">
+                  </div>
+                  <div class="flex justify-end">
+                    <button mat-button matDateRangePickerCancel>Cancel</button>
+                    <button mat-raised-button color="accent" matDateRangePickerApply>Apply</button>
+                  </div>
+                </div>
+              </mat-date-range-picker-actions>
+            </mat-date-range-picker>
+          </mat-form-field>
+
+
+          <div class="flex gap-2 items-center">
+            <mat-label class="mb-3">Buscar por:</mat-label>
+            <mat-radio-group [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}" class="mb-3">
+              <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
+                [value]="trasport.name">{{ trasport.text }}</mat-radio-button>
+            </mat-radio-group>
           </div>
-          <div class="mt-3 text-4xl font-bold truncate">Generar Reporte</div>
-        </div>
 
-        <div [hidden]="!editMode">
-          <form [formGroup]="this.formReport" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 pt-6">
-
-
-            <mat-form-field class="fuse-mat-dense w-full">
-              <mat-label>Seleccione el rango de fechas</mat-label>
-              <mat-date-range-input [rangePicker]="picker">
-                <input matStartDate placeholder="Desde" formControlName="date_init" />
-                <input matEndDate placeholder="Hasta" formControlName="date_end" />
-              </mat-date-range-input>
-
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-date-range-picker #picker>
-                <!-- <mat-datepicker-actions>
-                    <div class="inputs" style="display: flex; justify-content: space-between; padding: 10px;">
-                      <input type="time" matInput>
-                      <input type="time" matInput>
-                    </div>
-
-                  </mat-datepicker-actions> -->
-              </mat-date-range-picker>
+          <div [hidden]="!(selectTrasport === 'mobiles')">
+            <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
+              <mat-select multiple formControlName="plates" placeholder="Seleccione vehiculos">
+                <mat-option class="option-all" #allSelectedMobiles (click)="this.allSelectionMobiles()" [value]="0">
+                  Seleccionar todos
+                </mat-option>
+                <mat-option [value]="mobile.plate" *ngFor="let mobile of this.plates">
+                  {{ mobile.plate }}</mat-option>
+              </mat-select>
             </mat-form-field>
+          </div>
 
+          <div [hidden]="!(selectTrasport === 'fleet')">
+            <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
+              <mat-select multiple formControlName="fleets" placeholder="Seleccione flotas">
+                <mat-option class="option-all" #allSelectedFleets (click)="this.allSelectionFleets()" [value]="0">
+                  Seleccionar todos
+                </mat-option>
+                <mat-option [value]="fleet.id" *ngFor="let fleet of this.fleets">
+                  {{ fleet.name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
 
-            <div class="flex gap-2 items-center">
-              <mat-label class="mb-3">Buscar por:</mat-label>
-              <mat-radio-group [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}" class="mb-3">
-                <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
-                  [value]="trasport.name">{{ trasport.text }}</mat-radio-button>
-              </mat-radio-group>
-            </div>
+          <div class="mt-3">
+            <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
+              <mat-select multiple formControlName="events" placeholder="Seleccione eventos">
+                <mat-option class="option-all" #allSelectedEvents (click)="this.allSelectionEvents()" [value]="0">
+                  Seleccionar todos
+                </mat-option>
+                <mat-option [value]="event.event_id" *ngFor="let event of this.events">
+                  {{ event.event_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
 
-            <div [hidden]="!(selectTrasport === 'mobiles')">
-              <mat-form-field class="fuse-mat-no-subscript w-full" appearance="fill">
-                <mat-select multiple formControlName="plates" placeholder="Seleccione vehiculos">
-                  <mat-option class="option-all" #allSelectedMobiles (click)="this.allSelectionMobiles()" [value]="0">
-                    Seleccionar todos
-                  </mat-option>
-                  <mat-option [value]="mobile.plate" *ngFor="let mobile of this.plates">
-                    {{ mobile.plate }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+          <div
+            class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
+            <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.emitCloseForm.emit();">
+              Cancelar
+            </button>
 
-            <div [hidden]="!(selectTrasport === 'fleet')">
-              <mat-form-field class="fuse-mat-no-subscript w-full" appearance="fill">
-                <mat-select multiple formControlName="fleets" placeholder="Seleccione flotas">
-                  <mat-option class="option-all" #allSelectedFleets (click)="this.allSelectionFleets()" [value]="0">
-                    Seleccionar todos
-                  </mat-option>
-                  <mat-option [value]="fleet.id" *ngFor="let fleet of this.fleets">
-                    {{ fleet.name }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+            <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formReport.invalid"
+              [matTooltip]="'Guardar'">
+              Generar
+            </button>
+          </div>
+        </form>
 
-            <div class="mt-3">
-              <mat-form-field class="fuse-mat-no-subscript w-full" appearance="fill">
-                <mat-select multiple formControlName="events" placeholder="Seleccione eventos">
-                  <mat-option class="option-all" #allSelectedEvents (click)="this.allSelectionEvents()" [value]="0">
-                    Seleccionar todos
-                  </mat-option>
-                  <mat-option [value]="event.event_id" *ngFor="let event of this.events">
-                    {{ event.event_name }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-
-            <div
-              class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
-              <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
-                Cancelar
-              </button>
-
-              <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formReport.invalid"
-                [matTooltip]="'Guardar'">
-                Generar
-              </button>
-            </div>
-          </form>
-
-        </div>
       </div>
     </div>
   </div>

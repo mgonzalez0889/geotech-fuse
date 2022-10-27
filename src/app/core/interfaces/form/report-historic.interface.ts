@@ -9,4 +9,6 @@ export interface IBodyHistoric {
   limit: number;
   page: number;
   validationFleet: number;
+  timeInit: string;
+  timeEnd: string;
 }

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { ProfileRoutingModule } from './profile-routing.module';
 import { GridProfileComponent } from './grid-profile/grid-profile.component';
-import { FormPlateOptionComponent } from './form-plate-option/form-plate-option.component';
 import { GridOptionProfileComponent } from './grid-option-profile/grid-option-profile.component';
 import { GridUserOptionProfileComponent } from './grid-user-option-profile/grid-user-option-profile.component';
 import { GridPlateOptionComponent } from './grid-plate-option/grid-plate-option.component';
@@ -29,36 +28,35 @@ import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
-    declarations: [
-        GridProfileComponent,
-        FormProfileComponent,
-        GridOptionProfileComponent,
-        GridUserOptionProfileComponent,
-        GridPlateOptionComponent,
-        FormPlateOptionComponent,
-    ],
-    imports: [
-        CommonModule,
-        ProfileRoutingModule,
-        MatFormFieldModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSortModule,
-        MatSlideToggleModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatDividerModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        MatTooltipModule,
-        MatSnackBarModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        MatStepperModule,
-        FuseFindByKeyPipeModule,
-        SharedModule,
-    ],
+  declarations: [
+    GridProfileComponent,
+    FormProfileComponent,
+    GridOptionProfileComponent,
+    GridUserOptionProfileComponent,
+    GridPlateOptionComponent,
+  ],
+  imports: [
+    CommonModule,
+    ProfileRoutingModule,
+    MatFormFieldModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSortModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDividerModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatStepperModule,
+    FuseFindByKeyPipeModule,
+    SharedModule,
+  ],
 })
-export class ProfileModule {}
+export class ProfileModule { }

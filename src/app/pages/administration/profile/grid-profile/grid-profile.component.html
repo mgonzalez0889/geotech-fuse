@@ -1,48 +1,43 @@
 <div class="flex flex-col flex-auto w-full">
-	<div class="flex flex-wrap w-full mx-auto p-6">
+  <div class="flex flex-wrap w-full mx-auto p-6">
 
-		<div class="w-full">
-			<app-header-page [title]="this.titlePage" [subTitle]="this.subTitlepage"></app-header-page>
-		</div>
+    <div class="w-full">
+      <app-header-page [title]="this.titlePage" [subTitle]="this.subTitlepage"></app-header-page>
+    </div>
 
-		<div class="flex flex-wrap w-full py-6">
-			<div class="w-full overflow-hidden">
-				<mat-drawer-container class="flex-auto h-auto md:min-h-180">
-					<mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
-						class="w-full md:w-128 bg-gray-100 border-none">
-						<ng-container *ngIf="opened">
-							<app-form-profile></app-form-profile>
-						</ng-container>
-					</mat-drawer>
-					<mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
-						<!-- Acciones-->
-						<div class="flex border-b p-6">
-							<div class="flex border-2 rounded-full p-2 ">
-								<input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
-								<mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
-							</div>
-							<div class="pl-6">
-								<button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="newMenu()">
-									<mat-icon class="icon-size-5">add</mat-icon>
-									<span class="ml-2">Agregar perfil</span>
-								</button>
-							</div>
-						</div>
-						<div [hidden]="profileCount > 0" class="pt-3 w-full h-full items-center justify-center">
-							<div class="flex items-center justify-center">
-								<div class="text-base font-semibold text-secondary">Lo sentimos no se encontraron datos
-								</div>
-							</div>
-						</div>
-						<div>
-							<app-table [dataColumn]="this.columnsProfile" [dataRow]="this.profileData"
-								[dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
-								(emitSelectRow)="this.actionSelectTable($event)">
-							</app-table>
-						</div>
-					</mat-drawer-content>
-				</mat-drawer-container>
-			</div>
-		</div>
-	</div>
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <ng-container *ngIf="opened">
+              <app-form-profile></app-form-profile>
+            </ng-container>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+            <!-- Acciones-->
+            <div class="flex border-b p-6">
+              <div class="flex border-2 rounded-full p-2 ">
+                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+              </div>
+              <div class="pl-6">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="newMenu()">
+                  <mat-icon class="icon-size-5">add</mat-icon>
+                  <span class="ml-2">Agregar perfil</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <app-table [dataColumn]="this.columnsProfile" [dataRow]="this.profileData"
+                [dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
+                (emitSelectRow)="this.actionSelectTable($event)">
+              </app-table>
+            </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
 </div>

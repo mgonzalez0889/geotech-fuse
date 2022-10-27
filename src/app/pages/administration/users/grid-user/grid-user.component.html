@@ -10,17 +10,21 @@
         <mat-drawer-container class="flex-auto h-auto md:min-h-180">
           <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
             class="w-full md:w-128 bg-gray-100 border-none">
-            <app-form-user [listUsers]="this.userData" (emitCloseForm)="this.opened = false"></app-form-user>
+            <ng-container *ngIf="opened">
+              <app-form-user [listUsers]="this.userData" [dataUpdate]="this.userDataUpdate"
+                (emitCloseForm)="this.opened = false" [titleForm]="this.titleForm"></app-form-user>
+            </ng-container>
           </mat-drawer>
 
           <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
             <div class="flex border-b p-6">
               <div class="flex border-2 rounded-full p-2 ">
-                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                <input matInput placeholder="Buscar" (keyup)="filterTable($event)">
                 <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
               </div>
               <div class="pl-6">
-                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.opened = true">
+                <button class="fuse-mat-button-rounded" mat-flat-button color="accent"
+                  (click)="this.opened = true; this.titleForm = 'Crear usuario';">
                   <mat-icon class="icon-size-5">add</mat-icon>
                   <span class="ml-2">Agregar usuario</span>
                 </button>
@@ -29,7 +33,8 @@
 
             <div>
               <app-table [dataColumn]="this.displayedColumns" [dataRow]="this.userData"
-                [dataOptionTable]="this.optionsTable">
+                [dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
+                (emitSelectRow)="this.selectUser($event)">
               </app-table>
             </div>
 

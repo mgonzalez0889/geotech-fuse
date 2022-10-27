@@ -6,18 +6,17 @@
   </mat-slide-toggle>
 </ng-container> -->
 <div class="flex flex-col w-full sm:pl-6">
-
   <div class="bg-card shadow rounded-2xl min-h-auto">
 
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button matTooltip="Cerrar" (click)="this.emitCloseForm.emit(); this.editMode = false">
-          <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        <button mat-icon-button matTooltip="Cerrar" (click)="this.closeForm()">
+          <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
         </button>
       </div>
     </div>
 
-    <div class="relative flex flex-col flex-auto items-center p-4 pt-0 sm:p-12 sm:pt-0">
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
       <div class="w-full max-w-3xl">
         <div [hidden]="editMode">
           <div class="flex flex-auto items-end -mt-16">
@@ -36,7 +35,32 @@
               </button>
             </div>
           </div>
-          <div class="mt-3 text-4xl font-bold truncate">Crear Usuario</div>
+          <div class="mt-3 text-4xl font-bold truncate">{{this.titleForm}}</div>
+          <div class="flex flex-col mt-4 pt-6 border-t space-y-8" *ngIf="this.dataUpdate">
+            <div class="flex sm:items-center">
+              <mat-icon matTooltip="Dirección" svgIcon="heroicons_solid:user-circle">
+              </mat-icon>
+              <div class="ml-6 leading-6">{{dataUpdate['full_name']}}</div>
+            </div>
+            <div class="flex sm:items-center">
+              <mat-icon matTooltip="Correo electrónico" svgIcon="heroicons_outline:mail">
+              </mat-icon>
+              <div class="ml-6 leading-6">
+                <a class="hover:underline text-primary-500" [href]="'mailto:' + dataUpdate['email']" target="_blank">
+                  {{dataUpdate['email']}}
+                </a>
+              </div>
+            </div>
+            <div class="flex sm:items-center">
+              <mat-icon matTooltip="Celular" svgIcon="heroicons_outline:phone"></mat-icon>
+              <div class="ml-6 leading-6">{{dataUpdate['phone']}}</div>
+            </div>
+            <div class="flex sm:items-center">
+              <mat-icon matTooltip="Dirección" svgIcon="heroicons_outline:location-marker">
+              </mat-icon>
+              <div class="ml-6 leading-6">{{dataUpdate['address']}}</div>
+            </div>
+          </div>
         </div>
 
         <div [hidden]="!editMode">
@@ -53,10 +77,10 @@
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle"></mat-icon>
               <input type="text" placeholder="juan22" matInput formControlName="user_login">
 
+              <mat-error *ngIf="this.validUsername">
+                Este nombre de usuario ya existe
+              </mat-error>
             </mat-form-field>
-            <mat-error *ngIf="this.validUsername">
-              Este nombre de usuario ya existe
-            </mat-error>
 
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>Perfil</mat-label>
@@ -70,13 +94,12 @@
 
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>Correo electrónico</mat-label>
-              <mat-icon matPrefix class=" hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:mail'">
+              <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:mail">
               </mat-icon>
-              <input matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'" required>
+              <input matInput formControlName="email" placeholder="example@gmail.com">
             </mat-form-field>
 
-            <!-- *ngIf="fieldPassword || form.getRawValue().enable_pass" -->
-            <mat-form-field class="w-full fuse-mat-dense">
+            <mat-form-field *ngIf="!this.dataUpdate" class="w-full fuse-mat-dense">
               <mat-label>Contraseña</mat-label>
               <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="password_digest">
               <mat-icon class="cursor-pointer" matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ?
@@ -84,8 +107,7 @@
                 'visibility'}}</mat-icon>
             </mat-form-field>
 
-            <!-- *ngIf="fieldPassword || form.getRawValue().enable_pass" -->
-            <mat-form-field class="w-full fuse-mat-dense">
+            <mat-form-field *ngIf="!this.dataUpdate" class="w-full fuse-mat-dense">
               <mat-label>Confirmar contraseña</mat-label>
               <input matInput type="password" formControlName="confirm_password">
               <mat-error *ngIf="formUser.get('confirm_password').hasError('mustMatch')">
@@ -94,7 +116,7 @@
             </mat-form-field>
 
 
-            <!-- <mat-form-field class="w-full fuse-mat-dense">
+            <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>Celular</mat-label>
               <input matInput [formControlName]="'phone'" [placeholder]="'Celular'" type="number">
               <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
@@ -102,10 +124,8 @@
                   <span class="flex items-center">
                     <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
                       [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
-                      [style.backgroundSize]="'24px 3876px'"
-                      [style.backgroundPosition]="getCountryByIso(formUser.get('indicative').value)?.flagImagePos"></span>
-                    <span
-                      class="sm:mx-0.5 font-medium text-default">{{getCountryByIso(formUser.get('indicative').value)?.code}}</span>
+                      [style.backgroundSize]="'24px 3876px'" [style.backgroundPosition]="this.countrieFlagInit"></span>
+                    <span class="sm:mx-0.5 font-medium text-default">{{formUser.get('indicative').value}}</span>
                   </span>
                 </mat-select-trigger>
                 <ng-container *ngFor="let country of countries">
@@ -121,27 +141,29 @@
                   </mat-option>
                 </ng-container>
               </mat-select>
-            </mat-form-field> -->
+            </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>Dirección</mat-label>
-              <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:location-marker'">
+              <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:location-marker">
               </mat-icon>
-              <input matInput [formControlName]="'address'" [placeholder]="'Dirección'" required>
+              <input matInput formControlName="address" placeholder="Dirección">
             </mat-form-field>
-            <div
-              class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
+            <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+              <button *ngIf="this.dataUpdate" mat-button color="warn" matTooltip="Eliminar" (click)="this.deleteUser()">
+                Eliminar
+              </button>
+
               <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
                 Cancelar
               </button>
 
               <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formUser.invalid"
-                [matTooltip]="'Guardar'">
+                matTooltip="Guardar">
                 Guardar
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>

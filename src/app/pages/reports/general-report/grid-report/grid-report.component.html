@@ -15,14 +15,15 @@
           <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
 
             <div class="flex border-b p-6 gap-4">
-              <button mat-mini-fab [color]="'accent'">
+              <button *ngIf="this.historicData.length" mat-mini-fab matTooltip="Descargar csv" color="accent">
                 <mat-icon svgIcon="sim_card_download"></mat-icon>
               </button>
-              <button mat-mini-fab [color]="'accent'" (click)="this.viewReportTimeLine()">
-                <mat-icon [svgIcon]="'feather:map'"></mat-icon>
+              <button *ngIf="this.historicData.length" mat-mini-fab matTooltip="Ver linea del tiempo" color="accent"
+                (click)="this.viewReportTimeLine()">
+                <mat-icon svgIcon="feather:map"></mat-icon>
               </button>
-              <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.opened = true;">
-                <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+              <button class="fuse-mat-button-rounded" mat-flat-button color="accent" (click)="this.opened = true;">
+                <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
                 <span class="ml-2">Generar reporte</span>
               </button>
             </div>
