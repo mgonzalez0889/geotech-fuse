@@ -26,6 +26,7 @@ export class FormReportComponent implements OnInit, OnDestroy {
   public events: any[] = [];
   public plates: any[] = [];
   public fleets: any[] = [];
+  public valueFilterEvents: string = '';
   public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
   public listTrasport: { name: string; text: string }[] = [
     {
@@ -91,11 +92,12 @@ export class FormReportComponent implements OnInit, OnDestroy {
       delete formReportValues.timeInit;
       delete formReportValues.timeEnd;
 
+      console.log('form', formReportValues);
+
       this._historicService.behaviorSubjectDataForms.next({ payload: { ...formReportValues, date_init: converDateInit, date_end: converDateEnd } });
     }
 
     this.emitCloseForm.emit();
-    this.formReport.reset();
   }
 
   /**
@@ -122,7 +124,7 @@ export class FormReportComponent implements OnInit, OnDestroy {
   /**
    * @description: seleccionar muchos de moviles
    */
-  allSelectionMobiles(): void {
+  public allSelectionMobiles(): void {
     if (this.allSelectedMobiles.selected) {
       this.formReport.controls['plates']
         .patchValue([...this.plates.map(item => item.plate), 0]);
@@ -134,7 +136,7 @@ export class FormReportComponent implements OnInit, OnDestroy {
   /**
    * @description: seleccionar muchos de flotas
    */
-  allSelectionFleets(): void {
+  public allSelectionFleets(): void {
     if (this.allSelectedFleets.selected) {
       this.formReport.controls['fleets']
         .patchValue([...this.fleets.map(item => item.id), 0]);
@@ -146,7 +148,7 @@ export class FormReportComponent implements OnInit, OnDestroy {
   /**
    * @description: seleccionar muchos de eventos
    */
-  allSelectionEvents(): void {
+  public allSelectionEvents(): void {
     if (this.allSelectedEvents.selected) {
       this.formReport.controls['events']
         .patchValue([...this.events.map(item => item.event_id), 0]);

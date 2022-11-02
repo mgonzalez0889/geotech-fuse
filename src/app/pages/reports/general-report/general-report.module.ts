@@ -20,6 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [FormReportComponent, GridReportComponent],
@@ -43,6 +44,7 @@ import { SharedModule } from 'app/shared/shared.module';
     NgxPaginationModule,
     MatPaginatorModule,
     SharedModule,
+    MatProgressSpinnerModule
   ],
 })
 export class GeneralReportModule { }

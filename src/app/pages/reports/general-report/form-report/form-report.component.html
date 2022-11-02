@@ -78,14 +78,26 @@
           <div class="mt-3">
             <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
               <mat-select multiple formControlName="events" placeholder="Seleccione eventos">
-                <mat-option class="option-all" #allSelectedEvents (click)="this.allSelectionEvents()" [value]="0">
-                  Seleccionar todos
-                </mat-option>
-                <mat-option [value]="event.event_id" *ngFor="let event of this.events">
+
+                <div class="option-all ">
+                  <div class="flex items-center gap-2 px-4 py-2">
+                    <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">
+                    </mat-icon>
+                    <input class="w-full min-w-0 py-1 border-0" type="text" [(ngModel)]="valueFilterEvents"
+                      [ngModelOptions]="{standalone: true}" placeholder="Buscar" [maxLength]="30">
+                  </div>
+                  <mat-option #allSelectedEvents (click)="this.allSelectionEvents()" [value]="0">
+                    Seleccionar todos
+                  </mat-option>
+                </div>
+
+                <mat-option [value]="event.event_id"
+                  *ngFor="let event of this.events | filterList:valueFilterEvents:'event_name'">
                   {{ event.event_name }}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+
 
           <div
             class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
@@ -99,7 +111,6 @@
             </button>
           </div>
         </form>
-
       </div>
     </div>
   </div>

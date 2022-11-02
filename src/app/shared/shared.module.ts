@@ -14,6 +14,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -37,7 +38,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ComponentsModule,
     MatSidenavModule,
     MatTableModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })
