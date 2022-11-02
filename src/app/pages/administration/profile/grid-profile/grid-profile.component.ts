@@ -1,8 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ProfilesService } from 'app/core/services/profiles.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
 
+interface IListModules {
+  id: number;
+  title: string;
+}
 @Component({
   selector: 'app-grid-profile',
   templateUrl: './grid-profile.component.html',
@@ -10,10 +17,12 @@ import { IOptionTable } from '../../../../core/interfaces/components/table.inter
 })
 export class GridProfileComponent implements OnInit, OnDestroy {
   public titlePage: string = 'Gestion de perfiles';
+  public titleForm: string = '';
   public subTitlepage: string = '';
   public opened: boolean = false;
   public subscription: Subscription;
   public dataFilter: string = '';
+  public profileDataUpdate: any = null;
   public profileData: any[] = [];
   public columnsProfile: string[] = ['name', 'description'];
   public optionsTable: IOptionTable[] = [
@@ -29,11 +38,20 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private profileService: ProfilesService) { }
+  public availableModules: IListModules[] = [];
+  public assignedModules: IListModules[] = [];
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(private confirmationService: ConfirmationService, private profileService: ProfilesService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getProfiles();
     this.listenObservables();
+  }
+
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   /**
@@ -53,8 +71,6 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         ? `${res.data.length} perfiles`
         : 'Sin perfiles';
 
-      console.log(res.data);
-
       this.profileData = res.data;
     });
   }
@@ -64,9 +80,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
    */
   public newMenu(): void {
     this.opened = true;
-    this.profileService.behaviorSubjectProfileForm.next({
-      newProfile: 'Nuevo perfil',
-    });
+    this.titleForm = 'Crear Perfil';
+    this.profileDataUpdate = null;
   }
 
   /**
@@ -74,31 +89,39 @@ export class GridProfileComponent implements OnInit, OnDestroy {
    */
   public actionSelectTable(data: any): void {
     this.opened = true;
-    this.profileService.behaviorSubjectProfileForm.next({
-      payload: data,
-      isEdit: false,
-    });
+    this.profileDataUpdate = { ...data };
+    this.titleForm = 'Editar perfil';
   }
 
-  /**
-   * @description: Destruye el observable
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
 
   /**
    * @description: Escucha el observable behavior
    */
   private listenObservables(): void {
-    this.subscription =
-      this.profileService.behaviorSubjectProfileGrid.subscribe(
-        ({ reload, opened }) => {
-          this.opened = opened;
-          if (reload) {
-            this.getProfiles();
+    this.profileService.profileForm$.subscribe(({ formData, typeAction }) => {
+      if (typeAction === 'add') {
+        this.profileService.postProfile(formData).subscribe(() => {
+          this.getProfiles();
+          this._snackBar.open('Se ha creado el nuevo Perfil', 'CERRAR', { duration: 4000 });
+        });
+      } else if (typeAction === 'edit') {
+        this.profileService.putProfile(formData).pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
+          this.getProfiles();
+          this._snackBar.open('Perfil actualizado con exito', 'CERRAR', { duration: 4000 });
+        });
+      } else if (typeAction === 'delete') {
+        const confirmation = this.confirmationService.open();
+        confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
+          if (result === 'confirmed') {
+            this.profileService.deleteProfile(formData.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+              this._snackBar.open('Perfil Eliminado con exito', 'CERRAR', { duration: 4000 });
+              this.getProfiles();
+              this.opened = false;
+            });
           }
-        }
-      );
+        });
+      }
+
+    });
   }
 }

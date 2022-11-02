@@ -1,34 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../app-configs/app-settings.service';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfilesService {
-  public behaviorSubjectProfile$: BehaviorSubject<{
-    type?: string;
-    isEdit?: boolean;
-    payload?: any;
-    id?: number;
-  }> = new BehaviorSubject<{
-    type?: string;
-    isEdit?: boolean;
-    payload?: any;
-    id?: number;
-  }>({ type: '', isEdit: false, id: 0 });
-  public behaviorSubjectProfileForm: BehaviorSubject<{
-    payload?: any;
-    id?: number;
-    newProfile?: any;
-    isEdit?: boolean;
-  }> = new BehaviorSubject(null);
-  public behaviorSubjectProfileGrid: BehaviorSubject<{
-    reload?: boolean;
-    opened?: boolean;
-  }> = new BehaviorSubject({ reload: false, opened: false });
+
+  public profileForm$: Subject<{ typeAction: 'add' | 'edit' | 'delete'; formData: any }> = new Subject();
 
   constructor(
     private _http: HttpClient,

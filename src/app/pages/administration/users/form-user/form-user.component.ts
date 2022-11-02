@@ -49,9 +49,9 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataUpdate) {
-      this.formUser.controls['password_digest'].clearValidators();
-      this.formUser.controls['confirm_password'].clearValidators();
-      this.formUser.patchValue({ ...this.dataUpdate });
+      this.formUser?.controls['password_digest'].clearValidators();
+      this.formUser?.controls['confirm_password'].clearValidators();
+      this.formUser?.patchValue({ ...this.dataUpdate });
     } else {
       this.formUser?.controls['password_digest'].setValidators([Validators.required]);
       this.formUser?.controls['confirm_password'].setValidators([Validators.required]);
@@ -61,8 +61,6 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('holis');
-
     this.profile$ = this.profileService.getProfiles();
     this.buildForm();
     this.validateUsernameRepeat();

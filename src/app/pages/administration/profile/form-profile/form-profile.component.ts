@@ -1,63 +1,52 @@
 import {
   Component,
+  EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommandsService } from 'app/core/services/commands.service';
+import { Subject } from 'rxjs';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { ProfilesService } from 'app/core/services/profiles.service';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MenuOptionsService } from 'app/core/services/menu-options.service';
 import { OwnerPlateService } from 'app/core/services/owner-plate.service';
-import { ProfilesService } from 'app/core/services/profiles.service';
-import { Subject } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { SelectionModel } from '@angular/cdk/collections';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatOption } from '@angular/material/core';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { takeUntil } from 'rxjs/operators';
+
+interface IListModules {
+  id: number;
+  title: string;
+  option: { [key: string]: boolean };
+}
 
 @Component({
   selector: 'app-form-profile',
   templateUrl: './form-profile.component.html',
   styleUrls: ['./form-profile.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
 })
 export class FormProfileComponent implements OnInit, OnDestroy {
-  @ViewChild(MatSort) private sort: MatSort;
-  @ViewChild(MatPaginator) private paginator: MatPaginator;
+  @Input() dataUpdate: any = null;
+  @Input() titleForm: string = '';
+  @Output() emitCloseForm = new EventEmitter<void>();
   @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
   @ViewChild('allSelectedFleets') private allSelectedFleets: MatOption;
-  public dataTableOption: MatTableDataSource<any>;
-
-  public columnsOption: string[] = ['select', 'title', 'subtitle'];
-  public columnsToDisplayWithExpand = [...this.columnsOption, 'expand'];
   public profiles: any = [];
   public editMode: boolean = false;
+  public valueFilterFleets = '';
+  public valueFilterMobiles = '';
   public opened: boolean = true;
   public profileForm: FormGroup;
   public plates: any = [];
   public fleets: any = [];
-  public optionMenu: any = [];
-  public expandedElement = this.optionMenu;
-  public typeCommands: any;
+  public availableModules: IListModules[] = [];
+  public assignedModules: IListModules[] = [];
+  public panelOpenState = false;
+
   public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
   public listTrasport: { name: string; text: string }[] = [
     {
@@ -69,40 +58,71 @@ export class FormProfileComponent implements OnInit, OnDestroy {
       text: 'Flota',
     },
   ];
-  private selection = new SelectionModel<any>(true, []);
   private unsubscribe$ = new Subject<void>();
   constructor(
     private profileService: ProfilesService,
     private fb: FormBuilder,
     private ownerPlateService: OwnerPlateService,
     private fleetsService: FleetsService,
-    private commandsService: CommandsService,
-    protected menuOptionsService: MenuOptionsService,
+    private menuOptionsService: MenuOptionsService,
   ) { }
 
   ngOnInit(): void {
-    this.ownerPlateService.getOwnerPlates().subscribe((res) => {
+    this.ownerPlateService.getOwnerPlates().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
       this.plates = res.data;
     });
-    this.fleetsService.getFleets().subscribe((res) => {
+    this.fleetsService.getFleets().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
       this.fleets = res.data;
     });
-    this.listenObservables();
-    this.createprofileForm();
-    this.getTypeCommand();
-    this.getMenuOption();
+    this.menuOptionsService.getMenuOptionsNew().pipe(takeUntil(this.unsubscribe$)).subscribe(({ data }) => {
+      const option = {
+        read: false,
+        create: false,
+        update: false,
+        delete: false,
+      };
+      data.forEach(({ children }) => {
+        this.availableModules = this.availableModules.concat(children.map(module => ({ ...module, option })));
+      });
+    });
+    this.buildForm();
   }
 
-  public onSubmit(): void { }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  public onSubmit(): void {
+
+    const modules: FormArray = this.profileForm.get('module') as FormArray;
+    this.assignedModules.forEach(({ id, option }) => {
+      modules.push(new FormControl({ id, option: { ...option, read: true } }));
+    });
+
+    const valueForm = this.profileForm.value;
+
+    if (!this.dataUpdate) {
+      this.profileService.profileForm$.next({ typeAction: 'add', formData: valueForm });
+    } else {
+      this.profileService.profileForm$.next({ typeAction: 'edit', formData: { ...valueForm, id: this.dataUpdate.id } });
+    }
+    this.profileForm.reset();
+    this.editMode = false;
+
+  }
 
   /**
    * @description: Cierra el menu lateral de la derecha
    */
   public closeMenu(): void {
-    this.profileService.behaviorSubjectProfileGrid.next({
-      opened: false,
-      reload: false,
-    });
+
+  }
+  public closeForm(): void {
+    this.emitCloseForm.emit();
+    this.editMode = false;
+    this.dataUpdate = null;
+    this.profileForm.reset();
   }
 
   /**
@@ -111,10 +131,15 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   public allSelectionMobiles(): void {
     if (this.allSelectedMobiles.selected) {
       this.profileForm.controls['plates']
-        .patchValue([...this.plates.map(item => item.plate), 0]);
+        .patchValue([...this.plates.map(item => item.id), 0]);
     } else {
       this.profileForm.controls['plates'].patchValue([]);
     }
+  }
+
+  public deleteProfile(): void {
+    this.profileService.profileForm$.next({ typeAction: 'delete', formData: this.dataUpdate });
+    this.editMode = false;
   }
 
   /**
@@ -129,7 +154,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeTrasport({ value }: MatRadioChange): void {
+  public onChangeTrasport({ value }: MatRadioChange): void {
     if (value === 'mobiles') {
       this.profileForm.controls['fleets'].patchValue([]);
       this.profileForm.controls['fleets'].clearValidators();
@@ -144,114 +169,37 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     this.selectTrasport = value;
   }
 
-  /**
-   * @description: Si el número de elementos seleccionados coincide con el número total de filas.
-   */
-  public isAllSelected(): any {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataTableOption.data.length;
-    return numSelected === numRows;
-  }
-
-  /**
-   * @description: Selecciona todas las filas si no están todas seleccionadas; de lo contrario borrar la selección.
-   */
-  public toggleAllRows(): void {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
+  public asingOption(checked: boolean, keyOption: string, idModule: number): void {
+    const index = this.assignedModules.findIndex(module => module.id === idModule);
+    if (checked) {
+      this.assignedModules[index].option[keyOption] = true;
+    } else {
+      this.assignedModules[index].option[keyOption] = false;
     }
-    this.selection.select(...this.dataTableOption.data);
   }
 
-  /**
-   * @description: Filtrar datos de la tabla
-   */
-  public filterTable(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataTableOption.filter = filterValue.trim().toLowerCase();
-  }
-
-  /**
-   * @description: Destruye el observable
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  public drop(event: CdkDragDrop<IListModules[]>): void {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
   }
 
   /**
    * @description: Crea el formulario
    */
-  private createprofileForm(): void {
+  private buildForm(): void {
     this.profileForm = this.fb.group({
-      id: [''],
-      name: [''],
-      description: [''],
-      typeOfSelection: [0],
-      plates: [[]],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      plates: [[], Validators.required],
       fleets: [[]],
-      commands: [''],
-      rulesAcces: this.fb.array([]),
+      module: this.fb.array([]),
     });
   }
 
-  /**
-   * @description: Escucha el observable behavior y busca al contacto
-   */
-  private listenObservables(): void {
-
-    this.profileService.behaviorSubjectProfileForm.subscribe(
-      ({ newProfile, id, isEdit }) => {
-        this.editMode = isEdit;
-        if (newProfile) {
-          this.profiles = [];
-          this.profiles['name'] = newProfile;
-          if (this.profileForm) {
-            this.profileForm.reset();
-          }
-        }
-        if (id) {
-          // this.profileService.getContact(id).subscribe((res: any) => {
-          //     this.profiles = res.data;
-          //     this.profileForm.patchValue(this.profiles);
-          // });
-        }
-      }
-    );
-  }
-
-
-  /**
-   * @description: Muestra los tipos de comandos del cliente
-   */
-  private getTypeCommand(): void {
-    this.commandsService.getTypeCommands().subscribe((res) => {
-      this.typeCommands = res.data;
-    });
-  }
-  /**
-   * @description: Trae todos las opciones del menu
-   */
-  private getMenuOption(): void {
-    this.menuOptionsService.getMenuOptionsNew().subscribe((res) => {
-      console.log('menuOptions', res);
-
-      res.data.forEach((x) => {
-        x.children.forEach((y) => {
-          if (y.type === 'basic') {
-            this.optionMenu.push(y);
-          }
-          y.children.forEach((z) => {
-            if (z.type === 'basic') {
-              this.optionMenu.push(z);
-            }
-          });
-        });
-      });
-      this.dataTableOption = new MatTableDataSource(this.optionMenu);
-      this.dataTableOption.paginator = this.paginator;
-      this.dataTableOption.sort = this.sort;
-    });
-  }
 }

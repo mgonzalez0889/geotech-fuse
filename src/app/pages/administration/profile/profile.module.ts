@@ -26,6 +26,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { SharedModule } from 'app/shared/shared.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 
 @NgModule({
   declarations: [
@@ -57,6 +60,9 @@ import { SharedModule } from 'app/shared/shared.module';
     MatStepperModule,
     FuseFindByKeyPipeModule,
     SharedModule,
+    DragDropModule,
+    MatExpansionModule,
+    CdkAccordionModule
   ],
 })
 export class ProfileModule { }

@@ -58,6 +58,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  public newUser(): void {
+    this.opened = true;
+    this.titleForm = 'Crear usuario';
+    this.userDataUpdate = null;
+  }
   public selectUser(dataUser: any): void {
     this.userDataUpdate = { ...dataUser };
     this.opened = true;
