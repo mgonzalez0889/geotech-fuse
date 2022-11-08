@@ -11,7 +11,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProfilesService } from '../../../../core/services/profiles.service';
+import { ProfilesService } from '../../../../core/services/api/profiles.service';
 import { Observable, Subject } from 'rxjs';
 import { UsersService } from '../../../../core/services/users.service';
 import { fuseAnimations } from '../../../../../@fuse/animations';
@@ -88,6 +88,8 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       this.userService.userForm$.next({ typeAction: 'edit', formData: { ...userDataForm, id: this.dataUpdate.id } });
     }
+
+
     this.formUser.reset();
     this.editMode = false;
   }
@@ -141,6 +143,17 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
         validators: FuseValidators.mustMatch('password_digest', 'confirm_password')
       }
     );
+    if (this.dataUpdate) {
+      this.formUser?.controls['password_digest'].clearValidators();
+      this.formUser?.controls['confirm_password'].clearValidators();
+      this.formUser?.patchValue({ ...this.dataUpdate });
+    } else {
+      this.formUser?.controls['password_digest'].setValidators([Validators.required]);
+      this.formUser?.controls['confirm_password'].setValidators([Validators.required]);
+    }
+    this.formUser?.controls['password_digest'].updateValueAndValidity();
+    this.formUser?.controls['confirm_password'].updateValueAndValidity();
+
   }
 
   /**

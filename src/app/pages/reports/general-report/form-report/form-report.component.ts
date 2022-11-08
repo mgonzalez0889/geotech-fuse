@@ -92,8 +92,6 @@ export class FormReportComponent implements OnInit, OnDestroy {
       delete formReportValues.timeInit;
       delete formReportValues.timeEnd;
 
-      console.log('form', formReportValues);
-
       this._historicService.behaviorSubjectDataForms.next({ payload: { ...formReportValues, date_init: converDateInit, date_end: converDateEnd } });
     }
 

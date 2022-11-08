@@ -63,6 +63,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
     this.titleForm = 'Crear usuario';
     this.userDataUpdate = null;
   }
+
   public selectUser(dataUser: any): void {
     this.userDataUpdate = { ...dataUser };
     this.opened = true;
@@ -92,11 +93,13 @@ export class GridUserComponent implements OnInit, OnDestroy {
         this.usersService.postUser(formData).subscribe(() => {
           this.readDataUser();
           this._snackBar.open('Se ha creado el nuevo usuario', 'CERRAR', { duration: 4000 });
+          this.opened = false;
         });
       } else if (typeAction === 'edit') {
         this.usersService.putUser(formData).pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
           this.readDataUser();
           this._snackBar.open('Usuario actualizado con exito', 'CERRAR', { duration: 4000 });
+          this.opened = false;
         });
       } else if (typeAction === 'delete') {
         const confirmation = this.confirmationService.open();

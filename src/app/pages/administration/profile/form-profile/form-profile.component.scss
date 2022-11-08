@@ -96,3 +96,7 @@ tr.example-element-row:not(.example-expanded-row):active {
   z-index: 1000;
   background-color: #ffffff !important;
 }
+
+.title-module {
+  @extend .option-all;
+}

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, ReplaySubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Navigation } from 'app/core/navigation/navigation.types';
-import { AppSettingsService } from '../app-configs/app-settings.service';
+import { Navigation } from 'app/core/interfaces/services/navigation.interface';
+import { AppSettingsService } from '../../app-configs/app-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -67,6 +67,7 @@ export class NavigationService {
             futuristic: navigation,
             horizontal: navigation,
           };
+
           this._navigation.next(navigations);
         })
       );

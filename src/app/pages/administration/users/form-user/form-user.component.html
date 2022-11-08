@@ -87,7 +87,7 @@
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle"></mat-icon>
               <mat-select formControlName="user_profile_id" placeholder="Seleccione su perfil">
                 <mat-option *ngFor="let item of (profile$ | async)?.data" [value]="item.id">
-                  {{item.description}}
+                  {{item.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>

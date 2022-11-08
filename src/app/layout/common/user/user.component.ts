@@ -124,7 +124,9 @@ export class UserComponent implements OnInit, OnDestroy {
   public getInfoUser(): void {
     this.usersService.getInfoUser().subscribe((res) => {
       this.infoUser = res.data;
+
       localStorage.setItem('infoUser', JSON.stringify(this.infoUser));
+      this.usersService.assingPermission();
     });
   }
 }

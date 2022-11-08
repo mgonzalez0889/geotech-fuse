@@ -1,25 +1,28 @@
 <div class="flex flex-col w-full sm:pl-6">
   <div class="bg-card shadow rounded-2xl min-h-180">
+
+    <!-- Cabecera del formulario -->
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+        <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeForm()">
           <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
       </div>
     </div>
+
+    <!-- Contenido principal del formulario -->
     <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
       <div class="w-full max-w-3xl">
-        <!-- Avatar and actions -->
+
+        <!-- Avatar y acion de editar -->
         <ng-container *ngIf="!editMode">
           <div class="flex flex-auto items-end -mt-16">
-            <!-- Avatar -->
             <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
               <div
                 class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                {{profiles['name']?.charAt(0)}}
+                <mat-icon svgIcon="feather:user-check" class="icon-size-14"></mat-icon>
               </div>
             </div>
-            <!-- Actions -->
             <div class="flex items-center ml-auto mb-1">
               <button mat-stroked-button (click)="editMode = true">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
@@ -27,16 +30,22 @@
               </button>
             </div>
           </div>
-          <div class="mt-3 text-4xl font-bold truncate">{{profiles['name']}}</div>
-          <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
-            <ng-container *ngIf="profiles['description']">
-              <div class="flex sm:items-center">
-                <mat-icon [matTooltip]="'Descripción'">subtitles</mat-icon>
-                <div class="ml-6 leading-6">{{profiles['description']}}</div>
-              </div>
-            </ng-container>
+
+          <div class="mt-3 text-4xl font-bold truncate">{{this.titleForm}}</div>
+
+          <div class="flex flex-col mt-4 pt-6 border-t space-y-8" *ngIf="this.dataUpdate">
+            <div class="flex sm:items-center">
+              <mat-icon matTooltip="Nombre de perfil">subtitles</mat-icon>
+              <div class="ml-6 leading-6">{{dataUpdate['name']}}</div>
+            </div>
+            <div class="flex sm:items-center">
+              <mat-icon matTooltip="Descripción">subtitles</mat-icon>
+              <div class="ml-6 leading-6">{{dataUpdate['description']}}</div>
+            </div>
           </div>
         </ng-container>
+
+        <!-- Inputs del formulario -->
         <div [hidden]="!editMode">
           <form [formGroup]="profileForm" (submit)="this.onSubmit()">
             <div class="mt-4">
@@ -78,7 +87,8 @@
                       Seleccionar todos
                     </mat-option>
                   </div>
-                  <mat-option [value]="mobile.id" *ngFor="let mobile of this.plates">
+                  <mat-option [value]="mobile.id"
+                    *ngFor="let mobile of this.plates | filterList:valueFilterMobiles:'plate'">
                     {{ mobile.plate }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -98,28 +108,29 @@
                       Seleccionar todos
                     </mat-option>
                   </div>
-                  <mat-option [value]="fleet.id" *ngFor="let fleet of this.fleets">
+                  <mat-option [value]="fleet.id"
+                    *ngFor="let fleet of this.fleets | filterList:valueFilterFleets:'name'">
                     {{ fleet.name }}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
 
-            <div class="flex justify-between gap-3 mt-2" cdkDropListGroup>
+            <div class="flex justify-between gap-3 mt-2 h-80 overflow-auto">
 
-              <div class="w-full">
-                <mat-label>Available Modules</mat-label>
+              <div class="w-full h-auto ">
+                <mat-label>Modulos Disponibles</mat-label>
 
-                <div class="min-h-12 overflow-hidden bg-white rounded shadow" cdkDropList #availableList="cdkDropList"
-                  [cdkDropListData]="availableModules" cdkDropListOrientation="horizontal"
+                <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList
+                  #availableList="cdkDropList" [cdkDropListData]="availableModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[assignedList]" (cdkDropListDropped)="drop($event)">
                   <div class="example-box" *ngFor="let item of availableModules" cdkDrag>{{item.title}}</div>
                 </div>
               </div>
 
-              <div class="w-full inline-block">
-                <mat-label>Asing Modules</mat-label>
-                <div class="min-h-12 overflow-hidden bg-white rounded shadow" cdkDropList #assignedList="cdkDropList"
-                  [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
+              <div class="w-full h-auto ">
+                <mat-label>Modulos asignados</mat-label>
+                <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList
+                  #assignedList="cdkDropList" [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)">
 
                   <div class="example-box" *ngFor="let item of assignedModules" cdkDrag>
@@ -131,24 +142,25 @@
                             {{item.title}}
                           </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <mat-checkbox-group class="flex justify-center gap-3">
+                        <div class="flex justify-center gap-3">
                           <mat-checkbox (change)="asingOption($event.checked, 'create', item.id)"
                             *ngIf="item.createOption">Crear </mat-checkbox>
                           <mat-checkbox (change)="asingOption($event.checked, 'update', item.id)"
                             *ngIf="item.editOption">Actualizar </mat-checkbox>
                           <mat-checkbox (change)="asingOption($event.checked, 'delete', item.id)"
                             *ngIf="item.deleteOption">Borrar </mat-checkbox>
-                        </mat-checkbox-group>
+                        </div>
                       </mat-expansion-panel>
                     </mat-accordion>
+
                   </div>
+
                 </div>
               </div>
             </div>
 
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-              <button *ngIf="profiles['id']" mat-button color="warn" [matTooltip]="'Eliminar'"
-                (click)="deleteContact(profiles['id'])">
+              <button *ngIf="dataUpdate" mat-button color="warn" matTooltip="Eliminar" (click)="deleteProfile()">
                 Eliminar </button>
 
               <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="editMode = false">

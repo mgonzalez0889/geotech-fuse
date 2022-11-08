@@ -1,8 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { HistoriesService } from '../../../../core/services/histories.service';
-import { SettingsService } from 'app/core/services/settings.service';
 import { IButtonOptions } from '../../../../core/interfaces/components/table.interface';
 import {
   IOptionTable,
@@ -120,9 +118,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    public dialog: MatDialog,
     private _historicService: HistoriesService,
-    public settingsService: SettingsService
   ) { }
 
   ngOnInit(): void {
@@ -156,7 +152,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           ({ payload }) => {
-
 
             this.subscription$ = this._historicService
               .getHistoriesTrip(payload)

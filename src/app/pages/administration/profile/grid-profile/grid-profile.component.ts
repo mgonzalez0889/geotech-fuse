@@ -1,15 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { ProfilesService } from 'app/core/services/profiles.service';
-import { Subject, Subscription } from 'rxjs';
+import { ProfilesService } from 'app/core/services/api/profiles.service';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
+import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
 
-interface IListModules {
-  id: number;
-  title: string;
-}
 @Component({
   selector: 'app-grid-profile',
   templateUrl: './grid-profile.component.html',
@@ -20,10 +17,10 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public titleForm: string = '';
   public subTitlepage: string = '';
   public opened: boolean = false;
-  public subscription: Subscription;
   public dataFilter: string = '';
   public profileDataUpdate: any = null;
   public profileData: any[] = [];
+  public listPermission: any = [];
   public columnsProfile: string[] = ['name', 'description'];
   public optionsTable: IOptionTable[] = [
     {
@@ -37,21 +34,35 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       typeField: 'text',
     },
   ];
-
-  public availableModules: IListModules[] = [];
-  public assignedModules: IListModules[] = [];
+  private permissionValid: { [key: string]: string } = {
+    addProfile: 'administracion:perfiles:create',
+    updateProfile: 'administracion:perfiles:update',
+    deleteProfile: 'administracion:perfiles:delete',
+  };
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private confirmationService: ConfirmationService, private profileService: ProfilesService, private _snackBar: MatSnackBar) { }
+  constructor(
+    private permissionsService: NgxPermissionsService,
+    private confirmationService: ConfirmationService,
+    private profileService: ProfilesService,
+    private toastAlert: ToastAlertService
+  ) { }
 
   ngOnInit(): void {
     this.getProfiles();
     this.listenObservables();
+
+    this.permissionsService.permissions$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        console.log('permission', data);
+        this.listPermission = data ?? [];
+      });
   }
 
-
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   /**
@@ -63,29 +74,37 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description: Buscar los perfiles de ese cliente
+   * @description: Leemos todos los perfiles que el usuario logueado tenga asignados
    */
   public getProfiles(): void {
-    this.profileService.getProfiles().subscribe((res) => {
+    this.profileService.getProfiles().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
       this.subTitlepage = res.data
         ? `${res.data.length} perfiles`
         : 'Sin perfiles';
 
-      this.profileData = res.data;
+      this.profileData = res.data || [];
     });
   }
 
   /**
-   * @description: Crear un nuevo perfil
+   * @description: Se abre el formulario para crear un nuevo perfil
    */
-  public newMenu(): void {
-    this.opened = true;
-    this.titleForm = 'Crear Perfil';
-    this.profileDataUpdate = null;
+  public addProfileForm(): void {
+    if (!this.listPermission[this.permissionValid.addProfile]) {
+      this.toastAlert.openAlert({
+        message: 'No tienes permisos suficientes para esta opción.',
+        actionMessage: 'cerrar',
+        styleClass: 'alert-warn'
+      });
+    } else {
+      this.opened = true;
+      this.titleForm = 'Crear Perfil';
+      this.profileDataUpdate = null;
+    }
   }
 
   /**
-   * @description: Guarda la data del menu para aburirlo en el formulario
+   * @description: Cuando se seleccione cualquier registro de la tabla se ejecuta esta funcion y se habilita el formulario para modificar el perfil.
    */
   public actionSelectTable(data: any): void {
     this.opened = true;
@@ -93,35 +112,68 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     this.titleForm = 'Editar perfil';
   }
 
+  /**
+   * @description: Elimina cualquier perfil.
+   */
+  private deleteProfile(profileId: number): void {
+    if (!this.listPermission[this.permissionValid.deleteProfile]) {
+      this.toastAlert.openAlert({
+        message: 'No tienes permisos suficientes para esta opción.',
+        actionMessage: 'cerrar',
+        styleClass: 'alert-warn'
+      });
+    } else {
+      const confirmation = this.confirmationService.open();
+      confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
+        if (result === 'confirmed') {
+          this.profileService.deleteProfile(profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.opened = false;
+            this.getProfiles();
+            this.toastAlert.openAlert({
+              message: 'Se ha eliminado correctamente el perfil.',
+              styleClass: 'alert-success'
+            });
+          });
+        }
+      });
+    }
+  }
 
   /**
-   * @description: Escucha el observable behavior
+   * @description: Escucha cuando se active alguna acion del formulario.
    */
   private listenObservables(): void {
-    this.profileService.profileForm$.subscribe(({ formData, typeAction }) => {
+    this.profileService.profileForm$.subscribe(({ formData, typeAction, profileId }) => {
       if (typeAction === 'add') {
-        this.profileService.postProfile(formData).subscribe(() => {
+        this.profileService.postProfile(formData).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+          this.opened = false;
           this.getProfiles();
-          this._snackBar.open('Se ha creado el nuevo Perfil', 'CERRAR', { duration: 4000 });
+          this.toastAlert.openAlert({
+            message: 'Se ha agregado correctamente el perfil.',
+            styleClass: 'alert-success'
+          });
         });
       } else if (typeAction === 'edit') {
-        this.profileService.putProfile(formData).pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-          this.getProfiles();
-          this._snackBar.open('Perfil actualizado con exito', 'CERRAR', { duration: 4000 });
-        });
-      } else if (typeAction === 'delete') {
-        const confirmation = this.confirmationService.open();
-        confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
-          if (result === 'confirmed') {
-            this.profileService.deleteProfile(formData.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-              this._snackBar.open('Perfil Eliminado con exito', 'CERRAR', { duration: 4000 });
-              this.getProfiles();
-              this.opened = false;
+        if (!this.listPermission[this.permissionValid.updateProfile]) {
+          this.toastAlert.openAlert({
+            message: 'No tienes permisos suficientes para esta opción.',
+            actionMessage: 'cerrar',
+            styleClass: 'alert-warn'
+          });
+        } else {
+          this.profileService.putProfile(formData, profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.opened = false;
+            this.getProfiles();
+            this.toastAlert.openAlert({
+              message: 'Se ha modificado correctamente el perfil.',
+              styleClass: 'alert-success'
             });
-          }
-        });
+          });
+        }
+      } else if (typeAction === 'delete') {
+        this.deleteProfile(formData.id);
       }
-
     });
   }
+
 }

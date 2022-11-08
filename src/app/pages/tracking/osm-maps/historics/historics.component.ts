@@ -6,135 +6,133 @@ import moment from 'moment';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormReportComponent } from '../form-report/form-report.component';
-import { SettingsService } from 'app/core/services/settings.service';
 
 @Component({
-    selector: 'app-historics',
-    templateUrl: './historics.component.html',
-    styleUrls: ['./historics.component.scss'],
+  selector: 'app-historics',
+  templateUrl: './historics.component.html',
+  styleUrls: ['./historics.component.scss'],
 })
 export class HistoricsComponent implements OnInit {
-    seletedHistoric = null;
-    public today = new Date();
-    public month = this.today.getMonth();
-    public year = this.today.getFullYear();
-    public day = this.today.getDate();
-    public initialHours: string = '00:00:00';
-    public finalHours: string = '23:59:00';
-    public initialDate: Date = new Date(this.year, this.month, this.day);
-    public finalDate: Date = new Date(this.year, this.month, this.day);
-    public events: any = [];
-    public events$: Observable<any>;
-    public seleccionado = [];
-    message_dates: boolean = false;
+  seletedHistoric = null;
+  public today = new Date();
+  public month = this.today.getMonth();
+  public year = this.today.getFullYear();
+  public day = this.today.getDate();
+  public initialHours: string = '00:00:00';
+  public finalHours: string = '23:59:00';
+  public initialDate: Date = new Date(this.year, this.month, this.day);
+  public finalDate: Date = new Date(this.year, this.month, this.day);
+  public events: any = [];
+  public events$: Observable<any>;
+  public seleccionado = [];
+  message_dates: boolean = false;
 
-    constructor(
-        public mapFunctionalitieService: MapFunctionalitieService,
-        public mapRequestService: MapRequestService,
-        private _eventsService: EventsService,
-        public dialog: MatDialog,
-        public settingService: SettingsService
-    ) {}
+  constructor(
+    public mapFunctionalitieService: MapFunctionalitieService,
+    public mapRequestService: MapRequestService,
+    private _eventsService: EventsService,
+    public dialog: MatDialog,
+  ) { }
 
-    ngOnInit(): void {
-        this.getEvents();
+  ngOnInit(): void {
+    this.getEvents();
+  }
+
+  async generateHistoric(ev, trip) {
+    this.mapFunctionalitieService.type_historic = 'trip';
+
+    this.mapFunctionalitieService.goDeleteGeometryPath();
+    let data = {
+      date_init: moment(trip.fecha_inicial).format('DD/MM/YYYY HH:mm:ss'),
+      date_end: moment(trip.fecha_final).format('DD/MM/YYYY HH:mm:ss'),
+      plates: trip.plate,
+      events: -1,
+      limit: 99999999,
+      page: 1,
+      fleet_presence: 0,
+    };
+    console.log(data, 'null');
+
+    this.mapFunctionalitieService.type_geo = 'historic';
+    let response = await this.mapRequestService.getHistoric(data);
+    console.log(response, 'response');
+
+    if (ev.target.checked === false) {
+      this.mapFunctionalitieService.deleteChecks(response, 'delete');
+      // this.mapFunctionalitieService.map.removeLayer(this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]);
+    } else {
+      this.mapFunctionalitieService.createHistoric(
+        null,
+        response,
+        trip.color
+      );
+      this.mapFunctionalitieService.createHistoric(
+        'punt',
+        trip,
+        trip.color
+      );
     }
+  }
 
-    async generateHistoric(ev, trip) {
-        this.mapFunctionalitieService.type_historic = 'trip';
-
-        this.mapFunctionalitieService.goDeleteGeometryPath();
-        let data = {
-            date_init: moment(trip.fecha_inicial).format('DD/MM/YYYY HH:mm:ss'),
-            date_end: moment(trip.fecha_final).format('DD/MM/YYYY HH:mm:ss'),
-            plates: trip.plate,
-            events: -1,
-            limit: 99999999,
-            page: 1,
-            fleet_presence: 0,
-        };
-        console.log(data, 'null');
-
-        this.mapFunctionalitieService.type_geo = 'historic';
-        let response = await this.mapRequestService.getHistoric(data);
-        console.log(response, 'response');
-
-        if (ev.target.checked === false) {
-            this.mapFunctionalitieService.deleteChecks(response, 'delete');
-            // this.mapFunctionalitieService.map.removeLayer(this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]);
-        } else {
-            this.mapFunctionalitieService.createHistoric(
-                null,
-                response,
-                trip.color
-            );
-            this.mapFunctionalitieService.createHistoric(
-                'punt',
-                trip,
-                trip.color
-            );
-        }
+  viewHistoric(plate) {
+    if (this.seletedHistoric == plate) {
+      this.seletedHistoric = null;
+    } else {
+      this.seletedHistoric = plate;
     }
+  }
 
-    viewHistoric(plate) {
-        if (this.seletedHistoric == plate) {
-            this.seletedHistoric = null;
-        } else {
-            this.seletedHistoric = plate;
-        }
-    }
+  convertDateHour(date) {
+    return moment(this.initialDate).format('DD/MM/YYYY hh:mm:ss');
+  }
 
-    convertDateHour(date) {
-        return moment(this.initialDate).format('DD/MM/YYYY hh:mm:ss');
-    }
+  private getEvents(): void {
+    this.events$ = this._eventsService.getEvents();
+  }
 
-    private getEvents(): void {
-        this.events$ = this._eventsService.getEvents();
-    }
-
-    selectAll(ev, plate, color) {
-        for (
-            let j = 0;
-            j < this.mapFunctionalitieService.historic.length;
-            j++
-        ) {
-            this.mapFunctionalitieService.historic[j].data
-                .filter((x) => {
-                    return x.plate === plate;
-                })
-                .map((x) => {
-                    x.selected = ev.checked;
-                    return x;
-                });
-        }
-        let data = this.mapFunctionalitieService.historic.filter((x) => {
-            return x.plate === plate;
+  selectAll(ev, plate, color) {
+    for (
+      let j = 0;
+      j < this.mapFunctionalitieService.historic.length;
+      j++
+    ) {
+      this.mapFunctionalitieService.historic[j].data
+        .filter((x) => {
+          return x.plate === plate;
+        })
+        .map((x) => {
+          x.selected = ev.checked;
+          return x;
         });
-        this.mapFunctionalitieService.type_geo = 'historic';
+    }
+    let data = this.mapFunctionalitieService.historic.filter((x) => {
+      return x.plate === plate;
+    });
+    this.mapFunctionalitieService.type_geo = 'historic';
 
-        if (ev.checked === false) {
-            this.mapFunctionalitieService.deleteChecks(data[0].data, 'delete');
-            this.mapFunctionalitieService.map.removeLayer(
-                this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]
-            );
-        } else {
-            this.mapFunctionalitieService.createHistoric(
-                null,
-                data[0].data,
-                color
-            );
-        }
+    if (ev.checked === false) {
+      this.mapFunctionalitieService.deleteChecks(data[0].data, 'delete');
+      this.mapFunctionalitieService.map.removeLayer(
+        this.mapFunctionalitieService.punt_geometry[data[0].data[0].id]
+      );
+    } else {
+      this.mapFunctionalitieService.createHistoric(
+        null,
+        data[0].data,
+        color
+      );
+    }
+  }
+
+  onChange(ev, item) {
+    if (ev.checked) {
+      this.seleccionado.push(item);
+    } else {
+      const indx = this.seleccionado.findIndex((x) => x.id === item.id);
+      this.seleccionado.splice(indx, indx >= 0 ? 1 : 0);
     }
 
-    onChange(ev, item) {
-        if (ev.checked) {
-            this.seleccionado.push(item);
-        } else {
-            const indx = this.seleccionado.findIndex((x) => x.id === item.id);
-            this.seleccionado.splice(indx, indx >= 0 ? 1 : 0);
-        }
-
-        this.mapFunctionalitieService.type_geo = 'historic';
-        // this.mapFunctionalitieService.createPunt(null, this.seleccionado);
-    }
+    this.mapFunctionalitieService.type_geo = 'historic';
+    // this.mapFunctionalitieService.createPunt(null, this.seleccionado);
+  }
 }

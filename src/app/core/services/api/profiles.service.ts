@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AppSettingsService } from '../app-configs/app-settings.service';
+import { AppSettingsService } from '../../app-configs/app-settings.service';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -8,12 +8,13 @@ import { Observable, Subject } from 'rxjs';
 })
 export class ProfilesService {
 
-  public profileForm$: Subject<{ typeAction: 'add' | 'edit' | 'delete'; formData: any }> = new Subject();
+  public profileForm$: Subject<{ typeAction: 'add' | 'edit' | 'delete'; formData: any; profileId?: number }> = new Subject();
 
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService
   ) { }
+
   /**
    * @description: Obtiene todos los perfiles
    */
@@ -21,6 +22,7 @@ export class ProfilesService {
     const params = { method: 'index_all_user_profile' };
     return this._http.get(this._appSettings.profile.url.base, { params });
   }
+
   /**
    * @description: Creacion de perfil
    */
@@ -30,6 +32,7 @@ export class ProfilesService {
       params,
     });
   }
+
   /**
    * @description: Trae un perfil
    */
@@ -39,19 +42,19 @@ export class ProfilesService {
       params,
     });
   }
+
   /**
    * @description: Edita un perfil
    */
-  public putProfile(data: any): Observable<any> {
+  public putProfile(dataUpdate: any, profileId: number): Observable<any> {
     const params = { method: 'update_user_profile' };
-    const id = data.id;
-    delete data.id;
     return this._http.put(
-      `${this._appSettings.profile.url.base}/${id}`,
-      data,
+      `${this._appSettings.profile.url.base}/${profileId}`,
+      dataUpdate,
       { params }
     );
   }
+
   /**
    * @description: Elimina un perfil
    */

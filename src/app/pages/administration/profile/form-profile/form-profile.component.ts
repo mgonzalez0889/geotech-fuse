@@ -2,34 +2,31 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { ProfilesService } from 'app/core/services/profiles.service';
-import { FleetsService } from 'app/core/services/fleets.service';
-import { MenuOptionsService } from 'app/core/services/menu-options.service';
-import { OwnerPlateService } from 'app/core/services/owner-plate.service';
-import { MatRadioChange } from '@angular/material/radio';
-import { MatOption } from '@angular/material/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { takeUntil } from 'rxjs/operators';
-
-interface IListModules {
-  id: number;
-  title: string;
-  option: { [key: string]: boolean };
-}
+import { MatOption } from '@angular/material/core';
+import { MatRadioChange } from '@angular/material/radio';
+import { FleetsService } from 'app/core/services/fleets.service';
+import { IListModules, IOptionPermission } from 'app/core/interfaces';
+import { ProfilesService } from 'app/core/services/api/profiles.service';
+import { OwnerPlateService } from 'app/core/services/owner-plate.service';
+import { MenuOptionsService } from 'app/core/services/menu-options.service';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-form-profile',
   templateUrl: './form-profile.component.html',
   styleUrls: ['./form-profile.component.scss'],
 })
-export class FormProfileComponent implements OnInit, OnDestroy {
+export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   @Input() dataUpdate: any = null;
   @Input() titleForm: string = '';
   @Output() emitCloseForm = new EventEmitter<void>();
@@ -40,13 +37,13 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   public valueFilterFleets = '';
   public valueFilterMobiles = '';
   public opened: boolean = true;
-  public profileForm: FormGroup;
-  public plates: any = [];
-  public fleets: any = [];
+  public profileForm: FormGroup = this.fb.group({});
+  public plates: any[] = [];
+  public fleets: any[] = [];
   public availableModules: IListModules[] = [];
   public assignedModules: IListModules[] = [];
+  public moduleWithPermission: IListModules[] = [];
   public panelOpenState = false;
-
   public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
   public listTrasport: { name: string; text: string }[] = [
     {
@@ -59,6 +56,7 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     },
   ];
   private unsubscribe$ = new Subject<void>();
+
   constructor(
     private profileService: ProfilesService,
     private fb: FormBuilder,
@@ -67,6 +65,9 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     private menuOptionsService: MenuOptionsService,
   ) { }
 
+  /**
+   * @description: se llaman todos los servicios y se crea el formulario reactivo.
+   */
   ngOnInit(): void {
     this.ownerPlateService.getOwnerPlates().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
       this.plates = res.data;
@@ -74,18 +75,23 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     this.fleetsService.getFleets().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
       this.fleets = res.data;
     });
-    this.menuOptionsService.getMenuOptionsNew().pipe(takeUntil(this.unsubscribe$)).subscribe(({ data }) => {
-      const option = {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-      };
-      data.forEach(({ children }) => {
-        this.availableModules = this.availableModules.concat(children.map(module => ({ ...module, option })));
-      });
-    });
+
+    this.readAndParseOptionModules();
     this.buildForm();
+  }
+
+
+  /**
+   * @description: si viene informacion para modificar, seteamos el formulario o lo limpiamos.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.dataUpdate) {
+      this.editMode = false;
+      this.profileForm.patchValue({ ...this.dataUpdate });
+    } else {
+      this.editMode = false;
+      this.profileForm.reset();
+    }
   }
 
   ngOnDestroy(): void {
@@ -93,19 +99,25 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  /**
+   * @description: cuando se envie el formulario, parseamos y preguntamos si va a modificar o agregar.
+   */
   public onSubmit(): void {
 
     const modules: FormArray = this.profileForm.get('module') as FormArray;
     this.assignedModules.forEach(({ id, option }) => {
       modules.push(new FormControl({ id, option: { ...option, read: true } }));
     });
-
     const valueForm = this.profileForm.value;
 
     if (!this.dataUpdate) {
       this.profileService.profileForm$.next({ typeAction: 'add', formData: valueForm });
     } else {
-      this.profileService.profileForm$.next({ typeAction: 'edit', formData: { ...valueForm, id: this.dataUpdate.id } });
+      this.profileService.profileForm$.next({
+        typeAction: 'edit',
+        formData: { ...valueForm },
+        profileId: this.dataUpdate.id
+      });
     }
     this.profileForm.reset();
     this.editMode = false;
@@ -113,16 +125,21 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description: Cierra el menu lateral de la derecha
+   * @description: funcion para cerrar el formulario.
    */
-  public closeMenu(): void {
-
-  }
   public closeForm(): void {
     this.emitCloseForm.emit();
     this.editMode = false;
     this.dataUpdate = null;
     this.profileForm.reset();
+  }
+
+  /**
+   * @description: se emite hacia el componente grid-profile para que elimine el perfil.
+   */
+  public deleteProfile(): void {
+    this.profileService.profileForm$.next({ typeAction: 'delete', formData: this.dataUpdate });
+    this.editMode = false;
   }
 
   /**
@@ -137,11 +154,6 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  public deleteProfile(): void {
-    this.profileService.profileForm$.next({ typeAction: 'delete', formData: this.dataUpdate });
-    this.editMode = false;
-  }
-
   /**
    * @description: seleccionar muchos de flotas
    */
@@ -154,6 +166,12 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description
+   * se ejecuta con el evento del componente matRadio,
+   * y dependiendo del tipo de trasporte selecciondo le agregamos
+   * y quitamos validacion de requerido en el formulario
+   */
   public onChangeTrasport({ value }: MatRadioChange): void {
     if (value === 'mobiles') {
       this.profileForm.controls['fleets'].patchValue([]);
@@ -169,8 +187,14 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     this.selectTrasport = value;
   }
 
-  public asingOption(checked: boolean, keyOption: string, idModule: number): void {
-    const index = this.assignedModules.findIndex(module => module.id === idModule);
+  /**
+   * @description: se asignan los permisos de los modulos
+   * @param checked - indica si esta checkedo el check
+   * @param keyOption - el nombre del permiso
+   * @param moduleId - id del modulo al que se le van asiganar permisos
+   */
+  public asingOption(checked: boolean, keyOption: string, moduleId: number): void {
+    const index = this.assignedModules.findIndex(module => module.id === moduleId);
     if (checked) {
       this.assignedModules[index].option[keyOption] = true;
     } else {
@@ -178,6 +202,9 @@ export class FormProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description: funcion del drag drop, para la asignacion del modulos.
+   */
   public drop(event: CdkDragDrop<IListModules[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -190,7 +217,30 @@ export class FormProfileComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description: Crea el formulario
+   * @description: Se leen y se parsean los modulos.
+   */
+  private readAndParseOptionModules(): void {
+    this.menuOptionsService.getMenuOptionsNew()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+
+        const option: IOptionPermission = {
+          read: false,
+          create: false,
+          update: false,
+          delete: false,
+        };
+
+        data.forEach(({ children }) => {
+          children.forEach(({ id, title, createOption, editOption, deleteOption }) => {
+            this.availableModules.push({ id, title, createOption, editOption, deleteOption, option: { ...option } });
+          });
+        });
+      });
+  }
+
+  /**
+   * @description: Se crea el formulario reactivo.
    */
   private buildForm(): void {
     this.profileForm = this.fb.group({
@@ -200,6 +250,10 @@ export class FormProfileComponent implements OnInit, OnDestroy {
       fleets: [[]],
       module: this.fb.array([]),
     });
+
+    if (this.dataUpdate) {
+      this.profileForm.patchValue({ ...this.dataUpdate });
+    }
   }
 
 }

@@ -22,7 +22,11 @@ import { FilterListPipe } from '../pipes/filter-list.pipe';
     MatIconModule,
     MatTooltipModule,
   ],
-  exports: [HeaderPageComponent, TableComponent, DataTablePipe,
-    FilterListPipe],
+  exports: [
+    HeaderPageComponent,
+    TableComponent,
+    DataTablePipe,
+    FilterListPipe
+  ],
 })
 export class ComponentsModule { }
