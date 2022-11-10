@@ -17,7 +17,7 @@ import { UsersService } from '../../../../core/services/users.service';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { FuseValidators } from '../../../../../@fuse/validators';
 import { IconService } from 'app/core/services/icons/icon.service';
-import { takeUntil } from 'rxjs/operators';
+import { mergeMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-user',
@@ -27,11 +27,10 @@ import { takeUntil } from 'rxjs/operators';
   animations: fuseAnimations
 })
 export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() listUsers: any[] = [];
   @Input() dataUpdate: any = null;
   @Input() titleForm: string = '';
   @Output() emitCloseForm = new EventEmitter<void>();
-  public formUser: FormGroup;
+  public formUser: FormGroup = this.fb.group({});
   public hidePassword: boolean = false;
   public editMode: boolean = false;
   public countries: any[] = [];
@@ -49,15 +48,18 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataUpdate) {
-      this.formUser?.controls['password_digest'].clearValidators();
-      this.formUser?.controls['confirm_password'].clearValidators();
+      this.editMode = false;
+      this.formUser?.controls['password_digest']?.clearValidators();
+      this.formUser?.controls['confirm_password']?.clearValidators();
       this.formUser?.patchValue({ ...this.dataUpdate });
     } else {
-      this.formUser?.controls['password_digest'].setValidators([Validators.required]);
-      this.formUser?.controls['confirm_password'].setValidators([Validators.required]);
+      this.editMode = false;
+      this.formUser?.controls['password_digest']?.setValidators([Validators.required]);
+      this.formUser?.controls['confirm_password']?.setValidators([Validators.required]);
+      this.formUser.reset();
     }
-    this.formUser?.controls['password_digest'].updateValueAndValidity();
-    this.formUser?.controls['confirm_password'].updateValueAndValidity();
+    this.formUser?.controls['password_digest']?.updateValueAndValidity();
+    this.formUser?.controls['confirm_password']?.updateValueAndValidity();
   }
 
   ngOnInit(): void {
@@ -137,12 +139,13 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
       indicative: ['+57', [Validators.required]],
       full_name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      address: ['', [Validators.required]],
+      address: [''],
     },
       {
         validators: FuseValidators.mustMatch('password_digest', 'confirm_password')
       }
     );
+
     if (this.dataUpdate) {
       this.formUser?.controls['password_digest'].clearValidators();
       this.formUser?.controls['confirm_password'].clearValidators();
@@ -161,18 +164,22 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
    */
   private validateUsernameRepeat(): void {
     const usernameControl = this.formUser.controls['user_login'];
-    usernameControl.valueChanges.subscribe((data: string) => {
-      this.validUsername = this.listUsers.some(({ user_login }) => user_login === data);
-      if (this.validUsername && !this.dataUpdate) {
-        usernameControl.setErrors({ existUsername: true });
-        usernameControl.markAsTouched();
-      } else {
+    usernameControl.valueChanges.pipe(
+      mergeMap(valueControl => this.userService.validUsername(valueControl))
+    ).subscribe(({ message }) => {
+      if (message === 'User No Exists' || this.dataUpdate) {
         if (usernameControl.hasError('existUsername')) {
           delete usernameControl.errors.existUsername;
           usernameControl.updateValueAndValidity();
         }
+        this.validUsername = false;
+      } else {
+        usernameControl.setErrors({ existUsername: true });
+        usernameControl.markAsTouched();
+        this.validUsername = true;
       }
     });
+
   }
 
 }

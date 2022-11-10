@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/member-ordering */
+
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { IOptionTable } from 'app/core/interfaces';
 import { DispatchService } from 'app/core/services/dispatch.service';
+import { DowloadTools } from 'app/core/tools/dowload.tool';
 import { Subscription } from 'rxjs';
-import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-grid-dispatch',
@@ -15,6 +16,9 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./grid-dispatch.component.scss'],
 })
 export class GridDispatchComponent implements OnInit, OnDestroy {
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   public dispatch_cout: number = 0;
   public pre_dispatch_count: number = 0;
   public finished_cout: number = 0;
@@ -44,10 +48,69 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     'init_place',
     'end_place',
   ];
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+
+  public optionsTable: IOptionTable[] = [
+    {
+      name: 'id',
+      text: 'No.',
+      typeField: 'text'
+    },
+    {
+      name: 'spreadsheet',
+      text: 'Planilla',
+      typeField: 'text',
+    },
+    {
+      name: 'created_at',
+      text: 'Fecha de creacion',
+      typeField: 'date'
+    },
+    {
+      name: 'date_init_dispatch',
+      text: 'Fecha de inicio de despacho',
+      typeField: 'date'
+    },
+    {
+      name: 'date_end_dispatch',
+      text: 'Fecha de finalización del despacho',
+      typeField: 'date',
+    },
+    {
+      name: 'plate',
+      text: 'Vehiculo',
+      typeField: 'text',
+    },
+    {
+
+      name: 'device',
+      text: 'Dispositivo',
+      typeField: 'text',
+    },
+    {
+      name: 'container_number',
+      text: 'Contenedor',
+      typeField: 'text'
+    },
+    {
+      name: 'security_seal',
+      text: 'Sello de seguridad',
+      typeField: 'text'
+    },
+    {
+      name: 'init_place',
+      text: 'Origen',
+      typeField: 'text'
+    },
+    {
+      name: 'end_place',
+      text: 'Destino',
+      typeField: 'text'
+    },
+  ];
+
 
   constructor(
+    private dowloadTools: DowloadTools,
     private dispatchService: DispatchService,
     private dateAdapter: DateAdapter<any>
   ) {
@@ -58,6 +121,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     this.getDispatch();
     this.listenObservables();
   }
+
   /**
    * @description: Trae todos los despachos del cliente
    */
@@ -68,7 +132,8 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       status: [0, 1, 2],
     };
     this.dispatchService.getDispatches(data).subscribe((res) => {
-      this.infoDispatch = res.data;
+      this.infoDispatch = res.data || [];
+
       if (res.count_dispatches) {
         this.dispatch_cout = res.count_dispatches[1]?.count_status;
         this.pre_dispatch_count = res.count_dispatches[0]?.count_status;
@@ -89,6 +154,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       this.dataTableDispatch.sort = this.sort;
     });
   }
+
   /**
    * @description: Filtrar datos de la tabla
    */
@@ -96,6 +162,18 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataTableDispatch.filter = filterValue.trim().toLowerCase();
   }
+
+  public downloadDispatch(typeFormat: 'csv' | 'excel'): any {
+    switch (typeFormat) {
+      case 'csv':
+        this.dowloadTools.dowloadCsv(this.optionsTable, this.infoDispatch, 'dispach-report');
+        break;
+      case 'excel':
+        this.dowloadTools.dowloadExcel(this.optionsTable, this.infoDispatch, 'dispach-report');
+        break;
+    }
+  }
+
   /**
    * @description: Guarda el ID del despacho para aburirlo en el formulario
    */
@@ -106,6 +184,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       isEdit: false,
     });
   }
+
   /**
    * @description: Crear un nuevo despacho
    */
@@ -115,6 +194,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       newDispatch: 'Nuevo despacho',
     });
   }
+
   /**
    * @description: Destruye el observable
    */
@@ -135,63 +215,6 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
         }
       );
   }
-  public downloadDispatch(typeFormat: string): any {
-    const exportData = this.infoDispatch.map((row: any) => ({
-      'Numero de viaje': row.id,
-      Planilla: row.spreadsheet,
-      'Número de declaración': row.declaration_number,
-      Cliente: row.client,
-      Origen: row.init_place,
-      Destino: row.end_place,
-      Placa: row.plate,
-      Conductor: row.name,
-      Identificación: row.identification,
-      Contacto: row.phone,
-      Dispositivo: row.device_description,
-      'Sello de seguridad': row.security_seal,
-      'Numero de contenedor': row.container_number,
-      Observaciones: row.detail,
-    }));
-    this.exportReportData(exportData, typeFormat);
-  }
-  private exportReportData(exportData: any, typeFormat: any): void {
-    switch (typeFormat) {
-      case 'CSV':
-        let values;
-        const csv: any = [];
-        const csvTemp = [];
-        const headers = Object.keys(exportData[0]);
-        console.log('exportData[0]', exportData[0]);
-
-        console.log('headers', headers);
 
 
-        csvTemp.push(headers.join(','));
-        console.log('csvTemp', csvTemp);
-
-        for (const row of exportData) {
-          values = headers.map((header: any) => row[header]);
-          csvTemp.push(values.join(','));
-        }
-        csv.push(csvTemp.join('\n'));
-        console.log('csv', csv);
-
-        const blob = new Blob([csv], { type: 'text/csv' });
-        // const url = window.URL.createObjectURL(blob);
-        // const a = document.createElement('a');
-        // a.setAttribute('hidden', '');
-        // a.setAttribute('href', url);
-        // a.setAttribute('download', 'Report.csv');
-        // document.body.appendChild(a);
-        // a.click();
-        // document.body.removeChild(a);
-        break;
-      case 'EXCEL':
-        const ws = XLSX.utils.json_to_sheet(exportData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Report');
-        XLSX.writeFile(wb, 'ReportDispatch.xlsx');
-        break;
-    }
-  }
 }

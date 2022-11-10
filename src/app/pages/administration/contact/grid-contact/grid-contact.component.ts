@@ -40,7 +40,6 @@ export class GridContactComponent implements OnInit, OnDestroy {
 
     this.subscription = this.permissionsService.permissions$
       .subscribe((data) => {
-        console.log('permission', data);
         this.listPermission = data ?? [];
       });
   }

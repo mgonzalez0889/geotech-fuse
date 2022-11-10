@@ -10,14 +10,21 @@
         <mat-drawer-container class="flex-auto h-auto md:min-h-180">
           <mat-drawer #drawer mode="side" [(opened)]="opened" position="end"
             class="w-full md:w-128 bg-gray-100 border-none">
-            <app-form-report (emitCloseForm)="this.opened = false"></app-form-report>
+            <ng-container *ngIf="opened">
+              <app-form-report (emitCloseForm)="this.opened = false"></app-form-report>
+            </ng-container>
           </mat-drawer>
           <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
 
             <div class="flex border-b p-6 gap-4">
-              <button *ngIf="this.historicData.length" mat-mini-fab matTooltip="Descargar csv" color="accent">
+              <button *ngIf="this.historicData.length" [matMenuTriggerFor]="menu" mat-mini-fab
+                matTooltip="Descargar reporte" color="accent" (click)="this.downloadReport()">
                 <mat-icon svgIcon="sim_card_download"></mat-icon>
               </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="downloadReport('csv')">CSV</button>
+                <button mat-menu-item (click)="downloadReport('excel')">EXCEL</button>
+              </mat-menu>
               <button *ngIf="this.historicData.length" mat-mini-fab matTooltip="Ver linea del tiempo" color="accent"
                 (click)="this.viewReportTimeLine()">
                 <mat-icon svgIcon="feather:map"></mat-icon>

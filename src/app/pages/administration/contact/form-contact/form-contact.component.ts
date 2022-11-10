@@ -43,7 +43,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
     this.createContactForm();
     this.subscription = this.permissionsService.permissions$
       .subscribe((data) => {
-        console.log('permission', data);
         this.listPermission = data ?? [];
       });
     // this.iconService.countries$

@@ -3,7 +3,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { MobileService } from '../../../../core/services/mobile.service';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HistoriesService } from '../../../../core/services/histories.service';
+import { HistoriesService } from '../../../../core/services/api/histories.service';
 import moment from 'moment';
 import { MatOption } from '@angular/material/core';
 

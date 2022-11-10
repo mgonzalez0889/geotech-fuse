@@ -42,7 +42,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   public fleets: any[] = [];
   public availableModules: IListModules[] = [];
   public assignedModules: IListModules[] = [];
-  public moduleWithPermission: IListModules[] = [];
   public panelOpenState = false;
   public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
   public listTrasport: { name: string; text: string }[] = [

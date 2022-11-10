@@ -55,7 +55,6 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     this.permissionsService.permissions$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        console.log('permission', data);
         this.listPermission = data ?? [];
       });
   }
@@ -73,18 +72,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     this.dataFilter = filterValue.trim().toLowerCase();
   }
 
-  /**
-   * @description: Leemos todos los perfiles que el usuario logueado tenga asignados
-   */
-  public getProfiles(): void {
-    this.profileService.getProfiles().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-      this.subTitlepage = res.data
-        ? `${res.data.length} perfiles`
-        : 'Sin perfiles';
 
-      this.profileData = res.data || [];
-    });
-  }
 
   /**
    * @description: Se abre el formulario para crear un nuevo perfil
@@ -92,7 +80,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public addProfileForm(): void {
     if (!this.listPermission[this.permissionValid.addProfile]) {
       this.toastAlert.openAlert({
-        message: 'No tienes permisos suficientes para esta opción.',
+        message: 'No tienes permisos suficientes para realizar esta acción.',
         actionMessage: 'cerrar',
         styleClass: 'alert-warn'
       });
@@ -113,12 +101,25 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @description: Leemos todos los perfiles que el usuario logueado tenga asignados
+   */
+  private getProfiles(): void {
+    this.profileService.getProfiles().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
+      this.subTitlepage = res.data
+        ? `${res.data.length} perfiles`
+        : 'Sin perfiles';
+
+      this.profileData = res.data || [];
+    });
+  }
+
+  /**
    * @description: Elimina cualquier perfil.
    */
   private deleteProfile(profileId: number): void {
     if (!this.listPermission[this.permissionValid.deleteProfile]) {
       this.toastAlert.openAlert({
-        message: 'No tienes permisos suficientes para esta opción.',
+        message: 'No tienes permisos suficientes para realizar esta acción.',
         actionMessage: 'cerrar',
         styleClass: 'alert-warn'
       });
@@ -130,7 +131,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
             this.opened = false;
             this.getProfiles();
             this.toastAlert.openAlert({
-              message: 'Se ha eliminado correctamente el perfil.',
+              message: 'Perfil eliminado con exito.',
               styleClass: 'alert-success'
             });
           });
@@ -149,14 +150,14 @@ export class GridProfileComponent implements OnInit, OnDestroy {
           this.opened = false;
           this.getProfiles();
           this.toastAlert.openAlert({
-            message: 'Se ha agregado correctamente el perfil.',
+            message: `Perfil ${formData.name} creado con exito.`,
             styleClass: 'alert-success'
           });
         });
       } else if (typeAction === 'edit') {
         if (!this.listPermission[this.permissionValid.updateProfile]) {
           this.toastAlert.openAlert({
-            message: 'No tienes permisos suficientes para esta opción.',
+            message: 'No tienes permisos suficientes para realizar esta acción.',
             actionMessage: 'cerrar',
             styleClass: 'alert-warn'
           });
@@ -165,7 +166,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
             this.opened = false;
             this.getProfiles();
             this.toastAlert.openAlert({
-              message: 'Se ha modificado correctamente el perfil.',
+              message: 'Perfil modificado con exito.',
               styleClass: 'alert-success'
             });
           });

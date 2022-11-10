@@ -1,11 +1,12 @@
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HistoriesService } from '../../../../core/services/histories.service';
+import { HistoriesService } from '../../../../core/services/api/histories.service';
 import { IButtonOptions } from '../../../../core/interfaces/components/table.interface';
 import {
   IOptionTable,
 } from '../../../../core/interfaces/components/table.interface';
 import { filter } from 'rxjs/operators';
+import { DowloadTools } from 'app/core/tools/dowload.tool';
 
 @Component({
   selector: 'app-grid-report',
@@ -118,6 +119,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
+    private dowloadTools: DowloadTools,
     private _historicService: HistoriesService,
   ) { }
 
@@ -138,6 +140,16 @@ export class GridReportComponent implements OnInit, OnDestroy {
     this.tableData = this.consolidatorData;
   }
 
+  public downloadReport(typeDowload: 'csv' | 'excel'): void {
+    switch (typeDowload) {
+      case 'csv':
+        this.dowloadTools.dowloadCsv(this.optionsTable, this.tableData, 'consolidated-report');
+        break;
+      case 'excel':
+        this.dowloadTools.dowloadExcel(this.optionsTable, this.tableData, 'consolidated-report');
+        break;
+    }
+  }
 
   private extractNameOption(): string[] {
     return this.optionsTable.map(({ name }) => name)
@@ -160,6 +172,8 @@ export class GridReportComponent implements OnInit, OnDestroy {
                 this.tableData = res.data;
                 this.tripsReportData = res.trips;
               });
+
+            this.opened = false;
 
           }
         );

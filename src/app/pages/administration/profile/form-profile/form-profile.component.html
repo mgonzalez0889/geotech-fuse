@@ -160,14 +160,16 @@
             </div>
 
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-              <button *ngIf="dataUpdate" mat-button color="warn" matTooltip="Eliminar" (click)="deleteProfile()">
+              <button type="button" *ngIf="dataUpdate" mat-button color="warn" matTooltip="Eliminar"
+                (click)="deleteProfile()">
                 Eliminar </button>
 
-              <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="editMode = false">
+              <button type="button" class="ml-auto" mat-button matTooltip="Cancelar" (click)="editMode = false">
                 Cancelar
               </button>
 
-              <button class="ml-2" mat-flat-button color="accent" [disabled]="profileForm.invalid" matTooltip="Guardar">
+              <button type="submit" class="ml-2" mat-flat-button color="accent" [disabled]="profileForm.invalid"
+                matTooltip="Guardar">
                 Guardar
               </button>
             </div>

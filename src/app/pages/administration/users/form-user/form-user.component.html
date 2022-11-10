@@ -69,13 +69,13 @@
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>Nombre completo</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle"></mat-icon>
-              <input type="text" matInput placeholder="Juan Perez" formControlName="full_name">
+              <input type="text" matInput placeholder="Nombre completo" formControlName="full_name">
             </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>Nombre de usuario</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle"></mat-icon>
-              <input type="text" placeholder="juan22" matInput formControlName="user_login">
+              <input type="text" placeholder="Nombre de usuario" matInput formControlName="user_login">
 
               <mat-error *ngIf="this.validUsername">
                 Este nombre de usuario ya existe
@@ -150,11 +150,12 @@
               <input matInput formControlName="address" placeholder="Dirección">
             </mat-form-field>
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-              <button *ngIf="this.dataUpdate" mat-button color="warn" matTooltip="Eliminar" (click)="this.deleteUser()">
+              <button type="button" *ngIf="this.dataUpdate" mat-button color="warn" matTooltip="Eliminar"
+                (click)="this.deleteUser()">
                 Eliminar
               </button>
 
-              <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
+              <button type="button" class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
                 Cancelar
               </button>
 

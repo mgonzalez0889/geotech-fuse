@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../app-configs/app-settings.service';
@@ -26,10 +27,14 @@ export class UsersService {
   assingPermission(): void {
     const profile = JSON.parse(localStorage.getItem('infoUser'));
     this.getUserPermission(profile.user_profile_id).subscribe(({ data }) => {
-      console.log(data);
-
       this.permissionsService.addPermission(data.permission);
     });
+  }
+
+  validUsername(value: string): Observable<any> {
+    const params = { method: 'validator_user' };
+    const body = { user_login: value };
+    return this._http.post(this._appSettings.user.url.base, body, { params });
   }
 
   /**

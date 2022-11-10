@@ -1,9 +1,9 @@
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/table.interface';
-import { HistoriesService } from 'app/core/services/histories.service';
+import { HistoriesService } from 'app/core/services/api/histories.service';
 import { filter } from 'rxjs/operators';
+import { DowloadTools } from '../../../../core/tools/dowload.tool';
 
 @Component({
   selector: 'app-grid-report',
@@ -79,7 +79,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
     .concat('action');
 
   constructor(
-    public dialog: MatDialog,
+    private dowloadTools: DowloadTools,
     private _historicService: HistoriesService
   ) { }
 
@@ -89,6 +89,17 @@ export class GridReportComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
+  }
+
+  public downloadReport(typeDowload: 'csv' | 'excel'): void {
+    switch (typeDowload) {
+      case 'csv':
+        this.dowloadTools.dowloadCsv(this.optionsTable, this.historicData, 'historic-event-report');
+        break;
+      case 'excel':
+        this.dowloadTools.dowloadExcel(this.optionsTable, this.historicData, 'historic-event-report');
+        break;
+    }
   }
 
   /**

@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MobileService } from '../../../../core/services/mobile.service';
 import { EventsService } from '../../../../core/services/events.service';
-import { HistoriesService } from '../../../../core/services/histories.service';
+import { HistoriesService } from '../../../../core/services/api/histories.service';
 import { FleetsService } from '../../../../core/services/fleets.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -56,10 +56,10 @@ export class FormReportComponent implements OnInit, OnDestroy {
       ({ data }) => this.events = [...data]
     );
     this._mobileService.getMobiles().pipe(takeUntil(this.unsubscribe$)).subscribe(
-      ({ data }) => this.plates = [...data]
+      ({ data }) => this.plates = [...data || []]
     );
     this._fleetsServices.getFleets().pipe(takeUntil(this.unsubscribe$)).subscribe(
-      ({ data }) => this.fleets = [...data]
+      ({ data }) => this.fleets = [...data || []]
     );
   }
 
@@ -160,8 +160,8 @@ export class FormReportComponent implements OnInit, OnDestroy {
    */
   private buildForm(): void {
     this.formReport = this.formBuilder.group({
-      date_init: ['', [Validators.required]],
-      date_end: ['', [Validators.required]],
+      date_init: [new Date(), [Validators.required]],
+      date_end: [new Date(), [Validators.required]],
       timeInit: ['00:00:00', [Validators.required]],
       timeEnd: ['23:59:00', [Validators.required]],
       plates: [[], [Validators.required]],

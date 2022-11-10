@@ -59,6 +59,8 @@ export class ProfilesService {
    * @description: Elimina un perfil
    */
   public deleteProfile(id: number): Observable<any> {
+console.log(id);
+
     const params = { method: 'delete_user_profile' };
     return this._http.delete(
       `${this._appSettings.profile.url.base}/${id}`,

@@ -13,6 +13,10 @@ import { ComponentsModule } from './components/components.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   imports: [
@@ -42,7 +46,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDividerModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatMenuModule
   ],
   declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })
