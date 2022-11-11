@@ -22,18 +22,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { StartDispatchComponent } from './start-dispatch/start-dispatch.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
-    declarations: [
-        FormDispatchComponent,
-        GridDispatchComponent,
-        StartDispatchComponent,
-    ],
+    declarations: [FormDispatchComponent, GridDispatchComponent],
     imports: [
         CommonModule,
         GeneralDispatchRoutingModule,
@@ -59,7 +54,7 @@ import { MatMenuModule } from '@angular/material/menu';
         MatDialogModule,
         MatAutocompleteModule,
         MatProgressSpinnerModule,
-        MatMenuModule
+        MatMenuModule,
     ],
 })
 export class GeneralDispatchModule {}

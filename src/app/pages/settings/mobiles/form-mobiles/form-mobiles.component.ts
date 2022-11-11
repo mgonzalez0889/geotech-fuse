@@ -2,9 +2,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { OwnerPlateService } from 'app/core/services/owner-plate.service';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SocketIoClientService } from 'app/core/services/socket-io-client.service';
 import { MapToolsService } from 'app/core/services/map-tools.service';
+import { DriverService } from 'app/core/services/driver.service';
 
 @Component({
     selector: 'app-form-mobiles',
@@ -15,14 +16,18 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
     public mobiles: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
-    public contactForm: FormGroup;
+    public mobilForm: FormGroup;
     public subscription: Subscription;
+    public typeMobile: any = [];
+    public models: any = [];
+    public drivers: any = [];
 
     constructor(
         private fb: FormBuilder,
         private ownerPlateService: OwnerPlateService,
         private socketIoService: SocketIoClientService,
-        private mapToolsService: MapToolsService
+        private mapToolsService: MapToolsService,
+        private driverService: DriverService
     ) {}
 
     ngOnInit(): void {
@@ -33,6 +38,10 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
             this.mapToolsService.moveMarker(data);
         });
         this.listenObservables();
+        this.createMobileForm();
+        this.getTypePlate();
+        this.getModels();
+        this.getDriver();
     }
     /**
      * @description: Cierra el menu lateral de la derecha
@@ -42,7 +51,7 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
             opened: false,
             reload: false,
         });
-        this.mapToolsService.deleteOneChecks(this.mobiles.id);
+        this.mapToolsService.clearMap();
     }
     /**
      * @description: Destruye el observable
@@ -55,8 +64,6 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     ngAfterViewInit(): void {
         this.mapToolsService.initMap();
-        //this.mapFunctionalitieService.init();
-        //this.mapFunctionalitieService.getLocation();
     }
     /**
      * @description: Escucha el observable behavior y busca al vehiculo
@@ -72,24 +79,56 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
                                 this.mobiles = res.data;
                                 delete this.mobiles.id;
                                 this.mobiles.id = this.mobiles.mobile_id;
-                                this.mapToolsService.deleteOneChecks(
-                                    this.mobiles.id
+                                this.mapToolsService.clearMap();
+                                this.mapToolsService.setMarkers(
+                                    [this.mobiles],
+                                    (this.mapToolsService.verCluster = false),
+                                    (this.mapToolsService.verLabel = true)
                                 );
-                                const time = timer(2000);
-                                time.subscribe((t) => {
-                                    this.mapToolsService.setMarkers(
-                                        [this.mobiles],
-                                        (this.mapToolsService.verCluster =
-                                            false),
-                                        (this.mapToolsService.verLabel = true)
-                                    );
-                                });
-
-                                // this.getContact(res.contacts);
-                                // this.eventForm.patchValue(this.events);
                             });
                     }
                 }
             );
+    }
+    private getTypePlate(): any {
+        this.ownerPlateService.getTypePlate().subscribe((res) => {
+            this.typeMobile = res.data;
+        });
+    }
+
+    private getModels(): any {
+        const year = new Date().getFullYear();
+        for (let i = 1990; i <= year; i++) {
+            this.models.push(i);
+        }
+    }
+    /**
+     * @description: Buscar los dispositivos aptos para crear un despacho
+     */
+    private getDriver(): void {
+        this.driverService.getDrivers().subscribe((res) => {
+            this.drivers = res.data;
+        });
+    }
+
+    /**
+     * @description: Inicializa el formulario de moviles
+     */
+    private createMobileForm(): void {
+        this.mobilForm = this.fb.group({
+            id: [''],
+            brand: [''],
+            color: [''],
+            type_mobile_id: [''],
+            mobile_model: [''],
+            owner_driver_id: [''],
+            capacity: [''],
+            number_chassis: [''],
+            number_engine: [''],
+            type_of_service_id: [''],
+            weight_unit: [''],
+            number_passengers: [''],
+            full_name: [''],
+        });
     }
 }

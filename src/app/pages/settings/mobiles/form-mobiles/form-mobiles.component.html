@@ -94,8 +94,135 @@
             </div>
         </div>
         <div [hidden]="!editMode">
+            <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
+                <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+                    <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+                        <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+            <form [formGroup]="mobilForm">
+                <div class="px-6 py-3">
+                    <div>
+                        <span class="text-base font-semibold">Informacion del vehiculo</span>
+                        <span class="text-lg font-bold"> | {{mobiles['plate']}}</span>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Código interno</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'internal_code'"
+                                [placeholder]="'Código interno'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Marca</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'brand'" [placeholder]="'Marca'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Color</mat-label>
+                            <input matInput type="color" [formControlName]="'color'" required placeholder="Color">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Tipo de vehículo</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+                            <mat-select [formControlName]="'full_name'">
+                                <mat-option *ngFor="let type of typeMobile" [value]="type.id">
+                                    {{type.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Modelo</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+                            <mat-select [formControlName]="'full_name'">
+                                <mat-option *ngFor="let model of models" [value]="model">
+                                    {{model}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Conductor</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+                            <mat-select [formControlName]="'full_name'">
+                                <mat-option *ngFor="let driver of drivers" [value]="driver.id">
+                                    {{driver.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
 
 
+
+
+
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Numero de pasajeros</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'full_name'"
+                                [placeholder]="'Numero de pasajeros'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Capacidad de carga </mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'full_name'"
+                                [placeholder]="'Capacidad de carga'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Unidad de pedo</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'full_name'" [placeholder]="'Unidad de pedo'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Tipo de servicio</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'full_name'"
+                                [placeholder]="'Tipo de servicio '">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Numero de chasis </mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'full_name'" [placeholder]="'Numero de chasis'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Numero de motor</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput required [formControlName]="'full_name'" [placeholder]="'Numero de motor'">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

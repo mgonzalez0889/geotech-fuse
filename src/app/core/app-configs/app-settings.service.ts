@@ -191,4 +191,12 @@ export class AppSettingsService {
             base: EndPoints.uri('owner_driver'),
         },
     };
+    /**
+     * @description: End-point conductor
+     */
+    public typeMobile = {
+        url: {
+            base: EndPoints.uri('type_mobile'),
+        },
+    };
 }

@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
+import { IconService } from 'app/core/services/icons/icon.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,17 +18,22 @@ export class FormContactComponent implements OnInit, OnDestroy {
     public contactForm: FormGroup;
     public subscription: Subscription;
     public typeContacts: any = [];
+    public countries: any = [];
 
     constructor(
         private controlCenterService: ControlCenterService,
         private fb: FormBuilder,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private iconService: IconService
     ) {}
 
     ngOnInit(): void {
         this.createContactForm();
         this.listenObservables();
         this.typeContact();
+        this.iconService.getCountries().subscribe((res) => {
+            this.countries = res;
+        });
     }
     /**
      * @description: Valida si es edita o guarda un contacto nuevo
@@ -116,6 +122,14 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
     }
     /**
+     * @description:Trae la informacion que pertenece el indicativo en el formulario
+     */
+    public getCountryByIso(code: string): any {
+        if (code) {
+            return this.countries.find((country) => country.code === code);
+        }
+    }
+    /**
      * @description: Destruye el observable
      */
     ngOnDestroy(): void {
@@ -145,6 +159,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
             description: [''],
+            indicative: ['+57', [Validators.required]],
         });
     }
     /**
@@ -160,6 +175,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                         this.contacts['full_name'] = newContact;
                         if (this.contactForm) {
                             this.contactForm.reset();
+                            this.contactForm.controls['indicative'].setValue(
+                                '+57'
+                            );
                         }
                     }
                     this.contactForm.patchValue({

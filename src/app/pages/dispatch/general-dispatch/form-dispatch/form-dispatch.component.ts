@@ -103,15 +103,6 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
                 });
             }
         });
-
-        // const dialogRef = this.matDialog.open(StartDispatchComponent, {
-        //     width: '455px',
-        //     data: this.dispatches,
-        // });
-        // dialogRef.afterClosed().subscribe((res) => {
-        //     if (res) {
-        //     }
-        // });
     }
     /**
      * @description: Finaliza un despacho

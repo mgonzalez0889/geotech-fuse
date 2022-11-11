@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
+import { IconService } from 'app/core/services/icons/icon.service';
 
 @Component({
     selector: 'app-modal-contacts',
@@ -13,18 +14,31 @@ import { ControlCenterService } from 'app/core/services/control-center.service';
 export class ModalContactsComponent implements OnInit {
     public contactForm: FormGroup;
     public typeContacts: any = [];
+    public countries: any = [];
 
     constructor(
         public dialogRef: MatDialogRef<ModalContactsComponent>,
         @Inject(MAT_DIALOG_DATA) public infoContact,
         private controlCenterService: ControlCenterService,
         private fb: FormBuilder,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private iconService: IconService
     ) {}
 
     ngOnInit(): void {
         this.createContactForm();
         this.typeContact();
+        this.iconService.getCountries().subscribe((res) => {
+            this.countries = res;
+        });
+    }
+    /**
+     * @description:Trae la informacion que pertenece el indicativo en el formulario
+     */
+    getCountryByIso(code: string): any {
+        if (code) {
+            return this.countries.find((country) => country.code === code);
+        }
     }
     /**
      * @description: Valida si es edita o guarda un contacto nuevo
@@ -62,6 +76,7 @@ export class ModalContactsComponent implements OnInit {
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
             description: [''],
+            indicative: ['+57', [Validators.required]],
         });
         if (this.infoContact.id) {
             if (this.infoContact.owner_id_simulator === 1) {

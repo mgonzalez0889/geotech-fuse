@@ -65,7 +65,19 @@ export class OwnerPlateService {
      */
     public getInfoOwnerPlate(id: any): Observable<any> {
         const params = { method: 'show_owner_plate_driver' };
-        return this._http.get(`${this._appSettings.ownerPlate.url.base}/${id}`, {
+        return this._http.get(
+            `${this._appSettings.ownerPlate.url.base}/${id}`,
+            {
+                params,
+            }
+        );
+    }
+    /**
+     * @description: Obtiene la informacion de una placa del cliente
+     */
+    public getTypePlate(): Observable<any> {
+        const params = { method: 'index_all_type_mobile' };
+        return this._http.get(this._appSettings.typeMobile.url.base, {
             params,
         });
     }

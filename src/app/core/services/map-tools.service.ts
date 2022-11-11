@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
-import L from 'leaflet';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
 import moment from 'moment';
 
 @Injectable({
@@ -39,7 +40,7 @@ export class MapToolsService {
         this.map = L.map('map', {
             fullscreenControl: true,
             center: [11.004313, -74.808137],
-            zoom: 10,
+            zoom: 20,
             layers: [GoogleMaps],
             attributionControl: false,
         });
@@ -88,49 +89,8 @@ export class MapToolsService {
             );
             this.markers[data.id].options.rotationAngle =
                 this.rotationIcon(data);
-            // this.markers[data.id].on('click', (e: any) => {
-            //     moment.locale('es');
-            //     this.getPopup(e, data);
-            // });
         });
         this.map.fitBounds(this.pointLatLens);
-
-        // this.map.on('click', (e) => {
-        //     if (!this.showMenuMobiles) {
-        //         switch (this.type_geo) {
-        //             case 'route':
-        //                 this.createGeometry(e);
-        //                 break;
-        //             case 'zone':
-        //                 this.createGeometry(e);
-        //                 break;
-        //             case 'punt':
-        //                 let id = 9999999999;
-        //                 this.showFormGeomertry = true;
-        //                 this.showOptionsGeoTools = false;
-        //                 this.showGeoTools = false;
-        //                 var latlng = this.map.mouseEventToLatLng(
-        //                     e.originalEvent
-        //                 );
-        //                 this.goDeleteGeometryPath();
-        //                 this.map.setView([latlng.lat, latlng.lng]);
-        //                 this.markersPoint[id] = L.marker(
-        //                     [latlng.lat, latlng.lng],
-        //                     {
-        //                         icon: L.icon({
-        //                             iconUrl: '../assets/icons/iconMap/punt.svg',
-        //                             iconSize: [40, 40],
-        //                             iconAnchor: [20, 20],
-        //                         }),
-        //                     }
-        //                 );
-
-        //                 this.shape.push(String(latlng.lat + ' ' + latlng.lng));
-        //                 this.markersPoint[id].addTo(this.map);
-        //                 break;
-        //         }
-        //     }
-        // });
     }
     /**
      * @description: Asigna los iconos para el marcador deacuerdo al estado
@@ -218,35 +178,18 @@ export class MapToolsService {
         });
     }
     /**
-     * @description: Eliminar los marcadores en el mapa (Cuando es uno)
+     * @description: Limpia el mapa
      */
-    deleteOneChecks(data: any): void {
-        console.log(data, 'arturo');
-        console.log(this.markers.length,'entro');
-        if (this.markers.length) {
-
-            this.map.removeLayer(data);
-            this.markerCluster.clearLayers();
-        }
-    }
-    /**
-     * @description: Eliminar los marcadores en el mapa (cuando son multiples)
-     */
-    deleteChecks(data: any, type?: any): void {
-        if (type === 'delete') {
-            for (let i = 0; i < data.length; i++) {
-                const element = data[i];
-                this.map.removeLayer(this.markersPoint[element.id]);
-                this.clusterHistoric.clearLayers();
-            }
-        } else {
-            for (let i = 0; i < data.length; i++) {
-                const element = data[i];
-                this.map.removeLayer(this.markers[element.id]);
+    public clearMap(): void {
+        for (const point in this.markers) {
+            if (this.markers.hasOwnProperty(point)) {
+                this.map.removeLayer(this.markers[point]);
                 this.markerCluster.clearLayers();
+                this.pointLatLens = [];
             }
         }
     }
+
     /**
      * @description: Asigna la rotacion de los iconos
      */

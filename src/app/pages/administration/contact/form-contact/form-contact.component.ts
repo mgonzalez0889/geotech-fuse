@@ -31,16 +31,10 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
         this.listenObservables();
         this.createContactForm();
-
-        // this.iconService.countries$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((codes: Country[]) => {
-        //         this.countries = codes;
-
-        //         // Mark for check
-        //         this._changeDetectorRef.markForCheck();
-        //     });
     }
+    /**
+     * @description:Trae la informacion que pertenece el indicativo en el formulario
+     */
     getCountryByIso(code: string): any {
         if (code) {
             return this.countries.find((country) => country.code === code);
