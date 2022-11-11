@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-    AfterViewInit,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -14,11 +8,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
-import { HistoriesService } from 'app/core/services/histories.service';
 import { Subscription } from 'rxjs';
 import { ModalContactsComponent } from '../modal-contacts/modal-contacts.component';
 import { MapToolsService } from 'app/core/services/map-tools.service';
 import moment from 'moment';
+import { HistoriesService } from 'app/core/services/api/histories.service';
 
 @Component({
     selector: 'app-control-center-actions',

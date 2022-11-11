@@ -1,7 +1,31 @@
-.detail-report {
-    padding: 10px 30px;
-    .row {
+.detailConsolidator {
+    padding: 10px;
+
+    .title {
         display: flex;
         justify-content: space-between;
+        padding: 20px 100px;
+
+        .plate {
+            font-size: 20px;
+        }
+
+        .close {
+            cursor: pointer;
+        }
+    }
+
+    .items {
+        display: flex;
+        justify-content: space-between;
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            width: 25%;
+            margin-bottom: 10px;
+        }
     }
 }

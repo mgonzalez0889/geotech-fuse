@@ -1,109 +1,67 @@
-<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
-    <ng-container>
-        <div
-            class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-6 px-6 md:px-8 border-b">
-            <!-- Titulo   -->
-            <div class="text-3xl font-extrabold tracking-tight">
-                {{titleReport}}
+<div class="flex flex-col flex-auto w-full">
+  <div class="flex flex-wrap w-full mx-auto p-6">
+
+    <div class="w-full">
+      <app-header-page [title]="this.titlePage"></app-header-page>
+    </div>
+
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer mode="side" [(opened)]="opened" position="end"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <ng-container *ngIf="opened">
+              <app-form-report (emitCloseForm)="this.opened = false"></app-form-report>
+            </ng-container>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+
+            <div class="flex border-b p-6 gap-4">
+              <button *ngIf="this.historicData.length" [matMenuTriggerFor]="menu" mat-mini-fab
+                matTooltip="Descargar reporte" color="accent" (click)="this.downloadReport()">
+                <mat-icon svgIcon="sim_card_download"></mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="downloadReport('csv')">CSV</button>
+                <button mat-menu-item (click)="downloadReport('excel')">EXCEL</button>
+              </mat-menu>
+              <button *ngIf="this.historicData.length" mat-mini-fab matTooltip="Ver linea del tiempo" color="accent"
+                (click)="this.viewReportTimeLine()">
+                <mat-icon svgIcon="feather:map"></mat-icon>
+              </button>
+              <button class="fuse-mat-button-rounded" mat-flat-button color="accent" (click)="this.opened = true;">
+                <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
+                <span class="ml-2">Generar reporte</span>
+              </button>
             </div>
-            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                <!-- Boton generar reporte
-                <button *ngIf="messageNoReport" mat-mini-fab color="primary"
-                    aria-label="Example icon button with a menu icon" (click)="listenObservablesExport()">
-                    <mat-icon>sim_card_download</mat-icon>
-                </button> -->
-                <!--
-                <button mat-mini-fab color="primary" (click)="this.viewReportTimeLine()">
-                </button> -->
-                <button class="ml-4" mat-flat-button [color]="'primary'" (click)="onReport()">
-                    <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-                    <span class="ml-2 mr-1">Generar reporte</span>
-                </button>
+
+            <div>
+              <app-table [dataColumn]="this.displayedColumns" [dataRow]="this.historicData"
+                [dataOptionTable]="this.optionsTable" [buttonTable]="this.buttonTableOption">
+              </app-table>
             </div>
-        </div>
-    </ng-container>
-    <!--Tabla-->
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <!-- Placa Column -->
-        <ng-container matColumnDef="plate">
-            <th mat-header-cell *matHeaderCellDef>Placa</th>
-            <td mat-cell *matCellDef="let element">{{ element.plate }}</td>
-        </ng-container>
-        <!-- Fecha Column -->
-        <ng-container matColumnDef="date_event">
-            <th mat-header-cell *matHeaderCellDef>Fecha</th>
-            <td mat-cell *matCellDef="let element">{{ mapFunctionalitieService.convertHourDate(element.date_entry) }}
-            </td>
-        </ng-container>
-        <!-- Evento Column -->
-        <ng-container matColumnDef="event_name">
-            <th mat-header-cell *matHeaderCellDef>Evento</th>
-            <td mat-cell *matCellDef="let element">{{ element.event_name }}</td>
-        </ng-container>
-        <!-- Dirección Column -->
-        <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef>Dirección</th>
-            <td mat-cell *matCellDef="let element">{{ element.address }}</td>
-        </ng-container>
-        <!-- Latitud Column -->
-        <ng-container matColumnDef="x">
-            <th mat-header-cell *matHeaderCellDef>Latitud</th>
-            <td mat-cell *matCellDef="let element">{{ element.x }}</td>
-        </ng-container>
-        <!-- Longitud Column -->
-        <ng-container matColumnDef="y">
-            <th mat-header-cell *matHeaderCellDef>Longitud</th>
-            <td mat-cell *matCellDef="let element">{{ element.y }}</td>
-        </ng-container>
-        <!-- Velocidad Column -->
-        <ng-container matColumnDef="speed">
-            <th mat-header-cell *matHeaderCellDef>Velocidad</th>
-            <td mat-cell *matCellDef="let element">{{ element.speed }} Km/h</td>
-        </ng-container>
-        <!-- Batería Column -->
-        <ng-container matColumnDef="battery">
-            <th mat-header-cell *matHeaderCellDef>Batería</th>
-            <td mat-cell *matCellDef="let element">
-                {{ element.battery }} %
-            </td>
-        </ng-container>
-        <!-- Ver en mapa Column -->
-        <ng-container matColumnDef="vew_map">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
-                <a target="_blank" href="https://maps.google.com/?q={{ element.x }},{{
-                        element.y
-                    }}">
-                    Ver en el mapa</a>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-    <!-- Mensaje cuando excede  el reporte en mas de 90 dias -->
-    <mat-card class="p-8 m-8 text-center" *ngIf="!messageExceedTime">
-        <mat-card-title>Aviso</mat-card-title>
-        <mat-card-content>
-            <p>
-                El reporte solicitado cubre un rango de fecha de más de 90 días;
-                en ese caso puede solicitarlo a través de nuestros canales de
-                atención al cliente.
-            </p>
-            <p>Telefono: +57 386 0000</p>
-            <p>
-                Direccion: Carrera 55 #100-51 Centro Empresarial Blue Gardens,
-                Barranquilla, Atlántico
-            </p>
-            <p>Correo: Servicioalcliente@geotech.com.co</p>
-        </mat-card-content>
-    </mat-card>
-    <!-- Mensaje cuando no se encuentran dantos en la api de reporte -->
-    <mat-card class="p-8 m-8 text-center" *ngIf="!messageNoReport">
-        <mat-card-title>Aviso</mat-card-title>
-        <mat-card-content>
-            <p>Lo sentimos, no se encontraron datos</p>
-        </mat-card-content>
-    </mat-card>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
-    </mat-paginator>
+
+          </mat-drawer-content>
+
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- <mat-card class="p-8 m-8 text-center" *ngIf="!messageExceedTime">
+  <mat-card-title>Aviso</mat-card-title>
+  <mat-card-content>
+    <p>
+      El reporte solicitado cubre un rango de fecha de más de 90 días;
+      en ese caso puede solicitarlo a través de nuestros canales de
+      atención al cliente.
+    </p>
+    <p>Telefono: +57 386 0000</p>
+    <p>
+      Direccion: Carrera 55 #100-51 Centro Empresarial Blue Gardens,
+      Barranquilla, Atlántico
+    </p>
+    <p>Correo: Servicioalcliente@geotech.com.co</p>
+  </mat-card-content>
+</mat-card> -->

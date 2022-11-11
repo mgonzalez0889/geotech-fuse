@@ -1,91 +1,52 @@
 <div class="flex flex-col flex-auto w-full">
-    <div class="flex flex-wrap w-full mx-auto p-6">
-        <!--Title-->
-        <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
-            <div>
-                <h2 class="text-3xl font-semibold tracking-tight leading-8">Gestion de perfiles</h2>
-                <div class="ml-0.5 font-medium text-secondary">
-                    <ng-container *ngIf="profileCount > 0">
-                        {{profileCount}}
-                    </ng-container>
-                    {{profileCount | i18nPlural: {
-                    '=0' : 'Sin perfiles',
-                    '=1' : 'Perfil',
-                    'other': 'Perfiles'
-                    } }}
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-wrap w-full py-6">
-            <div class="w-full overflow-hidden">
-                <mat-drawer-container class="flex-auto h-auto md:min-h-180">
-                    <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
-                        class="w-full md:w-128 bg-gray-100 border-none">
-                        <ng-container *ngIf="opened">
-                            <app-form-profile></app-form-profile>
-                        </ng-container>
-                    </mat-drawer>
-                    <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
-                        <!-- Acciones-->
-                        <div class="flex border-b p-6">
-                            <div class="flex border-2 rounded-full p-2 ">
-                                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
-                                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
-                            </div>
-                            <div class="pl-6">
-                                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
-                                    (click)="newMenu()">
-                                    <mat-icon class="icon-size-5">add</mat-icon>
-                                    <span class="ml-2">Agregar perfil</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div [hidden]="profileCount > 0" class="pt-3 w-full h-full items-center justify-center">
-                            <div class="flex items-center justify-center">
-                                <div class="text-base font-semibold text-secondary">Lo sentimos no se encontraron datos
-                                </div>
-                            </div>
-                        </div>
-                        <div [hidden]="profileCount <= 0">
-                            <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
-                                <!-- Tabla-->
-                                <table mat-table [dataSource]="dataTableProfile" matSort class="w-full">
-                                    <!-- name Column -->
-                                    <ng-container matColumnDef="name">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-                                        <td mat-cell *matCellDef="let row">
-                                            <span class="pr-6 whitespace-nowrap">
-                                                {{row.name}} </span>
-                                        </td>
-                                    </ng-container>
-                                    <!-- description Column -->
-                                    <ng-container matColumnDef="description">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-                                        <td mat-cell *matCellDef="let row">
-                                            <span class="pr-6 whitespace-nowrap">
-                                                {{row.description}} </span>
-                                        </td>
-                                    </ng-container>
-                                    <tr mat-header-row *matHeaderRowDef="columnsProfile"></tr>
-                                    <tr mat-row (click)="actionsMenu(row)"
-                                        *matRowDef="let row; columns: columnsProfile;">
-                                    </tr>
-                                    <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
-                                    <tr class="mat-row" *matNoDataRow>
-                                        <td class="mat-cell" colspan="2">No hay datos que coincidan con la busqueda:
-                                            "{{input?.value}}"
-                                        </td>
-                                    </tr>
-                                </table>
-                                <mat-paginator
-                                    class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
-                                    [pageSizeOptions]="[10,20,50]">
-                                </mat-paginator>
-                            </div>
-                        </div>
-                    </mat-drawer-content>
-                </mat-drawer-container>
-            </div>
-        </div>
+  <div class="flex flex-wrap w-full mx-auto p-6">
+
+    <!-- Cabecera de la vista -->
+    <div class="w-full">
+      <app-header-page [title]="this.titlePage" [subTitle]="this.subTitlepage"></app-header-page>
     </div>
+
+    <!-- Contenido principal de la vista -->
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
+            class="w-full md:w-160 bg-gray-100 border-none">
+
+            <!-- Formulario de perfil -->
+            <ng-container *ngIf="opened">
+              <app-form-profile [dataUpdate]="this.profileDataUpdate" (emitCloseForm)="this.opened = false"
+                [titleForm]="this.titleForm"></app-form-profile>
+            </ng-container>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+
+            <!-- Botones y buscador de perfiles -->
+            <div class="flex border-b p-6">
+              <div class="flex border-2 rounded-full p-2 ">
+                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+              </div>
+              <div class="pl-6">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="addProfileForm()">
+                  <mat-icon class="icon-size-5">add</mat-icon>
+                  <span class="ml-2">Agregar perfil</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabla con la infomacion de perfiles -->
+            <div>
+              <app-table [dataColumn]="this.columnsProfile" [dataRow]="this.profileData"
+                [dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
+                (emitSelectRow)="this.actionSelectTable($event)">
+              </app-table>
+            </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
+
 </div>

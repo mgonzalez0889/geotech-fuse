@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ReportsService } from 'app/core/services/reports.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
     selector: 'app-detail-grid-report',
@@ -7,11 +6,13 @@ import { ReportsService } from 'app/core/services/reports.service';
     styleUrls: ['./detail-grid-report.component.scss'],
 })
 export class DetailGridReportComponent implements OnInit {
-    constructor(public reportService: ReportsService) {}
+    @Input() detailData: any;
+    @Output() emitClose = new EventEmitter<void>();
+    constructor() {}
 
-    ngOnInit(): void {
-        // this.reportService.trips$.subscribe(trip => {
-        //   console.log(trip);
-        // });
+    ngOnInit(): void {}
+
+    onClose(): void {
+        this.emitClose.emit();
     }
 }

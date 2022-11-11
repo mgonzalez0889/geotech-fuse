@@ -1,439 +1,258 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
 import {
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnDestroy,
-    OnInit,
-    Renderer2,
-    TemplateRef,
-    ViewChild,
-    ViewContainerRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommandsService } from 'app/core/services/commands.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { MatOption } from '@angular/material/core';
+import { MatRadioChange } from '@angular/material/radio';
 import { FleetsService } from 'app/core/services/fleets.service';
-import { MenuOptionsService } from 'app/core/services/menu-options.service';
+import { IListModules, IOptionPermission } from 'app/core/interfaces';
+import { ProfilesService } from 'app/core/services/api/profiles.service';
 import { OwnerPlateService } from 'app/core/services/owner-plate.service';
-import { ProfilesService } from 'app/core/services/profiles.service';
-import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { SelectionModel } from '@angular/cdk/collections';
-import {
-    animate,
-    state,
-    style,
-    transition,
-    trigger,
-} from '@angular/animations';
+import { MenuOptionsService } from 'app/core/services/menu-options.service';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
-    selector: 'app-form-profile',
-    templateUrl: './form-profile.component.html',
-    styleUrls: ['./form-profile.component.scss'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition(
-                'expanded <=> collapsed',
-                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-            ),
-        ]),
-    ],
+  selector: 'app-form-profile',
+  templateUrl: './form-profile.component.html',
+  styleUrls: ['./form-profile.component.scss'],
 })
-export class FormProfileComponent implements OnInit, OnDestroy {
-    @ViewChild(MatSort) private sort: MatSort;
-    @ViewChild(MatPaginator) private paginator: MatPaginator;
-    @ViewChild('platesPanel') private platesPanel: TemplateRef<any>;
-    @ViewChild('fleetsPanel') private fleetsPanel: TemplateRef<any>;
-    @ViewChild('platesPanelOrigin') private platesPanelOrigin: ElementRef;
-    @ViewChild('fleetsPanelOrigin') private fleetsPanelOrigin: ElementRef;
-    public dataTableOption: MatTableDataSource<any>;
-    public columnsOption: string[] = ['select', 'title', 'subtitle'];
-    public columnsToDisplayWithExpand = [...this.columnsOption, 'expand'];
-    public profiles: any = [];
-    public editMode: boolean = false;
-    public opened: boolean = true;
-    public profileForm: FormGroup;
-    public subscription: Subscription;
-    public plates: any = [];
-    public filteredPlates: any = [];
-    public fleets: any = [];
-    public filteredFleets: any = [];
-    public optionMenu: any = [];
-    public expandedElement = this.optionMenu;
-    public typeCommands: any;
-    private platesPanelOverlayRef: OverlayRef;
-    private selection = new SelectionModel<any>(true, []);
+export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() dataUpdate: any = null;
+  @Input() titleForm: string = '';
+  @Output() emitCloseForm = new EventEmitter<void>();
+  @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
+  @ViewChild('allSelectedFleets') private allSelectedFleets: MatOption;
+  public profiles: any = [];
+  public editMode: boolean = false;
+  public valueFilterFleets = '';
+  public valueFilterMobiles = '';
+  public opened: boolean = true;
+  public profileForm: FormGroup = this.fb.group({});
+  public plates: any[] = [];
+  public fleets: any[] = [];
+  public availableModules: IListModules[] = [];
+  public assignedModules: IListModules[] = [];
+  public panelOpenState = false;
+  public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
+  public listTrasport: { name: string; text: string }[] = [
+    {
+      name: 'mobiles',
+      text: 'Moviles',
+    },
+    {
+      name: 'fleet',
+      text: 'Flota',
+    },
+  ];
+  private unsubscribe$ = new Subject<void>();
 
-    constructor(
-        private profileService: ProfilesService,
-        private fb: FormBuilder,
-        private ownerPlateService: OwnerPlateService,
-        private overlay: Overlay,
-        private renderer2: Renderer2,
-        private viewContainerRef: ViewContainerRef,
-        private changeDetectorRef: ChangeDetectorRef,
-        private fleetsService: FleetsService,
-        private commandsService: CommandsService,
-        protected menuOptionsService: MenuOptionsService
-    ) {}
+  constructor(
+    private profileService: ProfilesService,
+    private fb: FormBuilder,
+    private ownerPlateService: OwnerPlateService,
+    private fleetsService: FleetsService,
+    private menuOptionsService: MenuOptionsService,
+  ) { }
 
-    ngOnInit(): void {
-        this.listenObservables();
-        this.createprofileForm();
-        this.getPlates();
-        this.getFleets();
-        this.getTypeCommand();
-        this.getMenuOption();
-    }
-    /**
-     * @description: Valida si es edita o guarda un perfil
-     */
-    public onSave(): void {
-        // const data = this.profileForm.getRawValue();
-        // if (!data.id) {
-        //     this.newContact(data);
-        // } else {
-        //     this.editContact(data);
-        // }
-    }
-    /**
-     * @description: Cierra el menu lateral de la derecha
-     */
-    public closeMenu(): void {
-        this.profileService.behaviorSubjectProfileGrid.next({
-            opened: false,
-            reload: false,
-        });
-    }
-    /**
-     * @description:  valida si esta leyenfo flotas o placas
-     */
-    public typeOfSelection(event: any): void {
-        if (event.value === 0) {
-            this.profileForm.patchValue({ fleets: [] });
-        } else {
-            this.profileForm.patchValue({ plates: [] });
-        }
-    }
+  /**
+   * @description: se llaman todos los servicios y se crea el formulario reactivo.
+   */
+  ngOnInit(): void {
+    this.ownerPlateService.getOwnerPlates().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
+      this.plates = res.data;
+    });
+    this.fleetsService.getFleets().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
+      this.fleets = res.data;
+    });
 
-    /**
-     * @description: Abre el modal de seleccion de placas
-     */
-    public openPlatesPanel(): void {
-        this.platesPanelOverlayRef = this.overlay.create({
-            backdropClass: '',
-            hasBackdrop: true,
-            scrollStrategy: this.overlay.scrollStrategies.block(),
-            positionStrategy: this.overlay
-                .position()
-                .flexibleConnectedTo(this.platesPanelOrigin.nativeElement)
-                .withFlexibleDimensions(true)
-                .withViewportMargin(64)
-                .withLockedPosition(true)
-                .withPositions([
-                    {
-                        originX: 'start',
-                        originY: 'bottom',
-                        overlayX: 'start',
-                        overlayY: 'top',
-                    },
-                ]),
-        });
-        this.platesPanelOverlayRef.attachments().subscribe(() => {
-            this.renderer2.addClass(
-                this.platesPanelOrigin.nativeElement,
-                'panel-opened'
-            );
-            this.platesPanelOverlayRef.overlayElement
-                .querySelector('input')
-                .focus();
-        });
-        const templatePortal = new TemplatePortal(
-            this.platesPanel,
-            this.viewContainerRef
-        );
-        this.platesPanelOverlayRef.attach(templatePortal);
-        this.platesPanelOverlayRef.backdropClick().subscribe(() => {
-            this.renderer2.removeClass(
-                this.platesPanelOrigin.nativeElement,
-                'panel-opened'
-            );
-            if (
-                this.platesPanelOverlayRef &&
-                this.platesPanelOverlayRef.hasAttached()
-            ) {
-                this.platesPanelOverlayRef.detach();
-                this.filteredPlates = this.plates;
-            }
-            if (templatePortal && templatePortal.isAttached) {
-                templatePortal.detach();
-            }
-        });
-    }
-    /**
-     * @description: Filtra las placas
-     */
-    public filterPlates(event: any): void {
-        const value = event.target.value.toLowerCase();
-        this.filteredPlates = this.plates.filter((plate: any) =>
-            plate.plate.toLowerCase().includes(value)
-        );
-    }
-    /**
-     * @description: Click en el select de plates
-     */
-    public togglePlates(plate: any): void {
-        if (this.profileForm.get('plates').value.includes(plate.id)) {
-            this.removePlatesFromContact(plate);
-        } else {
-            this.addPlateFromContact(plate);
-        }
-    }
-    /**
-     * @description: Elimina la placa seleccionada
-     */
-    public removePlatesFromContact(plate: any): void {
-        this.profileForm.get('plates').value.splice(
-            this.profileForm
-                .get('plates')
-                .value.findIndex((item: any) => item === plate.id),
-            1
-        );
-        this.changeDetectorRef.markForCheck();
-    }
-    /**
-     * @description: Agrega  la placa seleccionada
-     */
-    public addPlateFromContact(plate: any): void {
-        this.profileForm.get('plates').value.unshift(plate.id);
-        this.changeDetectorRef.markForCheck();
-    }
-    /**
-     * @description: Abre el modal de seleccion de flotas
-     */
-    public openFleetsPanel(): void {
-        this.platesPanelOverlayRef = this.overlay.create({
-            backdropClass: '',
-            hasBackdrop: true,
-            scrollStrategy: this.overlay.scrollStrategies.block(),
-            positionStrategy: this.overlay
-                .position()
-                .flexibleConnectedTo(this.fleetsPanelOrigin.nativeElement)
-                .withFlexibleDimensions(true)
-                .withViewportMargin(64)
-                .withLockedPosition(true)
-                .withPositions([
-                    {
-                        originX: 'start',
-                        originY: 'bottom',
-                        overlayX: 'start',
-                        overlayY: 'top',
-                    },
-                ]),
-        });
-        this.platesPanelOverlayRef.attachments().subscribe(() => {
-            this.renderer2.addClass(
-                this.fleetsPanelOrigin.nativeElement,
-                'panel-opened'
-            );
-            this.platesPanelOverlayRef.overlayElement
-                .querySelector('input')
-                .focus();
-        });
-        const templatePortal = new TemplatePortal(
-            this.fleetsPanel,
-            this.viewContainerRef
-        );
-        this.platesPanelOverlayRef.attach(templatePortal);
-        this.platesPanelOverlayRef.backdropClick().subscribe(() => {
-            this.renderer2.removeClass(
-                this.fleetsPanelOrigin.nativeElement,
-                'panel-opened'
-            );
-            if (
-                this.platesPanelOverlayRef &&
-                this.platesPanelOverlayRef.hasAttached()
-            ) {
-                this.platesPanelOverlayRef.detach();
-                this.filteredPlates = this.plates;
-            }
-            if (templatePortal && templatePortal.isAttached) {
-                templatePortal.detach();
-            }
-        });
-    }
-    /**
-     * @description: Filtra las flotas
-     */
-    public filterFleets(event: any): void {
-        const value = event.target.value.toLowerCase();
-        this.filteredFleets = this.fleets.filter((fleet: any) =>
-            fleet.name.toLowerCase().includes(value)
-        );
-    }
-    /**
-     * @description: Click en el select de flotas
-     */
-    public toggleFleets(fleet: any): void {
-        if (this.profileForm.get('fleets').value.includes(fleet.id)) {
-            this.removeFleetFromContact(fleet);
-        } else {
-            this.addFleetFromContact(fleet);
-        }
-    }
-    /**
-     * @description: Elimina las flotas seleccionada
-     */
-    public removeFleetFromContact(fleet: any): void {
-        this.profileForm.get('fleets').value.splice(
-            this.profileForm
-                .get('fleets')
-                .value.findIndex((item: any) => item === fleet.id),
-            1
-        );
-        this.changeDetectorRef.markForCheck();
-    }
-    /**
-     * @description: Agrega  la placa seleccionada
-     */
-    public addFleetFromContact(fleet: any): void {
-        this.profileForm.get('fleets').value.unshift(fleet.id);
-        this.changeDetectorRef.markForCheck();
-    }
-    /**
-     * @description: Si el número de elementos seleccionados coincide con el número total de filas.
-     */
-    public isAllSelected(): any {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataTableOption.data.length;
-        return numSelected === numRows;
-    }
-    /**
-     * @description: Selecciona todas las filas si no están todas seleccionadas; de lo contrario borrar la selección.
-     */
-    public toggleAllRows(): void {
-        if (this.isAllSelected()) {
-            this.selection.clear();
-            return;
-        }
-        this.selection.select(...this.dataTableOption.data);
-    }
-    /**
-     * @description: Filtrar datos de la tabla
-     */
-    public filterTable(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataTableOption.filter = filterValue.trim().toLowerCase();
-    }
-    /**
-     * @description: Destruye el observable
-     */
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
-    /**
-     * @description: Crea el formulario
-     */
-    private createprofileForm(): void {
-        this.profileForm = this.fb.group({
-            id: [''],
-            name: [''],
-            description: [''],
-            typeOfSelection: [0],
-            plates: [[]],
-            fleets: [[]],
-            commands: [''],
-            rulesAcces: this.fb.array([]),
-        });
-    }
-    /**
-     * @description: Agrega una nueva regla de acceso
-     */
+    this.readAndParseOptionModules();
+    this.buildForm();
+  }
 
-    // public addOption(): void {
-    //     const optionFormGroup = this.fb.group({
-    //         id: [0],
-    //     });
-    //     (this.profileForm.get('rulesAcces') as FormArray).push(optionFormGroup);
-    // }
 
-    /**
-     * @description: Escucha el observable behavior y busca al contacto
-     */
-    private listenObservables(): void {
-        this.subscription =
-            this.profileService.behaviorSubjectProfileForm.subscribe(
-                ({ newProfile, id, isEdit }) => {
-                    this.editMode = isEdit;
-                    if (newProfile) {
-                        this.profiles = [];
-                        this.profiles['name'] = newProfile;
-                        if (this.profileForm) {
-                            this.profileForm.reset();
-                        }
-                    }
-                    if (id) {
-                        // this.profileService.getContact(id).subscribe((res: any) => {
-                        //     this.profiles = res.data;
-                        //     this.profileForm.patchValue(this.profiles);
-                        // });
-                    }
-                }
-            );
+  /**
+   * @description: si viene informacion para modificar, seteamos el formulario o lo limpiamos.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.dataUpdate) {
+      this.editMode = false;
+      this.profileForm.patchValue({ ...this.dataUpdate });
+    } else {
+      this.editMode = false;
+      this.profileForm.reset();
     }
-    /**
-     * @description: Funcion trae las placas del cliente
-     */
-    private getPlates(): void {
-        this.ownerPlateService.getOwnerPlates().subscribe((res) => {
-            this.plates = res.data;
-            this.filteredPlates = res.data;
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * @description: cuando se envie el formulario, parseamos y preguntamos si va a modificar o agregar.
+   */
+  public onSubmit(): void {
+
+    const modules: FormArray = this.profileForm.get('module') as FormArray;
+    this.assignedModules.forEach(({ id, option }) => {
+      modules.push(new FormControl({ id, option: { ...option, read: true } }));
+    });
+    const valueForm = this.profileForm.value;
+
+    if (!this.dataUpdate) {
+      this.profileService.profileForm$.next({ typeAction: 'add', formData: valueForm });
+    } else {
+      this.profileService.profileForm$.next({
+        typeAction: 'edit',
+        formData: { ...valueForm },
+        profileId: this.dataUpdate.id
+      });
+    }
+    this.profileForm.reset();
+    this.editMode = false;
+
+  }
+
+  /**
+   * @description: funcion para cerrar el formulario.
+   */
+  public closeForm(): void {
+    this.emitCloseForm.emit();
+    this.editMode = false;
+    this.dataUpdate = null;
+    this.profileForm.reset();
+  }
+
+  /**
+   * @description: se emite hacia el componente grid-profile para que elimine el perfil.
+   */
+  public deleteProfile(): void {
+    this.profileService.profileForm$.next({ typeAction: 'delete', formData: this.dataUpdate });
+    this.editMode = false;
+  }
+
+  /**
+   * @description: seleccionar muchos de moviles
+   */
+  public allSelectionMobiles(): void {
+    if (this.allSelectedMobiles.selected) {
+      this.profileForm.controls['plates']
+        .patchValue([...this.plates.map(item => item.id), 0]);
+    } else {
+      this.profileForm.controls['plates'].patchValue([]);
+    }
+  }
+
+  /**
+   * @description: seleccionar muchos de flotas
+   */
+  public allSelectionFleets(): void {
+    if (this.allSelectedFleets.selected) {
+      this.profileForm.controls['fleets']
+        .patchValue([...this.fleets.map(item => item.id), 0]);
+    } else {
+      this.profileForm.controls['fleets'].patchValue([]);
+    }
+  }
+
+  /**
+   * @description
+   * se ejecuta con el evento del componente matRadio,
+   * y dependiendo del tipo de trasporte selecciondo le agregamos
+   * y quitamos validacion de requerido en el formulario
+   */
+  public onChangeTrasport({ value }: MatRadioChange): void {
+    if (value === 'mobiles') {
+      this.profileForm.controls['fleets'].patchValue([]);
+      this.profileForm.controls['fleets'].clearValidators();
+      this.profileForm.controls['plates'].setValidators([Validators.required]);
+    } else if (value === 'fleet') {
+      this.profileForm.controls['plates'].patchValue([]);
+      this.profileForm.controls['plates'].clearValidators();
+      this.profileForm.controls['fleets'].setValidators([Validators.required]);
+    }
+    this.profileForm.controls['plates'].updateValueAndValidity();
+    this.profileForm.controls['fleets'].updateValueAndValidity();
+    this.selectTrasport = value;
+  }
+
+  /**
+   * @description: se asignan los permisos de los modulos
+   * @param checked - indica si esta checkedo el check
+   * @param keyOption - el nombre del permiso
+   * @param moduleId - id del modulo al que se le van asiganar permisos
+   */
+  public asingOption(checked: boolean, keyOption: string, moduleId: number): void {
+    const index = this.assignedModules.findIndex(module => module.id === moduleId);
+    if (checked) {
+      this.assignedModules[index].option[keyOption] = true;
+    } else {
+      this.assignedModules[index].option[keyOption] = false;
+    }
+  }
+
+  /**
+   * @description: funcion del drag drop, para la asignacion del modulos.
+   */
+  public drop(event: CdkDragDrop<IListModules[]>): void {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  /**
+   * @description: Se leen y se parsean los modulos.
+   */
+  private readAndParseOptionModules(): void {
+    this.menuOptionsService.getMenuOptionsNew()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+
+        const option: IOptionPermission = {
+          read: false,
+          create: false,
+          update: false,
+          delete: false,
+        };
+
+        data.forEach(({ children }) => {
+          children.forEach(({ id, title, createOption, editOption, deleteOption }) => {
+            this.availableModules.push({ id, title, createOption, editOption, deleteOption, option: { ...option } });
+          });
         });
+      });
+  }
+
+  /**
+   * @description: Se crea el formulario reactivo.
+   */
+  private buildForm(): void {
+    this.profileForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      plates: [[], Validators.required],
+      fleets: [[]],
+      module: this.fb.array([]),
+    });
+
+    if (this.dataUpdate) {
+      this.profileForm.patchValue({ ...this.dataUpdate });
     }
-    /**
-     * @description: Funcion trae las flotas del cliente
-     */
-    private getFleets(): void {
-        this.fleetsService.getFleets().subscribe((res) => {
-            this.fleets = res.data;
-            this.filteredFleets = res.data;
-        });
-    }
-    /**
-     * @description: Muestra los tipos de comandos del cliente
-     */
-    private getTypeCommand(): void {
-        this.commandsService.getTypeCommands().subscribe((res) => {
-            this.typeCommands = res.data;
-        });
-    }
-    /**
-     * @description: Trae todos las opciones del menu
-     */
-    private getMenuOption(): void {
-        this.menuOptionsService.getMenuOptionsNew().subscribe((res) => {
-            res.data.forEach((x) => {
-                x.children.forEach((y) => {
-                    if (y.type === 'basic') {
-                        this.optionMenu.push(y);
-                    }
-                    y.children.forEach((z) => {
-                        if (z.type === 'basic') {
-                            this.optionMenu.push(z);
-                        }
-                    });
-                });
-            });
-            this.dataTableOption = new MatTableDataSource(this.optionMenu);
-            this.dataTableOption.paginator = this.paginator;
-            this.dataTableOption.sort = this.sort;
-        });
-    }
-    private actionsMenu(): void {}
+  }
+
 }

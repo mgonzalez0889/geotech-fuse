@@ -1,74 +1,82 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MobileService } from '../../../../core/services/mobile.service';
-import { Observable, Subscription } from 'rxjs';
-import { EventsService } from '../../../../core/services/events.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { HistoriesService } from '../../../../core/services/histories.service';
-import { FleetsService } from '../../../../core/services/fleets.service';
-import { MatRadioChange } from '@angular/material/radio';
+import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HistoriesService } from '../../../../core/services/api/histories.service';
 import moment from 'moment';
-
-export interface CalendarSettings {
-    dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD' | 'll';
-    timeFormat: '12' | '24';
-    startWeekOn: 6 | 0 | 1;
-}
+import { MatOption } from '@angular/material/core';
 
 @Component({
-    selector: 'app-form-report',
-    templateUrl: './form-report.component.html',
-    styleUrls: ['./form-report.component.scss'],
+  selector: 'app-form-report',
+  templateUrl: './form-report.component.html',
+  styleUrls: ['./form-report.component.scss'],
 })
 export class FormReportComponent implements OnInit {
-    public form: FormGroup;
-    public select: boolean;
-    public fleets$: Observable<any>;
-    public events$: Observable<any>;
-    public mobiles$: Observable<any>;
-    public today = new Date();
-    public month = this.today.getMonth();
-    public year = this.today.getFullYear();
-    public day = this.today.getDate();
-    public initialHours: string = '00:00:00';
-    public finalHours: string = '23:59:00';
-    public initialDate: Date = new Date(this.year, this.month, this.day);
-    public finalDate: Date = new Date(this.year, this.month, this.day);
-    plates: [];
+  @Output() emitCloseForm = new EventEmitter<void>();
+  @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
+  public form: FormGroup = this.formBuilder.group({});
+  public subcription$: Subscription;
+  public editMode: boolean = false;
+  public mobiles: any[] = [];
 
-    constructor(
-        public dialogRef: MatDialogRef<FormReportComponent>,
-        @Inject(MAT_DIALOG_DATA) public message: any,
-        private _mobileService: MobileService,
-        private _eventsService: EventsService,
-        private fb: FormBuilder,
-        private _historicService: HistoriesService,
-        private _fleetsServices: FleetsService
-    ) {}
+  constructor(
+    private _mobileService: MobileService,
+    private _historicService: HistoriesService,
+    private formBuilder: FormBuilder,
+  ) {
+    this.buildForm();
+  }
 
-    ngOnInit(): void {
-        this.getMobiles();
+  ngOnInit(): void {
+    this.subcription$ = this._mobileService.getMobiles().subscribe(({ data }) =>
+      this.mobiles = [...data]
+    );
+  }
+
+  public onSubmit(): void {
+
+    const formValues = this.form.value;
+    const dateStart = new Date(formValues.date_init).getTime();
+    const dateEnd = new Date(formValues.date_end).getTime();
+
+    if (Number((dateStart - dateEnd) / (1000 * 60 * 60 * 24)) < 91) {
+      const converDateInit =
+        moment(formValues.date_init).format('DD/MM/YYYY') +
+        ' 00:00:00';
+
+      const converDateEnd =
+        moment(formValues.date_end).format('DD/MM/YYYY') +
+        ' 23:59:00';
+
+      this._historicService.behaviorSubjectDataFormsTrip.next({
+        payload: { ...formValues, date_init: converDateInit, date_end: converDateEnd },
+      });
+
+      this.editMode = false;
     }
+  }
 
-    /**
-     * @description: Obtiene los eventos
-     */
-    private getMobiles(): void {
-        this.mobiles$ = this._mobileService.getMobiles();
+  /**
+   * @description: seleccionar muchos de moviles
+   */
+  allSelectionMobiles(): void {
+    if (this.allSelectedMobiles.selected) {
+      this.form.controls['plates']
+        .patchValue([...this.mobiles.map(item => item.plate), 0]);
+    } else {
+      this.form.controls['plates'].patchValue([]);
     }
+  }
 
-    /**
-     * @description: Genera el reporte
-     */
-    public onSelect(): void {
-        let data = {
-            date_init:
-                moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
-            date_end: moment(this.finalDate).format('DD/MM/YYYY') + ' 23:59:59',
-            plates: this.plates,
-        };
-        this._historicService.behaviorSubjectDataFormsTrip.next({
-            payload: data,
-        });
-    }
+  /**
+   * @description: Construimos el formulario
+   */
+  private buildForm(): void {
+    this.form = this.formBuilder.group({
+      date_init: [new Date(), [Validators.required]],
+      date_end: [new Date(), [Validators.required]],
+      plates: [[], [Validators.required]],
+    });
+  }
 }

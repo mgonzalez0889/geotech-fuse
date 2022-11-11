@@ -1,233 +1,225 @@
 <div class="flex flex-col flex-auto w-full">
-    <div class="flex flex-wrap w-full mx-auto p-6">
-        <!--Title-->
-        <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <h2 class="text-3xl font-semibold tracking-tight leading-8">Despachos</h2>
-                    <div class="ml-0.5 font-medium text-secondary">
-                        <ng-container *ngIf="dispatchCount > 0">
-                            {{dispatchCount}}
-                        </ng-container>
-                        {{dispatchCount | i18nPlural: {
-                        '=0' : 'Sin despachos',
-                        '=1' : 'Despachos',
-                        'other': 'Despachos'
-                        } }}
-                    </div>
-                </div>
-                <div class="hidden sm:inline-flex justify-end">
-                    <div
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50">
-                        <div class="text-lg font-bold">{{pre_dispatch_count}}</div>
-                        <p class="text-sm">Pre despacho </p>
-                    </div>
-                    <div
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-green-200  text-green-800 dark:bg-green-600 dark:text-green-50">
-                        <div class="text-lg font-bold">{{dispatch_cout}}</div>
-                        <p class="text-sm">Despacho</p>
-                    </div>
-                    <div
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
-                        <div class="text-lg font-bold">{{finished_cout}}</div>
-                        <p class="text-sm">Finalizado</p>
-                    </div>
-                </div>
-            </div>
+  <div class="flex flex-wrap w-full mx-auto p-6">
+    <!--Title-->
+    <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
+      <div class="flex items-center justify-between w-full">
+        <div>
+          <h2 class="text-3xl font-semibold tracking-tight leading-8">Despachos</h2>
+          <div class="ml-0.5 font-medium text-secondary">
+            <ng-container *ngIf="dispatchCount > 0">
+              {{dispatchCount}}
+            </ng-container>
+            {{dispatchCount | i18nPlural: {
+            '=0' : 'Sin despachos',
+            '=1' : 'Despachos',
+            'other': 'Despachos'
+            } }}
+          </div>
         </div>
-        <div class="flex flex-wrap w-full py-6">
-            <div class="w-full overflow-hidden">
-                <mat-drawer-container class="flex-auto h-auto md:min-h-180">
-                    <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
-                        class="w-full md:w-128 bg-gray-100 border-none">
-                        <ng-container *ngIf="opened">
-                            <app-form-dispatch></app-form-dispatch>
-                        </ng-container>
-                    </mat-drawer>
-                    <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
-                        <!-- Acciones-->
-                        <div class="flex border-b p-6">
-                            <div class="flex border-2 rounded-full p-2 ">
-                                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
-                                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
-                            </div>
-                            <div class="flex border-2 rounded-full p-2 cursor-pointer w-52  ml-3"
-                                (click)="picker.open()">
-                                <div color="accent">
-                                    <mat-date-range-input [rangePicker]="picker">
-                                        <input matStartDate [(ngModel)]="initialDate" placeholder="Fecha inicial">
-                                        <input matEndDate [(ngModel)]="finalDate" placeholder="Fecha Final">
-                                    </mat-date-range-input>
-                                    <mat-date-range-picker #picker>
-                                        <mat-datepicker-actions>
-                                            <button mat-button matDatepickerCancel>Cancelar</button>
-                                            <button mat-raised-button [color]="'accent'" matDatepickerApply
-                                                (click)="getDispatch()">Buscar</button>
-                                        </mat-datepicker-actions>
-                                    </mat-date-range-picker>
-                                </div>
-                                <mat-icon class="icon-size-5" matSuffix svgIcon="feather:calendar">
-                                </mat-icon>
-                            </div>
-                            <div class="pl-6">
-                                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
-                                    (click)="newDispatch()">
-                                    <mat-icon class="icon-size-5">add</mat-icon>
-                                    <span class="ml-2">Nuevo despacho</span>
-                                </button>
-                            </div>
-                            <div [hidden]="!infoDispatch" class="pl-6">
-                                <!--
-                                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
-                                    (click)="downloadDispatch()" [matTooltip]="'Descargar'">
-                                    <mat-icon class="icon-size-5">file_download</mat-icon>
-                                </button> -->
-                                <button class="fuse-mat-button-rounded" mat-flat-button [matMenuTriggerFor]="menu"
-                                    [color]="'accent'" [matTooltip]="'Descargar'">
-                                    <mat-icon class="icon-size-5">file_download</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu">
-                                    <button mat-menu-item (click)="downloadDispatch('CSV')">CSV</button>
-                                    <button mat-menu-item (click)="downloadDispatch('EXCEL')">EXCEL</button>
-                                </mat-menu>
-                            </div>
-                        </div>
-                        <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
-                            <!-- Tabla-->
-                            <table mat-table [dataSource]="dataTableDispatch" matSort class="w-full">
-                                <!-- spreadsheet Column -->
-                                <ng-container matColumnDef="id">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> No.</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.id}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- spreadsheet Column -->
-                                <ng-container matColumnDef="spreadsheet">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Planilla</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.spreadsheet}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- status Column -->
-                                <ng-container matColumnDef="status">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del despacho</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status ===2,
+        <div class="hidden sm:inline-flex justify-end">
+          <div
+            class="mx-2 text-center px-4 py-1 rounded-md bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50">
+            <div class="text-lg font-bold">{{pre_dispatch_count}}</div>
+            <p class="text-sm">Pre despacho </p>
+          </div>
+          <div
+            class="mx-2 text-center px-4 py-1 rounded-md bg-green-200  text-green-800 dark:bg-green-600 dark:text-green-50">
+            <div class="text-lg font-bold">{{dispatch_cout}}</div>
+            <p class="text-sm">Despacho</p>
+          </div>
+          <div class="mx-2 text-center px-4 py-1 rounded-md bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
+            <div class="text-lg font-bold">{{finished_cout}}</div>
+            <p class="text-sm">Finalizado</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <ng-container *ngIf="opened">
+              <app-form-dispatch></app-form-dispatch>
+            </ng-container>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col mb-18 overflow-y-auto bg-card shadow rounded-2xl">
+            <!-- Acciones-->
+            <div class="flex border-b p-6">
+              <div class="flex border-2 rounded-full p-2 ">
+                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+              </div>
+              <div class="flex border-2 rounded-full p-2 cursor-pointer w-52  ml-3" (click)="picker.open()">
+                <div color="accent">
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate [(ngModel)]="initialDate" placeholder="Fecha inicial">
+                    <input matEndDate [(ngModel)]="finalDate" placeholder="Fecha Final">
+                  </mat-date-range-input>
+                  <mat-date-range-picker #picker>
+                    <mat-datepicker-actions>
+                      <button mat-button matDatepickerCancel>Cancelar</button>
+                      <button mat-raised-button [color]="'accent'" matDatepickerApply
+                        (click)="getDispatch()">Buscar</button>
+                    </mat-datepicker-actions>
+                  </mat-date-range-picker>
+                </div>
+                <mat-icon class="icon-size-5" matSuffix svgIcon="feather:calendar">
+                </mat-icon>
+              </div>
+              <div class="pl-6">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="newDispatch()">
+                  <mat-icon class="icon-size-5">add</mat-icon>
+                  <span class="ml-2">Nuevo despacho</span>
+                </button>
+              </div>
+              <div *ngIf="this.infoDispatch.length" class="pl-6">
+
+                <button class="fuse-mat-button-rounded" mat-flat-button [matMenuTriggerFor]="menu" [color]="'accent'"
+                  [matTooltip]="'Descargar'">
+                  <mat-icon class="icon-size-5">file_download</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="downloadDispatch('csv')">CSV</button>
+                  <button mat-menu-item (click)="downloadDispatch('excel')">EXCEL</button>
+                </mat-menu>
+              </div>
+            </div>
+            <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
+              <!-- Tabla-->
+              <table mat-table [dataSource]="dataTableDispatch" matSort class="w-full">
+                <!-- spreadsheet Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> No.</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.id}} </span>
+                  </td>
+                </ng-container>
+                <!-- spreadsheet Column -->
+                <ng-container matColumnDef="spreadsheet">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Planilla</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.spreadsheet}} </span>
+                  </td>
+                </ng-container>
+                <!-- status Column -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del despacho</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span
+                      class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                      [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status ===2,
                                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': row.status ===1,
                                                     'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': row.status === 0
                                                 }">
 
-                                            <span *ngIf="row.status === 0" class="leading-relaxed whitespace-nowrap">
-                                                Predespacho
-                                            </span>
-                                            <span *ngIf="row.status === 1" class="leading-relaxed whitespace-nowrap">
-                                                Despacho
-                                            </span>
-                                            <span *ngIf="row.status === 2" class="leading-relaxed whitespace-nowrap">
-                                                Finalizado
-                                            </span>
-                                        </span>
-                                    </td>
-                                </ng-container>
-                                <!-- created_at Column -->
-                                <ng-container matColumnDef="created_at">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creacion </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="px-6 whitespace-nowrap">
-                                            {{row.created_at | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- date_init_dispatch Column -->
-                                <ng-container matColumnDef="date_init_dispatch">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio de despacho
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.date_init_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- date_end_dispatch Column -->
-                                <ng-container matColumnDef="date_end_dispatch">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de finalización del
-                                        despacho
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.date_end_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- plate Column -->
-                                <ng-container matColumnDef="plate">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Vehiculo</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.plate}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- device Column -->
-                                <ng-container matColumnDef="device">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Dispositivo</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.device_description}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- container_number Column -->
-                                <ng-container matColumnDef="container_number">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Contenedor</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.container_number}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- security_seal Column -->
-                                <ng-container matColumnDef="security_seal">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sello de seguridad</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.security_seal}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- init_place Column -->
-                                <ng-container matColumnDef="init_place">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.init_place}} </span>
-                                    </td>
-                                </ng-container>
-                                <!-- end_place Column -->
-                                <ng-container matColumnDef="end_place">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <span class="pr-6 whitespace-nowrap">
-                                            {{row.end_place}} </span>
-                                    </td>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="columnsDispatch"></tr>
-                                <tr mat-row (click)="actionsDispatch(row.id)"
-                                    *matRowDef="let row; columns: columnsDispatch;">
-                                </tr>
-                                <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
-                                <tr class="mat-row" *matNoDataRow>
-                                    <td class="mat-cell" colspan="10">No hay datos que coincidan con la busqueda:
-                                        "{{input?.value}}"
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <mat-paginator
-                            class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
-                            [pageSizeOptions]="[10]" aria-label="Select page of users">
-                        </mat-paginator>
-                    </mat-drawer-content>
-                </mat-drawer-container>
+                      <span *ngIf="row.status === 0" class="leading-relaxed whitespace-nowrap">
+                        Predespacho
+                      </span>
+                      <span *ngIf="row.status === 1" class="leading-relaxed whitespace-nowrap">
+                        Despacho
+                      </span>
+                      <span *ngIf="row.status === 2" class="leading-relaxed whitespace-nowrap">
+                        Finalizado
+                      </span>
+                    </span>
+                  </td>
+                </ng-container>
+                <!-- created_at Column -->
+                <ng-container matColumnDef="created_at">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creacion </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="px-6 whitespace-nowrap">
+                      {{row.created_at | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
+                  </td>
+                </ng-container>
+                <!-- date_init_dispatch Column -->
+                <ng-container matColumnDef="date_init_dispatch">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio de despacho
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.date_init_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
+                  </td>
+                </ng-container>
+                <!-- date_end_dispatch Column -->
+                <ng-container matColumnDef="date_end_dispatch">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de finalización del
+                    despacho
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.date_end_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
+                  </td>
+                </ng-container>
+                <!-- plate Column -->
+                <ng-container matColumnDef="plate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Vehiculo</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.plate}} </span>
+                  </td>
+                </ng-container>
+                <!-- device Column -->
+                <ng-container matColumnDef="device">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Dispositivo</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.device_description}} </span>
+                  </td>
+                </ng-container>
+                <!-- container_number Column -->
+                <ng-container matColumnDef="container_number">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Contenedor</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.container_number}} </span>
+                  </td>
+                </ng-container>
+                <!-- security_seal Column -->
+                <ng-container matColumnDef="security_seal">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Sello de seguridad</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.security_seal}} </span>
+                  </td>
+                </ng-container>
+                <!-- init_place Column -->
+                <ng-container matColumnDef="init_place">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.init_place}} </span>
+                  </td>
+                </ng-container>
+                <!-- end_place Column -->
+                <ng-container matColumnDef="end_place">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.end_place}} </span>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnsDispatch"></tr>
+                <tr mat-row (click)="actionsDispatch(row.id)" *matRowDef="let row; columns: columnsDispatch;">
+                </tr>
+                <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="10">No hay datos que coincidan con la busqueda:
+                    "{{input?.value}}"
+                  </td>
+                </tr>
+              </table>
             </div>
-        </div>
+            <mat-paginator
+              class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
+              [pageSizeOptions]="[10]" aria-label="Select page of users">
+            </mat-paginator>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
     </div>
+  </div>
 </div>

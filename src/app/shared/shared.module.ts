@@ -9,20 +9,49 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ComponentsModule } from './components/components.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatIconModule,
-        MatSelectModule,
-        MatFormFieldModule,
-    ],
-    exports: [CommonModule, FormsModule, ReactiveFormsModule],
-    declarations: [MessageDialogComponent, ConfirmDeleteComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ComponentsModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatTooltipModule,
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ComponentsModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatMenuModule
+  ],
+  declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })
-export class SharedModule {}
+export class SharedModule { }

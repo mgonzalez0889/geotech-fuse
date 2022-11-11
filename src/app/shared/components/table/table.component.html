@@ -1,0 +1,42 @@
+<div [hidden]="!this.dataRow.length">
+
+  <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
+
+    <table mat-table [dataSource]="this.dataSource" matSort class="w-full">
+      <ng-container [matColumnDef]="dataOption.name" *ngFor="let dataOption of this.dataOptionTable">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text}} </th>
+        <td [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row">
+          <span class="pr-6 whitespace-nowrap">
+            {{ row[dataOption.name] | dataTable:dataOption.typeField }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container *ngIf="this.buttonTable" matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button class="ml-4" mat-icon-button [matTooltip]="this.buttonTable.text" matTooltipPosition="above"
+            (click)="this.buttonTable.action(row)">
+            <mat-icon [svgIcon]="this.buttonTable.icon"></mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="this.dataColumn"></tr>
+      <tr mat-row (click)="actionSelectRow(row)" *matRowDef="let row; columns: this.dataColumn;"></tr>
+
+    </table>
+    <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
+      [pageSizeOptions]="[10,20,50]">
+    </mat-paginator>
+
+  </div>
+</div>
+
+<mat-card class="p-8 m-8 text-center" *ngIf="!this.dataRow.length">
+  <mat-card-title>Aviso</mat-card-title>
+  <mat-card-content>
+    <p>Lo sentimos, no se encontraron datos</p>
+  </mat-card-content>
+</mat-card>
