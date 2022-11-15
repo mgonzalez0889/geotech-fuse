@@ -18,7 +18,6 @@ import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.ser
   styleUrls: ['./grid-dispatch.component.scss'],
 })
 export class GridDispatchComponent implements OnInit, OnDestroy {
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public dispatch_cout: number = 0;

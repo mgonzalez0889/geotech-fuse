@@ -33,7 +33,7 @@
             <div>
               <app-table [dataColumn]="this.displayedColumns" [dataRow]="this.userData"
                 [dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
-                (emitSelectRow)="this.selectUserTable($event)">
+                (emitSelectRow)="this.selectUserTable($event)" (emitChangeSwitch)="this.changeEnableUser($event)">
               </app-table>
             </div>
 

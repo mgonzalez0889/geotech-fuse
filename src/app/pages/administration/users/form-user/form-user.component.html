@@ -1,10 +1,3 @@
-<!-- 
-<ng-container *ngIf="editPassword">
-  <span class="font-semibold mb-2">¿Cambiar contraseña?</span>
-  <mat-slide-toggle formControlName="enable_pass" [color]="'primary'">
-    {{selectedProductForm.get('active').value === true ? 'Active' : 'Disabled'}}
-  </mat-slide-toggle>
-</ng-container> -->
 <div class="flex flex-col w-full sm:pl-6">
   <div class="bg-card shadow rounded-2xl min-h-auto">
 
@@ -99,7 +92,16 @@
               <input matInput formControlName="email" placeholder="example@gmail.com">
             </mat-form-field>
 
-            <mat-form-field *ngIf="!this.dataUpdate" class="w-full fuse-mat-dense">
+            <ng-container *ngIf="this.dataUpdate">
+              <div class="flex gap-6">
+
+                <mat-label>¿Cambiar contraseña?</mat-label>
+                <mat-slide-toggle [(ngModel)]="editPassword" [ngModelOptions]="{standalone: true}" color="primary">
+                </mat-slide-toggle>
+              </div>
+            </ng-container>
+
+            <mat-form-field *ngIf="!this.dataUpdate || editPassword" class="w-full fuse-mat-dense">
               <mat-label>Contraseña</mat-label>
               <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="password_digest">
               <mat-icon class="cursor-pointer" matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ?
@@ -107,7 +109,7 @@
                 'visibility'}}</mat-icon>
             </mat-form-field>
 
-            <mat-form-field *ngIf="!this.dataUpdate" class="w-full fuse-mat-dense">
+            <mat-form-field *ngIf="!this.dataUpdate || editPassword" class="w-full fuse-mat-dense">
               <mat-label>Confirmar contraseña</mat-label>
               <input matInput type="password" formControlName="confirm_password">
               <mat-error *ngIf="formUser.get('confirm_password').hasError('mustMatch')">

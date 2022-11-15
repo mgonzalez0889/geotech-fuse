@@ -5,7 +5,8 @@ import { IOptionTable } from '../../../../core/interfaces/components/table.inter
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { takeUntil } from 'rxjs/operators';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
-import { NgxPermissionsService } from 'ngx-permissions';
+import { NgxPermissionsObject } from 'ngx-permissions';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
   selector: 'app-grid-user',
@@ -20,7 +21,6 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public userData: any[] = [];
   public dataFilter: string = '';
   public userDataUpdate: any = null;
-  public listPermission: any = [];
   public optionsTable: IOptionTable[] = [
     {
       name: 'user_login',
@@ -44,13 +44,13 @@ export class GridUserComponent implements OnInit, OnDestroy {
       classTailwind: 'hover:underline text-primary-500'
     },
     {
-      name: 'status',
+      name: 'enable_user',
       text: 'Estado',
       typeField: 'switch'
     }
   ];
-
   public displayedColumns: string[] = [...this.optionsTable.map(({ name }) => name)];
+  private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
     addUser: 'administracion:usuarios:create',
     updateUser: 'administracion:usuarios:update',
@@ -59,21 +59,20 @@ export class GridUserComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private permissionsService: NgxPermissionsService,
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private authService: AuthService,
   ) { }
 
 
   ngOnInit(): void {
     this.readDataUser();
     this.listenFormUser();
-
-    this.permissionsService.permissions$
+    this.authService.permissionList
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.listPermission = data ?? [];
+      .subscribe((permission) => {
+        this.listPermission = permission;
       });
   }
 
@@ -82,12 +81,13 @@ export class GridUserComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  /**
+   * @description: funcion para abrir formulario de usuario.
+   */
   public addUserForm(): void {
     if (!this.listPermission[this.permissionValid.addUser]) {
-      this.toastAlert.openAlert({
+      this.toastAlert.toasAlertWarn({
         message: 'No tienes permisos suficientes para realizar esta acción.',
-        actionMessage: 'cerrar',
-        styleClass: 'alert-warn'
       });
     } else {
       this.opened = true;
@@ -106,6 +106,17 @@ export class GridUserComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @description: resibe evento de la tabla cuando cambie el valor de el switch de estado de usuario.
+   */
+  public changeEnableUser(dataEvent: { state: boolean; data: any }): void {
+    this.usersService.changeEnableUser(dataEvent.data.id, dataEvent.state).subscribe((data) => {
+      this.toastAlert.toasAlertSuccess({
+        message: 'Estado de Usuario modificado con exito.'
+      });
+    });
+  }
+
+  /**
    * @description: Filtrar datos de la tabla
    */
   public filterTable(event: Event): void {
@@ -113,6 +124,9 @@ export class GridUserComponent implements OnInit, OnDestroy {
     this.dataFilter = filterValue.trim().toLowerCase();
   }
 
+  /**
+   * @description: leemos todos los registros de usuario.
+   */
   private readDataUser(): void {
     this.usersService.getUsers().pipe(takeUntil(this.unsubscribe$)).subscribe(({ data }) => {
       this.subTitlePage = data
@@ -122,6 +136,9 @@ export class GridUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description: Eliminamos un usuario.
+   */
   private deleteUser(userId: number): void {
     const confirmation = this.confirmationService.open();
     confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
@@ -134,36 +151,42 @@ export class GridUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description: escuchamos los eventos del formulario de usuarios.
+   */
   private listenFormUser(): void {
     this.usersService.userForm$.pipe(takeUntil(this.unsubscribe$)).subscribe(({ formData, typeAction }) => {
       if (typeAction === 'add') {
         this.usersService.postUser(formData).subscribe(() => {
           this.opened = false;
           this.readDataUser();
-          this.toastAlert.openAlert({
+          this.toastAlert.toasAlertSuccess({
             message: `Usuario ${formData.full_name} creado con exito.`,
-            styleClass: 'alert-success'
           });
         });
       } else if (typeAction === 'edit') {
         if (!this.listPermission[this.permissionValid.updateProfile]) {
-          this.toastAlert.openAlert({
+          this.toastAlert.toasAlertWarn({
             message: 'No tienes permisos suficientes para realizar esta acción.',
-            actionMessage: 'cerrar',
-            styleClass: 'alert-warn'
+          });
+          return;
+        }
+        this.usersService.putUser(formData).pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
+          this.opened = false;
+          this.readDataUser();
+          this.toastAlert.toasAlertSuccess({
+            message: 'Usuario modificado con exito.',
+          });
+        });
+
+      } else if (typeAction === 'delete') {
+        if (!this.listPermission[this.permissionValid.deleteUser]) {
+          this.toastAlert.toasAlertWarn({
+            message: 'No tienes permisos suficientes para realizar esta acción.',
           });
         } else {
-          this.usersService.putUser(formData).pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-            this.opened = false;
-            this.readDataUser();
-            this.toastAlert.openAlert({
-              message: 'Usuario modificado con exito.',
-              styleClass: 'alert-success'
-            });
-          });
+          this.deleteUser(formData.id);
         }
-      } else if (typeAction === 'delete') {
-        this.deleteUser(formData.id);
       }
     });
   }

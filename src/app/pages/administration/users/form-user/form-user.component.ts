@@ -17,7 +17,7 @@ import { UsersService } from '../../../../core/services/users.service';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { FuseValidators } from '../../../../../@fuse/validators';
 import { IconService } from 'app/core/services/icons/icon.service';
-import { map, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { map, mergeMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-user',
@@ -37,6 +37,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   public countrieFlagInit: string = '';
   public profile$: Observable<any>;
   public validUsername: boolean = false;
+  public editPassword: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -66,15 +67,13 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     this.profile$ = this.profileService.getProfiles().pipe(
       takeUntil(this.unsubscribe$),
       map(({ data }) =>
-        data.map(values => ({
+        data?.map(values => ({
           ...values.profile,
           plates: values.plate,
           fleets: values.fleets,
           modules: values.modules
         }))
       ),
-      tap(data => console.log(data)
-      )
     );
     this.buildForm();
     this.validateUsernameRepeat();
@@ -102,7 +101,6 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       this.userService.userForm$.next({ typeAction: 'edit', formData: { ...userDataForm, id: this.dataUpdate.id } });
     }
-
 
     this.formUser.reset();
     this.editMode = false;
@@ -146,7 +144,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
       user_login: ['', [Validators.required]],
       password_digest: ['', [Validators.required]],
       confirm_password: ['', [Validators.required]],
-      user_profile_id: ['', [Validators.required]],
+      user_profile_id: ['',],
       email: ['', [Validators.required, Validators.email]],
       indicative: ['+57', [Validators.required]],
       full_name: ['', [Validators.required]],
@@ -191,7 +189,6 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
         this.validUsername = true;
       }
     });
-
   }
 
 }

@@ -5,15 +5,23 @@
     <table mat-table [dataSource]="this.dataSource" matSort class="w-full">
       <ng-container [matColumnDef]="dataOption.name" *ngFor="let dataOption of this.dataOptionTable">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text}} </th>
-        <td [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row">
-          <span class="pr-6 whitespace-nowrap">
-            {{ row[dataOption.name] | dataTable:dataOption.typeField }}
-          </span>
-          <span class="pr-6 whitespace-nowrap w-full h-full" *ngIf="dataOption.typeField === 'switch'">
-            <mat-slide-toggle (toggleChange)="action()" color="primary" [checked]="row[dataOption.name]">
-            </mat-slide-toggle>
-          </span>
-        </td>
+        <ng-container *ngIf="dataOption.typeField !== 'switch'">
+          <td class="cursor-pointer" [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row"
+            (click)="actionSelectRow(row)">
+            <span class="whitespace-nowrap">
+              {{ row[dataOption.name] | dataTable:dataOption.typeField }}
+            </span>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="dataOption.typeField === 'switch'">
+          <td [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row">
+            <span class="w-full h-full" *ngIf="dataOption.typeField === 'switch'">
+              <mat-slide-toggle matTooltip="Cambiar estado" (change)="actionSwitch($event, row)" color="primary"
+                [checked]="row[dataOption.name]" [value]="row[dataOption.name]">
+              </mat-slide-toggle>
+            </span>
+          </td>
+        </ng-container>
       </ng-container>
 
       <ng-container *ngIf="this.buttonTable" matColumnDef="action">
@@ -26,9 +34,8 @@
         </td>
       </ng-container>
 
-
       <tr mat-header-row *matHeaderRowDef="this.dataColumn"></tr>
-      <tr mat-row (click)="actionSelectRow(row)" *matRowDef="let row; columns: this.dataColumn;"></tr>
+      <tr mat-row *matRowDef="let row; columns: this.dataColumn;"></tr>
 
     </table>
     <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"

@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IOptionTable, IButtonOptions } from '../../../core/interfaces/components/table.interface';
@@ -27,6 +28,7 @@ export class TableComponent implements OnChanges {
   @Input() dataFilter: string = '';
   @Input() buttonTable: IButtonOptions<any>;
   @Output() emitSelectRow = new EventEmitter<any>();
+  @Output() emitChangeSwitch = new EventEmitter<{ state: boolean; data: any }>();
 
   public dataSource: MatTableDataSource<any>;
 
@@ -43,8 +45,7 @@ export class TableComponent implements OnChanges {
     this.emitSelectRow.emit(row);
   }
 
-  action(): void {
-    console.log('aaa');
-
+  public actionSwitch({ checked }: MatSlideToggleChange, data: any): void {
+    this.emitChangeSwitch.emit({ state: checked, data });
   }
 }

@@ -106,7 +106,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$),
         map(({ data }) =>
-          data.map(values => ({
+          data?.map(values => ({
             ...values.profile,
             plates: values.plate,
             fleets: values.fleets,

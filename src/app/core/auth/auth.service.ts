@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, timer } from 'rxjs';
-import { catchError, filter, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { AppSettingsService } from '../app-configs/app-settings.service';
@@ -42,7 +42,6 @@ export class AuthService {
     return this.permissionService.permissions$
       .pipe(
         filter(data => Object.keys(data).length !== 0),
-        tap(console.log)
       );
   }
 

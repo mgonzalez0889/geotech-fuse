@@ -16,10 +16,15 @@ export class UsersService {
     private _appSettings: AppSettingsService,
   ) { }
 
-  validUsername(value: string): Observable<any> {
+  public validUsername(value: string): Observable<any> {
     const params = { method: 'validator_user' };
     const body = { user_login: value };
     return this._http.post(this._appSettings.user.url.base, body, { params });
+  }
+
+  public changeEnableUser(userId: number, enable_user: boolean): Observable<any> {
+    const params = { method: 'update_enable_user' };
+    return this._http.put(`${this._appSettings.user.url.base}/${userId}`, { enable_user }, { params });
   }
 
   /**
