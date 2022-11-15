@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../app-configs/app-settings.service';
 import { Observable, Subject } from 'rxjs';
-import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({
   providedIn: 'root',
@@ -15,21 +14,7 @@ export class UsersService {
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService,
-    private permissionsService: NgxPermissionsService
   ) { }
-
-
-  getUserPermission(idProfile: number): Observable<any> {
-    const params = { method: 'show_user_profile' };
-    return this._http.get(`${this._appSettings.profile.url.base}/${idProfile}`, { params });
-  }
-
-  assingPermission(): void {
-    const profile = JSON.parse(localStorage.getItem('infoUser'));
-    this.getUserPermission(profile.user_profile_id).subscribe(({ data }) => {
-      this.permissionsService.addPermission(data.permission);
-    });
-  }
 
   validUsername(value: string): Observable<any> {
     const params = { method: 'validator_user' };

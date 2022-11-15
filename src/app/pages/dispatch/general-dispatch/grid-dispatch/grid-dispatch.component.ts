@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,7 +7,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IOptionTable } from 'app/core/interfaces';
 import { DispatchService } from 'app/core/services/dispatch.service';
 import { DowloadTools } from 'app/core/tools/dowload.tool';
+import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-grid-dispatch',
@@ -48,7 +50,6 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     'init_place',
     'end_place',
   ];
-
   public optionsTable: IOptionTable[] = [
     {
       name: 'id',
@@ -81,7 +82,6 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       typeField: 'text',
     },
     {
-
       name: 'device',
       text: 'Dispositivo',
       typeField: 'text',
@@ -107,12 +107,19 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       typeField: 'text'
     },
   ];
-
+  private listPermission: NgxPermissionsObject;
+  private permissionValid: { [key: string]: string } = {
+    addDispatch: 'despachos:despachos:create',
+    updateDispatch: 'despachos:despachos:update',
+    deleteDispatch: 'despachos:despachos:delete',
+  };
 
   constructor(
     private dowloadTools: DowloadTools,
     private dispatchService: DispatchService,
-    private dateAdapter: DateAdapter<any>
+    private dateAdapter: DateAdapter<any>,
+    private authService: AuthService,
+    private toastAlert: ToastAlertService
   ) {
     this.dateAdapter.setLocale('es');
   }
@@ -120,6 +127,9 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getDispatch();
     this.listenObservables();
+    this.authService.permissionList.subscribe((permission) => {
+      this.listPermission = permission;
+    });
   }
 
   /**
@@ -189,10 +199,18 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
    * @description: Crear un nuevo despacho
    */
   public newDispatch(): void {
-    this.opened = true;
-    this.dispatchService.behaviorSubjectDispatchForm.next({
-      newDispatch: 'Nuevo despacho',
-    });
+    if (!this.listPermission[this.permissionValid.addDispatch]) {
+      this.toastAlert.openAlert({
+        message: 'No tienes permisos suficientes para realizar esta acción.',
+        actionMessage: 'cerrar',
+        styleClass: 'alert-warn'
+      });
+    } else {
+      this.opened = true;
+      this.dispatchService.behaviorSubjectDispatchForm.next({
+        newDispatch: 'Nuevo despacho',
+      });
+    }
   }
 
   /**

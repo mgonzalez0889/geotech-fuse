@@ -17,7 +17,7 @@ import { UsersService } from '../../../../core/services/users.service';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { FuseValidators } from '../../../../../@fuse/validators';
 import { IconService } from 'app/core/services/icons/icon.service';
-import { mergeMap, takeUntil } from 'rxjs/operators';
+import { map, mergeMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-user',
@@ -63,7 +63,19 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    this.profile$ = this.profileService.getProfiles();
+    this.profile$ = this.profileService.getProfiles().pipe(
+      takeUntil(this.unsubscribe$),
+      map(({ data }) =>
+        data.map(values => ({
+          ...values.profile,
+          plates: values.plate,
+          fleets: values.fleets,
+          modules: values.modules
+        }))
+      ),
+      tap(data => console.log(data)
+      )
+    );
     this.buildForm();
     this.validateUsernameRepeat();
     this.readCountries();

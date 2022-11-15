@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatDividerModule,
     MatRadioModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSlideToggleModule
   ],
   declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })

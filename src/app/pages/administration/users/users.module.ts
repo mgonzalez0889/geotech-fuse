@@ -6,7 +6,6 @@ import { GridUserComponent } from './grid-user/grid-user.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,7 +23,6 @@ import { SharedModule } from 'app/shared/shared.module';
     ReactiveFormsModule,
     MatInputModule,
     MatSortModule,
-    MatSlideToggleModule,
     MatOptionModule,
     MatDividerModule,
     MatCheckboxModule,

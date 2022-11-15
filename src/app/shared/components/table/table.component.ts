@@ -42,4 +42,9 @@ export class TableComponent implements OnChanges {
   public actionSelectRow(row: any): void {
     this.emitSelectRow.emit(row);
   }
+
+  action(): void {
+    console.log('aaa');
+
+  }
 }

@@ -42,6 +42,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
       text: 'Correo electrónico',
       typeField: 'text',
       classTailwind: 'hover:underline text-primary-500'
+    },
+    {
+      name: 'status',
+      text: 'Estado',
+      typeField: 'switch'
     }
   ];
 
@@ -113,7 +118,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
       this.subTitlePage = data
         ? `${data.length} Usuarios`
         : 'Sin usuarios';
-      this.userData = [...data];
+      this.userData = [...data || []];
     });
   }
 

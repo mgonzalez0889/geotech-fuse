@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   Component,
   EventEmitter,
@@ -85,6 +86,22 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataUpdate) {
+      this.assignedModules = [...this.dataUpdate.modules];
+
+      // const newAvailableModules = [];
+
+      // this.assignedModules.forEach((moduleAssing) => {
+
+      //   this.availableModules.forEach((moduleAvailable) => {
+      //     if (moduleAvailable.id !== moduleAssing.id) {
+      //       newAvailableModules.push(moduleAvailable);
+      //     }
+
+      //   });
+      // });
+
+      // this.availableModules = [...newAvailableModules];
+
       this.editMode = false;
       this.profileForm.patchValue({ ...this.dataUpdate });
     } else {
@@ -231,8 +248,8 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
         };
 
         data.forEach(({ children }) => {
-          children.forEach(({ id, title, createOption, editOption, deleteOption }) => {
-            this.availableModules.push({ id, title, createOption, editOption, deleteOption, option: { ...option } });
+          children.forEach(({ id, title, create_option, edit_option, delete_option }) => {
+            this.availableModules.push({ id, title, create_option, edit_option, delete_option, option: { ...option } });
           });
         });
       });
@@ -251,6 +268,7 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     });
 
     if (this.dataUpdate) {
+      this.assignedModules = [...this.dataUpdate.modules];
       this.profileForm.patchValue({ ...this.dataUpdate });
     }
   }

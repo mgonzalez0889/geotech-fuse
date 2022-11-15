@@ -1,7 +1,7 @@
 export interface IOptionTable {
   name: string;
   text: string;
-  typeField: 'text' | 'percentage' | 'date';
+  typeField: 'text' | 'percentage' | 'date' | 'switch';
   classTailwind?: string;
 }
 

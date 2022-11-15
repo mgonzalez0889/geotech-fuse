@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataTablePipe } from '../pipes/data-table.pipe';
 import { FilterListPipe } from '../pipes/filter-list.pipe';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [HeaderPageComponent, TableComponent, DataTablePipe, FilterListPipe],
@@ -21,6 +22,7 @@ import { FilterListPipe } from '../pipes/filter-list.pipe';
     MatCardModule,
     MatIconModule,
     MatTooltipModule,
+    MatSlideToggleModule
   ],
   exports: [
     HeaderPageComponent,

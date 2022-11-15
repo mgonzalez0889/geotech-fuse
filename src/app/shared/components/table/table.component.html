@@ -9,6 +9,10 @@
           <span class="pr-6 whitespace-nowrap">
             {{ row[dataOption.name] | dataTable:dataOption.typeField }}
           </span>
+          <span class="pr-6 whitespace-nowrap w-full h-full" *ngIf="dataOption.typeField === 'switch'">
+            <mat-slide-toggle (toggleChange)="action()" color="primary" [checked]="row[dataOption.name]">
+            </mat-slide-toggle>
+          </span>
         </td>
       </ng-container>
 

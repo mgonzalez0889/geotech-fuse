@@ -1,5 +1,5 @@
 <div class="flex flex-col w-full sm:pl-6">
-  <div class="bg-card shadow rounded-2xl min-h-180">
+  <div class="bg-card shadow rounded-2xl min-h-auto">
 
     <!-- Cabecera del formulario -->
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
@@ -35,7 +35,7 @@
 
           <div class="flex flex-col mt-4 pt-6 border-t space-y-8" *ngIf="this.dataUpdate">
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Nombre de perfil">subtitles</mat-icon>
+              <mat-icon matTooltip="Nombre de perfil">title</mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['name']}}</div>
             </div>
             <div class="flex sm:items-center">
@@ -143,12 +143,15 @@
                           </mat-panel-title>
                         </mat-expansion-panel-header>
                         <div class="flex justify-center gap-3">
-                          <mat-checkbox (change)="asingOption($event.checked, 'create', item.id)"
-                            *ngIf="item.createOption">Crear </mat-checkbox>
-                          <mat-checkbox (change)="asingOption($event.checked, 'update', item.id)"
-                            *ngIf="item.editOption">Actualizar </mat-checkbox>
-                          <mat-checkbox (change)="asingOption($event.checked, 'delete', item.id)"
-                            *ngIf="item.deleteOption">Borrar </mat-checkbox>
+                          <mat-checkbox [checked]="item.option.create"
+                            (change)="asingOption($event.checked, 'create', item.id)" *ngIf="item.create_option">Crear
+                          </mat-checkbox>
+                          <mat-checkbox [checked]="item.option.update"
+                            (change)="asingOption($event.checked, 'update', item.id)" *ngIf="item.edit_option">
+                            Actualizar </mat-checkbox>
+                          <mat-checkbox [checked]="item.option.delete"
+                            (change)="asingOption($event.checked, 'delete', item.id)" *ngIf="item.delete_option">Borrar
+                          </mat-checkbox>
                         </div>
                       </mat-expansion-panel>
                     </mat-accordion>

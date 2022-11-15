@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
@@ -15,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { UsersService } from 'app/core/services/users.service';
+import { AuthService } from 'app/core/auth/auth.service';
 
 interface IUserInfo {
   id: number;
@@ -57,7 +57,8 @@ export class UserComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _userService: UserService,
-    private usersService: UsersService
+    private userService: UsersService,
+    private authService: AuthService
   ) { }
 
   // -----------------------------------------------------------------------------------------------------
@@ -122,11 +123,11 @@ export class UserComponent implements OnInit, OnDestroy {
    * @description: Trae la informacion del usuario
    */
   public getInfoUser(): void {
-    this.usersService.getInfoUser().subscribe((res) => {
+    this.userService.getInfoUser().subscribe((res) => {
       this.infoUser = res.data;
 
       localStorage.setItem('infoUser', JSON.stringify(this.infoUser));
-      this.usersService.assingPermission();
+      this.authService.assingPermission();
     });
   }
 }

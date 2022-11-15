@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface IFormProfile {
   name: string;
   description: string;
@@ -10,9 +11,9 @@ export interface IListModules {
   id: number;
   title: string;
   option: IOptionPermission;
-  createOption: boolean;
-  editOption: boolean;
-  deleteOption: boolean;
+  create_option: boolean;
+  edit_option: boolean;
+  delete_option: boolean;
 }
 
 export interface IOptionPermission {

@@ -18,4 +18,24 @@ export class ToastAlertService {
       panelClass: styleClass || ''
     });
   }
+
+  toasAlertWarn(optionAlert: IToastAlertOption): void {
+    const { message, actionMessage, duration } = optionAlert;
+    this.snackBar.open(message, actionMessage || 'cerrar', {
+      duration: duration || 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: 'alert-warn'
+    });
+  }
+
+  toasAlertSuccess(optionAlert: IToastAlertOption): void {
+    const { message, actionMessage, duration } = optionAlert;
+    this.snackBar.open(message, actionMessage || 'cerrar', {
+      duration: duration || 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: 'alert-success'
+    });
+  }
 }

@@ -3,7 +3,7 @@ import { ConfirmationService } from 'app/core/services/confirmation/confirmation
 import { ProfilesService } from 'app/core/services/api/profiles.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
 import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
 
@@ -72,8 +72,6 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     this.dataFilter = filterValue.trim().toLowerCase();
   }
 
-
-
   /**
    * @description: Se abre el formulario para crear un nuevo perfil
    */
@@ -104,13 +102,25 @@ export class GridProfileComponent implements OnInit, OnDestroy {
    * @description: Leemos todos los perfiles que el usuario logueado tenga asignados
    */
   private getProfiles(): void {
-    this.profileService.getProfiles().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-      this.subTitlepage = res.data
-        ? `${res.data.length} perfiles`
-        : 'Sin perfiles';
+    this.profileService.getProfiles()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map(({ data }) =>
+          data.map(values => ({
+            ...values.profile,
+            plates: values.plate,
+            fleets: values.fleets,
+            modules: values.modules
+          }))
+        )
+      )
+      .subscribe((profileData) => {
+        this.subTitlepage = profileData
+          ? `${profileData.length} perfiles`
+          : 'Sin perfiles';
 
-      this.profileData = res.data || [];
-    });
+        this.profileData = profileData || [];
+      });
   }
 
   /**
@@ -120,7 +130,6 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.deleteProfile]) {
       this.toastAlert.openAlert({
         message: 'No tienes permisos suficientes para realizar esta acción.',
-        actionMessage: 'cerrar',
         styleClass: 'alert-warn'
       });
     } else {

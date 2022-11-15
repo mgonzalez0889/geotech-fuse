@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, timer } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { AppSettingsService } from "../app-configs/app-settings.service";
+import { AppSettingsService } from '../app-configs/app-settings.service';
+import { NgxPermissionsObject, NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,8 @@ export class AuthService {
   constructor(
     private _httpClient: HttpClient,
     private _userService: UserService,
-    private _appSettings: AppSettingsService
+    private _appSettings: AppSettingsService,
+    private permissionService: NgxPermissionsService
   ) {
   }
 
@@ -33,6 +35,27 @@ export class AuthService {
 
   get accessToken(): string {
     return localStorage.getItem('accessToken') ?? '';
+  }
+
+  //permission
+  get permissionList(): Observable<NgxPermissionsObject> {
+    return this.permissionService.permissions$
+      .pipe(
+        filter(data => Object.keys(data).length !== 0),
+        tap(console.log)
+      );
+  }
+
+  getUserPermission(idProfile: number): Observable<any> {
+    const params = { method: 'show_user_profile' };
+    return this._httpClient.get(`${this._appSettings.profile.url.base}/${idProfile}`, { params });
+  }
+
+  assingPermission(): void {
+    const profile = JSON.parse(localStorage.getItem('infoUser'));
+    this.getUserPermission(profile.user_profile_id).subscribe(({ data }) => {
+      this.permissionService.addPermission(data.permission);
+    });
   }
 
   // -----------------------------------------------------------------------------------------------------
