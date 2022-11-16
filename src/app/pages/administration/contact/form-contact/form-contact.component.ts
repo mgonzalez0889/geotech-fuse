@@ -70,10 +70,8 @@ export class FormContactComponent implements OnInit, OnDestroy {
       this.newContact(data);
     } else {
       if (!this.listPermission[this.permissionValid.updateContacto]) {
-        this.toastAlert.openAlert({
-          message: 'No tienes permisos suficientes para esta acción.',
-          actionMessage: 'cerrar',
-          styleClass: 'alert-warn'
+        this.toastAlert.toasAlertWarn({
+          message: 'No tienes permisos suficientes para realizar esta acción.',
         });
       } else {
         this.editContact(data);
@@ -94,10 +92,8 @@ export class FormContactComponent implements OnInit, OnDestroy {
    */
   public deleteContact(id: number): void {
     if (!this.listPermission[this.permissionValid.deleteContacto]) {
-      this.toastAlert.openAlert({
-        message: 'No tienes permisos suficientes para esta acción.',
-        actionMessage: 'cerrar',
-        styleClass: 'alert-warn'
+      this.toastAlert.toasAlertWarn({
+        message: 'No tienes permisos suficientes para realizar esta acción.',
       });
 
       return;

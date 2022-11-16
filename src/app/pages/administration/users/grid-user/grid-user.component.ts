@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UsersService } from '../../../../core/services/users.service';
+import { UsersService } from '../../../../core/services/api/users.service';
 import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { takeUntil } from 'rxjs/operators';
@@ -109,11 +109,26 @@ export class GridUserComponent implements OnInit, OnDestroy {
    * @description: resibe evento de la tabla cuando cambie el valor de el switch de estado de usuario.
    */
   public changeEnableUser(dataEvent: { state: boolean; data: any }): void {
-    this.usersService.changeEnableUser(dataEvent.data.id, dataEvent.state).subscribe((data) => {
-      this.toastAlert.toasAlertSuccess({
-        message: 'Estado de Usuario modificado con exito.'
+    if (!this.listPermission[this.permissionValid.updateUser]) {
+      this.toastAlert.toasAlertWarn({
+        message: 'No tienes permisos suficientes para realizar esta acción.',
       });
-    });
+      return;
+    }
+
+    this.usersService.changeEnableUser(dataEvent.data.id, dataEvent.state)
+      .subscribe((data) => {
+        console.log(data);
+        if (data.code === 400) {
+          this.toastAlert.toasAlertWarn({
+            message: 'No se puedo modificar el estado, intentelo de nuevo.'
+          });
+        } else {
+          this.toastAlert.toasAlertSuccess({
+            message: 'Estado de Usuario modificado con exito.'
+          });
+        }
+      });
   }
 
   /**
@@ -141,14 +156,27 @@ export class GridUserComponent implements OnInit, OnDestroy {
    */
   private deleteUser(userId: number): void {
     const confirmation = this.confirmationService.open();
-    confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
-      if (result === 'confirmed') {
-        this.usersService.deleteUser(userId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-          this.readDataUser();
-          this.opened = false;
-        });
-      }
-    });
+    confirmation.afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((result) => {
+        if (result === 'confirmed') {
+          this.usersService.deleteUser(userId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data) => {
+              this.readDataUser();
+              this.opened = false;
+              if (data.code === 400) {
+                this.toastAlert.toasAlertWarn({
+                  message: 'No se puedo eliminar el usuario, intentelo de nuevo.'
+                });
+              } else {
+                this.toastAlert.toasAlertSuccess({
+                  message: 'Usuario eliminado con exito.',
+                });
+              }
+            });
+        }
+      });
   }
 
   /**
@@ -157,27 +185,41 @@ export class GridUserComponent implements OnInit, OnDestroy {
   private listenFormUser(): void {
     this.usersService.userForm$.pipe(takeUntil(this.unsubscribe$)).subscribe(({ formData, typeAction }) => {
       if (typeAction === 'add') {
-        this.usersService.postUser(formData).subscribe(() => {
+        this.usersService.postUser(formData).subscribe((data) => {
           this.opened = false;
           this.readDataUser();
-          this.toastAlert.toasAlertSuccess({
-            message: `Usuario ${formData.full_name} creado con exito.`,
-          });
+          if (data.code === 400) {
+            this.toastAlert.toasAlertWarn({
+              message: 'No se puedo crear el usuario, intentelo de nuevo.'
+            });
+          } else {
+            this.toastAlert.toasAlertSuccess({
+              message: `Usuario ${formData.full_name} creado con exito.`,
+            });
+          }
         });
       } else if (typeAction === 'edit') {
-        if (!this.listPermission[this.permissionValid.updateProfile]) {
+        if (!this.listPermission[this.permissionValid.updateUser]) {
           this.toastAlert.toasAlertWarn({
             message: 'No tienes permisos suficientes para realizar esta acción.',
           });
           return;
         }
-        this.usersService.putUser(formData).pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-          this.opened = false;
-          this.readDataUser();
-          this.toastAlert.toasAlertSuccess({
-            message: 'Usuario modificado con exito.',
+        this.usersService.putUser(formData)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe((data) => {
+            this.opened = false;
+            this.readDataUser();
+            if (data.code === 400) {
+              this.toastAlert.toasAlertWarn({
+                message: 'No se puedo modificar el usuario, intentelo de nuevo.'
+              });
+            } else {
+              this.toastAlert.toasAlertSuccess({
+                message: 'Usuario modificado con exito.',
+              });
+            }
           });
-        });
 
       } else if (typeAction === 'delete') {
         if (!this.listPermission[this.permissionValid.deleteUser]) {

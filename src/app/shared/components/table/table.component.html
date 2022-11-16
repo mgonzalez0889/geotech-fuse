@@ -38,11 +38,10 @@
       <tr mat-row *matRowDef="let row; columns: this.dataColumn;"></tr>
 
     </table>
-    <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-200"
-      [pageSizeOptions]="[10,20,50]">
-    </mat-paginator>
-
   </div>
+  <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
+    [pageSizeOptions]="[10,20,50]">
+  </mat-paginator>
 </div>
 
 <mat-card class="p-8 m-8 text-center" *ngIf="!this.dataRow.length">

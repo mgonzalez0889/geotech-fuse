@@ -106,28 +106,35 @@ th.mat-header-cell {
 //toast alert
 
 .alert-base {
-  color: white !important;
   width: auto !important;
+  border-radius: 12px !important;
 
   button {
-    color: white !important;
+    padding: 0 12px !important;
+    margin-left: 12px;
   }
 }
 
 .alert-warn {
   @extend .alert-base;
-  background: #dc2626 !important;
+  background: #FECACA !important;
+  color: #991B1B !important;
 
   button {
-    background-color: #dc2626 !important;
+    color: #991B1B !important;
+    border: 0.01rem solid #991b1b8a !important;
+    background-color: #FECACA !important;
   }
 }
 
 .alert-success {
   @extend .alert-base;
-  background: #00c853 !important;
+  background: #A7F3D0 !important;
+  color: #065F46 !important;
 
   button {
-    background-color: #00c853 !important;
+    color: #065F46 !important;
+    border: 0.01rem solid #086b4f70 !important;
+    background-color: #A7F3D0 !important;
   }
 }

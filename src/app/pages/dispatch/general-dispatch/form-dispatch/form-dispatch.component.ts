@@ -63,10 +63,8 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
       this.newDispatch(data);
     } else {
       if (!this.listPermission[this.permissionValid.addDispatch]) {
-        this.toastAlert.openAlert({
+        this.toastAlert.toasAlertWarn({
           message: 'No tienes permisos suficientes para realizar esta acción.',
-          actionMessage: 'cerrar',
-          styleClass: 'alert-warn'
         });
       } else {
         this.editDispatch(data);

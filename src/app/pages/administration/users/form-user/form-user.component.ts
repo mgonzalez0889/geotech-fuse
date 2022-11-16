@@ -10,10 +10,10 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ProfilesService } from '../../../../core/services/api/profiles.service';
 import { Observable, Subject } from 'rxjs';
-import { UsersService } from '../../../../core/services/users.service';
+import { UsersService } from '../../../../core/services/api/users.service';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { FuseValidators } from '../../../../../@fuse/validators';
 import { IconService } from 'app/core/services/icons/icon.service';
@@ -48,19 +48,8 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.dataUpdate) {
-      this.editMode = false;
-      this.formUser?.controls['password_digest']?.clearValidators();
-      this.formUser?.controls['confirm_password']?.clearValidators();
-      this.formUser?.patchValue({ ...this.dataUpdate });
-    } else {
-      this.editMode = false;
-      this.formUser?.controls['password_digest']?.setValidators([Validators.required]);
-      this.formUser?.controls['confirm_password']?.setValidators([Validators.required]);
-      this.formUser.reset();
-    }
-    this.formUser?.controls['password_digest']?.updateValueAndValidity();
-    this.formUser?.controls['confirm_password']?.updateValueAndValidity();
+    this.changeControlsForm();
+    this.editMode = false;
   }
 
   ngOnInit(): void {
@@ -85,6 +74,10 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     this.unsubscribe$.complete();
   }
 
+  public get valueControlChangePassword(): boolean {
+    return this.formUser.get('change_password')?.value;
+  }
+
   /**
    * @description: Se recoge la informacion del formulario y si hay data de modificarcion se emite la accion de editar sino la accion de agregar
    */
@@ -94,6 +87,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     const userDataForm = this.formUser.value;
+    console.log(userDataForm);
 
     if (!this.dataUpdate) {
       delete userDataForm.confirm_password;
@@ -137,6 +131,23 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * @description: se hacen cambion en los controles del formulario
+   */
+  private changeControlsForm(): void {
+    if (this.dataUpdate) {
+      this.formUser.addControl('change_password', this.fb.control(false));
+      this.formUser.controls['password_digest']?.clearValidators();
+      this.formUser.controls['confirm_password']?.clearValidators();
+      this.formUser.patchValue({ ...this.dataUpdate });
+    } else {
+      this.formUser.controls['password_digest']?.setValidators([Validators.required]);
+      this.formUser.controls['confirm_password']?.setValidators([Validators.required]);
+    }
+    this.formUser.controls['password_digest']?.updateValueAndValidity();
+    this.formUser.controls['confirm_password']?.updateValueAndValidity();
+  }
+
+  /**
    * @description: Definicion del formulario reactivo
    */
   private buildForm(): void {
@@ -156,17 +167,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
       }
     );
 
-    if (this.dataUpdate) {
-      this.formUser?.controls['password_digest'].clearValidators();
-      this.formUser?.controls['confirm_password'].clearValidators();
-      this.formUser?.patchValue({ ...this.dataUpdate });
-    } else {
-      this.formUser?.controls['password_digest'].setValidators([Validators.required]);
-      this.formUser?.controls['confirm_password'].setValidators([Validators.required]);
-    }
-    this.formUser?.controls['password_digest'].updateValueAndValidity();
-    this.formUser?.controls['confirm_password'].updateValueAndValidity();
-
+    this.changeControlsForm();
   }
 
   /**

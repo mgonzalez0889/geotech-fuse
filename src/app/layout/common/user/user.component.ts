@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
-import { UsersService } from 'app/core/services/users.service';
+import { UsersService } from 'app/core/services/api/users.service';
 import { AuthService } from 'app/core/auth/auth.service';
 
 interface IUserInfo {

@@ -77,10 +77,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
    */
   public addProfileForm(): void {
     if (!this.listPermission[this.permissionValid.addProfile]) {
-      this.toastAlert.openAlert({
+      this.toastAlert.toasAlertWarn({
         message: 'No tienes permisos suficientes para realizar esta acción.',
-        actionMessage: 'cerrar',
-        styleClass: 'alert-warn'
       });
     } else {
       this.opened = true;
@@ -128,10 +126,10 @@ export class GridProfileComponent implements OnInit, OnDestroy {
    */
   private deleteProfile(profileId: number): void {
     if (!this.listPermission[this.permissionValid.deleteProfile]) {
-      this.toastAlert.openAlert({
+      this.toastAlert.toasAlertWarn({
         message: 'No tienes permisos suficientes para realizar esta acción.',
-        styleClass: 'alert-warn'
       });
+
     } else {
       const confirmation = this.confirmationService.open();
       confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
@@ -139,9 +137,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
           this.profileService.deleteProfile(profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
             this.opened = false;
             this.getProfiles();
-            this.toastAlert.openAlert({
+            this.toastAlert.toasAlertSuccess({
               message: 'Perfil eliminado con exito.',
-              styleClass: 'alert-success'
             });
           });
         }
@@ -158,25 +155,21 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         this.profileService.postProfile(formData).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           this.opened = false;
           this.getProfiles();
-          this.toastAlert.openAlert({
+          this.toastAlert.toasAlertSuccess({
             message: `Perfil ${formData.name} creado con exito.`,
-            styleClass: 'alert-success'
           });
         });
       } else if (typeAction === 'edit') {
         if (!this.listPermission[this.permissionValid.updateProfile]) {
-          this.toastAlert.openAlert({
+          this.toastAlert.toasAlertWarn({
             message: 'No tienes permisos suficientes para realizar esta acción.',
-            actionMessage: 'cerrar',
-            styleClass: 'alert-warn'
           });
         } else {
           this.profileService.putProfile(formData, profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
             this.opened = false;
             this.getProfiles();
-            this.toastAlert.openAlert({
+            this.toastAlert.toasAlertSuccess({
               message: 'Perfil modificado con exito.',
-              styleClass: 'alert-success'
             });
           });
         }

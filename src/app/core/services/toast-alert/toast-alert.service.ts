@@ -9,32 +9,22 @@ export class ToastAlertService {
 
   constructor(private snackBar: MatSnackBar) { }
 
-  openAlert(optionAlert: IToastAlertOption): void {
-    const { message, actionMessage, styleClass, duration } = optionAlert;
-    this.snackBar.open(message, actionMessage || 'cerrar', {
-      duration: duration || 4000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: styleClass || ''
-    });
-  }
-
   toasAlertWarn(optionAlert: IToastAlertOption): void {
     const { message, actionMessage, duration } = optionAlert;
-    this.snackBar.open(message, actionMessage || 'cerrar', {
+    this.snackBar.open(message, actionMessage || 'Cerrar', {
       duration: duration || 4000,
       horizontalPosition: 'center',
-      verticalPosition: 'top',
+      verticalPosition: 'bottom',
       panelClass: 'alert-warn'
     });
   }
 
   toasAlertSuccess(optionAlert: IToastAlertOption): void {
     const { message, actionMessage, duration } = optionAlert;
-    this.snackBar.open(message, actionMessage || 'cerrar', {
+    this.snackBar.open(message, actionMessage || 'Cerrar', {
       duration: duration || 4000,
       horizontalPosition: 'center',
-      verticalPosition: 'top',
+      verticalPosition: 'bottom',
       panelClass: 'alert-success'
     });
   }

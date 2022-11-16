@@ -6,7 +6,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { ControlCenterService } from 'app/core/services/control-center.service';
 import { OwnersService } from 'app/core/services/owners.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
-import { UsersService } from 'app/core/services/users.service';
+import { UsersService } from 'app/core/services/api/users.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 

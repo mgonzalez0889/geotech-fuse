@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AppSettingsService } from '../app-configs/app-settings.service';
+import { AppSettingsService } from '../../app-configs/app-settings.service';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({

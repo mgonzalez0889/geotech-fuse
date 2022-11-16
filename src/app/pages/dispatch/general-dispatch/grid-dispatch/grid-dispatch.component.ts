@@ -199,10 +199,9 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
    */
   public newDispatch(): void {
     if (!this.listPermission[this.permissionValid.addDispatch]) {
-      this.toastAlert.openAlert({
+      this.toastAlert.toasAlertWarn({
         message: 'No tienes permisos suficientes para realizar esta acción.',
-        actionMessage: 'cerrar',
-        styleClass: 'alert-warn'
+
       });
     } else {
       this.opened = true;

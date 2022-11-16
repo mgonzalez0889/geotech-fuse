@@ -80,10 +80,8 @@ export class GridContactComponent implements OnInit, OnDestroy {
    */
   public newContact(): void {
     if (!this.listPermission[this.permissionValid.addContacto]) {
-      this.toastAlert.openAlert({
-        message: 'No tienes permisos suficientes para esta acción.',
-        actionMessage: 'cerrar',
-        styleClass: 'alert-warn'
+      this.toastAlert.toasAlertWarn({
+        message: 'No tienes permisos suficientes para realizar esta acción.',
       });
     } else {
       this.opened = true;

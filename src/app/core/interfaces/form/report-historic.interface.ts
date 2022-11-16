@@ -1,4 +1,3 @@
-/* eslint-disable eol-last */
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IBodyHistoric {
   date_init: Date;
