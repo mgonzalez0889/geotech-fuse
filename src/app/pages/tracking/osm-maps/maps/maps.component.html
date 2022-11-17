@@ -1,36 +1,35 @@
-<ng-container>
-    <div style="position: relative;">
-        <!-- <div class="closeListMobiles" (click)="mapFunctionalitieService.showMenuMobiles = false">
-            Ocultar
-        </div> -->
-        <app-floating-menu *ngIf="mapFunctionalitieService.showMenuMobiles">
-        </app-floating-menu>
-    </div>
+<div #map id="map"></div>
+
+
+
+<ng-container *ngIf="mapService.showMenuMobiles">
+  <div class="absolute pl-2 pt-2 z-99">
+    <app-floating-menu>
+    </app-floating-menu>
+  </div>
 </ng-container>
 
-<ng-container *ngIf="mapFunctionalitieService.showDetailMobile">
-    <app-floating-menu-detail>
-    </app-floating-menu-detail>
+<ng-container *ngIf="mapService.showDetailMobile">
+  <app-floating-menu-detail>
+  </app-floating-menu-detail>
 </ng-container>
 
-<ng-container>
-    <app-geotools>
-    </app-geotools>
+<app-geotools>
+</app-geotools>
+
+<ng-container *ngIf="mapService.showFormGeomertry">
+  <app-form-geometry>
+  </app-form-geometry>
 </ng-container>
 
-<ng-container *ngIf="mapFunctionalitieService.showFormGeomertry">
-    <app-form-geometry>
-    </app-form-geometry>
+<ng-container *ngIf="mapService.showHistoricPlate">
+  <app-historics>
+  </app-historics>
 </ng-container>
 
-<ng-container *ngIf="mapFunctionalitieService.showHistoricPlate">
-    <app-historics>
-    </app-historics>
-</ng-container>
-
-<ng-container *ngIf="mapFunctionalitieService.showCommandsPlate">
-    <app-commands>
-    </app-commands>
+<ng-container *ngIf="mapService.showCommandsPlate">
+  <app-commands>
+  </app-commands>
 </ng-container>
 
 <!--<ng-container *ngIf="showMenuFleet">
@@ -47,64 +46,44 @@
         (closeMenu)="onCloseDetailMenu($event)"
     ></app-form-detail-mobile>
 </ng-container>-->
-<div #map id="map">
-</div>
+
+
 
 
 <div class="options">
-    <ul>
-        <li *ngFor="let option of optionsIcons" (click)="eventClick(option.type)">
-            <span>
-                <mat-icon svgIcon="{{option.name}}"></mat-icon>
-            </span>
-        </li>
-
-        <!-- <div class="change-map">
-            <div class="title">
-                Geomapas
-            </div>
-            <div class="button">
-                <button (click)="mapFunctionalitieService.changeMap('Google Maps')">Google maps</button>
-                <button (click)="mapFunctionalitieService.changeMapHybrid('Google Hibrido')">Google Hibrido</button>
-            </div>
-        </div> -->
-
-
-    </ul>
+  <ul>
+    <li *ngFor="let option of optionsIcons" (click)="eventClick(option.type)">
+      <span>
+        <mat-icon svgIcon="{{option.name}}"></mat-icon>
+      </span>
+    </li>
+  </ul>
 </div>
-<!--
-<div class="sm:absolute  sm:inset-0 flex flex-col flex-auto sm:overflow-hidden bg-card dark:bg-transparent">
-    <div class="container">
-         <div #map
-              class="w-min sm:w-screen h-screen"
-         >
-         </div>
+
+
+<div class="options-geo-tools" *ngIf="mapService.showOptionsGeoTools">
+  <div class="item" *ngFor="let options of optionsGeo" (click)="eventOptionGeotools(options.type)">
+    <div class="item-icon">
+      <mat-icon svgIcon="{{options.icon}}"></mat-icon>
     </div>
-</div>
--->
 
-<div class="options-geo-tools" *ngIf="mapFunctionalitieService.showOptionsGeoTools">
-    <div class="item" *ngFor="let options of optionsGeo" (click)="eventOptionGeotools(options.type)">
-        <div class="item-icon">
-            <mat-icon svgIcon="{{options.icon}}"></mat-icon>
-        </div>
-
-        <div class="item-title">
-            {{options.name}}
-        </div>
+    <div class="item-title">
+      {{options.name}}
     </div>
+  </div>
 </div>
+
 
 <div class="settings-map">
-    <div class="item">
-        <mat-checkbox (change)="setCluster($event)" [checked]="mapFunctionalitieService.verCluster">
-            Ver cluster
-        </mat-checkbox>
-    </div>
+  <div class="item">
+    <mat-checkbox (change)="setCluster($event)" [checked]="mapService.verCluster">
+      Ver cluster
+    </mat-checkbox>
+  </div>
 
-    <div class="item">
-        <mat-checkbox (change)="setLabel($event)" [checked]="mapFunctionalitieService.verLabel">
-            Ver label
-        </mat-checkbox>
-    </div>
+  <div class="item">
+    <mat-checkbox (change)="setLabel($event)" [checked]="mapService.verLabel">
+      Ver label
+    </mat-checkbox>
+  </div>
 </div>

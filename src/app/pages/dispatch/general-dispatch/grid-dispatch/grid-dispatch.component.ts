@@ -141,6 +141,8 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
       status: [0, 1, 2],
     };
     this.dispatchService.getDispatches(data).subscribe((res) => {
+      console.log('dispach', res);
+
       this.infoDispatch = res.data || [];
 
       if (res.count_dispatches) {

@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfilesService } from '../../../../core/services/api/profiles.service';
 import { Observable, Subject } from 'rxjs';
 import { UsersService } from '../../../../core/services/api/users.service';
@@ -32,6 +32,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   @Output() emitCloseForm = new EventEmitter<void>();
   public formUser: FormGroup = this.fb.group({});
   public hidePassword: boolean = false;
+  public hidePasswordConfirm: boolean = false;
   public editMode: boolean = false;
   public countries: any[] = [];
   public countrieFlagInit: string = '';
@@ -78,6 +79,10 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     return this.formUser.get('change_password')?.value;
   }
 
+  public get errorMustMatch(): boolean {
+    return this.formUser.get('confirm_password').hasError('mustMatch');
+  }
+
   /**
    * @description: Se recoge la informacion del formulario y si hay data de modificarcion se emite la accion de editar sino la accion de agregar
    */
@@ -87,7 +92,6 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     const userDataForm = this.formUser.value;
-    console.log(userDataForm);
 
     if (!this.dataUpdate) {
       delete userDataForm.confirm_password;

@@ -1,35 +1,34 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Subscription } from 'rxjs';
-import { fuseAnimations } from '../../../../../@fuse/animations';
-import { IMobiles } from '../../../../core/interfaces/mobiles.interface';
-import {
-  FormDialogSelectHistorialComponent
-} from '../form-dialog-select-historial/form-dialog-select-historial.component';
-import { IconService } from 'app/core/services/icons/icon.service';
-import { MobilesService } from 'app/core/services/mobiles/mobiles.service';
-import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MapRequestService } from 'app/core/services/request/map-request.service';
-import { HistoriesService } from 'app/core/services/api/histories.service';
-import moment from 'moment';
-import { FleetsService } from 'app/core/services/fleets.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { IMobiles } from 'app/core/interfaces/mobiles.interface';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { FormReportComponent } from '../form-report/form-report.component';
+import { HistoriesService } from 'app/core/services/api/histories.service';
+import { FleetsService } from 'app/core/services/fleets.service';
+import { IconService } from 'app/core/services/icons/icon.service';
+import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
+import { MobileService } from 'app/core/services/mobile.service';
+import { MapRequestService } from 'app/core/services/request/map-request.service';
+import { FormDialogSelectHistorialComponent } from '../../osm-maps/form-dialog-select-historial/form-dialog-select-historial.component';
+import { FormReportComponent } from '../../osm-maps/form-report/form-report.component';
+import { MatTableDataSource } from '@angular/material/table';
+
+type TypeService = { classMobileId: number; classMobileName: string };
 
 @Component({
-  selector: 'app-floating-menu',
-  templateUrl: './floating-menu.component.html',
-  styleUrls: ['./floating-menu.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: fuseAnimations
+  selector: 'app-panel-map-main',
+  templateUrl: './panel-map-main.component.html',
+  styleUrls: ['./panel-map-main.component.scss']
 })
-export class FloatingMenuComponent implements OnInit, OnDestroy {
+export class PanelMapMainComponent implements OnInit {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
-  public displayedColumns: string[] = ['select', 'code', 'menu'];
+  public mobileData: IMobiles[] = [];
+  public dataSource: MatTableDataSource<any>;
+
+  public displayedColumns: string[] = ['checkbox', 'select', 'code', 'menu'];
   public displayedColumnsFleets: string[] = ['select'];
-  public dataSource: any = [];
+  // public dataSource: any = [];
   public items: IMobiles[] = [];
   public selection = new SelectionModel<IMobiles>(true, []);
   public subscription: Subscription;
@@ -44,114 +43,61 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
   public day = this.today.getDate();
   public initialDate: Date = new Date(this.year, this.month, this.day);
   public finalDate: Date = new Date(this.year, this.month, this.day);
-
+  public typeServices: TypeService[] = [
+    {
+      classMobileId: 0,
+      classMobileName: 'Todos'
+    }
+  ];
   constructor(
-    public mobileRequestService: MobilesService,
+    private mobilesService: MobileService,
     private historiesService: HistoriesService,
     public dialog: MatDialog,
     public mapFunctionalitieService: MapFunctionalitieService,
     private iconService: IconService,
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
     private fleetServices: FleetsService,
     public mapRequestService: MapRequestService
-  ) {
-    this.iconRegistry.addSvgIcon('signal-movil', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal-movil.svg'));
-    this.iconRegistry.addSvgIcon('not-signal-movil', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'));
-    this.iconRegistry.addSvgIcon('fixed-movil', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/fixed-movil.svg'));
-    this.iconRegistry.addSvgIcon('historic', this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/historic.svg'));
-
-    this.animationStates = {
-      expandCollapse: 'expanded',
-      fadeIn: {
-        direction: 'in',
-        in: '*',
-        top: '*',
-        bottom: '*',
-        left: '*',
-        right: '*'
-      },
-      fadeOut: {
-        direction: 'out',
-        out: '*',
-        top: '*',
-        bottom: '*',
-        left: '*',
-        right: '*'
-      },
-      shake: {
-        shake: true
-      },
-      slideIn: {
-        direction: 'top',
-        top: '*',
-        bottom: '*',
-        left: '*',
-        right: '*'
-      },
-      slideOut: {
-        direction: 'top',
-        top: '*',
-        bottom: '*',
-        left: '*',
-        right: '*'
-      },
-      zoomIn: {
-        in: '*'
-      },
-      zoomOut: {
-        out: '*'
-      }
-    };
-
-    this.visibilityStates = {
-      expandCollapse: true,
-      fadeIn: {
-        in: true,
-        top: true,
-        bottom: true,
-        left: true,
-        right: true
-      },
-      fadeOut: {
-        out: true,
-        top: true,
-        bottom: true,
-        left: true,
-        right: true
-      },
-      shake: {
-        shake: true
-      },
-      slideIn: {
-        top: true,
-        bottom: true,
-        left: true,
-        right: true
-      },
-      slideOut: {
-        top: true,
-        bottom: true,
-        left: true,
-        right: true
-      },
-      zoomIn: {
-        in: true
-      },
-      zoomOut: {
-        out: true
-      }
-    };
-  }
+  ) { }
 
   ngOnInit(): void {
     this.iconService.loadIcons();
     this.listenObservableShow();
+
+    this.mobilesService.getMobiles().subscribe(({ data }) => {
+
+      this.mobileData = [...data];
+      this.dataSource = new MatTableDataSource([...data]);
+      this.mobileData.forEach((valueMobile) => {
+        const validTypeService: boolean = this.typeServices.some(
+          ({ classMobileId }) => classMobileId === valueMobile.class_mobile_id
+        );
+
+        if (!validTypeService) {
+          this.typeServices.push({
+            classMobileId: valueMobile.class_mobile_id,
+            classMobileName: valueMobile.class_mobile_name
+          });
+        }
+      });
+    });
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  public filterForTypeService(e: any): void {
+    console.log(e);
+
+    if (e.value === 0) {
+      this.dataSource = new MatTableDataSource([...this.mobileData]);
+      return;
+    }
+
+    const dataFilter = this.mobileData.filter(
+      ({ class_mobile_id }) => class_mobile_id === e.value
+    );
+
+    this.dataSource = new MatTableDataSource([...dataFilter]);
   }
+
+
 
   /**
    * @description: Cierra la ventana de opciones
@@ -223,7 +169,7 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     this.mapFunctionalitieService.mobile_set = this.mapFunctionalitieService.mobiles.filter(function (x) {
       return x.selected == true;
     });
-    this.mapFunctionalitieService.receiveData('checked', this.mapFunctionalitieService.mobile_set);
+    this.mapFunctionalitieService.receiveData('checked', this.mapFunctionalitieService.mobile_set)
 
     if (value.selected) {
       this.mapFunctionalitieService.plateHistoric.push(
@@ -244,7 +190,9 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     });
 
     if (!row.selected) {
-      const data = this.mapFunctionalitieService.platesFleet.filter(x => x.fleetId = row.id);
+      let data = this.mapFunctionalitieService.platesFleet.filter(x => {
+        return x.fleetId = row.id;
+      });
       this.mapFunctionalitieService.deleteChecks(data[0].data);
 
       const indx = this.mapFunctionalitieService.platesFleet.findIndex(v => v.fleetId === row.id);

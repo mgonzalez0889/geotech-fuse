@@ -1,9 +1,9 @@
 import { Subscription } from 'rxjs';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/table.interface';
-import { HistoriesService } from 'app/core/services/api/histories.service';
 import { filter } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DowloadTools } from '../../../../core/tools/dowload.tool';
+import { HistoriesService } from 'app/core/services/api/histories.service';
+import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/table.interface';
 
 @Component({
   selector: 'app-grid-report',

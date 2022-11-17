@@ -161,6 +161,49 @@ export class IconService {
         './assets/icons/iconMap/battery-red.svg'
       )
     );
+    this.iconRegistry.addSvgIcon(
+      'geo-cancel',
+      this.sanitizer.bypassSecurityTrustResourceUrl(
+        './assets/icons/iconMap/geo-cancel.svg'
+      )
+    );
+    this.iconRegistry.addSvgIcon(
+      'geo-back',
+      this.sanitizer.bypassSecurityTrustResourceUrl(
+        './assets/icons/iconMap/geo-back.svg'
+      )
+    );
+    this.iconRegistry.addSvgIcon(
+      'geo-clear',
+      this.sanitizer.bypassSecurityTrustResourceUrl(
+        './assets/icons/iconMap/geo-clear.svg'
+      )
+    );
+    this.iconRegistry.addSvgIcon(
+      'geo-save',
+      this.sanitizer.bypassSecurityTrustResourceUrl(
+        './assets/icons/iconMap/geo-save.svg'
+      )
+    );
+    this.iconRegistry.addSvgIcon(
+      'signal-movil',
+      this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal-movil.svg'
+      )
+    );
+    this.iconRegistry.addSvgIcon(
+      'not-signal-movil',
+      this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'
+      )
+    );
+    this.iconRegistry.addSvgIcon(
+      'fixed-movil',
+      this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/fixed-movil.svg')
+    );
+    this.iconRegistry.addSvgIcon(
+      'historic',
+      this.sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/historic.svg'
+      )
+    );
   }
 
   /**

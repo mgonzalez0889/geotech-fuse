@@ -6,8 +6,6 @@ import { FleetsService } from 'app/core/services/fleets.service';
 import { SocketIoClientService } from '../../../../core/services/socket-io-client.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { IconService } from 'app/core/services/icons/icon.service';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { MatTableDataSource } from '@angular/material/table';
 import { MapRequestService } from 'app/core/services/request/map-request.service';
 
@@ -82,79 +80,32 @@ export class MapsComponent implements OnInit, AfterViewInit {
     private mobilesService: MobileService,
     private fleetService: FleetsService,
     private socketIoService: SocketIoClientService,
-    public mapFunctionalitieService: MapFunctionalitieService,
+    public mapService: MapFunctionalitieService,
     public iconService: IconService,
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
     private mapRequestService: MapRequestService
   ) {
-    iconRegistry.addSvgIcon(
-      'settings-map',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/settings.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'type-map',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/type-map.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'route-map',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/route.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'zone-map',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/zone.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'point-map',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/point.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'geo-cancel',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/geo-cancel.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'geo-back',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/geo-back.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'geo-clear',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/geo-clear.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'geo-save',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        './assets/icons/iconMap/geo-save.svg'
-      )
-    );
+
   }
 
   ngOnInit(): void {
     this.iconService.loadIcons();
+
     //abre el socket y manda el token del usuario
     this.socketIoService.sendMessage('authorization');
+
     //escucha el socket de new position
     this.socketIoService.listenin('new_position').subscribe((data: any) => {
-      this.mapFunctionalitieService.moveMarker(data);
+      console.log('socket chanel', data);
+
+      this.mapService.moveMarker(data);
     });
+
     this.socketIoService
       .listenin('new_command')
-      .subscribe((data: any) => { });
+      .subscribe((data: any) => {
+
+        console.log('command ', data);
+      });
 
     const time = timer(2000);
 
@@ -173,18 +124,18 @@ export class MapsComponent implements OnInit, AfterViewInit {
     this.subscription = this.mobilesService
       .getMobiles()
       .subscribe((data) => {
-        this.mapFunctionalitieService.mobiles = data.data.map((x) => {
+        this.mapService.mobiles = data.data.map((x) => {
           x['selected'] = false;
           return x;
         });
-        this.mapFunctionalitieService.dataSource =
+        this.mapService.dataSource =
           new MatTableDataSource(
-            this.mapFunctionalitieService.mobiles
+            this.mapService.mobiles
           );
-        this.mapFunctionalitieService.setMarkers(
+        this.mapService.setMarkers(
           data.data,
-          this.mapFunctionalitieService.verCluster,
-          this.mapFunctionalitieService.verLabel
+          this.mapService.verCluster,
+          this.mapService.verLabel
         );
 
         const alls = {
@@ -192,20 +143,21 @@ export class MapsComponent implements OnInit, AfterViewInit {
           class_mobile_name: 'Todos',
         };
 
-        this.mapFunctionalitieService.type_service.push(alls);
+        this.mapService.type_service.push(alls);
 
         for (
           let i = 0;
-          i < this.mapFunctionalitieService.mobiles.length;
+          i < this.mapService.mobiles.length;
           i++
         ) {
-          const element = this.mapFunctionalitieService.mobiles[i];
+          const element = this.mapService.mobiles[i];
+
           if (
-            Object.keys(this.mapFunctionalitieService.type_service)
+            Object.keys(this.mapService.type_service)
               .length
           ) {
             const validate =
-              this.mapFunctionalitieService.type_service.filter(
+              this.mapService.type_service.filter(
                 (x) => {
                   return (
                     x.class_mobile_id ===
@@ -215,12 +167,14 @@ export class MapsComponent implements OnInit, AfterViewInit {
               );
 
             if (!validate.length) {
-              this.mapFunctionalitieService.type_service.push(
+
+              this.mapService.type_service.push(
                 element
               );
             }
           } else {
-            this.mapFunctionalitieService.type_service.push(
+
+            this.mapService.type_service.push(
               element
             );
           }
@@ -229,20 +183,20 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
     // Flotas de el cliente
     this.subscription = this.fleetService.getFleets().subscribe((data) => {
-      this.mapFunctionalitieService.fleets = data.data;
-      this.mapFunctionalitieService.fleets.map((x) => {
+      this.mapService.fleets = data.data;
+      this.mapService.fleets.map((x) => {
         x['selected'] = false;
         return x;
       });
-      this.mapFunctionalitieService.dataSourceFleets =
-        new MatTableDataSource(this.mapFunctionalitieService.fleets);
+      this.mapService.dataSourceFleets =
+        new MatTableDataSource(this.mapService.fleets);
     });
   }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   ngAfterViewInit(): void {
-    this.mapFunctionalitieService.init();
-    this.mapFunctionalitieService.getLocation();
+    this.mapService.init();
+    this.mapService.getLocation();
   }
 
   async eventClick(type) {
@@ -250,28 +204,28 @@ export class MapsComponent implements OnInit, AfterViewInit {
       case 'settings-map':
         break;
       case 'route':
-        this.mapFunctionalitieService.drawerOpenedChanged();
-        this.mapFunctionalitieService.type_geometry = 'Rutas';
-        this.mapFunctionalitieService.type_geo = type;
+        this.mapService.drawerOpenedChanged();
+        this.mapService.type_geometry = 'Rutas';
+        this.mapService.type_geo = type;
         (await this.mapRequestService.getGeometry(type + 's')) || [];
         break;
       case 'zone':
-        this.mapFunctionalitieService.drawerOpenedChanged();
-        this.mapFunctionalitieService.type_geometry = 'Zonas';
-        this.mapFunctionalitieService.type_geo = type;
+        this.mapService.drawerOpenedChanged();
+        this.mapService.type_geometry = 'Zonas';
+        this.mapService.type_geo = type;
         (await this.mapRequestService.getGeometry(type + 's')) || [];
         break;
       case 'punt':
-        this.mapFunctionalitieService.drawerOpenedChanged();
-        this.mapFunctionalitieService.type_geometry =
+        this.mapService.drawerOpenedChanged();
+        this.mapService.type_geometry =
           'Puntos de control';
-        this.mapFunctionalitieService.type_geo = type;
+        this.mapService.type_geo = type;
         (await this.mapRequestService.getGeometry(type + 's')) || [];
         break;
       case 'owner_map':
-        this.mapFunctionalitieService.drawerOpenedChanged();
-        this.mapFunctionalitieService.type_geometry = 'Capas de mapas';
-        this.mapFunctionalitieService.type_geo = type;
+        this.mapService.drawerOpenedChanged();
+        this.mapService.type_geometry = 'Capas de mapas';
+        this.mapService.type_geo = type;
         (await this.mapRequestService.getGeometry(type + 's')) || [];
         break;
     }
@@ -279,62 +233,62 @@ export class MapsComponent implements OnInit, AfterViewInit {
 
   eventOptionGeotools(type): any {
     if (type === 1) {
-      this.mapFunctionalitieService.goCancelToGeometry();
+      this.mapService.goCancelToGeometry();
     } else if (type === 2) {
-      this.mapFunctionalitieService.goBackToGeometry();
+      this.mapService.goBackToGeometry();
     } else if (type === 3) {
-      this.mapFunctionalitieService.goDeleteGeometryPath();
+      this.mapService.goDeleteGeometryPath();
     } else if (type === 5) {
-      this.mapFunctionalitieService.goImportGeometry();
+      this.mapService.goImportGeometry();
     } else {
-      this.mapFunctionalitieService.goAddGeometry();
+      this.mapService.goAddGeometry();
     }
   }
 
   setCluster(ev) {
-    if (this.mapFunctionalitieService.mobile_set.length) {
-      this.mapFunctionalitieService.verCluster = ev.checked;
-      this.mapFunctionalitieService.deleteChecks(
-        this.mapFunctionalitieService.mobile_set
+    if (this.mapService.mobile_set.length) {
+      this.mapService.verCluster = ev.checked;
+      this.mapService.deleteChecks(
+        this.mapService.mobile_set
       );
-      this.mapFunctionalitieService.setMarkers(
-        this.mapFunctionalitieService.mobile_set,
-        this.mapFunctionalitieService.verCluster,
-        this.mapFunctionalitieService.verLabel
+      this.mapService.setMarkers(
+        this.mapService.mobile_set,
+        this.mapService.verCluster,
+        this.mapService.verLabel
       );
     } else {
-      this.mapFunctionalitieService.verCluster = ev.checked;
-      this.mapFunctionalitieService.deleteChecks(
-        this.mapFunctionalitieService.mobiles
+      this.mapService.verCluster = ev.checked;
+      this.mapService.deleteChecks(
+        this.mapService.mobiles
       );
-      this.mapFunctionalitieService.setMarkers(
-        this.mapFunctionalitieService.mobiles,
-        this.mapFunctionalitieService.verCluster,
-        this.mapFunctionalitieService.verLabel
+      this.mapService.setMarkers(
+        this.mapService.mobiles,
+        this.mapService.verCluster,
+        this.mapService.verLabel
       );
     }
   }
 
   setLabel(ev) {
-    if (this.mapFunctionalitieService.mobile_set.length) {
-      this.mapFunctionalitieService.verLabel = ev.checked;
-      this.mapFunctionalitieService.deleteChecks(
-        this.mapFunctionalitieService.mobile_set
+    if (this.mapService.mobile_set.length) {
+      this.mapService.verLabel = ev.checked;
+      this.mapService.deleteChecks(
+        this.mapService.mobile_set
       );
-      this.mapFunctionalitieService.setMarkers(
-        this.mapFunctionalitieService.mobile_set,
-        this.mapFunctionalitieService.verCluster,
-        this.mapFunctionalitieService.verLabel
+      this.mapService.setMarkers(
+        this.mapService.mobile_set,
+        this.mapService.verCluster,
+        this.mapService.verLabel
       );
     } else {
-      this.mapFunctionalitieService.verLabel = ev.checked;
-      this.mapFunctionalitieService.deleteChecks(
-        this.mapFunctionalitieService.mobiles
+      this.mapService.verLabel = ev.checked;
+      this.mapService.deleteChecks(
+        this.mapService.mobiles
       );
-      this.mapFunctionalitieService.setMarkers(
-        this.mapFunctionalitieService.mobiles,
-        this.mapFunctionalitieService.verCluster,
-        this.mapFunctionalitieService.verLabel
+      this.mapService.setMarkers(
+        this.mapService.mobiles,
+        this.mapService.verCluster,
+        this.mapService.verLabel
       );
     }
   }
