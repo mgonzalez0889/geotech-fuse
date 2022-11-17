@@ -1,6 +1,4 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import moment from 'moment';
-import { IconService } from 'app/core/services/icons/icon.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 
 @Component({
@@ -18,12 +16,10 @@ export class InfoWindowsComponent implements OnInit {
 
   constructor(
     public mapFunctionalitieService: MapFunctionalitieService,
-    private iconService: IconService
   ) {
   }
 
   ngOnInit(): void {
-    this.iconService.loadIcons();
     if (this.mapFunctionalitieService.type_geo === 'historic') {
       this.visible = 1;
     } else {

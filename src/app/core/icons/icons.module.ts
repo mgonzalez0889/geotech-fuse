@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @NgModule()
 export class IconsModule {
-  /**
-   * Constructor
-   */
+  private _countries: BehaviorSubject<any | null> = new BehaviorSubject(null);
+
   constructor(
     private _domSanitizer: DomSanitizer,
-    private _matIconRegistry: MatIconRegistry
+    private _matIconRegistry: MatIconRegistry,
+    private _http: HttpClient
   ) {
-    // Register icon sets
     this._matIconRegistry.addSvgIconSet(this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-twotone.svg'));
     this._matIconRegistry.addSvgIconSetInNamespace('mat_outline', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-outline.svg'));
     this._matIconRegistry.addSvgIconSetInNamespace('mat_solid', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-solid.svg'));
@@ -52,5 +53,18 @@ export class IconsModule {
     this._matIconRegistry.addSvgIcon('not-signal-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'));
     this._matIconRegistry.addSvgIcon('fixed-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/fixed-movil.svg'));
     this._matIconRegistry.addSvgIcon('historic', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/historic.svg'));
+    this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown.svg'));
+    this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition.svg'));
+  }
+
+  /**
+   * Getter for countries
+   */
+  get countries$(): Observable<any> {
+    return this._countries.asObservable();
+  }
+
+  getCountries(): Observable<any> {
+    return this._http.get<any>('api/apps/contacts/countries');
   }
 }

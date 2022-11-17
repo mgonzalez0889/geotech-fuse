@@ -5,7 +5,6 @@ import { MobileService } from 'app/core/services/mobile.service';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { SocketIoClientService } from '../../../../core/services/socket-io-client.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
-import { IconService } from 'app/core/services/icons/icon.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MapRequestService } from 'app/core/services/request/map-request.service';
 
@@ -81,14 +80,12 @@ export class MapsComponent implements OnInit, AfterViewInit {
     private fleetService: FleetsService,
     private socketIoService: SocketIoClientService,
     public mapService: MapFunctionalitieService,
-    public iconService: IconService,
     private mapRequestService: MapRequestService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.iconService.loadIcons();
 
     //abre el socket y manda el token del usuario
     this.socketIoService.sendMessage('authorization');

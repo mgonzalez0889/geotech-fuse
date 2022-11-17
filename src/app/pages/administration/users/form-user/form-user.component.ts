@@ -10,14 +10,14 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProfilesService } from '../../../../core/services/api/profiles.service';
 import { Observable, Subject } from 'rxjs';
-import { UsersService } from '../../../../core/services/api/users.service';
-import { fuseAnimations } from '../../../../../@fuse/animations';
-import { FuseValidators } from '../../../../../@fuse/validators';
-import { IconService } from 'app/core/services/icons/icon.service';
 import { map, mergeMap, takeUntil } from 'rxjs/operators';
+import { IconsModule } from 'app/core/icons/icons.module';
+import { FuseValidators } from '../../../../../@fuse/validators';
+import { fuseAnimations } from '../../../../../@fuse/animations';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UsersService } from '../../../../core/services/api/users.service';
+import { ProfilesService } from '../../../../core/services/api/profiles.service';
 
 @Component({
   selector: 'app-form-user',
@@ -45,7 +45,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private profileService: ProfilesService,
     private userService: UsersService,
-    private iconService: IconService
+    private iconService: IconsModule
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {

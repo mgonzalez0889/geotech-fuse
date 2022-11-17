@@ -6,14 +6,12 @@ import { IMobiles } from '../../../../core/interfaces/mobiles.interface';
 import {
   FormDialogSelectHistorialComponent
 } from '../form-dialog-select-historial/form-dialog-select-historial.component';
-import { IconService } from 'app/core/services/icons/icon.service';
 import { MobilesService } from 'app/core/services/mobiles/mobiles.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapRequestService } from 'app/core/services/request/map-request.service';
 import { HistoriesService } from 'app/core/services/api/histories.service';
-import moment from 'moment';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormReportComponent } from '../form-report/form-report.component';
@@ -50,7 +48,6 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
     private historiesService: HistoriesService,
     public dialog: MatDialog,
     public mapFunctionalitieService: MapFunctionalitieService,
-    private iconService: IconService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private fleetServices: FleetsService,
@@ -145,7 +142,6 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.iconService.loadIcons();
     this.listenObservableShow();
   }
 

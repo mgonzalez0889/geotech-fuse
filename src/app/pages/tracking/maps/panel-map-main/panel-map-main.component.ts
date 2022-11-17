@@ -6,7 +6,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HistoriesService } from 'app/core/services/api/histories.service';
 import { FleetsService } from 'app/core/services/fleets.service';
-import { IconService } from 'app/core/services/icons/icon.service';
 import { MapFunctionalitieService } from 'app/core/services/maps/map.service';
 import { MobileService } from 'app/core/services/mobile.service';
 import { MapRequestService } from 'app/core/services/request/map-request.service';
@@ -25,6 +24,7 @@ export class PanelMapMainComponent implements OnInit {
   @Output() sendMarker: EventEmitter<any> = new EventEmitter<any>();
   public mobileData: IMobiles[] = [];
   public dataSource: MatTableDataSource<any>;
+  showFiller = false;
 
   public displayedColumns: string[] = ['checkbox', 'select', 'code', 'menu'];
   public displayedColumnsFleets: string[] = ['select'];
@@ -54,16 +54,15 @@ export class PanelMapMainComponent implements OnInit {
     private historiesService: HistoriesService,
     public dialog: MatDialog,
     public mapFunctionalitieService: MapFunctionalitieService,
-    private iconService: IconService,
     private fleetServices: FleetsService,
     public mapRequestService: MapRequestService
   ) { }
 
   ngOnInit(): void {
-    this.iconService.loadIcons();
     this.listenObservableShow();
 
     this.mobilesService.getMobiles().subscribe(({ data }) => {
+      console.log(data);
 
       this.mobileData = [...data];
       this.dataSource = new MatTableDataSource([...data]);
@@ -83,8 +82,6 @@ export class PanelMapMainComponent implements OnInit {
   }
 
   public filterForTypeService(e: any): void {
-    console.log(e);
-
     if (e.value === 0) {
       this.dataSource = new MatTableDataSource([...this.mobileData]);
       return;
@@ -98,20 +95,32 @@ export class PanelMapMainComponent implements OnInit {
   }
 
 
-
-  /**
-   * @description: Cierra la ventana de opciones
-   */
-  public onShowMenu(): void {
-    this.showMenu = !this.showMenu;
+  public setIconView(data: any, typeService: string): string {
+    let icon = '';
+    if (typeService === 'Geobolt') {
+      switch (data.status) {
+        case 0:
+          icon = 'status_open_color';
+          break;
+        case 1:
+          icon = 'status_close_color';
+          break;
+      }
+    } else if (typeService === 'Vehicular') {
+      switch (data.status) {
+        case 0:
+          icon = 'engine_shutdown';
+          break;
+        case 1:
+          icon = 'engine_ignition';
+          break;
+      }
+    }
+    return icon;
   }
 
-  /**
-   * @description: Submenu de opciones
-   */
-  public onShowMenuGroup(): void {
-    this.showMenuGroup = !this.showMenuGroup;
-  }
+
+
 
   /**
    * @description: Opcion agrupar, mostrar flotas
@@ -211,17 +220,13 @@ export class PanelMapMainComponent implements OnInit {
     }
   }
 
-
-
   /**
    * @description: Filtra registros de la grid
    */
   public applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.mapFunctionalitieService.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
-
 
   /**
    * @description: Filtra registros de la grid

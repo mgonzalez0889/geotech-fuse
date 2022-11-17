@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { ContactService } from 'app/core/services/contact.service';
-import { IconService } from 'app/core/services/icons/icon.service';
-import { NgxPermissionsService } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { IconsModule } from '../../../../core/icons/icons.module';
+import { ContactService } from 'app/core/services/contact.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
-
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-form-contact',
@@ -31,7 +30,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
     private contactService: ContactService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
-    private iconService: IconService,
+    private iconService: IconsModule,
     private permissionsService: NgxPermissionsService,
     private toastAlert: ToastAlertService,
   ) { }
