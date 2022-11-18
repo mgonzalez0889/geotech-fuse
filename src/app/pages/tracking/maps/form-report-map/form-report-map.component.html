@@ -1,0 +1,72 @@
+<div class="w-full h-full flex flex-col gap-5">
+
+  <div class="w-full h-10 flex items-center justify-center border-b-2">
+    <h2 class="text-2xl font-semibold tracking-tight leading-8">Generar Reporte</h2>
+  </div>
+
+  <form [formGroup]="this.formReport" (ngSubmit)="this.onSubmit()" class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
+
+      <mat-form-field class=" fuse-mat-dense w-full">
+        <mat-label>Seleccione el rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="date_init" />
+          <input matEndDate placeholder="Hasta" formControlName="date_end" />
+        </mat-date-range-input>
+
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker>
+          <mat-date-range-picker-actions>
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-around">
+                <input type="time" matInput formControlName="timeInit">
+                <input type="time" matInput formControlName="timeEnd">
+              </div>
+              <div class="flex justify-end">
+                <button mat-button matDateRangePickerCancel>Cancel</button>
+                <button mat-raised-button color="accent" matDateRangePickerApply>Apply</button>
+              </div>
+            </div>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+      </mat-form-field>
+
+
+      <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
+        <mat-label>Seleccione eventos</mat-label>
+
+        <mat-select multiple formControlName="events">
+
+          <div class="option-all ">
+            <div class="flex items-center gap-2 px-4 py-2">
+              <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">
+              </mat-icon>
+              <input class="w-full min-w-0 py-1 border-0" type="text" [(ngModel)]="valueFilterEvents"
+                [ngModelOptions]="{standalone: true}" placeholder="Buscar" [maxLength]="30">
+            </div>
+            <mat-option #allSelectedEvents (click)="this.allSelectionEvents()" [value]="0">
+              Seleccionar todos
+            </mat-option>
+          </div>
+
+          <mat-option [value]="event.event_id"
+            *ngFor="let event of this.events | filterList:valueFilterEvents:'event_name'">
+            {{ event.event_name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="self-end">
+      <!-- <mat-dialog-actions> -->
+
+      <button mat-button mat-dialog-close>
+        Cancelar
+      </button>
+
+      <button type="submit" [mat-dialog-close]="true" mat-flat-button color="accent"
+        [disabled]="this.formReport.invalid">
+        Generar
+      </button>
+    </div>
+  </form>
+</div>

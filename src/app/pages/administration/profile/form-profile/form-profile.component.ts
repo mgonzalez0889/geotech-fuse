@@ -248,9 +248,12 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
         };
 
         data.forEach(({ children }) => {
-          children.forEach(({ id, title, create_option, edit_option, delete_option }) => {
-            this.availableModules.push({ id, title, create_option, edit_option, delete_option, option: { ...option } });
-          });
+          children.forEach(
+            ({ id, title, create_option, edit_option, delete_option }) => {
+              this.availableModules.push(
+                { id, title, create_option, edit_option, delete_option, option: { ...option } }
+              );
+            });
         });
       });
   }

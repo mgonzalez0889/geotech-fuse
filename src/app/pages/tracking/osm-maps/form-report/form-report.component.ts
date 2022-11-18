@@ -32,22 +32,19 @@ export class FormReportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getEvents();
-  }
-
-  private getEvents(): void {
     this.events$ = this._eventsService.getEvents();
+
   }
 
-  setFilter() {
-    var fechaInicio = new Date(
+  public setFilter(): void {
+    const fechaInicio = new Date(
       moment(this.initialDate).format('DD/MM/YYYY')
     ).getTime();
-    var fechaFin = new Date(
+    const fechaFin = new Date(
       moment(this.finalDate).format('DD/MM/YYYY')
     ).getTime();
 
-    var diff = fechaFin - fechaInicio;
+    const diff = fechaFin - fechaInicio;
 
     if (Number(diff / (1000 * 60 * 60 * 24)) > 30) {
       this.message_dates = true;

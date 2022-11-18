@@ -65,11 +65,11 @@ export class MapToolsService {
     verCluster: boolean,
     verLabel: boolean
   ): void {
-    mobiles.forEach((value: any, index: number) => {
-      const data = mobiles[index];
+    mobiles.forEach((data: any, index: number) => {
       this.markers[data.id] = new L.Marker([data.x, data.y], {
         icon: this.setIcon(data),
       });
+
       // Validamos estado de label
       if (verLabel) {
         this.markers[data.id].bindTooltip(data.plate, {

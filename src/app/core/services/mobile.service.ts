@@ -1,18 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../app-configs/app-settings.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ApiResponseInterface } from '../interfaces/api-response.interface';
 import { IMobiles } from '../interfaces/mobiles.interface';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MobileService {
+
+  private readyMobiles$: Subject<IMobiles[]> = new Subject();
+
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService
   ) { }
+
+  get mobiles$(): Observable<IMobiles[]> {
+    return this.readyMobiles$.asObservable();
+  }
 
   /**
    * @description: Obtiene todos los moviles
@@ -22,7 +30,7 @@ export class MobileService {
     return this._http.get<ApiResponseInterface<IMobiles[]>>(
       this._appSettings.mobile.url.base,
       { params }
-    );
+    ).pipe(tap(({ data }) => this.readyMobiles$.next(data)));
   }
 
   /**
