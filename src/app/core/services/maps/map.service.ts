@@ -276,6 +276,9 @@ export class MapFunctionalitieService {
       this.markers[data.id].options.rotationAngle =
         this.rotationIcon(data);
       this.markers[data.id].on('click', (e: any) => {
+
+        console.log('aeee', e);
+
         moment.locale('es');
         this.getPopup(e, data);
       });
@@ -284,6 +287,9 @@ export class MapFunctionalitieService {
     this.map.fitBounds(this.pointLatLens);
 
     this.map.on('click', (e) => {
+
+      console.log('click', e);
+
       if (!this.showMenuMobiles) {
         switch (this.type_geo) {
           case 'route':

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { ProfilesService } from 'app/core/services/api/profiles.service';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -129,20 +129,21 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       this.toastAlert.toasAlertWarn({
         message: 'No tienes permisos suficientes para realizar esta acción.',
       });
-
     } else {
       const confirmation = this.confirmationService.open();
-      confirmation.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
-        if (result === 'confirmed') {
-          this.profileService.deleteProfile(profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-            this.opened = false;
-            this.getProfiles();
-            this.toastAlert.toasAlertSuccess({
-              message: 'Perfil eliminado con exito.',
+      confirmation.afterClosed()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((result) => {
+          if (result === 'confirmed') {
+            this.profileService.deleteProfile(profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+              this.opened = false;
+              this.getProfiles();
+              this.toastAlert.toasAlertSuccess({
+                message: 'Perfil eliminado con exito.',
+              });
             });
-          });
-        }
-      });
+          }
+        });
     }
   }
 

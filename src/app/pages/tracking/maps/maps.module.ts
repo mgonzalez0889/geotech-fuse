@@ -9,11 +9,17 @@ import { PanelMapMainComponent } from './panel-map-main/panel-map-main.component
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { _MatMenuDirectivesModule } from '@angular/material/menu';
-
+import { FormReportMapComponent } from './form-report-map/form-report-map.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { PanelMapHistoryComponent } from './panel-map-history/panel-map-history.component';
+import { PopupMapComponent } from './popup-map/popup-map.component';
 @NgModule({
   declarations: [
     MapComponent,
     PanelMapMainComponent,
+    FormReportMapComponent,
+    PanelMapHistoryComponent,
+    PopupMapComponent,
   ],
   imports: [
     CommonModule,
@@ -23,6 +29,7 @@ import { _MatMenuDirectivesModule } from '@angular/material/menu';
     MatButtonToggleModule,
     MatCheckboxModule,
     MatInputModule,
+    MatDialogModule
   ],
 
 })

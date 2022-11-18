@@ -1,30 +1,35 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { Component, OnDestroy } from '@angular/core';
 import { AfterViewInit, OnInit } from '@angular/core';
-import { Component } from '@angular/core';
-import * as L from 'leaflet';
-import { MapToolsService } from 'app/core/services/map-tools.service';
+import { MobileService } from 'app/core/services/mobile.service';
+import { MapToolsService } from 'app/core/services/maps/map-tools.service';
+import { SocketIoClientService } from 'app/core/services/socket-io-client.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private googleMaps = L.tileLayer(
-    'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
-    {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }
-  );
-
+  private mobiles: any[] = [];
+  private unsubscribe$ = new Subject<void>();
   constructor(
-    private mapService: MapToolsService
+    public mapService: MapToolsService,
+    private socketIoService: SocketIoClientService,
+    private mobilesService: MobileService
   ) { }
 
   ngOnInit(): void {
+    this.listenChanelsSocket();
+  }
 
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   ngAfterViewInit(): void {
@@ -35,11 +40,54 @@ export class MapComponent implements OnInit, AfterViewInit {
       },
       center: [11.004313, -74.808137],
       zoom: 11,
-      layers: [this.googleMaps],
       attributionControl: false,
       zoomControl: true,
     });
-    this.mapService.getLocation();
+
+    this.mobilesService.mobiles$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.mobiles = [...data];
+        this.mapService.setMarkers(data);
+      });
   }
+
+  /**
+   * @description: Filtra por tipo de servicio o dispositivo
+   */
+  public changeViewCluster(checked: boolean): void {
+    this.mapService.verCluster = checked;
+    this.mapService.clearMap();
+    this.mapService.setMarkers(this.mobiles);
+  }
+
+  /**
+   * @description: Filtra por tipo de servicio o dispositivo
+   */
+  public changeViewLabel(checked: boolean): void {
+    this.mapService.verLabel = checked;
+    this.mapService.clearMap();
+    this.mapService.setMarkers(this.mobiles);
+  }
+
+  private listenChanelsSocket(): void {
+    this.socketIoService.sendMessage('authorization');
+    this.socketIoService.listenin('new_position')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: any) => {
+        console.log('socket chanel', data);
+
+        this.mapService.moveMarker(data);
+      });
+
+    this.socketIoService
+      .listenin('new_command')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: any) => {
+
+        console.log('command ', data);
+      });
+  }
+
 
 }

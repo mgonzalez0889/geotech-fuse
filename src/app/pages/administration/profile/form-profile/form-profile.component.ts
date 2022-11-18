@@ -119,7 +119,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    * @description: cuando se envie el formulario, parseamos y preguntamos si va a modificar o agregar.
    */
   public onSubmit(): void {
-
     const modules: FormArray = this.profileForm.get('module') as FormArray;
     this.assignedModules.forEach(({ id, option }) => {
       modules.push(new FormControl({ id, option: { ...option, read: true } }));
@@ -137,7 +136,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.profileForm.reset();
     this.editMode = false;
-
   }
 
   /**
@@ -248,9 +246,12 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
         };
 
         data.forEach(({ children }) => {
-          children.forEach(({ id, title, create_option, edit_option, delete_option }) => {
-            this.availableModules.push({ id, title, create_option, edit_option, delete_option, option: { ...option } });
-          });
+          children.forEach(
+            ({ id, title, create_option, edit_option, delete_option }) => {
+              this.availableModules.push(
+                { id, title, create_option, edit_option, delete_option, option: { ...option } }
+              );
+            });
         });
       });
   }

@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Injectable } from '@angular/core';
-import * as L from 'leaflet';
 import 'leaflet.markercluster';
+import * as L from 'leaflet';
 import moment from 'moment';
+import { ApplicationRef, ComponentFactoryResolver, Injectable, Injector } from '@angular/core';
+import { InfoWindowsComponent } from 'app/pages/tracking/osm-maps/info-windows/info-windows.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapToolsService {
-  latitud: number | null = null;
-  longitud: number | null = null;
+
+  compRef: any;
+  popup = L.popup({
+    closeButton: false,
+    keepInView: true,
+    maxWidth: 300,
+  });
+  dataInfoWindows: any;
   public map: L.Map;
   public markerCluster = L.markerClusterGroup();
   public markers: any = {};
@@ -19,6 +26,8 @@ export class MapToolsService {
   public pointLatLens: any = [];
   public clusterHistoric: L.MarkerClusterGroup;
   public markersPoint: any = {};
+  private latitud: number | null = null;
+  private longitud: number | null = null;
   private googleMaps = L.tileLayer(
     'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
     {
@@ -38,21 +47,20 @@ export class MapToolsService {
     'Google Hibrido': this.googleHybrid,
   };
 
-  constructor() { }
+  constructor(
+    private resolver: ComponentFactoryResolver,
+    private injector: Injector,
+    private appRef: ApplicationRef,
+  ) {
+    this.getLocation();
+  }
 
   /**
    * @description: Se inicializa el mapa
    */
-  public initMap(optionsMap?: L.MapOptions): void {
-    const optionsDefaultMap = {
-      fullscreenControl: true,
-      center: [11.004313, -74.808137],
-      zoom: 20,
-      layers: [this.googleMaps],
-      attributionControl: false,
-    } as L.MapOptions;
-
-    this.map = L.map('map', { ...(optionsMap || optionsDefaultMap) });
+  public initMap(optionsMap: L.MapOptions): void {
+    this.map = L.map('map', { ...optionsMap, layers: [this.googleMaps] });
+    console.log(this.map, 'aaa');
 
     L.control.layers(this.baseLayers).addTo(this.map);
   }
@@ -61,17 +69,15 @@ export class MapToolsService {
    * @description: Se crea los marcadores de los vehiculos en el mapa
    */
   public setMarkers(
-    mobiles: any,
-    verCluster: boolean,
-    verLabel: boolean
+    mobiles: any[],
   ): void {
-    mobiles.forEach((value: any, index: number) => {
-      const data = mobiles[index];
+    mobiles.forEach((data: any) => {
       this.markers[data.id] = new L.Marker([data.x, data.y], {
         icon: this.setIcon(data),
       });
+
       // Validamos estado de label
-      if (verLabel) {
+      if (this.verLabel) {
         this.markers[data.id].bindTooltip(data.plate, {
           permanent: true,
           direction: 'bottom',
@@ -84,21 +90,54 @@ export class MapToolsService {
           offset: L.point({ x: 0, y: 18 }),
         });
       }
+
       // Validamos estado de cluster
-      if (verCluster) {
+      if (this.verCluster) {
         this.markers[data.id].addTo(this.markerCluster);
         this.markerCluster.addTo(this.map);
       } else {
         this.markers[data.id].addTo(this.map);
       }
+
       this.pointLatLens.push(
         Object.values(this.markers[data.id].getLatLng())
       );
+
       this.markers[data.id].options.rotationAngle =
         this.rotationIcon(data);
+
+      // this.markers[data.id].on('click', (e: any) => {
+
+      //   console.log('holis');
+      //   if (this.compRef) { this.compRef.destroy(); }
+      //   const compFactory =
+      //     this.resolver.resolveComponentFactory(InfoWindowsComponent);
+      //   this.compRef = compFactory.create(this.injector);
+      //   this.dataInfoWindows = data;
+      //   this.compRef.instance.data = data;
+      //   // const subscription = this.compRef.instance.onRefreshData.subscribe(
+      //   //   (x) => {
+      //   //     data;
+      //   //   }
+      //   // );
+      //   const div = document.createElement('div');
+      //   div.appendChild(this.compRef.location.nativeElement);
+
+      //   this.popup.setLatLng(e.latlng);
+      //   this.popup.setContent(div);
+      //   this.popup.openOn(this.map);
+
+      //   this.appRef.attachView(this.compRef.hostView);
+      //   this.compRef.onDestroy(() => {
+      //     this.appRef.detachView(this.compRef.hostView);
+      //     // subscription.unsubscribe();
+      //   });
+      // });
     });
+
     this.map.fitBounds(this.pointLatLens);
   }
+
   /**
    * @description: Asigna los iconos para el marcador deacuerdo al estado
    */
@@ -231,6 +270,8 @@ export class MapToolsService {
           });
         },
         (err) => {
+          console.log(err);
+
           // reject(err);
         }
       );

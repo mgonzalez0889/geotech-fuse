@@ -232,6 +232,8 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
   }
 
   public individualFleet(event, row) {
+    console.log('row', row);
+
     this.mapFunctionalitieService.fleets.map((x) => {
       if (x.id == row.id) {
         x.selected = !event;
@@ -247,6 +249,8 @@ export class FloatingMenuComponent implements OnInit, OnDestroy {
       this.mapFunctionalitieService.platesFleet.splice(indx, indx >= 0 ? 1 : 0);
     } else {
       this.subscription = this.fleetServices.getFleetsPlateAssignedMap(row.id).subscribe(({ data }) => {
+        console.log('data', data);
+
         if (data.length > 0) {
           this.mapFunctionalitieService.platesFleet.push({
             fleetId: row.id,

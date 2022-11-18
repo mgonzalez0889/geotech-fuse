@@ -50,7 +50,6 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.changeControlsForm();
-    this.editMode = false;
   }
 
   ngOnInit(): void {
@@ -142,10 +141,13 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
       this.formUser.addControl('change_password', this.fb.control(false));
       this.formUser.controls['password_digest']?.clearValidators();
       this.formUser.controls['confirm_password']?.clearValidators();
+      this.editMode = false;
       this.formUser.patchValue({ ...this.dataUpdate });
     } else {
       this.formUser.controls['password_digest']?.setValidators([Validators.required]);
       this.formUser.controls['confirm_password']?.setValidators([Validators.required]);
+      this.editMode = false;
+      this.formUser.reset();
     }
     this.formUser.controls['password_digest']?.updateValueAndValidity();
     this.formUser.controls['confirm_password']?.updateValueAndValidity();

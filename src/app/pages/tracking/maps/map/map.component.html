@@ -3,3 +3,17 @@
 <div class="absolute pl-2 pt-2 z-99">
   <app-panel-map-main></app-panel-map-main>
 </div>
+
+<div class="absolute z-99 flex gap-3 bottom-3 right-3">
+  <div class="bg-white py-1 px-3 rounded">
+    <mat-checkbox (change)="this.changeViewCluster($event.checked)" [checked]="mapService.verCluster">
+      Ver cluster
+    </mat-checkbox>
+  </div>
+
+  <div class="bg-white py-1 px-3 rounded">
+    <mat-checkbox (change)="this.changeViewLabel($event.checked)" [checked]="mapService.verLabel">
+      Ver label
+    </mat-checkbox>
+  </div>
+</div>

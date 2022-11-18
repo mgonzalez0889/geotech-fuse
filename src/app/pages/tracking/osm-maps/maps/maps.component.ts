@@ -107,8 +107,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
     const time = timer(2000);
 
     time.subscribe((t) => {
-      console.log('a');
-
       this.getMobiles();
     });
   }
@@ -197,6 +195,8 @@ export class MapsComponent implements OnInit, AfterViewInit {
   }
 
   async eventClick(type) {
+    console.log('fff');
+
     switch (type) {
       case 'settings-map':
         break;

@@ -18,6 +18,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatRadioModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatDatepickerModule
   ],
   declarations: [MessageDialogComponent, ConfirmDeleteComponent],
 })
