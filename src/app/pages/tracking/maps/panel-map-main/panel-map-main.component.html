@@ -1,8 +1,8 @@
-<mat-drawer-container [ngClass]="{'expand':drawer.opened}" class="w-10 h-auto bg-transparent shadow-lg">
+<mat-drawer-container [ngClass]="{'expand':drawer.opened}" class="w-10 h-auto bg-transparent shadow-xl">
   <mat-drawer #drawer position="start" mode="side"
-    class="w-full h-full shadow-xl bg-card rounded-lg pt-3 overflow-y-auto">
+    class="w-full h-full shadow-xl bg-card rounded-lg pt-3 overflow-y-auto flex flex-col">
 
-    <div class="absolute ml-3 mt-1" [hidden]="!drawer.opened">
+    <div class="ml-3 mt-1" [hidden]="!drawer.opened">
       <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle()">
         <mat-icon svgIcon="mat_outline:arrow_back"></mat-icon>
       </button>
@@ -28,7 +28,7 @@
         </div>
 
         <!--Table list Mobiles-->
-        <div class="h-100 w-full pl-2 overflow-y-auto">
+        <div class="h-60 w-full pl-2 overflow-y-auto">
           <table mat-table class="w-full" [dataSource]="dataSource">
 
             <ng-container matColumnDef="checkbox">
@@ -52,7 +52,7 @@
               <th mat-header-cell *matHeaderCellDef> </th>
               <td mat-cell *matCellDef="let element">
                 <span class="whitespace-nowrap text-sm text-blackTertiary">
-                  {{convertDateHour(element.date_entry)}}
+                  {{toolDate.convertDateHour(element.date_entry)}}
                 </span>
               </td>
             </ng-container>
@@ -60,7 +60,7 @@
             <ng-container matColumnDef="icon">
               <th mat-header-cell *matHeaderCellDef> </th>
               <td mat-cell *matCellDef="let element">
-                <span *ngIf="setIconView(element, element.class_mobile_name) as configIcon">
+                <span *ngIf="iconService.iconTypeService(element, element.class_mobile_name) as configIcon">
                   <mat-icon [matTooltip]="configIcon.text" [svgIcon]="configIcon.icon">
                   </mat-icon>
                 </span>

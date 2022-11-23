@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
-
+  public dataSocket: any = null;
   private mobiles: any[] = [];
   private unsubscribe$ = new Subject<void>();
   constructor(
@@ -26,29 +26,33 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenChanelsSocket();
   }
 
-
   ngOnDestroy(): void {
+    this.mapService.clearMap();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
   ngAfterViewInit(): void {
-    this.mapService.initMap({
-      fullscreenControl: true,
-      fullscreenControlOptions: {
-        position: 'topright',
-      },
-      center: [11.004313, -74.808137],
-      zoom: 11,
-      attributionControl: false,
-      zoomControl: true,
-    });
+    setTimeout(() => {
+      this.mapService.initMap({
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+          position: 'topright',
+        },
+        center: [11.004313, -74.808137],
+        zoom: 10,
+        attributionControl: false,
+        zoomControl: true,
+      });
+    }, 500);
+
 
     this.mobilesService.mobiles$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.mobiles = [...data];
-        this.mapService.setMarkers(data);
+        this.mobiles = [...data || []];
+
+        this.mapService.setMarkers(data, true);
       });
   }
 
@@ -75,8 +79,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketIoService.listenin('new_position')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
-        console.log('socket chanel', data);
-
+        console.log('new_position ', data);
+        this.dataSocket = { ...data };
         this.mapService.moveMarker(data);
       });
 

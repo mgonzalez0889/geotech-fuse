@@ -1,26 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import 'leaflet.markercluster';
 import * as L from 'leaflet';
 import moment from 'moment';
-import { ApplicationRef, ComponentFactoryResolver, Injectable, Injector } from '@angular/core';
-import { InfoWindowsComponent } from 'app/pages/tracking/osm-maps/info-windows/info-windows.component';
+import 'leaflet.markercluster';
+import { PopupMapComponent } from '../../../pages/tracking/maps/popup-map/popup-map.component';
+import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapToolsService {
 
-  compRef: any;
-  popup = L.popup({
-    closeButton: false,
-    keepInView: true,
-    maxWidth: 300,
-  });
-  dataInfoWindows: any;
   public map: L.Map;
   public markerCluster = L.markerClusterGroup();
   public markers: any = {};
-  public mobiles: any[] = [];
+  // public mobiles: any[] = [];
   public verLabel: boolean = true;
   public verCluster: boolean = true;
   public pointLatLens: any = [];
@@ -28,29 +21,17 @@ export class MapToolsService {
   public markersPoint: any = {};
   private latitud: number | null = null;
   private longitud: number | null = null;
-  private googleMaps = L.tileLayer(
-    'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
-    {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }
-  );
-  private googleHybrid = L.tileLayer(
-    'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-    {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }
-  );
-  private baseLayers = {
-    'Google Maps': this.googleMaps,
-    'Google Hibrido': this.googleHybrid,
-  };
+  private compRef: ComponentRef<PopupMapComponent>;
+  private popup = L.popup({
+    closeButton: false,
+    keepInView: true,
+    maxWidth: 300,
+  });
 
   constructor(
-    private resolver: ComponentFactoryResolver,
     private injector: Injector,
     private appRef: ApplicationRef,
+    private resolver: ComponentFactoryResolver,
   ) {
     this.getLocation();
   }
@@ -59,10 +40,28 @@ export class MapToolsService {
    * @description: Se inicializa el mapa
    */
   public initMap(optionsMap: L.MapOptions): void {
-    this.map = L.map('map', { ...optionsMap, layers: [this.googleMaps] });
-    console.log(this.map, 'aaa');
-
-    L.control.layers(this.baseLayers).addTo(this.map);
+    const GoogleMaps = L.tileLayer(
+      'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+      {
+        maxZoom: 20,
+        minZoom: 3,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }
+    );
+    const GoogleHybrid = L.tileLayer(
+      'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+      {
+        maxZoom: 20,
+        minZoom: 3,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }
+    );
+    const baseLayers = {
+      'Google Maps': GoogleMaps,
+      'Google Hibrido': GoogleHybrid,
+    };
+    this.map = L.map('map', { ...optionsMap, layers: [GoogleMaps] });
+    L.control.layers(baseLayers).addTo(this.map);
   }
 
   /**
@@ -70,13 +69,13 @@ export class MapToolsService {
    */
   public setMarkers(
     mobiles: any[],
+    popup: boolean = false
   ): void {
     mobiles.forEach((data: any) => {
       this.markers[data.id] = new L.Marker([data.x, data.y], {
         icon: this.setIcon(data),
       });
 
-      // Validamos estado de label
       if (this.verLabel) {
         this.markers[data.id].bindTooltip(data.plate, {
           permanent: true,
@@ -91,12 +90,15 @@ export class MapToolsService {
         });
       }
 
-      // Validamos estado de cluster
       if (this.verCluster) {
         this.markers[data.id].addTo(this.markerCluster);
         this.markerCluster.addTo(this.map);
       } else {
         this.markers[data.id].addTo(this.map);
+      }
+
+      if (popup) {
+        this.makePopup(data);
       }
 
       this.pointLatLens.push(
@@ -105,34 +107,6 @@ export class MapToolsService {
 
       this.markers[data.id].options.rotationAngle =
         this.rotationIcon(data);
-
-      // this.markers[data.id].on('click', (e: any) => {
-
-      //   console.log('holis');
-      //   if (this.compRef) { this.compRef.destroy(); }
-      //   const compFactory =
-      //     this.resolver.resolveComponentFactory(InfoWindowsComponent);
-      //   this.compRef = compFactory.create(this.injector);
-      //   this.dataInfoWindows = data;
-      //   this.compRef.instance.data = data;
-      //   // const subscription = this.compRef.instance.onRefreshData.subscribe(
-      //   //   (x) => {
-      //   //     data;
-      //   //   }
-      //   // );
-      //   const div = document.createElement('div');
-      //   div.appendChild(this.compRef.location.nativeElement);
-
-      //   this.popup.setLatLng(e.latlng);
-      //   this.popup.setContent(div);
-      //   this.popup.openOn(this.map);
-
-      //   this.appRef.attachView(this.compRef.hostView);
-      //   this.compRef.onDestroy(() => {
-      //     this.appRef.detachView(this.compRef.hostView);
-      //     // subscription.unsubscribe();
-      //   });
-      // });
     });
 
     this.map.fitBounds(this.pointLatLens);
@@ -204,24 +178,26 @@ export class MapToolsService {
       this.markers[data.id_mobile].options.rotationAngle =
         this.rotationIcon(data);
       this.markers[data.id_mobile].setIcon(this.setIcon(data));
-      this.setData(data);
     }
   }
+
   /**
    * @description: Mantiene actualizado el array de los vh con la data que llega del socket
    */
   public setData(data: any): void {
-    this.mobiles.forEach((x) => {
-      if (x.id === data.id_mobile) {
-        x.orientation = data.orientation;
-        x.speed = data.speed;
-        x.x = data.x;
-        x.y = data.y;
-        x.status = Number(data.status);
-        x.status_gps = data.status_gps;
-        x.status_signal = data.status_signal;
-      }
-    });
+    console.log('setData', data);
+
+    // this.mobiles.forEach((x) => {
+    //   if (x.id === data.id_mobile) {
+    //     x.orientation = data.orientation;
+    //     x.speed = data.speed;
+    //     x.x = data.x;
+    //     x.y = data.y;
+    //     x.status = Number(data.status);
+    //     x.status_gps = data.status_gps;
+    //     x.status_signal = data.status_signal;
+    //   }
+    // });
   }
 
   /**
@@ -244,6 +220,30 @@ export class MapToolsService {
     });
   }
 
+  private makePopup(data: any): void {
+    this.markers[data.id].on('click', (e: any) => {
+
+      if (this.compRef) { this.compRef.destroy(); }
+
+      const compFactory =
+        this.resolver.resolveComponentFactory(PopupMapComponent);
+      this.compRef = compFactory.create(this.injector);
+      this.compRef.instance.data = data;
+
+      const div = document.createElement('div');
+      div.appendChild(this.compRef.location.nativeElement);
+
+      this.popup.setLatLng(e.latlng);
+      this.popup.setContent(div);
+      this.popup.openOn(this.map);
+
+      this.appRef.attachView(this.compRef.hostView);
+
+      this.compRef.onDestroy(() => {
+        this.appRef.detachView(this.compRef.hostView);
+      });
+    });
+  }
   /**
    * @description: Asigna la rotacion de los iconos
    */
@@ -252,12 +252,7 @@ export class MapToolsService {
       moment(data.date_entry),
       'days'
     );
-    let rotaIcon: any;
-    if (diffDays >= 1 || isNaN(diffDays)) {
-      return (rotaIcon = null);
-    } else {
-      return (rotaIcon = data.orientation);
-    }
+    return diffDays >= 1 || isNaN(diffDays) ? null : data.orientation;
   }
 
   private getPosition(): Promise<{ lng: number; lat: number }> {

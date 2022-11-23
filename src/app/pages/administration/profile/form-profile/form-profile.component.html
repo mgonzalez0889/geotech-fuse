@@ -25,8 +25,8 @@
             </div>
             <div class="flex items-center ml-auto mb-1">
               <button mat-stroked-button (click)="editMode = true">
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                <span class="ml-2">Editar</span>
+                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil-alt"></mat-icon>
+                <span class="ml-2">{{this.dataUpdate ? 'Editar': 'Crear'}}</span>
               </button>
             </div>
           </div>

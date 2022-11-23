@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { IconsModule } from 'app/core/icons/icons.module';
 import { IMobiles } from 'app/core/interfaces/mobiles.interface';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { MobileService } from 'app/core/services/mobile.service';
-import moment from 'moment';
+import { DateTools } from 'app/core/tools/date.tool';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FormReportMapComponent } from '../form-report-map/form-report-map.component';
@@ -18,8 +19,10 @@ type TypeService = { classMobileId: number; classMobileName: string };
   templateUrl: './panel-map-main.component.html',
   styleUrls: ['./panel-map-main.component.scss']
 })
-export class PanelMapMainComponent implements OnInit, OnDestroy {
-  public mobileData: IMobiles[] = [];
+export class PanelMapMainComponent implements OnInit, OnDestroy, OnChanges {
+
+  @Input() dataSocket: any = null;
+  public mobileData: any[] = [];
   public fleets: any[] = [];
   public dataSource: MatTableDataSource<any>;
   public dataSourceFleets: MatTableDataSource<any>;
@@ -31,38 +34,42 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private mobilesService: MobileService,
-    private fleetService: FleetsService,
+    public toolDate: DateTools,
+    public iconService: IconsModule,
     private dialog: MatDialog,
     private mapService: MapToolsService,
+    private fleetService: FleetsService,
+    private mobilesService: MobileService,
   ) { }
 
-  ngOnInit(): void {
-    this.mobilesService.getMobiles()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-        this.mobileData = [...data];
-        this.dataSource = new MatTableDataSource([...data]);
-        this.mobileData.forEach((valueMobile) => {
-          const validTypeService: boolean = this.typeServices.some(
-            ({ classMobileId }) => classMobileId === valueMobile.
-              class_mobile_id
-          );
+  ngOnChanges(changes: SimpleChanges): void {
 
-          if (!validTypeService) {
-            this.typeServices.push({
-              classMobileId: valueMobile.class_mobile_id,
-              classMobileName: valueMobile.class_mobile_name
-            });
-          }
-        });
-      });
+    if (this.dataSocket) {
+      const indexMobile: number = this.mobileData.findIndex(({ plate }) => plate === this.dataSocket.plate);
+
+      if (indexMobile >= 0) {
+
+        console.log('ae', this.mobileData[indexMobile].status);
+
+        this.mobileData[indexMobile].status = this.dataSocket.status;
+        this.mobileData[indexMobile].date_entry = this.dataSocket.date_entry;
+        console.log('aeaa', this.mobileData[indexMobile].status);
+
+      }
+
+    }
+  }
+  ngOnInit(): void {
+
+    setTimeout(() => {
+      this.readMobiles();
+    }, 1000);
 
     this.fleetService.getFleets()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
-        this.fleets = [...data];
-        this.dataSourceFleets = new MatTableDataSource([...data]);
+        this.fleets = [...data || []];
+        this.dataSourceFleets = new MatTableDataSource([...data || []]);
       });
   }
 
@@ -89,40 +96,6 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description: Renderisa los iconos de mobiles en la tabla
-   */
-  public setIconView(data: any, typeService: string): any {
-    const configIcon = {
-      icon: '',
-      text: ''
-    };
-    if (typeService === 'Geobolt') {
-      switch (data.status) {
-        case 0:
-          configIcon['icon'] = 'status_open_color';
-          configIcon['text'] = 'Abierto';
-          break;
-        case 1:
-          configIcon['icon'] = 'status_close_color';
-          configIcon['text'] = 'Cerrado';
-          break;
-      }
-    } else if (typeService === 'Vehicular') {
-      switch (data.status) {
-        case 0:
-          configIcon['icon'] = 'engine_shutdown';
-          configIcon['text'] = 'Apagado';
-          break;
-        case 1:
-          configIcon['icon'] = 'engine_ignition';
-          configIcon['text'] = 'Encendido';
-          break;
-      }
-    }
-    return configIcon;
-  }
-
-  /**
    * @description: Selecciona mobiles con los check y se muestran en el mapa
    */
   public selectMobiles(checked: boolean, data: IMobiles): void {
@@ -135,10 +108,10 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
 
     if (!this.selectPlates.length) {
       this.mapService.clearMap();
-      this.mapService.setMarkers(this.mobileData);
+      this.mapService.setMarkers(this.mobileData, true);
     } else {
       this.mapService.clearMap();
-      this.mapService.setMarkers(this.selectPlates);
+      this.mapService.setMarkers(this.selectPlates, true);
     }
   }
 
@@ -155,10 +128,10 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
 
     if (!this.selectFleet.length) {
       this.mapService.clearMap();
-      this.mapService.setMarkers(this.mobileData);
+      this.mapService.setMarkers(this.mobileData, true);
     } else {
       this.mapService.clearMap();
-      this.mapService.setMarkers(data.plates);
+      this.mapService.setMarkers(data.plates, true);
     }
   }
 
@@ -177,11 +150,6 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     });
   }
 
-  public convertDateHour(date): string {
-    moment.locale('es');
-    return moment(date).fromNow();
-  }
-
   /**
    * @description: Filtra registros de la table de placas
    */
@@ -196,6 +164,29 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
   public applyFilterFleets(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSourceFleets.filter = filterValue.trim().toLowerCase();
+  }
+
+  private readMobiles(): void {
+    this.mobilesService.getMobiles()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+        console.log('aaaa');
+
+        this.mobileData = [...data];
+        this.dataSource = new MatTableDataSource([...data]);
+        this.mobileData.forEach((valueMobile) => {
+          const validTypeService: boolean = this.typeServices.some(
+            ({ classMobileId }) => classMobileId === valueMobile.
+              class_mobile_id
+          );
+          if (!validTypeService) {
+            this.typeServices.push({
+              classMobileId: valueMobile.class_mobile_id,
+              classMobileName: valueMobile.class_mobile_name
+            });
+          }
+        });
+      });
   }
 
 }

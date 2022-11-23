@@ -1,8 +1,18 @@
 <div class="w-full h-full" #map id="map"></div>
 
-<div class="absolute pl-2 pt-2 z-99">
-  <app-panel-map-main></app-panel-map-main>
+
+<div class="absolute pl-2 pt-2 z-99 flex gap-4">
+
+  <div>
+    <app-panel-map-main [dataSocket]="this.dataSocket"></app-panel-map-main>
+  </div>
+
+  <div *ngIf="false">
+    <app-panel-map-history></app-panel-map-history>
+  </div>
+
 </div>
+
 
 <div class="absolute z-99 flex gap-3 bottom-3 right-3">
   <div class="bg-white py-1 px-3 rounded">

@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { IConfigIcon } from '../interfaces/other/icon.interface';
 
 @NgModule()
 export class IconsModule {
@@ -56,6 +57,101 @@ export class IconsModule {
     this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown.svg'));
     this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition.svg'));
   }
+
+  public iconTypeService(data: any, typeService: string): IConfigIcon {
+    const configIcon = {
+      icon: '',
+      text: ''
+    };
+    if (typeService === 'Geobolt') {
+      switch (Number(data.status)) {
+        case 0:
+          configIcon['icon'] = 'status_open_color';
+          configIcon['text'] = 'Abierto';
+          break;
+        case 1:
+          configIcon['icon'] = 'status_close_color';
+          configIcon['text'] = 'Cerrado';
+          break;
+      }
+    } else if (typeService === 'Vehicular') {
+      switch (Number(data.status)) {
+        case 0:
+          configIcon['icon'] = 'engine_shutdown';
+          configIcon['text'] = 'Apagado';
+          break;
+        case 1:
+          configIcon['icon'] = 'engine_ignition';
+          configIcon['text'] = 'Encendido';
+          break;
+      }
+    }
+    return configIcon;
+  }
+
+  public iconStatusGps(data: any): IConfigIcon {
+    const configIcon = {
+      icon: '',
+      text: ''
+    };
+    const statusGps = data.status_gps.toLowerCase();
+    switch (statusGps) {
+      case 'excelente':
+        configIcon['icon'] = 'status_gps_green';
+        break;
+      case 'regular':
+        configIcon['icon'] = 'status_gps_orange';
+        break;
+      case 'mala':
+        configIcon['icon'] = 'status_gps_red';
+        break;
+    }
+    return configIcon;
+  }
+
+  public iconStatusSignal(data: any): IConfigIcon {
+    const configIcon = {
+      icon: '',
+      text: ''
+    };
+    const statusSignal = data.status_signal.toLowerCase();
+    switch (statusSignal) {
+      case 'excelente':
+        configIcon['icon'] = 'signal_level_green';
+        break;
+      case 'regular':
+        configIcon['icon'] = 'signal_level_orange';
+        break;
+      case 'mala':
+        configIcon['icon'] = 'signal_level_red';
+        break;
+    }
+    return configIcon;
+  }
+
+  public iconStatusBattery(data: any): IConfigIcon {
+    const battery = Number(data.battery);
+    const configIcon = {
+      icon: '',
+      text: ''
+    };
+    if (battery >= 0 && battery <= 25) {
+      configIcon['text'] = `${battery}%`;
+      configIcon['icon'] = 'battery_red';
+    } else if (battery >= 26 && battery <= 50) {
+      configIcon['text'] = `${battery}%`;
+      configIcon['icon'] = 'battery_orange';
+    } else if (battery >= 51 && battery <= 75) {
+      configIcon['text'] = `${battery}%`;
+      configIcon['icon'] = 'battery_yellow';
+    } else if (battery >= 76 && battery <= 100) {
+      configIcon['text'] = `${battery}%`;
+      configIcon['icon'] = 'battery_green';
+    }
+
+    return configIcon;
+  }
+
 
   /**
    * Getter for countries
