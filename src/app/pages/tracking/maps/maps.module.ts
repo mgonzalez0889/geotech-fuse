@@ -13,6 +13,9 @@ import { FormReportMapComponent } from './form-report-map/form-report-map.compon
 import { MatDialogModule } from '@angular/material/dialog';
 import { PanelMapHistoryComponent } from './panel-map-history/panel-map-history.component';
 import { PopupMapComponent } from './popup-map/popup-map.component';
+import { PanelMapDetailsComponent } from './panel-map-details/panel-map-details.component';
+import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-commands.component';
+
 @NgModule({
   declarations: [
     MapComponent,
@@ -20,6 +23,8 @@ import { PopupMapComponent } from './popup-map/popup-map.component';
     FormReportMapComponent,
     PanelMapHistoryComponent,
     PopupMapComponent,
+    PanelMapDetailsComponent,
+    PanelMapCommandsComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +36,5 @@ import { PopupMapComponent } from './popup-map/popup-map.component';
     MatInputModule,
     MatDialogModule
   ],
-
 })
 export class MapsModule { }

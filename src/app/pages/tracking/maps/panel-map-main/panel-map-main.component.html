@@ -76,15 +76,12 @@
                 </button>
 
                 <mat-menu #menu="matMenu">
-
-                  <button mat-menu-item>
-                    <span>Ver detalle</span>
+                  <button mat-menu-item (click)="mapService.selectPanel.next({panel:'details', data:element})">
+                    Ver detalles
                   </button>
-
-                  <button mat-menu-item>
-                    <span>Comandos</span>
+                  <button mat-menu-item (click)="mapService.selectPanel.next({panel:'commands', data:element})">
+                    Comandos
                   </button>
-
                 </mat-menu>
               </td>
             </ng-container>
@@ -93,6 +90,13 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           </table>
+
+          <ng-container *ngIf="!mobileData.length">
+            <div class="w-full h-20 bg-card border-2 flex justify-center items-center">
+              <p class="text-lg font-normal">No tienes placas asignadas.</p>
+            </div>
+          </ng-container>
+
         </div>
 
       </mat-tab>
@@ -123,16 +127,22 @@
             <tr mat-row *matRowDef="let row; columns: ['checkbox']"></tr>
           </table>
 
+          <ng-container *ngIf="!fleets.length">
+            <div class="w-full h-20 bg-card border-2 flex justify-center items-center">
+              <p class="text-lg font-normal">No tienes flotas asignadas.</p>
+            </div>
+          </ng-container>
+
         </div>
       </mat-tab>
 
     </mat-tab-group>
 
-    <div class="absolute flex w-full justify-end bottom-4 -left-3 z-999" *ngIf="selectPlates.length ">
+    <!-- <div class="absolute flex w-full justify-end bottom-4 -left-3 z-999" *ngIf="selectPlates.length ">
       <button matTooltip="Generar Reporte" mat-mini-fab (click)="generateReport()">
-        <mat-icon svgIcon="historic"></mat-icon>
+        <mat-icon svgIcon="mat_outline:history_toggle_off"></mat-icon>
       </button>
-    </div>
+    </div> -->
 
   </mat-drawer>
 

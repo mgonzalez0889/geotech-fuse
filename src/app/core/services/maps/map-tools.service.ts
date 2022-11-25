@@ -2,26 +2,26 @@
 import * as L from 'leaflet';
 import moment from 'moment';
 import 'leaflet.markercluster';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { PopupMapComponent } from '../../../pages/tracking/maps/popup-map/popup-map.component';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
+import { IOptionPanelMap } from 'app/core/interfaces/services/map.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapToolsService {
-
   public map: L.Map;
   public markerCluster = L.markerClusterGroup();
   public markers: any = {};
-  // public mobiles: any[] = [];
   public verLabel: boolean = true;
   public verCluster: boolean = true;
   public pointLatLens: any = [];
   public clusterHistoric: L.MarkerClusterGroup;
   public markersPoint: any = {};
-  private latitud: number | null = null;
-  private longitud: number | null = null;
-  private compRef: ComponentRef<PopupMapComponent>;
+  public compRef: ComponentRef<PopupMapComponent>;
+  public mobileSocket: Subject<any> = new Subject();
+  public selectPanel: BehaviorSubject<IOptionPanelMap> = new BehaviorSubject({ panel: 'none', data: null });
   private popup = L.popup({
     closeButton: false,
     keepInView: true,
@@ -33,7 +33,17 @@ export class MapToolsService {
     private appRef: ApplicationRef,
     private resolver: ComponentFactoryResolver,
   ) {
-    this.getLocation();
+    this.getPosition().then(({ lat, lng }) => {
+      this.map.options.center = [lat, lng];
+    });
+  }
+
+  get mobileSocketData$(): Observable<any> {
+    return this.mobileSocket.asObservable();
+  }
+
+  get selectPanelMap$(): Observable<IOptionPanelMap> {
+    return this.selectPanel.asObservable();
   }
 
   /**
@@ -182,25 +192,6 @@ export class MapToolsService {
   }
 
   /**
-   * @description: Mantiene actualizado el array de los vh con la data que llega del socket
-   */
-  public setData(data: any): void {
-    console.log('setData', data);
-
-    // this.mobiles.forEach((x) => {
-    //   if (x.id === data.id_mobile) {
-    //     x.orientation = data.orientation;
-    //     x.speed = data.speed;
-    //     x.x = data.x;
-    //     x.y = data.y;
-    //     x.status = Number(data.status);
-    //     x.status_gps = data.status_gps;
-    //     x.status_signal = data.status_signal;
-    //   }
-    // });
-  }
-
-  /**
    * @description: Limpia el mapa
    */
   public clearMap(): void {
@@ -211,13 +202,6 @@ export class MapToolsService {
         this.pointLatLens = [];
       }
     }
-  }
-
-  public getLocation(): void {
-    this.getPosition().then((pos) => {
-      this.latitud = pos.lat;
-      this.longitud = pos.lng;
-    });
   }
 
   private makePopup(data: any): void {
@@ -236,10 +220,10 @@ export class MapToolsService {
       this.popup.setLatLng(e.latlng);
       this.popup.setContent(div);
       this.popup.openOn(this.map);
-
       this.appRef.attachView(this.compRef.hostView);
 
       this.compRef.onDestroy(() => {
+        this.popup.close();
         this.appRef.detachView(this.compRef.hostView);
       });
     });
@@ -266,12 +250,8 @@ export class MapToolsService {
         },
         (err) => {
           console.log(err);
-
-          // reject(err);
         }
       );
     });
   }
-
-
 }

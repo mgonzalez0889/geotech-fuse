@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IconsModule } from 'app/core/icons/icons.module';
 import { IConfigIcon } from 'app/core/interfaces/other/icon.interface';
+import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { DateTools } from 'app/core/tools/date.tool';
 
 @Component({
@@ -26,18 +27,27 @@ export class PopupMapComponent implements OnInit {
     icon: '',
     text: ''
   };
+
   constructor(
     public toolDate: DateTools,
-    private iconService: IconsModule
+    public mapService: MapToolsService,
+    private iconService: IconsModule,
   ) { }
 
-  ngOnInit(): void {
-    console.log(this.data);
 
-    this.iconStatus = this.iconService.iconTypeService(this.data, this.data.class_mobile_name);
-    this.iconStatusBattery = this.iconService.iconStatusBattery(this.data);
-    this.iconStatusSignal = this.iconService.iconStatusSignal(this.data);
-    this.iconStatusGps = this.iconService.iconStatusGps(this.data);
+  ngOnInit(): void {
+    this.assingIcons(this.data);
+    this.mapService.mobileSocketData$
+      .subscribe(() =>
+        this.assingIcons(this.data)
+      );
+  }
+
+  assingIcons(data: any): void {
+    this.iconStatus = this.iconService.iconTypeService(data, data.class_mobile_name);
+    this.iconStatusBattery = this.iconService.iconStatusBattery(data);
+    this.iconStatusSignal = this.iconService.iconStatusSignal(data);
+    this.iconStatusGps = this.iconService.iconStatusGps(data);
   }
 
 }

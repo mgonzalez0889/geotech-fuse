@@ -1,8 +1,29 @@
-<div class="h-100 w-100 bg-red-100">
+<div class="h-128 w-80 bg-card shadow-xl rounded-lg py-2 px-3 flex flex-col gap-3">
 
+  <div class="flex items-center justify-between border-b-2">
+    <h2 class="text-xl font-semibold tracking-tight leading-6">
+      Historial
+    </h2>
+    <button mat-icon-button matTooltip="Cerrar" (click)="mapService.selectPanel.next({panel:'none',data:null})">
+      <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+    </button>
+  </div>
 
+  <div>
+    <div class="flex gap-1 w-full h-8 rounded bg-blue-200 items-center px-2 py-1">
+      <mat-icon color="primary" svgIcon="mat_outline:date_range"></mat-icon>
+      <span class="text-sm text-blue-600">
+        {{dataHistory.date_end.split(' ')[0]}} -
+        {{dataHistory.date_init.split(' ')[0]}}</span>
+    </div>
+  </div>
 
-
+  <div>
+    <mat-tab-group>
+      <mat-tab label="Historial"> Content 1 </mat-tab>
+      <mat-tab label="Eventos"> Content 2 </mat-tab>
+    </mat-tab-group>
+  </div>
 
 
 </div>

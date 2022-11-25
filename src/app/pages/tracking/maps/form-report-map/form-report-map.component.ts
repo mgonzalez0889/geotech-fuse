@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatOption } from '@angular/material/core';
@@ -7,6 +6,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventsService } from 'app/core/services/events.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { MapToolsService } from 'app/core/services/maps/map-tools.service';
+import { DateTools } from '../../../../core/tools/date.tool';
 
 @Component({
   selector: 'app-form-report-map',
@@ -23,6 +24,8 @@ export class FormReportMapComponent implements OnInit, OnDestroy {
   constructor(
     private eventsService: EventsService,
     private formBuilder: FormBuilder,
+    private mapService: MapToolsService,
+    private dateTools: DateTools,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) { }
 
@@ -43,26 +46,26 @@ export class FormReportMapComponent implements OnInit, OnDestroy {
 
   public onSubmit(): void {
     const formReportValues = this.formReport.value;
-    const dateStart = new Date(formReportValues.date_init).getTime();
-    const dateEnd = new Date(formReportValues.date_end).getTime();
 
-    const diff = dateStart - dateEnd;
-    if (Number(diff / (1000 * 60 * 60 * 24)) < 91) {
-      const converDateInit =
-        moment(formReportValues.date_init).format('DD/MM/YYYY')
-        + ' ' + formReportValues.timeInit;
+    const dates = this.dateTools.validateDateRange(
+      {
+        dateInit: formReportValues.date_init,
+        dateEnd: formReportValues.date_end,
+        timeInit: formReportValues.timeInit,
+        timeEnd: formReportValues.timeEnd
+      }
+    );
 
-      const converDateEnd =
-        moment(formReportValues.date_end).format('DD/MM/YYYY')
-        + ' ' + formReportValues.timeEnd;
-
-
+    if (dates) {
       delete formReportValues.timeInit;
       delete formReportValues.timeEnd;
-
-      const data = { ...formReportValues, date_init: converDateInit, date_end: converDateEnd };
+      const dataHistory = { ...formReportValues, date_init: dates.converDateInit, date_end: dates.converDateEnd };
+      const dataHistoryTrips = { date_init: dates.converDateInit, date_end: dates.converDateEnd, plates: formReportValues.plates };
+      this.mapService.selectPanel.next({ panel: 'history', data: { dataHistory, dataHistoryTrips } });
     }
   }
+
+
   /**
    * @description: seleccionar muchos de eventos
    */

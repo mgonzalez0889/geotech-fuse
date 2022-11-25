@@ -36,7 +36,7 @@ export class MobileService {
   /**
    * @description: Obtiene detalle de un movil
    */
-  public getDetailMobile(id: number): any {
+  public getDetailMobile(id: number): Observable<any> {
     const params = { method: 'show_mobile' };
     return this._http.get(`${this._appSettings.mobile.url.base}/${id}`, {
       params,
@@ -53,6 +53,7 @@ export class MobileService {
       { params }
     );
   }
+
   /**
    * @description: Elimina los moviles de la flota
    */

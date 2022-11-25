@@ -86,6 +86,9 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataUpdate) {
+      console.log(this.dataUpdate, 'aa');
+
+      this.selectTrasport = this.dataUpdate.fleets.length ? 'fleet' : 'mobiles';
       this.assignedModules = [...this.dataUpdate.modules];
       setTimeout(() => {
         this.parseModuleUpdate();
@@ -113,6 +116,8 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       modules.push(new FormControl({ id, option: { ...option, read: true } }));
     });
     const valueForm = this.profileForm.value;
+
+    console.log('values', valueForm);
 
     if (!this.dataUpdate) {
       this.profileService.profileForm$.next({ typeAction: 'add', formData: valueForm });
@@ -221,16 +226,15 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
 
   private parseModuleUpdate(): void {
     const newAvailableModules = [...this.availableModules];
-
     this.assignedModules.forEach((moduleAssing) => {
       const indexModule: number = newAvailableModules.findIndex(({ id }) => id === moduleAssing.id);
       if (indexModule >= 0) {
         newAvailableModules.splice(indexModule, 1);
       }
     });
-
     this.availableModules = [...newAvailableModules];
   }
+
   /**
    * @description: Se leen y se parsean los modulos.
    */
