@@ -118,91 +118,67 @@
                     </div>
                     <div class="mt-4">
                         <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Color</mat-label>
+                            <input matInput type="color" [formControlName]="'color'" required placeholder="Color">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript">
                             <mat-label>Marca</mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                             <input matInput required [formControlName]="'brand'" [placeholder]="'Marca'">
                         </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Color</mat-label>
-                            <input matInput type="color" [formControlName]="'color'" required placeholder="Color">
-                        </mat-form-field>
-                    </div>
-
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Tipo de vehículo</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                            <mat-select [formControlName]="'full_name'">
-                                <mat-option *ngFor="let type of typeMobile" [value]="type.id">
-                                    {{type.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-form-field class="fuse-mat-no-subscript">
                             <mat-label>Modelo</mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                            <mat-select [formControlName]="'full_name'">
+                            <mat-select [formControlName]="'mobile_model'">
                                 <mat-option *ngFor="let model of models" [value]="model">
                                     {{model}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-
                     <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Conductor</mat-label>
+                        <mat-form-field class="fuse-mat-no-subscript ">
+                            <mat-label>Tipo de vehículo</mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                            <mat-select [formControlName]="'full_name'">
-                                <mat-option *ngFor="let driver of drivers" [value]="driver.id">
-                                    {{driver.name}}
+                            <mat-select [formControlName]="'type_mobile_id'">
+                                <mat-option *ngFor="let type of typeMobile" [value]="type.id">
+                                    {{type.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="fuse-mat-no-subscript">
+                            <mat-label>Tipo de servicio</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <mat-select [formControlName]="'type_of_service_id'">
+                                <mat-option *ngFor="let type of typeSrvices" [value]="type.id">
+                                    {{type.name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-
-
-
-
-
                     <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-form-field class="fuse-mat-no-subscript">
                             <mat-label>Numero de pasajeros</mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'full_name'"
+                            <input matInput required [formControlName]="'number_passengers'"
                                 [placeholder]="'Numero de pasajeros'">
                         </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-form-field class="fuse-mat-no-subscript">
                             <mat-label>Capacidad de carga </mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'full_name'"
-                                [placeholder]="'Capacidad de carga'">
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Unidad de pedo</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'full_name'" [placeholder]="'Unidad de pedo'">
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Tipo de servicio</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'full_name'"
-                                [placeholder]="'Tipo de servicio '">
+                            <input matInput required [formControlName]="'weight_capacity'"
+                                [placeholder]="'Capacidad de carga'" type="number" pattern="^[0-9]+">
+                            <mat-select class="mr-1.5" [formControlName]="'weight_unit'" matSuffix>
+                                <mat-option *ngFor="let unit of weightUnit" [value]="unit.id">
+                                    {{unit.name}}
+                                </mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="mt-4">
@@ -210,7 +186,8 @@
                             <mat-label>Numero de chasis </mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'full_name'" [placeholder]="'Numero de chasis'">
+                            <input matInput required [formControlName]="'number_chassis'"
+                                [placeholder]="'Numero de chasis'">
                         </mat-form-field>
                     </div>
                     <div class="mt-4">
@@ -218,10 +195,23 @@
                             <mat-label>Numero de motor</mat-label>
                             <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'full_name'" [placeholder]="'Numero de motor'">
+                            <input matInput required [formControlName]="'number_engine'"
+                                [placeholder]="'Numero de motor'">
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Conductor</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+                            <mat-select [formControlName]="'owner_driver_id'">
+                                <mat-option *ngFor="let driver of drivers" [value]="driver.id">
+                                    {{driver.name}}
+                                </mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                 </div>
+                <div> {{ mobilForm | json }}</div>
             </form>
         </div>
     </div>
