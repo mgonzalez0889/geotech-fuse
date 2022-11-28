@@ -3,32 +3,47 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
-
         path: '',
         children: [
             {
                 path: 'users',
-                loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
+                loadChildren: () =>
+                    import('./users/users.module').then((m) => m.UsersModule),
             },
             {
                 path: 'profile',
-                loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+                loadChildren: () =>
+                    import('./profile/profile.module').then(
+                        (m) => m.ProfileModule
+                    ),
             },
             {
                 path: 'contacts',
-                loadChildren: () => import('./contact/contact.module').then(m => m.ContactModule)
+                loadChildren: () =>
+                    import('./contact/contact.module').then(
+                        (m) => m.ContactModule
+                    ),
             },
             {
                 path: 'fleets',
-                loadChildren: () => import('./fleets/fleets.module').then(m => m.FleetsModule)
+                loadChildren: () =>
+                    import('./fleets/fleets.module').then(
+                        (m) => m.FleetsModule
+                    ),
             },
-        ]
-
-    }
+            {
+                path: 'driver',
+                loadChildren: () =>
+                    import('./driver/driver.module').then(
+                        (m) => m.DriverModule
+                    ),
+            },
+        ],
+    },
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class AdministrationRoutingModule { }
+export class AdministrationRoutingModule {}

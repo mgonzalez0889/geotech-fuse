@@ -12,11 +12,15 @@ export const environment = {
     // urlApi: 'http://192.168.190.59:3000/api/v1/',
     // baseUrl: 'http://192.168.190.59:3000/',
 
+    /*Api para pruebas en mi local*/
+    urlApi: 'http://localhost:3000/api/v1/',
+    baseUrl: 'http://localhost:3000/',
+
     /*Api para pruebas en local Samir*/
     // urlApi: 'http://192.168.190.250:3000/api/v1/',
     // baseUrl: 'http://192.168.190.250:3000/',
 
     /*Api para pruebas en server Geotech*/
-    urlApi: 'http://192.168.140.240:3000/api/v1/',
-    baseUrl: 'http://192.168.140.240:3000/',
+    // urlApi: 'http://192.168.140.240:3000/api/v1/',
+    // baseUrl: 'http://192.168.140.240:3000/',
 };
