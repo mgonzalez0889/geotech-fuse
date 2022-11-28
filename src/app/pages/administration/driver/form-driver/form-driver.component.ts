@@ -1,32 +1,35 @@
-import { Subscription } from 'rxjs';
-import { NgxPermissionsService } from 'ngx-permissions';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IconsModule } from '../../../../core/icons/icons.module';
-import { ContactService } from 'app/core/services/contact.service';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { IconsModule } from 'app/core/icons/icons.module';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { DriverService } from 'app/core/services/driver.service';
+import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-form-contact',
-    templateUrl: './form-contact.component.html',
-    styleUrls: ['./form-contact.component.scss'],
+    selector: 'app-form-driver',
+    templateUrl: './form-driver.component.html',
+    styleUrls: ['./form-driver.component.scss'],
 })
-export class FormContactComponent implements OnInit, OnDestroy {
-    public contacts: any = [];
+export class FormDriverComponent implements OnInit, OnDestroy {
+    public drivers: any = [];
     public editMode: boolean = false;
     public opened: boolean = true;
     public countries: any = [];
-    public contactForm: FormGroup;
+    public driverForm: FormGroup;
     public subscription: Subscription;
+    public subscription2: Subscription;
     public listPermission: any = [];
     private permissionValid: { [key: string]: string } = {
-        addContacto: 'administracion:contactos:create',
-        updateContacto: 'administracion:contactos:update',
-        deleteContacto: 'administracion:contactos:delete',
+        addContacto: 'administracion:conductores:create',
+        updateDriver: 'administracion:conductores:update',
+        deleteDriver: 'administracion:conductores:delete',
     };
+
     constructor(
-        private contactService: ContactService,
+        private driverServce: DriverService,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
         private iconService: IconsModule,
@@ -39,7 +42,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
             this.countries = res;
         });
         this.listenObservables();
-        this.createContactForm();
+        this.createDriverForm();
         this.subscription = this.permissionsService.permissions$.subscribe(
             (data) => {
                 this.listPermission = data ?? [];
@@ -51,22 +54,21 @@ export class FormContactComponent implements OnInit, OnDestroy {
             return this.countries.find((country: any) => country.code === code);
         }
     }
-
     /**
-     * @description: Valida si es edita o guarda un contacto nuevo
+     * @description: Valida si es edita o guarda un conductor nuevo
      */
     public onSave(): void {
-        const data = this.contactForm.getRawValue();
+        const data = this.driverForm.getRawValue();
         if (!data.id) {
-            this.newContact(data);
+            this.newDriver(data);
         } else {
-            if (!this.listPermission[this.permissionValid.updateContacto]) {
+            if (!this.listPermission[this.permissionValid.updateDriver]) {
                 this.toastAlert.toasAlertWarn({
                     message:
                         'No tienes permisos suficientes para realizar esta acción.',
                 });
             } else {
-                this.editContact(data);
+                this.editDriver(data);
             }
         }
     }
@@ -74,16 +76,16 @@ export class FormContactComponent implements OnInit, OnDestroy {
      * @description: Cierra el menu lateral de la derecha
      */
     public closeMenu(): void {
-        this.contactService.behaviorSubjectContactGrid.next({
+        this.driverServce.behaviorSubjectDriverGrid.next({
             opened: false,
             reload: false,
         });
     }
     /**
-     * @description: Elimina el contacto
+     * @description: Elimina el conductor
      */
     public deleteContact(id: number): void {
-        if (!this.listPermission[this.permissionValid.deleteContacto]) {
+        if (!this.listPermission[this.permissionValid.deleteDriver]) {
             this.toastAlert.toasAlertWarn({
                 message:
                     'No tienes permisos suficientes para realizar esta acción.',
@@ -92,9 +94,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
             return;
         }
         let confirmation = this.confirmationService.open({
-            title: 'Eliminar contacto',
+            title: 'Eliminar conductor',
             message:
-                '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',
+                '¿Está seguro de que desea eliminar este conductor? ¡Esta acción no se puede deshacer!',
             actions: {
                 confirm: {
                     label: 'Eliminar',
@@ -103,15 +105,15 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.contactService.deleteContacts(id).subscribe((res) => {
+                this.driverServce.deleteDrivers(id).subscribe((res) => {
                     if (res.code === 200) {
-                        this.contactService.behaviorSubjectContactGrid.next({
+                        this.driverServce.behaviorSubjectDriverGrid.next({
                             reload: true,
                             opened: false,
                         });
                         confirmation = this.confirmationService.open({
-                            title: 'Eliminar contacto',
-                            message: 'Contacto eliminado con exito!',
+                            title: 'Eliminar conductor',
+                            message: 'Conductor eliminado con exito!',
                             actions: {
                                 cancel: {
                                     label: 'Aceptar',
@@ -127,9 +129,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                         });
                     } else {
                         confirmation = this.confirmationService.open({
-                            title: 'Eliminar contacto',
+                            title: 'Eliminar conductor',
                             message:
-                                'El contacto no se pudo eliminar, favor intente nuevamente.',
+                                'El conductor no se pudo eliminar, favor intente nuevamente.',
                             actions: {
                                 cancel: {
                                     label: 'Aceptar',
@@ -154,57 +156,62 @@ export class FormContactComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.subscription2.unsubscribe();
     }
     /**
-     * @description: Inicializa el formulario de contactos
+     * @description: Inicializa el formulario de conductores
      */
-    private createContactForm(): void {
-        this.contactForm = this.fb.group({
+    private createDriverForm(): void {
+        this.driverForm = this.fb.group({
             id: [''],
-            full_name: ['', [Validators.required]],
+            name: ['', [Validators.required]],
             email: ['', [Validators.email, Validators.required]],
             phone: ['', [Validators.required]],
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
+            license: ['', [Validators.required]],
+            license_end: ['', [Validators.required]],
             indicative: ['+57', [Validators.required]],
         });
     }
     /**
-     * @description: Escucha el observable behavior y busca al contacto
+     * @description: Escucha el observable behavior y busca al conductor
      */
     private listenObservables(): void {
-        this.subscription =
-            this.contactService.behaviorSubjectContactForm.subscribe(
-                ({ newContact, id, isEdit }) => {
+        this.subscription2 =
+            this.driverServce.behaviorSubjectDriverForm.subscribe(
+                ({ newDriver, id, isEdit }) => {
                     this.editMode = isEdit;
-                    if (newContact) {
-                        this.contacts = [];
-                        this.contacts['full_name'] = newContact;
-                        if (this.contactForm) {
-                            this.contactForm.reset();
-                            this.contactForm.controls['indicative'].setValue(
+                    if (newDriver) {
+                        this.drivers = [];
+                        this.drivers['name'] = newDriver;
+                        if (this.driverForm) {
+                            this.driverForm.reset();
+                            this.driverForm.controls['indicative'].setValue(
                                 '+57'
                             );
                         }
                     }
                     if (id) {
-                        this.contactService.getContact(id).subscribe((data) => {
-                            this.contacts = data.data;
-                            this.contactForm.patchValue(this.contacts);
-                        });
+                        this.driverServce
+                            .getDriver(id)
+                            .subscribe((data: any) => {
+                                this.drivers = data.data;
+                                this.driverForm.patchValue(this.drivers);
+                            });
                     }
                 }
             );
     }
     /**
-     * @description: Editar un contacto
+     * @description: Editar un conductor
      */
-    private editContact(data: any): void {
-        this.contactForm.disable();
+    private editDriver(data: any): void {
+        this.driverForm.disable();
         let confirmation = this.confirmationService.open({
-            title: 'Editar contacto',
+            title: 'Editar conductor',
             message:
-                '¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!',
+                '¿Está seguro de que desea editar este conductor? ¡Esta acción no se puede deshacer!',
             actions: {
                 confirm: {
                     label: 'Editar',
@@ -218,16 +225,16 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.contactService.putContacts(data).subscribe((res) => {
-                    this.contactForm.enable();
+                this.driverServce.putDrivers(data).subscribe((res) => {
+                    this.driverForm.enable();
                     if (res.code === 200) {
-                        this.contactService.behaviorSubjectContactGrid.next({
+                        this.driverServce.behaviorSubjectDriverGrid.next({
                             reload: true,
                             opened: false,
                         });
                         confirmation = this.confirmationService.open({
-                            title: 'Editar contacto',
-                            message: 'Contacto editado con exito!',
+                            title: 'Editar conductor',
+                            message: 'Conductor editado con exito!',
                             actions: {
                                 cancel: {
                                     label: 'Aceptar',
@@ -243,9 +250,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                         });
                     } else {
                         confirmation = this.confirmationService.open({
-                            title: 'Editar contacto',
+                            title: 'Editar conductor',
                             message:
-                                'El contacto no se pudo actualizar, favor intente nuevamente.',
+                                'El conductor no se pudo actualizar, favor intente nuevamente.',
                             actions: {
                                 cancel: {
                                     label: 'Aceptar',
@@ -266,20 +273,20 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
     }
     /**
-     * @description: Guarda un nuevo contacto
+     * @description: Guarda un nuevo conductor
      */
-    private newContact(data: any): void {
-        this.contactForm.disable();
-        this.contactService.postContacts(data).subscribe((res) => {
-            this.contactForm.enable();
+    private newDriver(data: any): void {
+        this.driverForm.disable();
+        this.driverServce.postDrivers(data).subscribe((res) => {
+            this.driverForm.enable();
             if (res.code === 200) {
-                this.contactService.behaviorSubjectContactGrid.next({
+                this.driverServce.behaviorSubjectDriverGrid.next({
                     reload: true,
                     opened: false,
                 });
                 const confirmation = this.confirmationService.open({
-                    title: 'Crear contacto',
-                    message: 'Contacto creado con exito!',
+                    title: 'Crear conductor',
+                    message: 'Conductor creado con exito!',
                     actions: {
                         cancel: {
                             label: 'Aceptar',
@@ -295,9 +302,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
                 });
             } else {
                 const confirmation = this.confirmationService.open({
-                    title: 'Crear contacto',
+                    title: 'Crear conductor',
                     message:
-                        'El contacto no se pudo crear, favor intente nuevamente.',
+                        'El conductor no se pudo crear, favor intente nuevamente.',
                     actions: {
                         cancel: {
                             label: 'Aceptar',
