@@ -1,26 +1,26 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ContactService } from 'app/core/services/contact.service';
+import { DriverService } from 'app/core/services/driver.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-grid-contact',
-    templateUrl: './grid-contact.component.html',
-    styleUrls: ['./grid-contact.component.scss'],
+    selector: 'app-grid-driver',
+    templateUrl: './grid-driver.component.html',
+    styleUrls: ['./grid-driver.component.scss'],
 })
-export class GridContactComponent implements OnInit, OnDestroy {
+export class GridDriverComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     public subscription: Subscription;
     public opened: boolean = false;
-    public dataTableContact: MatTableDataSource<any>;
-    public contactsCount: number = 0;
+    public dataTableDriver: MatTableDataSource<any>;
+    public driversCount: number = 0;
     public listPermission: any = [];
-    public columnsContact: string[] = [
+    public columnsDrive: string[] = [
         'name',
         'identification',
         'address',
@@ -28,38 +28,41 @@ export class GridContactComponent implements OnInit, OnDestroy {
         'cellPhone',
     ];
     private permissionValid: { [key: string]: string } = {
-        addContacto: 'administracion:contactos:create',
-        updateContacto: 'administracion:contactos:update',
-        deleteContacto: 'administracion:contactos:delete',
+        addDriver: 'administracion:conductores:create',
+        updateDriver: 'administracion:conductores:update',
+        deleteDriver: 'administracion:conductores:delete',
     };
+
     constructor(
+        private driverServce: DriverService,
         private toastAlert: ToastAlertService,
-        private permissionsService: NgxPermissionsService,
-        private contactService: ContactService
+        private permissionsService: NgxPermissionsService
     ) {}
 
     ngOnInit(): void {
-        this.getContact();
+        this.getDriver();
         this.listenObservables();
         this.subscription = this.permissionsService.permissions$.subscribe(
-            (data) => {
+            (data: any) => {
+                console.log(data,'a ver');
+
                 this.listPermission = data ?? [];
             }
         );
     }
     /**
-     * @description: Trae todos los contactos del cliente
+     * @description: Trae todos los conductores del cliente
      */
-    public getContact(): void {
-        this.contactService.getContacts().subscribe((res) => {
+    public getDriver(): void {
+        this.driverServce.getDrivers().subscribe((res) => {
             if (res.data) {
-                this.contactsCount = res.data.length;
+                this.driversCount = res.data.length;
             } else {
-                this.contactsCount = 0;
+                this.driversCount = 0;
             }
-            this.dataTableContact = new MatTableDataSource(res.data);
-            this.dataTableContact.paginator = this.paginator;
-            this.dataTableContact.sort = this.sort;
+            this.dataTableDriver = new MatTableDataSource(res.data);
+            this.dataTableDriver.paginator = this.paginator;
+            this.dataTableDriver.sort = this.sort;
         });
     }
     /**
@@ -67,31 +70,31 @@ export class GridContactComponent implements OnInit, OnDestroy {
      */
     public filterTable(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        this.dataTableContact.filter = filterValue.trim().toLowerCase();
+        this.dataTableDriver.filter = filterValue.trim().toLowerCase();
     }
     /**
-     * @description: Guarda el ID del contacto para aburirlo en el formulario
+     * @description: Guarda el ID del conductor para aburirlo en el formulario
      */
     public actionsContact(id: number): void {
         this.opened = true;
-        this.contactService.behaviorSubjectContactForm.next({
+        this.driverServce.behaviorSubjectDriverForm.next({
             id: id,
             isEdit: false,
         });
     }
     /**
-     * @description: Crear un nuevo contacto
+     * @description: Crear un nuevo conductor
      */
-    public newContact(): void {
-        if (!this.listPermission[this.permissionValid.addContacto]) {
+    public newDriver(): void {
+        if (!this.listPermission[this.permissionValid.addDriver]) {
             this.toastAlert.toasAlertWarn({
                 message:
                     'No tienes permisos suficientes para realizar esta acción.',
             });
         } else {
             this.opened = true;
-            this.contactService.behaviorSubjectContactForm.next({
-                newContact: 'Nuevo contacto',
+            this.driverServce.behaviorSubjectDriverForm.next({
+                newDriver: 'Nuevo conductor',
             });
         }
     }
@@ -106,11 +109,11 @@ export class GridContactComponent implements OnInit, OnDestroy {
      */
     private listenObservables(): void {
         this.subscription =
-            this.contactService.behaviorSubjectContactGrid.subscribe(
+            this.driverServce.behaviorSubjectDriverGrid.subscribe(
                 ({ reload, opened }) => {
                     this.opened = opened;
                     if (reload) {
-                        this.getContact();
+                        this.getDriver();
                     }
                 }
             );
