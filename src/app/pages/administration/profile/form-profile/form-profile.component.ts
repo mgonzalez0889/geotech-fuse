@@ -69,12 +69,16 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    * @description: se llaman todos los servicios y se crea el formulario reactivo.
    */
   ngOnInit(): void {
-    this.ownerPlateService.getOwnerPlates().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-      this.plates = res.data;
-    });
-    this.fleetsService.getFleets().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-      this.fleets = res.data;
-    });
+    this.ownerPlateService.getOwnerPlates()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.plates = res.data;
+      });
+    this.fleetsService.getFleets()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.fleets = res.data;
+      });
 
     this.readAndParseOptionModules();
     this.buildForm();
@@ -86,8 +90,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataUpdate) {
-      console.log(this.dataUpdate, 'aa');
-
       this.selectTrasport = this.dataUpdate.fleets.length ? 'fleet' : 'mobiles';
       this.assignedModules = [...this.dataUpdate.modules];
       setTimeout(() => {

@@ -10,16 +10,16 @@ import { ConfirmationService } from 'app/core/services/confirmation/confirmation
 import { ControlCenterService } from 'app/core/services/control-center.service';
 import { Subscription } from 'rxjs';
 import { ModalContactsComponent } from '../modal-contacts/modal-contacts.component';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import moment from 'moment';
 import { HistoriesService } from 'app/core/services/api/histories.service';
+import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 
 @Component({
   selector: 'app-control-center-actions',
   templateUrl: './control-center-actions.component.html',
   styleUrls: ['./control-center-actions.component.scss'],
 })
-export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ControlCenterActionsComponent implements OnInit, OnDestroy {
   @ViewChild('paginatorContactsControlCenter')
   paginatorContactsControlCenter: MatPaginator;
   @ViewChild('sortContactsControlCenter') sortContactsControlCenter: MatSort;
@@ -71,20 +71,17 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterVi
   ) { }
 
   ngOnInit(): void {
-    this.listenObservables();
-    this.getAllCausalAttends();
-    this.getAllStatusAttends();
-    this.createContactForm();
-    this.getReportAlarmsAttens();
-  }
-
-  ngAfterViewInit(): void {
     this.mapToolsService.initMap({
       fullscreenControl: true,
       center: [11.004313, -74.808137],
       zoom: 20,
       attributionControl: false,
     });
+    this.listenObservables();
+    this.getAllCausalAttends();
+    this.getAllStatusAttends();
+    this.createContactForm();
+    this.getReportAlarmsAttens();
   }
 
   /**

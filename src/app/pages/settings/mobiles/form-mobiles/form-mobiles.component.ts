@@ -4,15 +4,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { OwnerPlateService } from 'app/core/services/owner-plate.service';
 import { Subscription } from 'rxjs';
 import { SocketIoClientService } from 'app/core/services/socket-io-client.service';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { DriverService } from 'app/core/services/driver.service';
+import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 
 @Component({
   selector: 'app-form-mobiles',
   templateUrl: './form-mobiles.component.html',
   styleUrls: ['./form-mobiles.component.scss'],
 })
-export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FormMobilesComponent implements OnInit, OnDestroy {
   public mobiles: any = [];
   public editMode: boolean = false;
   public opened: boolean = true;
@@ -31,6 +31,12 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    this.mapToolsService.initMap({
+      fullscreenControl: true,
+      center: [11.004313, -74.808137],
+      zoom: 20,
+      attributionControl: false,
+    });
     //abre el socket y manda el token del usuario
     this.socketIoService.sendMessage('authorization');
     //escucha el socket de new position
@@ -59,17 +65,7 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  /**
-   * @description: Para cargar el mapa
-   */
-  ngAfterViewInit(): void {
-    this.mapToolsService.initMap({
-      fullscreenControl: true,
-      center: [11.004313, -74.808137],
-      zoom: 20,
-      attributionControl: false,
-    });
-  }
+
   /**
    * @description: Escucha el observable behavior y busca al vehiculo
    */
