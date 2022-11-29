@@ -15,6 +15,8 @@ import { PanelMapHistoryComponent } from './panel-map-history/panel-map-history.
 import { PopupMapComponent } from './popup-map/popup-map.component';
 import { PanelMapDetailsComponent } from './panel-map-details/panel-map-details.component';
 import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-commands.component';
+import { PanelMapGeotoolsComponent } from './panel-map-geotools/panel-map-geotools.component';
+import { FuseDrawerModule } from '@fuse/components/drawer';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-comman
     PopupMapComponent,
     PanelMapDetailsComponent,
     PanelMapCommandsComponent,
+    PanelMapGeotoolsComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +37,8 @@ import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-comman
     MatButtonToggleModule,
     MatCheckboxModule,
     MatInputModule,
-    MatDialogModule
+    MatDialogModule,
+    FuseDrawerModule
   ],
 })
 export class MapsModule { }

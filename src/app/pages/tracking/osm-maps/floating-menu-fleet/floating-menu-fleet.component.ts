@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FleetsService } from "../../../../core/services/fleets.service";
-import { Subscription } from "rxjs";
-import { MatTableDataSource } from "@angular/material/table";
-import { SelectionModel } from "@angular/cdk/collections";
-import { HistoriesService } from "../../../../core/services/api/histories.service";
-import { fuseAnimations } from "../../../../../@fuse/animations";
-import { FleetInterface } from "../../../../core/interfaces/fleets.interface";
+import { FleetsService } from '../../../../core/services/fleets.service';
+import { Subscription } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { HistoriesService } from '../../../../core/services/api/histories.service';
+import { fuseAnimations } from '../../../../../@fuse/animations';
+import { FleetInterface } from '../../../../core/interfaces/services/fleets.interface';
 
 @Component({
   selector: 'app-floating-menu-fleet',

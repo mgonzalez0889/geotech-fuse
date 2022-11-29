@@ -44,7 +44,7 @@ export class PopupMapComponent implements OnInit {
   }
 
   assingIcons(data: any): void {
-    this.iconStatus = this.iconService.iconTypeService(data, data.class_mobile_name);
+    this.iconStatus = this.iconService.iconStatus(data);
     this.iconStatusBattery = this.iconService.iconStatusBattery(data);
     this.iconStatusSignal = this.iconService.iconStatusSignal(data);
     this.iconStatusGps = this.iconService.iconStatusGps(data);

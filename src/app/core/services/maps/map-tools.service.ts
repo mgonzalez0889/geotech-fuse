@@ -5,7 +5,7 @@ import 'leaflet.markercluster';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { PopupMapComponent } from '../../../pages/tracking/maps/popup-map/popup-map.component';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
-import { IOptionPanelMap } from 'app/core/interfaces/services/map.interface';
+import { IOptionPanelGeotools, IOptionPanelMap } from 'app/core/interfaces/services/map.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,7 @@ export class MapToolsService {
   public compRef: ComponentRef<PopupMapComponent>;
   public mobileSocket: Subject<any> = new Subject();
   public selectPanel: BehaviorSubject<IOptionPanelMap> = new BehaviorSubject({ panel: 'none', data: null });
+  public selectPanelGeoTools: Subject<IOptionPanelGeotools> = new Subject();
   private popup = L.popup({
     closeButton: false,
     keepInView: true,
@@ -44,6 +45,10 @@ export class MapToolsService {
 
   get selectPanelMap$(): Observable<IOptionPanelMap> {
     return this.selectPanel.asObservable();
+  }
+
+  get selectPanelGeotool$(): Observable<IOptionPanelGeotools> {
+    return this.selectPanelGeoTools.asObservable();
   }
 
   /**

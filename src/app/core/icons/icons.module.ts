@@ -56,14 +56,17 @@ export class IconsModule {
     this._matIconRegistry.addSvgIcon('historic', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/historic.svg'));
     this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown.svg'));
     this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition.svg'));
+    this._matIconRegistry.addSvgIcon('plus-border', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/plus-border.svg'));
+    this._matIconRegistry.addSvgIcon('close-geo', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/close.svg'));
   }
 
-  public iconTypeService(data: any, typeService: string): IConfigIcon {
+  public iconStatus(data: any): IConfigIcon {
     const configIcon = {
       icon: '',
       text: ''
     };
-    if (typeService === 'Geobolt') {
+    const typeService = data.class_mobile_name.toLowerCase();
+    if (typeService === 'geobolt') {
       switch (Number(data.status)) {
         case 0:
           configIcon['icon'] = 'status_open_color';
@@ -74,7 +77,7 @@ export class IconsModule {
           configIcon['text'] = 'Cerrado';
           break;
       }
-    } else if (typeService === 'Vehicular') {
+    } else if (typeService === 'vehicular') {
       switch (Number(data.status)) {
         case 0:
           configIcon['icon'] = 'engine_shutdown';
@@ -98,18 +101,22 @@ export class IconsModule {
     switch (statusGps) {
       case 'excelente':
         configIcon['icon'] = 'status_gps_green';
+        configIcon['text'] = 'Excelente';
         break;
       case 'regular':
         configIcon['icon'] = 'status_gps_orange';
+        configIcon['text'] = 'Regular';
         break;
       case 'mala':
         configIcon['icon'] = 'status_gps_red';
+        configIcon['text'] = 'Mala';
         break;
     }
     return configIcon;
   }
 
   public iconStatusSignal(data: any): IConfigIcon {
+    console.log('icon', data);
     const configIcon = {
       icon: '',
       text: ''
@@ -118,12 +125,15 @@ export class IconsModule {
     switch (statusSignal) {
       case 'excelente':
         configIcon['icon'] = 'signal_level_green';
+        configIcon['text'] = '';
         break;
       case 'regular':
         configIcon['icon'] = 'signal_level_orange';
+        configIcon['text'] = '';
         break;
       case 'mala':
         configIcon['icon'] = 'signal_level_red';
+        configIcon['text'] = '';
         break;
     }
     return configIcon;
@@ -151,7 +161,6 @@ export class IconsModule {
 
     return configIcon;
   }
-
 
   /**
    * Getter for countries

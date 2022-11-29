@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { IconsModule } from 'app/core/icons/icons.module';
-import { IMobiles } from 'app/core/interfaces/mobiles.interface';
+import { IMobiles } from 'app/core/interfaces/other/mobiles.interface';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { MobileService } from 'app/core/services/mobile.service';
@@ -167,8 +167,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource([...data]);
         this.mobileData.forEach((valueMobile) => {
           const validTypeService: boolean = this.typeServices.some(
-            ({ classMobileId }) => classMobileId === valueMobile.
-              class_mobile_id
+            ({ classMobileId }) => classMobileId === valueMobile.class_mobile_id
           );
           if (!validTypeService) {
             this.typeServices.push({

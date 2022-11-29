@@ -21,28 +21,28 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: 'route-map',
       text: 'Rutas',
       actionClick: (): void => {
-        console.log('rutas');
+        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Rutas', typePanel: 'routes' });
       },
     },
     {
       icon: 'zone-map',
       text: 'Zona',
       actionClick: (): void => {
-        console.log('t<zona>');
+        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Zonas', typePanel: 'zones' });
       },
     },
     {
       text: 'Puntos',
       icon: 'point-map',
       actionClick: (): void => {
-        console.log('point');
+        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
       },
     },
     {
       text: 'Mapa',
       icon: 'map',
       actionClick: (): void => {
-        console.log('map');
+        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
       },
     },
   ];

@@ -1,4 +1,4 @@
-<div class="flex flex-col h-auto w-52 gap-3">
+<div class="flex flex-col h-auto w-60 gap-3">
   <div class="flex justify-between">
     <h2 class="text-lg font-semibold tracking-tight leading-6">{{data.plate}}</h2>
     <div>
@@ -11,14 +11,16 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap gap-x-4 gap-y-2">
-    <div>
-      <h4 class="text-base font-semibold tracking-tight leading-6">Ultima trasmisión</h4>
-      <p class="text-sm">{{toolDate.convertDateHour(data.date_entry)}}</p>
-    </div>
-    <div>
-      <h4 class="text-base font-semibold tracking-tight leading-6">Velocidad</h4>
-      <p class="text-sm">{{data.speed}} Km/h</p>
+  <div class="flex flex-wrap gap-y-2">
+    <div class="flex w-full justify-between">
+      <div>
+        <h4 class="text-base font-semibold tracking-tight leading-6">Ultima trasmisión</h4>
+        <p class="text-sm">{{toolDate.convertDateHour(data.date_entry)}}</p>
+      </div>
+      <div>
+        <h4 class="text-base font-semibold tracking-tight leading-6">Velocidad</h4>
+        <p class="text-sm">{{data.speed}} Km/h</p>
+      </div>
     </div>
     <div>
       <h4 class="text-base font-semibold tracking-tight leading-6">Ultima posición</h4>
@@ -30,7 +32,7 @@
     <div class="w-1/2 h-24 rounded-lg bg-gray-300 flex flex-col gap-1 justify-center items-center">
       <mat-icon svgIcon="driver"></mat-icon>
       <p class="text-sm">Conductor</p>
-      <div>
+      <div class="flex flex-col justify-center items-center">
         <p class="text-sm font-semibold">{{data.name_driver || 'Sin conductor'}}</p>
         <p class="text-sm" *ngIf="data.name_driver">{{data.phone}}</p>
       </div>
@@ -38,7 +40,7 @@
     <div class="w-1/2 h-24 rounded-lg bg-gray-300 flex flex-col gap-1 justify-center items-center ">
       <mat-icon svgIcon="sheet"></mat-icon>
       <p class="text-sm">Planilla</p>
-      <div>
+      <div class="flex flex-col justify-center items-center">
         <p class="text-sm font-semibold">{{data.spreadsheet || 'Sin planilla'}}</p>
         <p class="text-sm" *ngIf="data.spreadsheet">{{data.created_at | date}}</p>
       </div>

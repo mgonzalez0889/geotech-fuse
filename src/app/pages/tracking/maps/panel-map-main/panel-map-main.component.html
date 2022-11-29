@@ -59,7 +59,7 @@
             <ng-container matColumnDef="icon">
               <th mat-header-cell *matHeaderCellDef> </th>
               <td mat-cell *matCellDef="let element">
-                <span *ngIf="iconService.iconTypeService(element, element.class_mobile_name) as configIcon">
+                <span *ngIf="iconService.iconStatus(element) as configIcon">
                   <mat-icon [matTooltip]="configIcon.text" [svgIcon]="configIcon.icon">
                   </mat-icon>
                 </span>

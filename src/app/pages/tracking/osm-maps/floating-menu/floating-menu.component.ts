@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation }
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs';
 import { fuseAnimations } from '../../../../../@fuse/animations';
-import { IMobiles } from '../../../../core/interfaces/mobiles.interface';
+import { IMobiles } from '../../../../core/interfaces/other/mobiles.interface';
 import {
   FormDialogSelectHistorialComponent
 } from '../form-dialog-select-historial/form-dialog-select-historial.component';
