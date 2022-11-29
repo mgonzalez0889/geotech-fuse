@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { GeotoolMapService } from 'app/core/services/maps/geotool-map.service';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { GeotoolMapService } from 'app/core/services/api/geotool-map.service';
+import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { CommonTools } from 'app/core/tools/common.tool';
-import { mergeMap, tap } from 'rxjs/operators';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
 
 @Component({
@@ -15,14 +17,17 @@ export class PanelMapGeotoolsComponent implements OnInit {
   public titlePanel: string = '';
   public dataSource: MatTableDataSource<any>;
   public typePanel: string = '';
+  private dataGeo: any[] = [];
   constructor(
     public commonTool: CommonTools,
     private mapService: MapToolsService,
-    private geotoolMapService: GeotoolMapService
+    private toastAlert: ToastAlertService,
+    private geotoolMapService: GeotoolMapService,
+    private confirmationService: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
-    this.mapService.selectPanelGeotool$
+    this.mapService.selectPanelGeoTools$
       .pipe(
         tap(({ titlePanel, typePanel }) => {
           this.titlePanel = titlePanel;
@@ -31,7 +36,40 @@ export class PanelMapGeotoolsComponent implements OnInit {
         mergeMap(({ typePanel }) => this.geotoolMapService.getGeometry(typePanel))
       )
       .subscribe(({ data }: any) => {
+        this.dataGeo = [...data];
         this.dataSource = new MatTableDataSource([...data || []]);
+      });
+  }
+
+  public actionCheckbox(check: boolean, data: any): void {
+    if (check) {
+      this.mapService.viewPoint(data);
+      console.log('check');
+    } else {
+      console.log('no check');
+    }
+  }
+
+  public deleteGeo(geoId: number): void {
+    const confirmation = this.confirmationService.open();
+    confirmation.afterClosed()
+      .pipe(
+        filter(result => result === 'confirmed'),
+        mergeMap(() => this.geotoolMapService.deleteGeometry(this.typePanel, geoId))
+      )
+      .subscribe((data) => {
+        if (data.code === 200) {
+          this.toastAlert.toasAlertSuccess({
+            message: `${this.titlePanel} eliminado correctamente.`
+          });
+          const indexGeo = this.dataGeo.findIndex(({ id }) => id === geoId);
+          this.dataGeo.splice(indexGeo, 1);
+          this.dataSource = new MatTableDataSource([...this.dataGeo]);
+        } else {
+          this.toastAlert.toasAlertWarn({
+            message: 'Ha ocurrido algo, vuelva a intentarlo.'
+          });
+        }
       });
   }
 
@@ -54,6 +92,4 @@ export class PanelMapGeotoolsComponent implements OnInit {
     }
     this.typePanel = typePanel;
   }
-
-
 }

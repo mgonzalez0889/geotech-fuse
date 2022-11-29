@@ -1,12 +1,26 @@
+/* eslint-disable max-len */
 import { NgModule } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IConfigIcon } from '../interfaces/other/icon.interface';
+import L from 'leaflet';
 
 @NgModule()
 export class IconsModule {
+
+  public iconHistory: L.Icon<L.IconOptions> = L.icon({
+    iconUrl:
+      'data:image/svg+xml,' +
+      encodeURIComponent(
+        '<svg width="16" height="31" viewBox="0 0 16 31" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.34146 0.880403C8.28621 0.656155 8.08457 0.498922 7.85362 0.500006C7.62268 0.501089 7.42252 0.660209 7.36938 0.884965L0.513413 29.885C0.457854 30.12 0.578199 30.3611 0.7994 30.458C1.0206 30.5549 1.27944 30.4798 1.41449 30.2796L7.86444 20.7191L14.591 30.2875C14.7293 30.4844 14.9882 30.5547 15.2071 30.4551C15.4261 30.3554 15.543 30.114 15.4855 29.8804L8.34146 0.880403Z" fill="' +
+        'red' +
+        '" stroke="white" stroke-linejoin="round"/></svg>'
+      ),
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  });
   private _countries: BehaviorSubject<any | null> = new BehaviorSubject(null);
 
   constructor(
@@ -101,22 +115,19 @@ export class IconsModule {
     switch (statusGps) {
       case 'excelente':
         configIcon['icon'] = 'status_gps_green';
-        configIcon['text'] = 'Excelente';
         break;
       case 'regular':
         configIcon['icon'] = 'status_gps_orange';
-        configIcon['text'] = 'Regular';
         break;
       case 'mala':
         configIcon['icon'] = 'status_gps_red';
-        configIcon['text'] = 'Mala';
         break;
     }
+    configIcon['text'] = `${data.status_gps}`;
     return configIcon;
   }
 
   public iconStatusSignal(data: any): IConfigIcon {
-    console.log('icon', data);
     const configIcon = {
       icon: '',
       text: ''
@@ -125,17 +136,15 @@ export class IconsModule {
     switch (statusSignal) {
       case 'excelente':
         configIcon['icon'] = 'signal_level_green';
-        configIcon['text'] = '';
         break;
       case 'regular':
         configIcon['icon'] = 'signal_level_orange';
-        configIcon['text'] = '';
         break;
       case 'mala':
         configIcon['icon'] = 'signal_level_red';
-        configIcon['text'] = '';
         break;
     }
+    configIcon['text'] = `${data.type_net}`;
     return configIcon;
   }
 
@@ -146,19 +155,15 @@ export class IconsModule {
       text: ''
     };
     if (battery >= 0 && battery <= 25) {
-      configIcon['text'] = `${battery}%`;
       configIcon['icon'] = 'battery_red';
     } else if (battery >= 26 && battery <= 50) {
-      configIcon['text'] = `${battery}%`;
       configIcon['icon'] = 'battery_orange';
     } else if (battery >= 51 && battery <= 75) {
-      configIcon['text'] = `${battery}%`;
       configIcon['icon'] = 'battery_yellow';
     } else if (battery >= 76 && battery <= 100) {
-      configIcon['text'] = `${battery}%`;
       configIcon['icon'] = 'battery_green';
     }
-
+    configIcon['text'] = `${battery}%`;
     return configIcon;
   }
 

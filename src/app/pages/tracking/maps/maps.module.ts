@@ -17,6 +17,7 @@ import { PanelMapDetailsComponent } from './panel-map-details/panel-map-details.
 import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-commands.component';
 import { PanelMapGeotoolsComponent } from './panel-map-geotools/panel-map-geotools.component';
 import { FuseDrawerModule } from '@fuse/components/drawer';
+import { FormGeotoolMapComponent } from './form-geotool-map/form-geotool-map.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FuseDrawerModule } from '@fuse/components/drawer';
     PopupMapComponent,
     PanelMapDetailsComponent,
     PanelMapCommandsComponent,
-    PanelMapGeotoolsComponent
+    PanelMapGeotoolsComponent,
+    FormGeotoolMapComponent
   ],
   imports: [
     CommonModule,

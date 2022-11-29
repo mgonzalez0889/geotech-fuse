@@ -32,6 +32,8 @@ export class GeotoolsComponent implements OnInit {
   }
 
   onListSelectionChange(options) {
+    console.log('options', options);
+
     this.mapFunctionalitieService.goDeleteGeometryPath();
     if (Object.keys(options).length) {
       for (let i = 0; i < options.length; i++) {

@@ -53,7 +53,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
         this.dataSourceFleets = new MatTableDataSource([...data || []]);
       });
 
-    this.mapService.mobileSocketData$
+    this.mapService.mobileSocket$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         const indexMobile: number = this.mobileData.findIndex(({ plate }) => plate === data.plate);

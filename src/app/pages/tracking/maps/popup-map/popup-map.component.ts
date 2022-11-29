@@ -37,7 +37,7 @@ export class PopupMapComponent implements OnInit {
 
   ngOnInit(): void {
     this.assingIcons(this.data);
-    this.mapService.mobileSocketData$
+    this.mapService.mobileSocket$
       .subscribe(() =>
         this.assingIcons(this.data)
       );

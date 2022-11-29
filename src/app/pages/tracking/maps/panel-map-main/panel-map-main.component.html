@@ -75,10 +75,10 @@
                 </button>
 
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="mapService.selectPanel.next({panel:'details', data:element})">
+                  <button mat-menu-item (click)="mapService.selectPanelMap$.next({panel:'details', data:element})">
                     Ver detalles
                   </button>
-                  <button mat-menu-item (click)="mapService.selectPanel.next({panel:'commands', data:element})">
+                  <button mat-menu-item (click)="mapService.selectPanelMap$.next({panel:'commands', data:element})">
                     Comandos
                   </button>
                 </mat-menu>

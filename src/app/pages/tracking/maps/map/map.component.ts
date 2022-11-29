@@ -21,28 +21,28 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: 'route-map',
       text: 'Rutas',
       actionClick: (): void => {
-        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Rutas', typePanel: 'routes' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Rutas', typePanel: 'routes' });
       },
     },
     {
       icon: 'zone-map',
       text: 'Zona',
       actionClick: (): void => {
-        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Zonas', typePanel: 'zones' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Zonas', typePanel: 'zones' });
       },
     },
     {
       text: 'Puntos',
       icon: 'point-map',
       actionClick: (): void => {
-        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
       },
     },
     {
       text: 'Mapa',
       icon: 'map',
       actionClick: (): void => {
-        this.mapService.selectPanelGeoTools.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
       },
     },
   ];
@@ -88,7 +88,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }, 500);
 
-
     this.mobilesService.mobiles$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
@@ -121,7 +120,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
         console.log('socket', data);
-        this.mapService.mobileSocket.next(data);
+        this.mapService.mobileSocket$.next(data);
         this.mapService.moveMarker(data);
       });
 

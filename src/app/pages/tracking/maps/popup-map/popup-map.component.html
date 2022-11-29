@@ -49,9 +49,9 @@
 
   <div class="flex flex-col w-ful gap-1">
     <button class="w-full rounded" mat-raised-button color="accent"
-      (click)="mapService.selectPanel.next({panel:'details', data })">Detalles</button>
+      (click)="mapService.selectPanelMap$.next({panel:'details', data })">Detalles</button>
     <button class="w-full rounded" mat-raised-button color="accent"
-      (click)="mapService.selectPanel.next({panel:'commands', data})">Comandos</button>
+      (click)="mapService.selectPanelMap$.next({panel:'commands', data})">Comandos</button>
   </div>
 
 </div>
