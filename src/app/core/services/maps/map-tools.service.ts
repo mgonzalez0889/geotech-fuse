@@ -65,7 +65,13 @@ export class MapToolsService {
       'Google Maps': GoogleMaps,
       'Google Hibrido': GoogleHybrid,
     };
-    this.map = L.map('map', { ...optionsMap, layers: [GoogleMaps] });
+    this.map = L.map('map', {
+      ...optionsMap,
+      layers: [GoogleMaps],
+      fullscreenControlOptions: {
+        position: 'topright',
+      },
+    });
     L.control.layers(baseLayers).addTo(this.map);
   }
 
@@ -174,11 +180,41 @@ export class MapToolsService {
   }
 
   public createPoint(): void {
+    this.clearMap();
     this.map.on('click', (e) => {
-      console.log('shii');
-    });
+      const idPoint = 999999;
+      const latlng = this.map.mouseEventToLatLng(e.originalEvent);
 
+      if (this.markers[idPoint]) {
+        this.map.removeLayer(this.markers[idPoint]);
+      }
+      this.map.setView([latlng.lat, latlng.lng], 11);
+      this.markers[idPoint] = L.marker(
+        [latlng.lat, latlng.lng],
+        {
+          icon: L.icon({
+            iconUrl: '../assets/icons/iconMap/punt.svg',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+          }),
+        }
+      );
+      this.markers[idPoint].addTo(this.map);
+    });
   }
+
+  // createGeometry(type: string): void {
+  //   this.clearMap();
+  //   this.map.on('click', (e) => {
+  //     const latlng = this.map.mouseEventToLatLng(e.originalEvent);
+
+  //     const point: any[] = [];
+
+  //   })
+
+
+
+  // }
 
   /**
    * @description: Limpia el mapa
@@ -194,7 +230,6 @@ export class MapToolsService {
   }
 
   public removeLayer(layer: any, type: string): void {
-    this.map.removeEventListener('click');
     switch (type) {
       case 'routes':
         if (this.markersRoutes[layer.id]) {

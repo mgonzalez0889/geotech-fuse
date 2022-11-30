@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MobileService } from 'app/core/services/mobile.service';
-import { filter, mergeMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, mergeMap, takeUntil } from 'rxjs/operators';
 import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
 
 @Component({
@@ -8,8 +9,8 @@ import { MapToolsService } from '../../../../core/services/maps/map-tools.servic
   templateUrl: './panel-map-details.component.html',
   styleUrls: ['./panel-map-details.component.scss']
 })
-export class PanelMapDetailsComponent implements OnInit {
-
+export class PanelMapDetailsComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
   constructor(
     public mapService: MapToolsService,
     private mobilesService: MobileService
@@ -21,10 +22,18 @@ export class PanelMapDetailsComponent implements OnInit {
         filter(({ data }) => !!data),
         mergeMap(({ data }) =>
           this.mobilesService.getDetailMobile(data.id)
-        ))
+        ),
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe((mobile) => {
         console.log('mobile', mobile);
       });
+  }
+
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }
