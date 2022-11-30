@@ -16,18 +16,21 @@ type OptionsMap = { icon: string; text: string; actionClick: (data: any) => void
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectPanel: 'history' | 'details' | 'commands' | 'none';
+  public selectOption: string = '';
   public optionsMap: OptionsMap[] = [
     {
       icon: 'route-map',
       text: 'Rutas',
       actionClick: (): void => {
+        this.selectOption = 'Rutas';
         this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Rutas', typePanel: 'routes' });
       },
     },
     {
       icon: 'zone-map',
-      text: 'Zona',
+      text: 'Zonas',
       actionClick: (): void => {
+        this.selectOption = 'Zonas';
         this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Zonas', typePanel: 'zones' });
       },
     },
@@ -35,13 +38,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       text: 'Puntos',
       icon: 'point-map',
       actionClick: (): void => {
+        this.selectOption = 'Puntos';
         this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
       },
     },
     {
-      text: 'Mapa',
+      text: 'Mapas',
       icon: 'map',
       actionClick: (): void => {
+        this.selectOption = 'Mapas';
         this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
       },
     },

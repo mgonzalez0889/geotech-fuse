@@ -17,10 +17,12 @@ export class PanelMapGeotoolsComponent implements OnInit {
   public titlePanel: string = '';
   public dataSource: MatTableDataSource<any>;
   public typePanel: string = '';
+  public openedForm: boolean = false;
+  public columnTable: string[] = ['checkbox', 'color', 'name', 'delete'];
   private dataGeo: any[] = [];
   constructor(
     public commonTool: CommonTools,
-    private mapService: MapToolsService,
+    public mapService: MapToolsService,
     private toastAlert: ToastAlertService,
     private geotoolMapService: GeotoolMapService,
     private confirmationService: ConfirmationService,
@@ -31,6 +33,7 @@ export class PanelMapGeotoolsComponent implements OnInit {
       .pipe(
         tap(({ titlePanel, typePanel }) => {
           this.titlePanel = titlePanel;
+          this.openedForm = false;
           this.verifyPanel(typePanel);
         }),
         mergeMap(({ typePanel }) => this.geotoolMapService.getGeometry(typePanel))
@@ -42,12 +45,27 @@ export class PanelMapGeotoolsComponent implements OnInit {
   }
 
   public actionCheckbox(check: boolean, data: any): void {
-    if (check) {
-      this.mapService.viewPoint(data);
-      console.log('check');
+    if (!check) {
+      this.mapService.removeLayer(data, this.typePanel);
     } else {
-      console.log('no check');
+      switch (this.typePanel) {
+        case 'punts':
+          this.mapService.viewPoint(data);
+          break;
+        case 'routes':
+          this.mapService.viewRoutes(data);
+          break;
+        case 'zones':
+          this.mapService.viewZones(data);
+          break;
+      }
     }
+  }
+
+  public actionAdd(): void {
+    this.mapService.createPoint();
+    this.openedForm = true;
+
   }
 
   public deleteGeo(geoId: number): void {
@@ -67,7 +85,7 @@ export class PanelMapGeotoolsComponent implements OnInit {
           this.dataSource = new MatTableDataSource([...this.dataGeo]);
         } else {
           this.toastAlert.toasAlertWarn({
-            message: 'Ha ocurrido algo, vuelva a intentarlo.'
+            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
           });
         }
       });

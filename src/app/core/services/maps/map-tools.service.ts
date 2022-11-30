@@ -3,7 +3,7 @@
 import * as L from 'leaflet';
 import moment from 'moment';
 import 'leaflet.markercluster';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { PopupMapComponent } from '../../../pages/tracking/maps/popup-map/popup-map.component';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
 import { IOptionPanelGeotools, IOptionPanelMap } from 'app/core/interfaces/services/map.interface';
@@ -22,6 +22,8 @@ export class MapToolsService {
   private markerCluster = L.markerClusterGroup();
   private markers: any = {};
   private markersPoint: any = {};
+  private markersRoutes: any = {};
+  private markersZones: any = {};
   private pointLatLens: any[] = [];
   private popup = L.popup({
     closeButton: false,
@@ -171,6 +173,13 @@ export class MapToolsService {
     }
   }
 
+  public createPoint(): void {
+    this.map.on('click', (e) => {
+      console.log('shii');
+    });
+
+  }
+
   /**
    * @description: Limpia el mapa
    */
@@ -181,6 +190,27 @@ export class MapToolsService {
         this.markerCluster.clearLayers();
         this.pointLatLens = [];
       }
+    }
+  }
+
+  public removeLayer(layer: any, type: string): void {
+    this.map.removeEventListener('click');
+    switch (type) {
+      case 'routes':
+        if (this.markersRoutes[layer.id]) {
+          this.map.removeLayer(this.markersRoutes[layer.id]);
+        }
+        break;
+      case 'punts':
+        if (this.markersPoint[layer.id]) {
+          this.map.removeLayer(this.markersPoint[layer.id]);
+        }
+        break;
+      case 'zones':
+        if (this.markersZones[layer.id]) {
+          this.map.removeLayer(this.markersZones[layer.id]);
+        }
+        break;
     }
   }
 
@@ -205,6 +235,45 @@ export class MapToolsService {
     });
 
     this.markersPoint[data.id].addTo(this.map);
+  }
+
+  public viewRoutes(data: any): void {
+    if (data.shape === 'x, y') { return; }
+    const shape: string[] = JSON.parse(data.shape);
+
+    const arrayPointRoute = shape.map((position) => {
+      const x = Number(position.split(' ')[0]);
+      const y = Number(position.split(' ')[1]);
+      return { lat: x, lng: y };
+    });
+
+    this.map.setView([arrayPointRoute[0].lat, arrayPointRoute[0].lng], 13);
+
+    this.markersRoutes[data.id] = L.polyline(arrayPointRoute, {
+      color: data.color,
+      weight: 6
+    });
+    this.markersRoutes[data.id].addTo(this.map);
+  }
+
+  public viewZones(data: any): void {
+    console.log(data.shape);
+    if (!data.shape) { return; }
+
+    const shape: string[] = JSON.parse(data.shape);
+    const arrayPointRoute = shape.map((position) => {
+      const x = Number(position.split(' ')[0]);
+      const y = Number(position.split(' ')[1]);
+      return { lat: x, lng: y };
+    });
+
+    this.map.setView([arrayPointRoute[0].lat, arrayPointRoute[0].lng], 7);
+
+    this.markersZones[data.id] = L.polygon(arrayPointRoute, {
+      color: data.color,
+      weight: 5
+    });
+    this.markersZones[data.id].addTo(this.map);
   }
 
   private makePopup(data: any): void {

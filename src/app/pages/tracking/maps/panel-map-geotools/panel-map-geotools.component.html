@@ -20,10 +20,11 @@
           </mat-form-field>
 
           <div class="w-auto flex gap-1">
-            <button mat-mini-fab matTooltip="Importar" *ngIf="typePanel === 'punts' || typePanel === 'owner_maps'">
+            <button mat-mini-fab matTooltip="Importar" *ngIf="typePanel === 'punts' || typePanel === 'owner_maps'"
+              style="background: transparent !important; color:rgba(26, 25, 25, 0.548) !important">
               <mat-icon svgIcon="mat_solid:import_export"></mat-icon>
             </button>
-            <button mat-mini-fab matTooltip="Agregar" color="accent">
+            <button mat-mini-fab matTooltip="Agregar" color="accent" (click)="actionAdd()">
               <mat-icon svgIcon="mat_outline:add"></mat-icon>
             </button>
           </div>
@@ -65,12 +66,16 @@
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="['checkbox', 'color','name', 'delete']" [hidden]="true"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['checkbox', 'color', 'name', 'delete'];"></tr>
+            <tr mat-header-row *matHeaderRowDef="columnTable" [hidden]="true"></tr>
+            <tr mat-row *matRowDef="let row; columns:columnTable;"></tr>
 
           </table>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="openedForm" class="absolute z-999 w-full h-full">
+      <app-form-geotool-map [titleForm]="titlePanel" (closeForm)="openedForm = $event"></app-form-geotool-map>
     </div>
   </fuse-drawer>
 </div>

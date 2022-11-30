@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 
 @Component({
   selector: 'app-form-geotool-map',
@@ -6,8 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./form-geotool-map.component.scss']
 })
 export class FormGeotoolMapComponent implements OnInit {
+  @Input() titleForm: string = '';
+  @Output() closeForm = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor(private mapService: MapToolsService) { }
 
   ngOnInit(): void {
   }
