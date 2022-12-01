@@ -16,33 +16,38 @@ type OptionsMap = { icon: string; text: string; actionClick: (data: any) => void
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectPanel: 'history' | 'details' | 'commands' | 'none';
+  public selectOption: string = '';
   public optionsMap: OptionsMap[] = [
     {
       icon: 'route-map',
       text: 'Rutas',
       actionClick: (): void => {
-        console.log('rutas');
+        this.selectOption = 'Rutas';
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Rutas', typePanel: 'routes' });
       },
     },
     {
       icon: 'zone-map',
-      text: 'Zona',
+      text: 'Zonas',
       actionClick: (): void => {
-        console.log('t<zona>');
+        this.selectOption = 'Zonas';
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Zonas', typePanel: 'zones' });
       },
     },
     {
       text: 'Puntos',
       icon: 'point-map',
       actionClick: (): void => {
-        console.log('point');
+        this.selectOption = 'Puntos';
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
       },
     },
     {
-      text: 'Mapa',
+      text: 'Mapas',
       icon: 'map',
       actionClick: (): void => {
-        console.log('map');
+        this.selectOption = 'Mapas';
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
       },
     },
   ];
@@ -76,9 +81,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.mapService.initMap({
         fullscreenControl: true,
-        fullscreenControlOptions: {
-          position: 'topright',
-        },
         center: [11.004313, -74.808137],
         zoom: 10,
         attributionControl: false,
@@ -87,7 +89,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         worldCopyJump: true,
       });
     }, 500);
-
 
     this.mobilesService.mobiles$
       .pipe(takeUntil(this.unsubscribe$))
@@ -121,7 +122,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
         console.log('socket', data);
-        this.mapService.mobileSocket.next(data);
+        this.mapService.mobileSocket$.next(data);
         this.mapService.moveMarker(data);
       });
 

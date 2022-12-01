@@ -1,0 +1,37 @@
+<div class="w-full h-full py-2 px-3 bg-white flex flex-col gap-2">
+
+  <div class="flex items-center justify-between border-b-2">
+    <h2 class="text-xl font-semibold tracking-tight leading-6">
+      {{'Nuevo ' + titleForm}}
+    </h2>
+    <button mat-icon-button matTooltip="Cerrar" matTooltipPosition="left" (click)="this.closeForm.emit(false)">
+      <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+    </button>
+  </div>
+
+  <div class="h-auto overflow-auto px-2">
+    <form [formGroup]="this.formGeotool" class="flex flex-col ">
+
+      <mat-form-field class="fuse-mat-dense">
+        <mat-label>Codigo</mat-label>
+        <input matInput placeholder="codigo">
+      </mat-form-field>
+
+      <mat-form-field class="fuse-mat-dense">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="nombre">
+      </mat-form-field>
+
+      <mat-form-field class="fuse-mat-dense">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+
+      <div class="flex gap-2 self-end">
+        <button type="button" mat-flat-button>cancelar</button>
+        <button type="submit" mat-flat-button color="accent">enviar</button>
+      </div>
+    </form>
+  </div>
+
+</div>

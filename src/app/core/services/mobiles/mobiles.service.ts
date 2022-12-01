@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MobileService } from 'app/core/services/mobile.service';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { IMobiles } from 'app/core/interfaces/mobiles.interface';
+import { IMobiles } from 'app/core/interfaces/other/mobiles.interface';
 import { items } from 'app/mock-api/apps/file-manager/data';
 import { MapFunctionalitieService } from '../maps/map.service';
 import { CommandsService } from '../commands.service';

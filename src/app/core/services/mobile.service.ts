@@ -2,15 +2,14 @@ import { tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IMobiles } from '../interfaces/mobiles.interface';
+import { IMobiles } from '../interfaces/other/mobiles.interface';
 import { AppSettingsService } from '../app-configs/app-settings.service';
-import { ApiResponseInterface } from '../interfaces/api-response.interface';
+import { ApiResponseInterface } from '../interfaces/services/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MobileService {
-
   private readyMobiles$: Subject<IMobiles[]> = new Subject();
 
   constructor(
@@ -42,6 +41,7 @@ export class MobileService {
       params,
     });
   }
+
   /**
    * @description: Crea un nuevo movil a la flota
    */

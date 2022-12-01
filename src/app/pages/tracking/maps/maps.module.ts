@@ -15,26 +15,32 @@ import { PanelMapHistoryComponent } from './panel-map-history/panel-map-history.
 import { PopupMapComponent } from './popup-map/popup-map.component';
 import { PanelMapDetailsComponent } from './panel-map-details/panel-map-details.component';
 import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-commands.component';
+import { PanelMapGeotoolsComponent } from './panel-map-geotools/panel-map-geotools.component';
+import { FuseDrawerModule } from '@fuse/components/drawer';
+import { FormGeotoolMapComponent } from './form-geotool-map/form-geotool-map.component';
 
 @NgModule({
-  declarations: [
-    MapComponent,
-    PanelMapMainComponent,
-    FormReportMapComponent,
-    PanelMapHistoryComponent,
-    PopupMapComponent,
-    PanelMapDetailsComponent,
-    PanelMapCommandsComponent,
-  ],
-  imports: [
-    CommonModule,
-    MapsRoutingModule,
-    SharedModule,
-    MatTabsModule,
-    MatButtonToggleModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatDialogModule
-  ],
+    declarations: [
+        MapComponent,
+        PanelMapMainComponent,
+        FormReportMapComponent,
+        PanelMapHistoryComponent,
+        PopupMapComponent,
+        PanelMapDetailsComponent,
+        PanelMapCommandsComponent,
+        PanelMapGeotoolsComponent,
+        FormGeotoolMapComponent,
+    ],
+    imports: [
+        CommonModule,
+        MapsRoutingModule,
+        SharedModule,
+        MatTabsModule,
+        MatButtonToggleModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatDialogModule,
+        FuseDrawerModule,
+    ],
 })
-export class MapsModule { }
+export class MapsModule {}

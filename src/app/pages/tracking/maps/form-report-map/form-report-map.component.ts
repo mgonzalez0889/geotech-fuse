@@ -61,10 +61,9 @@ export class FormReportMapComponent implements OnInit, OnDestroy {
       delete formReportValues.timeEnd;
       const dataHistory = { ...formReportValues, date_init: dates.converDateInit, date_end: dates.converDateEnd };
       const dataHistoryTrips = { date_init: dates.converDateInit, date_end: dates.converDateEnd, plates: formReportValues.plates };
-      this.mapService.selectPanel.next({ panel: 'history', data: { dataHistory, dataHistoryTrips } });
+      this.mapService.selectPanelMap$.next({ panel: 'history', data: { dataHistory, dataHistoryTrips } });
     }
   }
-
 
   /**
    * @description: seleccionar muchos de eventos

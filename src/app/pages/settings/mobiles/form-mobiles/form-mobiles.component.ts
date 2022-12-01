@@ -95,7 +95,12 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
    * @description: Para cargar el mapa
    */
   ngAfterViewInit(): void {
-    this.mapToolsService.initMap();
+    this.mapToolsService.initMap({
+      fullscreenControl: true,
+      center: [11.004313, -74.808137],
+      zoom: 20,
+      attributionControl: false,
+    });
   }
   /**
    * @description: Escucha el observable behavior y busca al vehiculo
@@ -114,8 +119,6 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.mapToolsService.clearMap();
                 this.mapToolsService.setMarkers(
                   [this.mobiles],
-                  (this.mapToolsService.verCluster = false),
-                  (this.mapToolsService.verLabel = true)
                 );
               });
           }

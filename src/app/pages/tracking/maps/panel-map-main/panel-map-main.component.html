@@ -59,7 +59,7 @@
             <ng-container matColumnDef="icon">
               <th mat-header-cell *matHeaderCellDef> </th>
               <td mat-cell *matCellDef="let element">
-                <span *ngIf="iconService.iconTypeService(element, element.class_mobile_name) as configIcon">
+                <span *ngIf="iconService.iconStatus(element) as configIcon">
                   <mat-icon [matTooltip]="configIcon.text" [svgIcon]="configIcon.icon">
                   </mat-icon>
                 </span>
@@ -75,10 +75,10 @@
                 </button>
 
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="mapService.selectPanel.next({panel:'details', data:element})">
+                  <button mat-menu-item (click)="mapService.selectPanelMap$.next({panel:'details', data:element})">
                     Ver detalles
                   </button>
-                  <button mat-menu-item (click)="mapService.selectPanel.next({panel:'commands', data:element})">
+                  <button mat-menu-item (click)="mapService.selectPanelMap$.next({panel:'commands', data:element})">
                     Comandos
                   </button>
                 </mat-menu>

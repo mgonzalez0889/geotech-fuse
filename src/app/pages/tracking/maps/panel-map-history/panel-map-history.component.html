@@ -4,7 +4,7 @@
     <h2 class="text-xl font-semibold tracking-tight leading-6">
       Historial
     </h2>
-    <button mat-icon-button matTooltip="Cerrar" (click)="mapService.selectPanel.next({panel:'none',data:null})">
+    <button mat-icon-button matTooltip="Cerrar" (click)="mapService.selectPanelMap$.next({panel:'none',data:null})">
       <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
     </button>
   </div>

@@ -195,6 +195,7 @@ const config = {
         '3/4': '75%',
 
         // Bigger values
+        '82': '21rem',
         '100': '25rem',
         '120': '30rem',
         '128': '32rem',

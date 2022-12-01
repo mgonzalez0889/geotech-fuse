@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { IconsModule } from 'app/core/icons/icons.module';
-import { IMobiles } from 'app/core/interfaces/mobiles.interface';
+import { IMobiles } from 'app/core/interfaces/other/mobiles.interface';
 import { FleetsService } from 'app/core/services/fleets.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { MobileService } from 'app/core/services/mobile.service';
@@ -17,7 +17,8 @@ type TypeService = { classMobileId: number; classMobileName: string };
 @Component({
   selector: 'app-panel-map-main',
   templateUrl: './panel-map-main.component.html',
-  styleUrls: ['./panel-map-main.component.scss']
+  styleUrls: ['./panel-map-main.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PanelMapMainComponent implements OnInit, OnDestroy {
   public mobileData: any[] = [];
@@ -38,8 +39,9 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private fleetService: FleetsService,
     private mobilesService: MobileService,
-  ) { }
-
+    private ref: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -53,15 +55,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
         this.dataSourceFleets = new MatTableDataSource([...data || []]);
       });
 
-    this.mapService.mobileSocketData$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        const indexMobile: number = this.mobileData.findIndex(({ plate }) => plate === data.plate);
-        if (indexMobile >= 0) {
-          const dataMobile = this.mobileData[indexMobile];
-          this.mobileData[indexMobile] = Object.assign(dataMobile, data);
-        }
-      });
+    this.refreshDataSocket();
   }
 
   ngOnDestroy(): void {
@@ -159,6 +153,19 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     this.dataSourceFleets.filter = filterValue.trim().toLowerCase();
   }
 
+  private refreshDataSocket(): void {
+    this.mapService.mobileSocket$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.ref.markForCheck();
+        const indexMobile: number = this.mobileData.findIndex(({ plate }) => plate === data.plate);
+        if (indexMobile >= 0) {
+          const dataMobile = this.mobileData[indexMobile];
+          this.mobileData[indexMobile] = Object.assign(dataMobile, data);
+        }
+      });
+  }
+
   private readMobiles(): void {
     this.mobilesService.getMobiles()
       .pipe(takeUntil(this.unsubscribe$))
@@ -167,8 +174,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource([...data]);
         this.mobileData.forEach((valueMobile) => {
           const validTypeService: boolean = this.typeServices.some(
-            ({ classMobileId }) => classMobileId === valueMobile.
-              class_mobile_id
+            ({ classMobileId }) => classMobileId === valueMobile.class_mobile_id
           );
           if (!validTypeService) {
             this.typeServices.push({

@@ -8,11 +8,10 @@ export type Theme = 'default' | string;
  * AppConfig interface. Update this interface to strictly type your config
  * object.
  */
-export interface AppConfig
-{
-    layout: Layout;
-    scheme: Scheme;
-    theme: Theme;
+export interface AppConfig {
+  layout: Layout;
+  scheme: Scheme;
+  theme: Theme;
 }
 
 /**
@@ -24,7 +23,7 @@ export interface AppConfig
  * FuseConfigService and its methods.
  */
 export const appConfig: AppConfig = {
-    layout: 'dense',
-    scheme: 'light',
-    theme : 'brand'
+  layout: 'dense',
+  scheme: 'light',
+  theme: 'brand'
 };

@@ -5,27 +5,24 @@ import { TranslocoCoreModule } from 'app/core/transloco/transloco.module';
 import { ConfirmationModule } from './services/confirmation/confirmation.module';
 
 @NgModule({
-    imports: [
-        AuthModule,
-        IconsModule,
-        TranslocoCoreModule,
-        ConfirmationModule
-    ],
+  imports: [
+    AuthModule,
+    IconsModule,
+    TranslocoCoreModule,
+    ConfirmationModule
+  ],
 
 })
-export class CoreModule
-{
-    /**
-     * Constructor
-     */
-    constructor(
-        @Optional() @SkipSelf() parentModule?: CoreModule
-    )
-    {
-        // Do not allow multiple injections
-        if ( parentModule )
-        {
-            throw new Error('CoreModule has already been loaded. Import this module in the AppModule only.');
-        }
+export class CoreModule {
+  /**
+   * Constructor
+   */
+  constructor(
+    @Optional() @SkipSelf() parentModule?: CoreModule
+  ) {
+    // Do not allow multiple injections
+    if (parentModule) {
+      throw new Error('CoreModule has already been loaded. Import this module in the AppModule only.');
     }
+  }
 }
