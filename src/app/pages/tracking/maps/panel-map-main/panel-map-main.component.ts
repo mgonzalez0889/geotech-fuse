@@ -40,8 +40,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     private fleetService: FleetsService,
     private mobilesService: MobileService,
     private ref: ChangeDetectorRef
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     setTimeout(() => {

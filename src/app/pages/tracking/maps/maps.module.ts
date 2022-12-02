@@ -18,6 +18,7 @@ import { PanelMapCommandsComponent } from './panel-map-commands/panel-map-comman
 import { PanelMapGeotoolsComponent } from './panel-map-geotools/panel-map-geotools.component';
 import { FuseDrawerModule } from '@fuse/components/drawer';
 import { FormGeotoolMapComponent } from './form-geotool-map/form-geotool-map.component';
+import { ModalImportGeojsonComponent } from './modal-import-geojson/modal-import-geojson.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FormGeotoolMapComponent } from './form-geotool-map/form-geotool-map.com
     PanelMapDetailsComponent,
     PanelMapCommandsComponent,
     PanelMapGeotoolsComponent,
-    FormGeotoolMapComponent
+    FormGeotoolMapComponent,
+    ModalImportGeojsonComponent,
   ],
   imports: [
     CommonModule,

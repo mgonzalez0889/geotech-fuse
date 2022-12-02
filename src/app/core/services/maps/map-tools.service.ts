@@ -19,6 +19,7 @@ export class MapToolsService {
   public selectPanelMap$: BehaviorSubject<IOptionPanelMap> = new BehaviorSubject({ panel: 'none', data: null });
   public selectPanelGeoTools$: Subject<IOptionPanelGeotools> = new Subject();
   public shapeData$: Subject<string[]> = new Subject();
+  private zoom: number = 11;
   private countPointId = 0;
   private shapeGeo: string[] = [];
   private latlng: { lat: number; lng: number }[] = [];
@@ -79,13 +80,10 @@ export class MapToolsService {
       inertia: true,
       worldCopyJump: true,
     });
+    this.map.on('zoom', (data) => {
+      this.zoom = data.target.getZoom();
+    });
     L.control.layers(baseLayers).addTo(this.map);
-    // this.map.on('mouseup', () => {
-    //   this.map.getContainer().style.cursor = 'grab';
-    // });
-    // this.map.on('mousedown', () => {
-    //   this.map.getContainer().style.cursor = 'grabbing';
-    // });
   }
 
   /**
@@ -203,7 +201,7 @@ export class MapToolsService {
       if (this.markersPoint[idPoint]) {
         this.map.removeLayer(this.markersPoint[idPoint]);
       }
-      this.map.setView([latlng.lat, latlng.lng], 11);
+      this.map.setView([latlng.lat, latlng.lng], this.zoom);
       this.markersPoint[idPoint] = L.marker(
         [latlng.lat, latlng.lng],
         {
@@ -223,16 +221,13 @@ export class MapToolsService {
   createGeometry(type: string): void {
     this.clearMap();
     this.map.getContainer().style.cursor = 'crosshair';
-    let zoom: number = 11;
-    this.map.on('zoom', (data) => {
-      zoom = data.target.getZoom();
-    });
+
     this.map.on('click', (e) => {
       const latlng = this.map.mouseEventToLatLng(e.originalEvent);
       this.latlng.push(latlng);
       this.countPointId++;
       this.shapeGeo.push(`${latlng.lat} ${latlng.lng}`);
-      this.map.setView([latlng.lat, latlng.lng], zoom);
+      this.map.setView([latlng.lat, latlng.lng], this.zoom);
       if (type === 'routes') {
         this.markersRoutes[this.countPointId] = L.polyline(
           [this.latlng],
@@ -284,6 +279,7 @@ export class MapToolsService {
         this.map.removeLayer(this.markersRoutes[pointView]);
       }
     }
+
     this.countPointId = 0;
     this.latlng = [];
     this.shapeGeo = [];
@@ -323,7 +319,7 @@ export class MapToolsService {
     const x = Number(shape.split(' ')[0]);
     const y = Number(shape.split(' ')[1]);
 
-    this.map.setView([x, y], 11);
+    this.map.setView([x, y], this.zoom);
     this.markersPoint[data.id] = L.marker([x, y], {
       icon: L.icon({
         iconUrl: iconUrl,

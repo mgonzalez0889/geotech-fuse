@@ -72,7 +72,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.mapService.clearMap();
+    this.mobilesService.readyMobiles$.next([]);
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

@@ -7,6 +7,9 @@ import { CommonTools } from 'app/core/tools/common.tool';
 import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalImportGeojsonComponent } from '../modal-import-geojson/modal-import-geojson.component';
+import { TypeGeotool } from 'app/core/interfaces';
 
 @Component({
   selector: 'app-panel-map-geotools',
@@ -17,7 +20,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   public openedDrawer = false;
   public titlePanel: string = '';
   public dataSource: MatTableDataSource<any>;
-  public typePanel: string = '';
+  public typePanel: TypeGeotool = 'none';
   public openedForm: boolean = false;
   public columnTable: string[] = ['checkbox', 'color', 'name', 'delete'];
   private dataGeo: any[] = [];
@@ -29,6 +32,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     private toastAlert: ToastAlertService,
     private geotoolMapService: GeotoolMapService,
     private confirmationService: ConfirmationService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -43,7 +47,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe(({ data }: any) => {
-        this.dataGeo = [...data];
+        this.dataGeo = [...data || []];
         this.dataSource = new MatTableDataSource([...data || []]);
       });
   }
@@ -53,14 +57,39 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  public openModalImportGeojson(): void {
+    const dialogRef = this.dialog.open(ModalImportGeojsonComponent, {
+      maxWidth: '360px',
+      minWidth: '340px',
+      minHeight: '260px',
+      maxHeight: '280px',
+    });
+
+    dialogRef.afterClosed()
+      .pipe(
+        mergeMap((data) => {
+          const type = this.typePanel === 'punts' ? 'masive_points' : 'owner_maps';
+          return this.geotoolMapService.postGeometry(type, data);
+        }),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((data) => {
+        if (data.code === 200) {
+          this.refreshData();
+          this.toastAlert.toasAlertSuccess({
+            message: '¡Geojson importado con exito!'
+          });
+        } else {
+          this.toastAlert.toasAlertWarn({
+            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+          });
+        }
+      });
+  }
+
   public closePanelForm({ refreshData }): void {
     if (refreshData) {
-      this.geotoolMapService.getGeometry(this.typePanel)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(({ data }: any) => {
-          this.dataGeo = [...data];
-          this.dataSource = new MatTableDataSource([...data || []]);
-        });
+      this.refreshData();
     }
     this.openedForm = false;
     this.mapService.removeLayer({ id: 999999 }, this.typePanel);
@@ -107,8 +136,10 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
             message: `${this.titlePanel} eliminado correctamente.`
           });
           const indexGeo = this.dataGeo.findIndex(({ id }) => id === geoId);
-          this.dataGeo.splice(indexGeo, 1);
-          this.dataSource = new MatTableDataSource([...this.dataGeo]);
+          if (indexGeo >= 0) {
+            this.dataGeo.splice(indexGeo, 1);
+            this.dataSource = new MatTableDataSource([...this.dataGeo]);
+          }
         } else {
           this.toastAlert.toasAlertWarn({
             message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
@@ -125,8 +156,17 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  private verifyPanel(typePanel: string): void {
-    if (this.typePanel === typePanel || this.typePanel === '') {
+  private refreshData(): void {
+    this.geotoolMapService.getGeometry(this.typePanel)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }: any) => {
+        this.dataGeo = [...data];
+        this.dataSource = new MatTableDataSource([...data || []]);
+      });
+  }
+
+  private verifyPanel(typePanel: TypeGeotool): void {
+    if (this.typePanel === typePanel || this.typePanel === 'none') {
       this.openedDrawer = !this.openedDrawer;
     } else {
       this.openedDrawer = !this.openedDrawer;

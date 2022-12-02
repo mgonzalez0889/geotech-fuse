@@ -7,7 +7,7 @@
           {{this.titlePanel}}
         </h2>
         <button mat-icon-button matTooltip="Cerrar" matTooltipPosition="left"
-          (click)="openedDrawer = false; this.typePanel=''">
+          (click)="openedDrawer = false; this.typePanel='none';">
           <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
         </button>
       </div>
@@ -21,10 +21,12 @@
 
           <div class="w-auto flex gap-1">
             <button mat-mini-fab matTooltip="Importar" *ngIf="typePanel === 'punts' || typePanel === 'owner_maps'"
-              style="background: transparent !important; color:rgba(26, 25, 25, 0.548) !important">
+              style="background: transparent !important; color:rgba(26, 25, 25, 0.548) !important"
+              (click)="this.openModalImportGeojson()">
               <mat-icon svgIcon="mat_solid:import_export"></mat-icon>
             </button>
-            <button mat-mini-fab matTooltip="Agregar" color="accent" (click)="actionAdd()">
+            <button mat-mini-fab matTooltip="Agregar" color="accent" (click)="actionAdd()"
+              *ngIf="typePanel !== 'owner_maps'">
               <mat-icon svgIcon="mat_outline:add"></mat-icon>
             </button>
           </div>
