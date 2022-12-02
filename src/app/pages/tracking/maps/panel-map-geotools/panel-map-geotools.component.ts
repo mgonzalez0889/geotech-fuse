@@ -53,6 +53,19 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  public closePanelForm({ refreshData }): void {
+    if (refreshData) {
+      this.geotoolMapService.getGeometry(this.typePanel)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(({ data }: any) => {
+          this.dataGeo = [...data];
+          this.dataSource = new MatTableDataSource([...data || []]);
+        });
+    }
+    this.openedForm = false;
+    this.mapService.removeLayer({ id: 999999 }, this.typePanel);
+  }
+
   public actionCheckbox(check: boolean, data: any): void {
     if (!check) {
       this.mapService.removeLayer(data, this.typePanel);
@@ -72,14 +85,10 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   }
 
   public actionAdd(): void {
-    switch (this.typePanel) {
-      case 'punts':
-        this.mapService.createPoint();
-        break;
-      case 'routes':
-        break;
-      case 'zones':
-        break;
+    if (this.typePanel === 'punts') {
+      this.mapService.createPoint();
+    } else {
+      this.mapService.createGeometry(this.typePanel);
     }
     this.openedForm = true;
   }

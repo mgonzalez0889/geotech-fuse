@@ -1,5 +1,5 @@
 import { tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IMobiles } from '../interfaces/other/mobiles.interface';
@@ -10,7 +10,7 @@ import { ApiResponseInterface } from '../interfaces/services/api-response.interf
   providedIn: 'root',
 })
 export class MobileService {
-  private readyMobiles$: Subject<IMobiles[]> = new Subject();
+  public readyMobiles$: BehaviorSubject<IMobiles[]> = new BehaviorSubject([]);
 
   constructor(
     private _http: HttpClient,

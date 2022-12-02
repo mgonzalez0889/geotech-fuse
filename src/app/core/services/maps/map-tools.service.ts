@@ -18,6 +18,10 @@ export class MapToolsService {
   public mobileSocket$: Subject<any> = new Subject();
   public selectPanelMap$: BehaviorSubject<IOptionPanelMap> = new BehaviorSubject({ panel: 'none', data: null });
   public selectPanelGeoTools$: Subject<IOptionPanelGeotools> = new Subject();
+  public shapeData$: Subject<string[]> = new Subject();
+  private countPointId = 0;
+  private shapeGeo: string[] = [];
+  private latlng: { lat: number; lng: number }[] = [];
   private map: L.Map;
   private markerCluster = L.markerClusterGroup();
   private markers: any = {};
@@ -67,12 +71,21 @@ export class MapToolsService {
     };
     this.map = L.map('map', {
       ...optionsMap,
-      layers: [GoogleMaps],
       fullscreenControlOptions: {
         position: 'topright',
       },
+      zoomAnimation: true,
+      layers: [GoogleMaps],
+      inertia: true,
+      worldCopyJump: true,
     });
     L.control.layers(baseLayers).addTo(this.map);
+    // this.map.on('mouseup', () => {
+    //   this.map.getContainer().style.cursor = 'grab';
+    // });
+    // this.map.on('mousedown', () => {
+    //   this.map.getContainer().style.cursor = 'grabbing';
+    // });
   }
 
   /**
@@ -181,15 +194,17 @@ export class MapToolsService {
 
   public createPoint(): void {
     this.clearMap();
+    this.map.getContainer().style.cursor = 'crosshair';
     this.map.on('click', (e) => {
       const idPoint = 999999;
+      const shape = [];
       const latlng = this.map.mouseEventToLatLng(e.originalEvent);
 
-      if (this.markers[idPoint]) {
-        this.map.removeLayer(this.markers[idPoint]);
+      if (this.markersPoint[idPoint]) {
+        this.map.removeLayer(this.markersPoint[idPoint]);
       }
       this.map.setView([latlng.lat, latlng.lng], 11);
-      this.markers[idPoint] = L.marker(
+      this.markersPoint[idPoint] = L.marker(
         [latlng.lat, latlng.lng],
         {
           icon: L.icon({
@@ -199,22 +214,48 @@ export class MapToolsService {
           }),
         }
       );
-      this.markers[idPoint].addTo(this.map);
+      shape.push(`${latlng.lat} ${latlng.lng}`);
+      this.shapeData$.next(shape);
+      this.markersPoint[idPoint].addTo(this.map);
     });
   }
 
-  // createGeometry(type: string): void {
-  //   this.clearMap();
-  //   this.map.on('click', (e) => {
-  //     const latlng = this.map.mouseEventToLatLng(e.originalEvent);
+  createGeometry(type: string): void {
+    this.clearMap();
+    this.map.getContainer().style.cursor = 'crosshair';
+    let zoom: number = 11;
+    this.map.on('zoom', (data) => {
+      zoom = data.target.getZoom();
+    });
+    this.map.on('click', (e) => {
+      const latlng = this.map.mouseEventToLatLng(e.originalEvent);
+      this.latlng.push(latlng);
+      this.countPointId++;
+      this.shapeGeo.push(`${latlng.lat} ${latlng.lng}`);
+      this.map.setView([latlng.lat, latlng.lng], zoom);
+      if (type === 'routes') {
+        this.markersRoutes[this.countPointId] = L.polyline(
+          [this.latlng],
+          {
+            color: 'blue',
+            weight: 5,
+          }
+        );
+        this.markersRoutes[this.countPointId].addTo(this.map);
+      } else if (type === 'zones') {
+        this.markersZones[this.countPointId] = L.polygon([this.latlng], {
+          color: 'blue',
+          weight: 5,
+        });
+        this.markersZones[this.countPointId].addTo(this.map);
+      }
+      this.shapeData$.next(this.shapeGeo);
+    });
+  }
 
-  //     const point: any[] = [];
-
-  //   })
-
-
-
-  // }
+  public deleteEventMap(event: string = 'click'): void {
+    this.map.removeEventListener(event);
+  }
 
   /**
    * @description: Limpia el mapa
@@ -223,13 +264,35 @@ export class MapToolsService {
     for (const point in this.markers) {
       if (this.markers.hasOwnProperty(point)) {
         this.map.removeLayer(this.markers[point]);
-        this.markerCluster.clearLayers();
-        this.pointLatLens = [];
       }
     }
+
+    for (const pointView in this.markersPoint) {
+      if (this.markersPoint.hasOwnProperty(pointView)) {
+        this.map.removeLayer(this.markersPoint[pointView]);
+      }
+    }
+
+    for (const pointView in this.markersZones) {
+      if (this.markersZones.hasOwnProperty(pointView)) {
+        this.map.removeLayer(this.markersZones[pointView]);
+      }
+    }
+
+    for (const pointView in this.markersRoutes) {
+      if (this.markersRoutes.hasOwnProperty(pointView)) {
+        this.map.removeLayer(this.markersRoutes[pointView]);
+      }
+    }
+    this.countPointId = 0;
+    this.latlng = [];
+    this.shapeGeo = [];
+    this.pointLatLens = [];
+    this.markerCluster.clearLayers();
   }
 
   public removeLayer(layer: any, type: string): void {
+    this.map.getContainer().style.cursor = 'grab';
     switch (type) {
       case 'routes':
         if (this.markersRoutes[layer.id]) {
@@ -292,7 +355,6 @@ export class MapToolsService {
   }
 
   public viewZones(data: any): void {
-    console.log(data.shape);
     if (!data.shape) { return; }
 
     const shape: string[] = JSON.parse(data.shape);

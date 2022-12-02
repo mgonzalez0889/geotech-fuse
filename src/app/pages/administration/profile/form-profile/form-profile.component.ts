@@ -21,6 +21,7 @@ import { OwnerPlateService } from 'app/core/services/owner-plate.service';
 import { MenuOptionsService } from 'app/core/services/menu-options.service';
 import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MobileService } from 'app/core/services/mobile.service';
 
 @Component({
   selector: 'app-form-profile',
@@ -60,16 +61,16 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private profileService: ProfilesService,
     private fb: FormBuilder,
-    private ownerPlateService: OwnerPlateService,
     private fleetsService: FleetsService,
     private menuOptionsService: MenuOptionsService,
+    private mobilesService: MobileService
   ) { }
 
   /**
    * @description: se llaman todos los servicios y se crea el formulario reactivo.
    */
   ngOnInit(): void {
-    this.ownerPlateService.getOwnerPlates()
+    this.mobilesService.getMobiles()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((res) => {
         this.plates = res.data;
@@ -119,8 +120,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     });
     const valueForm = this.profileForm.value;
 
-    console.log('values', valueForm);
-
     if (!this.dataUpdate) {
       this.profileService.profileForm$.next({ typeAction: 'add', formData: valueForm });
     } else {
@@ -158,7 +157,7 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   public allSelectionMobiles(): void {
     if (this.allSelectedMobiles.selected) {
       this.profileForm.controls['plates']
-        .patchValue([...this.plates.map(item => item.id), 0]);
+        .patchValue([...this.plates.map(item => item.plate_id), 0]);
     } else {
       this.profileForm.controls['plates'].patchValue([]);
     }

@@ -4,32 +4,57 @@
     <h2 class="text-xl font-semibold tracking-tight leading-6">
       {{'Nuevo ' + titleForm}}
     </h2>
-    <button mat-icon-button matTooltip="Cerrar" matTooltipPosition="left" (click)="this.closeForm.emit(false)">
+    <button mat-icon-button matTooltip="Cerrar" matTooltipPosition="left"
+      (click)="this.closeForm.emit({ closePanel: false, refreshData: false })">
       <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
     </button>
   </div>
 
   <div class="h-auto overflow-auto px-2">
-    <form [formGroup]="this.formGeotool" class="flex flex-col ">
+    <form [formGroup]="this.formGeotool" (submit)="this.onSubmit()" class="flex flex-col">
+      <div class="flex gap-2 justify-between">
+        <mat-form-field class="fuse-mat-dense w-full">
+          <mat-label>Codigo</mat-label>
+          <input matInput formControlName="code" placeholder="codigo">
+        </mat-form-field>
 
-      <mat-form-field class="fuse-mat-dense">
-        <mat-label>Codigo</mat-label>
-        <input matInput placeholder="codigo">
-      </mat-form-field>
+        <mat-form-field class="fuse-mat-dense w-16">
+          <mat-label>Color</mat-label>
+          <mat-select formControlName="color" matPrefix>
+            <mat-select-trigger class="h-6">
+              <span class="flex w-6 h-6 rounded-full"
+                [ngStyle]="{'background-color': formGeotool.get('color').value}"></span>
+            </mat-select-trigger>
+            <div class="px-4 pt-5 text-xl font-semibold">Colores</div>
+            <div class="flex flex-wrap w-48 my-4 mx-3 -mr-4">
+              <ng-container *ngFor="let color of colors">
+                <mat-option class="relative flex w-12 h-12 p-0 cursor-pointer rounded-full bg-transparent"
+                  [value]="color" #matOption="matOption">
+                  <mat-icon *ngIf="matOption.selected" class="absolute m-2 text-white"
+                    svgIcon="heroicons_outline:check">
+                  </mat-icon>
+                  <span class="flex w-8 h-8 m-1 rounded-full" [ngStyle]="{'background-color': color}"></span>
+                </mat-option>
+              </ng-container>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
       <mat-form-field class="fuse-mat-dense">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="nombre">
+        <input matInput formControlName="name" placeholder="nombre">
       </mat-form-field>
 
       <mat-form-field class="fuse-mat-dense">
-        <mat-label>Textarea</mat-label>
-        <textarea matInput></textarea>
+        <mat-label>Decripcion</mat-label>
+        <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
 
       <div class="flex gap-2 self-end">
-        <button type="button" mat-flat-button>cancelar</button>
-        <button type="submit" mat-flat-button color="accent">enviar</button>
+        <button type="button" mat-flat-button
+          (click)="this.closeForm.emit({ closePanel: false, refreshData: false })">Cancelar</button>
+        <button type="submit" mat-flat-button color="accent" [disabled]="formGeotool.invalid">Guardar</button>
       </div>
     </form>
   </div>

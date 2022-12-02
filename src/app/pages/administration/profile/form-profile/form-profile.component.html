@@ -87,7 +87,7 @@
                       Seleccionar todos
                     </mat-option>
                   </div>
-                  <mat-option [value]="mobile.id"
+                  <mat-option [value]="mobile.plate_id"
                     *ngFor="let mobile of this.plates | filterList:valueFilterMobiles:'plate'">
                     {{ mobile.plate }}</mat-option>
                 </mat-select>

@@ -75,7 +75,9 @@
     </div>
 
     <div *ngIf="openedForm" class="absolute z-999 w-full h-full">
-      <app-form-geotool-map [titleForm]="titlePanel" (closeForm)="openedForm = $event"></app-form-geotool-map>
+      <app-form-geotool-map [typeGeo]="this.typePanel" [titleForm]="titlePanel"
+        (closeForm)="this.closePanelForm($event)">
+      </app-form-geotool-map>
     </div>
   </fuse-drawer>
 </div>

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AfterViewInit, OnInit } from '@angular/core';
 import { MobileService } from 'app/core/services/mobile.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { SocketIoClientService } from 'app/core/services/socket-io-client.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinct, filter, takeUntil } from 'rxjs/operators';
 
 type OptionsMap = { icon: string; text: string; actionClick: (data: any) => void };
 
@@ -58,7 +58,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public mapService: MapToolsService,
     private socketIoService: SocketIoClientService,
-    private mobilesService: MobileService
+    private mobilesService: MobileService,
   ) { }
 
   ngOnInit(): void {
@@ -82,18 +82,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mapService.initMap({
         fullscreenControl: true,
         center: [11.004313, -74.808137],
-        zoom: 10,
+        zoom: 8,
         attributionControl: false,
         zoomControl: true,
-        inertia: true,
-        worldCopyJump: true,
       });
-    }, 500);
-
+    }, 100);
     this.mobilesService.mobiles$
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        filter(data => !!data.length),
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe((data) => {
         this.mobiles = [...data || []];
+        this.mapService.clearMap();
         this.mapService.setMarkers(data, true);
       });
   }

@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { FleetsService } from 'app/core/services/fleets.service';
+import { MobileService } from 'app/core/services/mobile.service';
 import { OwnerPlateService } from 'app/core/services/owner-plate.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
@@ -46,6 +47,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private toastAlert: ToastAlertService,
     private authService: AuthService,
+    private mobilesService: MobileService
   ) { }
 
   ngOnInit(): void {
@@ -62,7 +64,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
   public onSave(): void {
     this.owner_plate_id = [];
     this.selection.selected.forEach((x) => {
-      this.owner_plate_id.push(x.id);
+      this.owner_plate_id.push(x.plate_id);
     });
     this.fleetForm.patchValue({ plates: this.owner_plate_id });
     const data = this.fleetForm.getRawValue();
@@ -169,7 +171,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
    * @description: Obtiene un listado de los vehiculos del cliente
    */
   public getMobiles(): void {
-    this.ownerPlateService.getOwnerPlates().subscribe((res) => {
+    this.mobilesService.getMobiles().subscribe((res) => {
       this.selection.clear();
       if (res.data) {
         this.mobilesCount = res.data.length;
