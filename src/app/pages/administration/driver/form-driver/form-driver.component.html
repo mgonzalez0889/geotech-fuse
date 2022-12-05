@@ -142,18 +142,18 @@
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Numero de AL licencia</mat-label>
+                                <mat-label>Numero de la licencia</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:identification'">
                                 </mat-icon>
-                                <input matInput [formControlName]="'license'" [placeholder]="'Numero de licencia'"
+                                <input matInput [formControlName]="'license'" [placeholder]="'Numero de la licencia'"
                                     required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Fecha de vencimiento de la licencia</mat-label>
-                                <input matInput [matDatepicker]="picker" [formControlName]="'license_end'">
+                                <input matInput [matDatepicker]="picker" [formControlName]="'license_end'" required>
                                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
