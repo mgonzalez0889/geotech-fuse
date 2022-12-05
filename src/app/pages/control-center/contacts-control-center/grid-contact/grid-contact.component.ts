@@ -3,12 +3,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from 'app/core/auth/auth.service';
-import { ControlCenterService } from 'app/core/services/control-center.service';
-import { OwnersService } from 'app/core/services/owners.service';
+import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { UsersService } from 'app/core/services/api/users.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
+import { OwnersService } from 'app/core/services/api/owners.service';
 
 @Component({
   selector: 'app-grid-contact',

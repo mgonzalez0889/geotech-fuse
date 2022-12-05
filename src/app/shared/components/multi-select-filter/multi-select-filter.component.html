@@ -1,0 +1,21 @@
+<div [formGroup]="form">
+  <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
+    <mat-select multiple [formControlName]="labelControl" [placeholder]="placeholder">
+      <div class="option-all">
+        <div class="flex items-center gap-2 px-4 py-2">
+          <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">
+          </mat-icon>
+          <input class="w-full min-w-0 py-1 border-0" type="text" [(ngModel)]="valueFilter"
+            [ngModelOptions]="{standalone: true}" placeholder="Buscar" [maxLength]="30">
+        </div>
+        <mat-option #allSelected (click)="this.allSelection()" [value]="0">
+          Seleccionar todos
+        </mat-option>
+      </div>
+      <mat-option [value]="data[options.key]"
+        *ngFor="let data of this.options.data | filterList:valueFilter:options.keyView">
+        {{ data[options.keyView] }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

@@ -2,9 +2,9 @@ import { tap } from 'rxjs/operators';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IMobiles } from '../interfaces/other/mobiles.interface';
-import { AppSettingsService } from '../app-configs/app-settings.service';
-import { ApiResponseInterface } from '../interfaces/services/api-response.interface';
+import { IMobiles } from '../../interfaces/other/mobiles.interface';
+import { AppSettingsService } from '../../app-configs/app-settings.service';
+import { ApiResponseInterface } from '../../interfaces/services/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

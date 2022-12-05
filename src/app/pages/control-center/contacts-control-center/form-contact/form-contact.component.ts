@@ -5,7 +5,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { IconsModule } from 'app/core/icons/icons.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ControlCenterService } from 'app/core/services/control-center.service';
+import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 

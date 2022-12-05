@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from 'app/core/auth/auth.service';
-import { MenuOptionsService } from 'app/core/services/menu-options.service';
+import { MenuOptionsService } from 'app/core/services/api/menu-options.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';

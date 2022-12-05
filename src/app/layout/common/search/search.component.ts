@@ -24,9 +24,9 @@ import {
   startWith,
 } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations/public-api';
-import { OwnersService } from 'app/core/services/owners.service';
 import { UsersService } from 'app/core/services/api/users.service';
 import { Router } from '@angular/router';
+import { OwnersService } from 'app/core/services/api/owners.service';
 
 @Component({
   selector: 'search',

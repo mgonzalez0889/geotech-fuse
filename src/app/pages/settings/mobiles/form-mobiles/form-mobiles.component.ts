@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { OwnerPlateService } from 'app/core/services/owner-plate.service';
+import { OwnerPlateService } from 'app/core/services/api/owner-plate.service';
 import { Subscription } from 'rxjs';
-import { SocketIoClientService } from 'app/core/services/socket-io-client.service';
+import { SocketIoClientService } from 'app/core/services/socket/socket-io-client.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { DriverService } from 'app/core/services/driver.service';
+import { DriverService } from 'app/core/services/api/driver.service';
 
 @Component({
   selector: 'app-form-mobiles',

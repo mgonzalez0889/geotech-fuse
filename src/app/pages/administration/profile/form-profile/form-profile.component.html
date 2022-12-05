@@ -72,47 +72,16 @@
               </mat-radio-group>
             </div>
 
-            <div [hidden]="!(selectTrasport === 'mobiles')">
-              <mat-form-field class="fuse-mat-dense w-full " appearance="fill">
-                <mat-select multiple formControlName="plates" placeholder="Seleccione vehiculos">
-
-                  <div class="option-all ">
-                    <div class="flex items-center gap-2 px-4 py-2">
-                      <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">
-                      </mat-icon>
-                      <input class="w-full min-w-0 py-1 border-0" type="text" [(ngModel)]="valueFilterMobiles"
-                        [ngModelOptions]="{standalone: true}" placeholder="Buscar" [maxLength]="30">
-                    </div>
-                    <mat-option class="option-all" #allSelectedMobiles (click)="this.allSelectionMobiles()" [value]="0">
-                      Seleccionar todos
-                    </mat-option>
-                  </div>
-                  <mat-option [value]="mobile.plate_id"
-                    *ngFor="let mobile of this.plates | filterList:valueFilterMobiles:'plate'">
-                    {{ mobile.plate }}</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div *ngIf="selectTrasport === 'mobiles'">
+              <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione vehiculos'"
+                [options]="{data:this.plates, key:'plate_id', keyView:'plate'}" labelControl="plates">
+              </app-multi-select-filter>
             </div>
 
-            <div [hidden]="!(selectTrasport === 'fleet')">
-              <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
-                <mat-select multiple formControlName="fleets" placeholder="Seleccione flotas">
-                  <div class="option-all ">
-                    <div class="flex items-center gap-2 px-4 py-2">
-                      <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">
-                      </mat-icon>
-                      <input class="w-full min-w-0 py-1 border-0" type="text" [(ngModel)]="valueFilterFleets"
-                        [ngModelOptions]="{standalone: true}" placeholder="Buscar" [maxLength]="30">
-                    </div>
-                    <mat-option class="option-all" #allSelectedFleets (click)="this.allSelectionFleets()" [value]="0">
-                      Seleccionar todos
-                    </mat-option>
-                  </div>
-                  <mat-option [value]="fleet.id"
-                    *ngFor="let fleet of this.fleets | filterList:valueFilterFleets:'name'">
-                    {{ fleet.name }}</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div *ngIf="selectTrasport === 'fleet'">
+              <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione flotas'"
+                [options]="{data:this.fleets, key:'id', keyView:'name'}" labelControl="fleets">
+              </app-multi-select-filter>
             </div>
 
             <div class="flex justify-between gap-3 mt-2 h-80 overflow-auto">
@@ -157,7 +126,6 @@
                     </mat-accordion>
 
                   </div>
-
                 </div>
               </div>
             </div>

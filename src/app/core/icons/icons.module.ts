@@ -44,6 +44,7 @@ export class IconsModule {
     this._matIconRegistry.addSvgIcon('status_close_color', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/status_close_color.svg'));
     this._matIconRegistry.addSvgIcon('circle-off', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/circle-off.svg'));
     this._matIconRegistry.addSvgIcon('circle-on', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/circle-on.svg'));
+    this._matIconRegistry.addSvgIcon('not-signal-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_green.svg'));
     this._matIconRegistry.addSvgIcon('signal_level_green', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_green.svg'));
     this._matIconRegistry.addSvgIcon('signal_level_orange', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_orange.svg'));
     this._matIconRegistry.addSvgIcon('signal_level_red', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/signal_level_red.svg'));
@@ -108,28 +109,30 @@ export class IconsModule {
 
   public iconStatusGps(data: any): IConfigIcon {
     const configIcon = {
-      icon: '',
+      icon: null,
       text: ''
     };
     const statusGps = data.status_gps.toLowerCase();
     switch (statusGps) {
       case 'excelente':
         configIcon['icon'] = 'status_gps_green';
+        configIcon['text'] = `${data.status_gps}`;
         break;
       case 'regular':
         configIcon['icon'] = 'status_gps_orange';
+        configIcon['text'] = `${data.status_gps}`;
         break;
       case 'mala':
         configIcon['icon'] = 'status_gps_red';
+        configIcon['text'] = `${data.status_gps}`;
         break;
     }
-    configIcon['text'] = `${data.status_gps}`;
     return configIcon;
   }
 
   public iconStatusSignal(data: any): IConfigIcon {
     const configIcon = {
-      icon: '',
+      icon: null,
       text: ''
     };
     const statusSignal = data.status_signal.toLowerCase();
@@ -143,6 +146,9 @@ export class IconsModule {
       case 'mala':
         configIcon['icon'] = 'signal_level_red';
         break;
+      case 'sin señal':
+        configIcon['icon'] = 'not-signal-movil';
+
     }
     configIcon['text'] = `${data.type_net}`;
     return configIcon;
@@ -151,7 +157,7 @@ export class IconsModule {
   public iconStatusBattery(data: any): IConfigIcon {
     const battery = Number(data.battery);
     const configIcon = {
-      icon: '',
+      icon: null,
       text: ''
     };
     if (battery >= 0 && battery <= 25) {

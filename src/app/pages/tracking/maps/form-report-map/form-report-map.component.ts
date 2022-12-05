@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatOption } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EventsService } from 'app/core/services/events.service';
+import { EventsService } from 'app/core/services/api/events.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';

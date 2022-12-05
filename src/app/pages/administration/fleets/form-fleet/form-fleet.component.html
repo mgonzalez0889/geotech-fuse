@@ -1,5 +1,5 @@
 <div class="flex flex-col w-full pl-0 md:pl-6">
-  <div class="bg-card shadow rounded-2xl min-h-180">
+  <div class="bg-card shadow rounded-2xl min-h-auto">
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
         <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
@@ -18,12 +18,11 @@
                 <div
                   class="flex items-center justify-center w-full h-full rounded overflow-hidden text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
                   <mat-icon class="icon-size-14">local_shipping</mat-icon>
-
                 </div>
               </div>
               <!-- Actions -->
               <div class="flex items-center ml-auto mb-1">
-                <button mat-stroked-button (click)="editMode = true;getMobiles();">
+                <button mat-stroked-button (click)="editMode = true;">
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
                   <span class="ml-2">Editar</span>
                 </button>
@@ -51,92 +50,28 @@
         </div>
         <div [hidden]="!editMode">
           <ng-container>
-            <form [formGroup]="fleetForm">
-              <div class=" border-b pb-5">
-                <div class="mt-4">
-                  <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Nombre de la flota</mat-label>
-                    <mat-icon matPrefix class="hidden sm:flex icon-size-5">label</mat-icon>
-                    <input matInput [formControlName]="'name'" [placeholder]="'Nombre de la flota'" required>
-                  </mat-form-field>
-                </div>
-                <div class="mt-4">
-                  <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                    <mat-label>Descripción</mat-label>
-                    <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:menu-alt-2">
-                    </mat-icon>
-                    <textarea [formControlName]="'description'" placeholder="Descripción" matInput
-                      matTextareaAutosize></textarea>
-                  </mat-form-field>
-                </div>
+            <form [formGroup]="fleetForm" class="flex flex-col gap-2 pt-6">
+              <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Nombre de la flota</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5">label</mat-icon>
+                <input matInput [formControlName]="'name'" [placeholder]="'Nombre de la flota'" required>
+              </mat-form-field>
+
+              <div class="flex flex-col gap-1">
+                <mat-label>Seleccione Vehiculos</mat-label>
+                <app-multi-select-filter [form]="this.fleetForm" [placeholder]="'Seleccione vehiculos'"
+                  [options]="{data:this.mobiles, key:'plate_id', keyView:'plate'}" labelControl="plates">
+                </app-multi-select-filter>
               </div>
-              <div class="px-3 pt-4 flex justify-between">
-                <div class="flex flex-col">
-                  <h2 class="text-2xl font-semibold tracking-tight leading-6">Móviles
-                  </h2>
-                  <div class="text-base font-semibold text-secondary">
-                    <ng-container *ngIf="mobilesCount > 0">
-                      {{mobilesCount}}
-                    </ng-container>
-                    {{mobilesCount | i18nPlural: {
-                    '=0' : 'Sin móviles',
-                    '=1' : 'Móvil',
-                    'other': 'Móviles'
-                    } }}
-                  </div>
-                </div>
-                <div class="flex border-2 rounded-full p-2 ">
-                  <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
-                  <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
-                  </mat-icon>
-                </div>
-              </div>
-              <div class="flex flex-col flex-auto   overflow-y-auto">
-                <!-- Tabla-->
-                <table mat-table [dataSource]="dataTableMobies" matSort class="w-full">
-                  <!-- Checkbox Column -->
-                  <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef>
-                      <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()">
-                      </mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                      <mat-checkbox class="pr-6 whitespace-nowrap" (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
-                  <!-- plate Column -->
-                  <ng-container matColumnDef="plate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
-                    <td mat-cell *matCellDef="let row">
-                      <span class="pr-6 whitespace-nowrap">
-                        {{row.plate}} </span>
-                    </td>
-                  </ng-container>
-                  <!-- internal_code Column -->
-                  <ng-container matColumnDef="internal_code">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Codigo interno</th>
-                    <td mat-cell *matCellDef="let row">
-                      <span class="pr-6 whitespace-nowrap">
-                        {{row.internal_code}} </span>
-                    </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="columnsMobile"></tr>
-                  <tr mat-row (click)="selection.toggle(row)" *matRowDef="let row; columns: columnsMobile;">
-                  </tr>
-                  <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
-                  <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="3">No hay datos que coincidan con la busqueda:
-                      "{{input?.value}}"
-                    </td>
-                  </tr>
-                </table>
-                <mat-paginator class="bg-gray-200" [pageSizeOptions]="[10,20,50]" aria-label="Select page of users">
-                </mat-paginator>
-              </div>
+
+              <mat-form-field class="w-full fuse-mat-dense">
+                <mat-label>Descripción</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:menu-alt-2">
+                </mat-icon>
+                <textarea [formControlName]="'description'" placeholder="Descripción" matInput
+                  matTextareaAutosize></textarea>
+              </mat-form-field>
+
               <div class="flex pt-3">
                 <!-- Eliminar -->
                 <button *ngIf="fleets['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
@@ -156,7 +91,7 @@
                   <span *ngIf="!fleetForm.disabled">
                     Guardar
                   </span>
-                  <mat-progress-spinner *ngIf="fleetForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                  <mat-progress-spinner *ngIf="fleetForm.disabled" [diameter]="24" mode="indeterminate">
                   </mat-progress-spinner>
                 </button>
               </div>

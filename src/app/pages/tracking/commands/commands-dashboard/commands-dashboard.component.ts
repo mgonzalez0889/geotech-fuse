@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommandsService } from 'app/core/services/commands.service';
+import { CommandsService } from 'app/core/services/api/commands.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { FleetsService } from 'app/core/services/fleets.service';
-import { MobileService } from 'app/core/services/mobile.service';
+import { FleetsService } from 'app/core/services/api/fleets.service';
+import { MobileService } from 'app/core/services/api/mobile.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { interval, Subscription } from 'rxjs';

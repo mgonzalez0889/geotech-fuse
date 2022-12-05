@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { MobileService } from '../../../../core/services/mobile.service';
+import { MobileService } from '../../../../core/services/api/mobile.service';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HistoriesService } from '../../../../core/services/api/histories.service';

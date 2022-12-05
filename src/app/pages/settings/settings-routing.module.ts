@@ -7,21 +7,21 @@ const routes: Routes = [
     children: [
       {
         path: 'menu-option',
-        loadChildren: () =>
+        loadChildren: (): Promise<any> =>
           import('./menu-options/menu-options.module').then(
             m => m.MenuOptionsModule
           ),
       },
       {
         path: 'events',
-        loadChildren: () =>
+        loadChildren: (): Promise<any> =>
           import('./events/events.module').then(
             m => m.EventsModule
           ),
       },
       {
         path: 'mobiles',
-        loadChildren: () =>
+        loadChildren: (): Promise<any> =>
           import('./mobiles/mobiles.module').then(
             m => m.MobilesModule
           ),

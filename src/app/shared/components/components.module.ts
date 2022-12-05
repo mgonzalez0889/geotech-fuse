@@ -11,24 +11,39 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataTablePipe } from '../pipes/data-table.pipe';
 import { FilterListPipe } from '../pipes/filter-list.pipe';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MultiSelectFilterComponent } from './multi-select-filter/multi-select-filter.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [HeaderPageComponent, TableComponent, DataTablePipe, FilterListPipe],
+  declarations: [
+    HeaderPageComponent,
+    TableComponent,
+    DataTablePipe,
+    FilterListPipe,
+    MultiSelectFilterComponent
+  ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,
     MatIconModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   exports: [
     HeaderPageComponent,
     TableComponent,
     DataTablePipe,
-    FilterListPipe
+    FilterListPipe,
+    MultiSelectFilterComponent
   ],
 })
 export class ComponentsModule { }

@@ -68,6 +68,18 @@
               </td>
             </ng-container>
 
+            <ng-container matColumnDef="edit">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell class="w-5" *matCellDef="let row;">
+                <ng-container *ngIf="this.typePanel !== 'owner_maps'">
+
+                  <button matTooltip="Editar" color="accent" mat-icon-button (click)="actionEdit(row)">
+                    <mat-icon svgIcon="mat_solid:edit"></mat-icon>
+                  </button>
+                </ng-container>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="columnTable" [hidden]="true"></tr>
             <tr mat-row *matRowDef="let row; columns:columnTable;"></tr>
 
@@ -77,7 +89,7 @@
     </div>
 
     <div *ngIf="openedForm" class="absolute z-999 w-full h-full">
-      <app-form-geotool-map [typeGeo]="this.typePanel" [titleForm]="titlePanel"
+      <app-form-geotool-map [typeGeo]="this.typePanel" [dataUpdate]="this.dataUpdate" [titleForm]="titlePanel"
         (closeForm)="this.closePanelForm($event)">
       </app-form-geotool-map>
     </div>

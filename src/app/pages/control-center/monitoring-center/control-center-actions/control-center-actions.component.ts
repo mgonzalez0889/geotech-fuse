@@ -7,7 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { ControlCenterService } from 'app/core/services/control-center.service';
+import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { Subscription } from 'rxjs';
 import { ModalContactsComponent } from '../modal-contacts/modal-contacts.component';
 import moment from 'moment';

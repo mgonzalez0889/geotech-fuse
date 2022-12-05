@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AfterViewInit, OnInit } from '@angular/core';
-import { MobileService } from 'app/core/services/mobile.service';
+import { MobileService } from 'app/core/services/api/mobile.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { SocketIoClientService } from 'app/core/services/socket-io-client.service';
+import { SocketIoClientService } from 'app/core/services/socket/socket-io-client.service';
 import { Subject } from 'rxjs';
 import { distinct, filter, takeUntil } from 'rxjs/operators';
 

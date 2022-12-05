@@ -4,9 +4,10 @@
     <div>
       <mat-icon *ngIf="iconStatusSignal" [matTooltip]="iconStatusSignal['text']" [svgIcon]="iconStatusSignal['icon']">
       </mat-icon>
-      <mat-icon *ngIf="iconStatusGps" [matTooltip]="iconStatusGps['text']" [svgIcon]="iconStatusGps['icon']"></mat-icon>
-      <mat-icon *ngIf="iconStatus" [matTooltip]="iconStatus['text']" [svgIcon]="iconStatus['icon']"></mat-icon>
-      <mat-icon *ngIf="iconStatusBattery" [matTooltip]="iconStatusBattery['text']"
+      <mat-icon *ngIf="iconStatusGps.icon" [matTooltip]="iconStatusGps['text']" [svgIcon]="iconStatusGps['icon']">
+      </mat-icon>
+      <mat-icon *ngIf="iconStatus.icon" [matTooltip]="iconStatus['text']" [svgIcon]="iconStatus['icon']"></mat-icon>
+      <mat-icon *ngIf="iconStatusBattery.icon" [matTooltip]="iconStatusBattery['text']"
         [svgIcon]="iconStatusBattery['icon']"></mat-icon>
     </div>
   </div>

@@ -19,15 +19,15 @@ export class PopupMapComponent implements OnInit, OnDestroy {
     text: ''
   };
   public iconStatusGps: IConfigIcon = {
-    icon: '',
+    icon: null,
     text: ''
   };
   public iconStatusBattery: IConfigIcon = {
-    icon: '',
+    icon: null,
     text: ''
   };
   public iconStatusSignal: IConfigIcon = {
-    icon: '',
+    icon: null,
     text: ''
   };
   private unsubscribe$ = new Subject<void>();
@@ -46,8 +46,7 @@ export class PopupMapComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.ref.markForCheck();
         this.assingIcons(this.data);
-      }
-      );
+      });
   }
 
   ngOnDestroy(): void {

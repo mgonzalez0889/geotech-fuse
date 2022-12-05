@@ -22,7 +22,8 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   public dataSource: MatTableDataSource<any>;
   public typePanel: TypeGeotool = 'none';
   public openedForm: boolean = false;
-  public columnTable: string[] = ['checkbox', 'color', 'name', 'delete'];
+  public dataUpdate: any = null;
+  public columnTable: string[] = ['checkbox', 'color', 'name', 'delete', 'edit'];
   private dataGeo: any[] = [];
   private unsubscribe$ = new Subject<void>();
 
@@ -91,6 +92,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     if (refreshData) {
       this.refreshData();
     }
+    this.dataUpdate = null;
     this.openedForm = false;
     this.mapService.removeLayer({ id: 999999 }, this.typePanel);
   }
@@ -119,6 +121,13 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     } else {
       this.mapService.createGeometry(this.typePanel);
     }
+    this.openedForm = true;
+  }
+
+  public actionEdit(data: any): void {
+
+    console.log(data);
+    this.dataUpdate = { ...data };
     this.openedForm = true;
   }
 

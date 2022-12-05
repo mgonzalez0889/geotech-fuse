@@ -142,7 +142,8 @@ export class MapToolsService {
   /**
    * @description: Asigna los iconos para el marcador deacuerdo al estado
    */
-  public setIcon(data: any, type?: any, color?: any): L.Icon<L.IconOptions> {
+  public setIcon(data: any): L.Icon<L.IconOptions> {
+    const typeService = data.class_mobile_name.toLowerCase();
     const diffDays = moment(new Date()).diff(
       moment(data.date_entry),
       'days'
@@ -154,29 +155,47 @@ export class MapToolsService {
         iconSize: [25, 25],
         iconAnchor: [12.5, 12.5],
       });
-    } else {
-      if (data.status === 0) {
-        return L.icon({
-          iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
-          iconSize: [25, 25],
-          iconAnchor: [12.5, 12.5],
-        });
-      } else {
-        if (data.speed === 0) {
+    }
+
+    if (typeService === 'geobolt') {
+      if (+data.speed === 0) {
+        if (Number(data.status) === 0) {
           return L.icon({
-            iconUrl:
-              '../assets/icons/iconMap/engine_ignition.svg',
+            iconUrl: './assets/icons/iconMap/status_open_color.svg',
             iconSize: [25, 25],
             iconAnchor: [12.5, 12.5],
           });
         } else {
           return L.icon({
-            iconUrl: '../assets/icons/iconMap/arrow.svg',
-            iconSize: [36, 36],
-            iconAnchor: [10, 10],
+            iconUrl: './assets/icons/iconMap/status_close_color.svg',
+            iconSize: [25, 25],
+            iconAnchor: [12.5, 12.5],
           });
         }
       }
+    } else if (typeService === 'vehicular') {
+      if (Number(data.status) === 0) {
+        return L.icon({
+          iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
+          iconSize: [25, 25],
+          iconAnchor: [12.5, 12.5],
+        });
+      }
+    }
+
+    if (+data.speed === 0) {
+      return L.icon({
+        iconUrl:
+          '../assets/icons/iconMap/engine_ignition.svg',
+        iconSize: [25, 25],
+        iconAnchor: [12.5, 12.5],
+      });
+    } else {
+      return L.icon({
+        iconUrl: '../assets/icons/iconMap/arrow.svg',
+        iconSize: [36, 36],
+        iconAnchor: [10, 10],
+      });
     }
   }
 
@@ -184,10 +203,6 @@ export class MapToolsService {
    * @description: Realiza el cambio de orientacion de los iconos del mapa
    */
   public moveMarker(data: any): void {
-    console.log('data', data);
-    console.log('makers', this.markers);
-
-
     if (this.markers.hasOwnProperty(data.id_mobile)) {
       this.markers[data.id_mobile].slideTo([data.x, data.y], {
         duration: 2000,
@@ -405,12 +420,8 @@ export class MapToolsService {
   /**
    * @description: Asigna la rotacion de los iconos
    */
-  private rotationIcon(data: any): any {
-    const diffDays = moment(new Date()).diff(
-      moment(data.date_entry),
-      'days'
-    );
-    return diffDays >= 1 || isNaN(diffDays) ? null : data.orientation;
+  private rotationIcon(data: any): number | null {
+    return data.speed > 0 ? data.orientation : null;
   }
 
   private getPosition(): Promise<{ lng: number; lat: number }> {

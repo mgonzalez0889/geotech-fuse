@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { IconsModule } from '../../../../core/icons/icons.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ControlCenterService } from 'app/core/services/control-center.service';
+import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 
 @Component({

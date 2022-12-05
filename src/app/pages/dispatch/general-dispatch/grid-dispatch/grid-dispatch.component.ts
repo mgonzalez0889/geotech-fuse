@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IOptionTable } from 'app/core/interfaces';
-import { DispatchService } from 'app/core/services/dispatch.service';
+import { DispatchService } from 'app/core/services/api/dispatch.service';
 import { DowloadTools } from 'app/core/tools/dowload.tool';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';

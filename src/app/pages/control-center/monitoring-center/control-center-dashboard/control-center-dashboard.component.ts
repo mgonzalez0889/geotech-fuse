@@ -5,7 +5,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ControlCenterService } from 'app/core/services/control-center.service';
+import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { UsersService } from 'app/core/services/api/users.service';
 import { Subscription } from 'rxjs';
 

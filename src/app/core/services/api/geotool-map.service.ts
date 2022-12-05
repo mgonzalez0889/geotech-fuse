@@ -33,6 +33,13 @@ export class GeotoolMapService {
     });
   }
 
+  public updateGeometry(type: string, data: any, geoId: number): Observable<any> {
+    const params = { method: 'update_geozones', type };
+    return this._http.put(`${this._appSettings.owner_zone.url.base}/${geoId}`, data, {
+      params
+    });
+  }
+
   public deleteGeometry(type: string, geometryId: number): Observable<any> {
     const params = { method: 'delete_zones', type };
     return this._http.delete(`${this._appSettings.owner_zone.url.base}/${geometryId}`, {

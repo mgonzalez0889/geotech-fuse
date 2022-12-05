@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { MenuOptionsService } from 'app/core/services/menu-options.service';
+import { MenuOptionsService } from 'app/core/services/api/menu-options.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
