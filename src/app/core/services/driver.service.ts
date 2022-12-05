@@ -45,7 +45,7 @@ export class DriverService {
      */
     public deleteDrivers(id: number): Observable<any> {
         const params = { method: 'delete_owner_driver' };
-        return this._http.put(
+        return this._http.delete(
             this._appSettings.driver.url.base + '/' + id,
             { params }
         );

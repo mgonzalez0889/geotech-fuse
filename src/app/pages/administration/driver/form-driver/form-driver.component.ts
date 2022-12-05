@@ -170,7 +170,7 @@ export class FormDriverComponent implements OnInit, OnDestroy {
             identification: ['', [Validators.required]],
             address: ['', [Validators.required]],
             license: ['', [Validators.required]],
-            license_end: ['', [Validators.required]],
+            license_end: [new Date(), [Validators.required]],
             indicative: ['+57', [Validators.required]],
         });
     }
@@ -189,6 +189,9 @@ export class FormDriverComponent implements OnInit, OnDestroy {
                             this.driverForm.reset();
                             this.driverForm.controls['indicative'].setValue(
                                 '+57'
+                            );
+                            this.driverForm.controls['license_end'].setValue(
+                                new Date()
                             );
                         }
                     }
