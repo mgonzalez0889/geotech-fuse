@@ -3,6 +3,11 @@
 import * as L from 'leaflet';
 import moment from 'moment';
 import 'leaflet.markercluster';
+import 'leaflet-rotatedmarker';
+import 'leaflet.fullscreen';
+import 'leaflet-routing-machine';
+import 'leaflet.marker.slideto';
+import 'leaflet-hotline';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PopupMapComponent } from '../../../pages/tracking/maps/popup-map/popup-map.component';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
@@ -179,6 +184,10 @@ export class MapToolsService {
    * @description: Realiza el cambio de orientacion de los iconos del mapa
    */
   public moveMarker(data: any): void {
+    console.log('data', data);
+    console.log('makers', this.markers);
+
+
     if (this.markers.hasOwnProperty(data.id_mobile)) {
       this.markers[data.id_mobile].slideTo([data.x, data.y], {
         duration: 2000,
@@ -420,3 +429,258 @@ export class MapToolsService {
     });
   }
 }
+
+
+// createHistoric(type, historic, color) {
+//   console.log(historic, 'joseeeee');
+
+//   if (type === 'punt') {
+//     let myIconUrl =
+//       'data:image/svg+xml,' +
+//       encodeURIComponent(
+//         '<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_94_339)"><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" fill="' +
+//         color +
+//         '"/><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" stroke="white" stroke-width="0.5"/></g><circle cx="15" cy="12" r="7" fill="white"/><path d="M18.25 12.0311L13 15.0622L13 9L18.25 12.0311Z" fill="#006AA3"/><defs><filter id="filter0_d_94_339" x="-0.25" y="-3.25" width="30.5" height="33.536" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset/><feGaussianBlur stdDeviation="3"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_94_339"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_94_339" result="shape"/></filter></defs></svg>'
+//       );
+//     let myIconUrl2 =
+//       'data:image/svg+xml,' +
+//       encodeURIComponent(
+//         '<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_94_338)"><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" fill="' +
+//         color +
+//         '"/><path d="M15 24C15 24 24 19 24 12C24 7.02944 19.9706 3 15 3C10.0294 3 6 7.02944 6 12C6 19 15 24 15 24Z" stroke="white" stroke-width="0.5"/></g><circle cx="15" cy="12" r="7" fill="white"/><rect x="11.4286" y="12.2857" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="12.8572" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="14.2857" y="9.42859" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="14.2857" y="12.2857" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="15.7143" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="10" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="11.4286" y="9.42859" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="12.8572" y="8" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="15.7143" y="8" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="17.1428" y="9.42859" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="18.5714" y="10.8571" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="17.1428" y="12.2857" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="15.7143" y="13.7143" width="1.42857" height="1.42857" fill="#006AA3"/><rect x="12.8572" y="13.7143" width="1.42857" height="1.42857" fill="#006AA3"/><defs><filter id="filter0_d_94_338" x="-0.25" y="-3.25" width="30.5" height="33.536" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset/><feGaussianBlur stdDeviation="3"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_94_338"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_94_338" result="shape"/></filter></defs></svg>'
+//       );
+//     // this.map.setView([historic.x_inicial, historic.y_inicial], 10);
+//     this.markersPoint[-1] = L.marker(
+//       [historic.x_inicial, historic.y_inicial],
+//       {
+//         icon: L.icon({
+//           iconUrl: myIconUrl,
+//           iconSize: [60, 60],
+//           iconAnchor: [30, 30],
+//         }),
+//       }
+//     );
+
+//     this.markersPoint[-2] = L.marker(
+//       [historic.x_final, historic.y_final],
+//       {
+//         icon: L.icon({
+//           iconUrl: myIconUrl2,
+//           iconSize: [60, 60],
+//           iconAnchor: [30, 30],
+//         }),
+//       }
+//     );
+
+//     this.markersPoint[-1].addTo(this.map);
+//     this.markersPoint[-2].addTo(this.map);
+//   } else {
+//     this.paint_punts = [];
+//     this.clusterHistoric = L.markerClusterGroup({
+//       iconCreateFunction: function (cluster) {
+//         var marker = cluster.getAllChildMarkers();
+//         var html =
+//           '<div class="svg-icon abstract-tracker-marker" title="" style="transform: rotate(' +
+//           marker[marker.length - 1].options.rotationAngle +
+//           'deg) scale(1); transform-origin: center center;">          <img src="' +
+//           marker[marker.length - 1].options.icon.options.iconUrl +
+//           '" width="24px" height="24px"></div>';
+//         return L.divIcon({
+//           html: html,
+//           className: '',
+//           iconSize: L.point(24, 24),
+//           iconAnchor: L.point(12, 12),
+//         });
+//       },
+//     });
+//     // let waypoints = [];
+//     for (let i = 0; i < historic.length; i++) {
+//       const element = historic[i];
+//       let x = element.x;
+//       let y = element.y;
+//       this.paint_punts.push({
+//         lat: x,
+//         lng: y,
+//       });
+//       // waypoints.push(new L.LatLng(x, y));
+//       this.markersPoint[historic[i].id] = L.marker([x, y], {
+//         icon: this.setIcon(historic[i], 'historic', color),
+//       });
+//       this.markersPoint[historic[i].id].addTo(this.clusterHistoric);
+//       this.clusterHistoric.addTo(this.map);
+
+//       this.markersPoint[historic[i].id].on('click', (e: any) => {
+//         moment.locale('es');
+//         this.getPopup(e, historic[i]);
+//       });
+
+//       this.markersPoint[historic[i].id].options.rotationAngle =
+//         this.rotationIconHistoric(historic[i]);
+//     }
+
+//     this.map.setView(
+//       [this.paint_punts[0].lat, this.paint_punts[0].lng],
+//       12
+//     );
+//     // L.Routing.control({
+//     //     waypoints: waypoints,
+//     //     plan: L.Routing.plan(waypoints, {
+//     //         createMarker: function (i, wp, n) {
+//     //             if (i == 0 || i == n - 1) {
+//     //                 return L.marker(wp.latLng, {
+//     //                     draggable: false // prevent users from changing waypoint position
+//     //                 });
+//     //             } else {
+//     //                 return false;
+//     //             }
+//     //         }
+//     //     }),
+//     //     routeWhileDragging: false,
+//     //     fitSelectedRoutes: false,
+//     //     addWaypoints: false
+//     // }).addTo(this.map);
+
+//     this.punt_geometry[historic[0].id] = new L.Polyline(
+//       this.paint_punts,
+//       {
+//         color: color,
+//         weight: 6,
+//       }
+//     );
+
+//     this.punt_geometry[historic[0].id].addTo(this.map);
+//   }
+// }
+
+// async getHistoric(data: any) {
+//   console.log(data, 'daataaa');
+
+//   return new Promise((resolve, reject) => {
+//     this._historicService.getHistories(data).subscribe(
+//       (res: any) => {
+//         if (
+//           this.mapFunctionalitieService.type_historic ===
+//           'historic'
+//         ) {
+//           resolve(res);
+//           this.mapFunctionalitieService.historic = [];
+//           let historic = res;
+
+//           for (
+//             let i = 0;
+//             i <
+//             this.mapFunctionalitieService.plateHistoric.length;
+//             i++
+//           ) {
+//             const element =
+//               this.mapFunctionalitieService.plateHistoric[i];
+
+//             let encontrado = historic.plates.filter((x) => {
+//               return x.plate == element;
+//             });
+
+//             let data = [];
+//             if (encontrado.length > 0) {
+//               data = historic.data.filter((x) => {
+//                 return x.plate == element;
+//               });
+
+//               this.mapFunctionalitieService.historic.push({
+//                 plate: element,
+//                 color: getRandomColor(),
+//                 data: data,
+//                 selected: false,
+//               });
+//             } else {
+//               this.mapFunctionalitieService.historic.push({
+//                 plate: element,
+//                 data: data,
+//               });
+//             }
+//           }
+
+//           for (
+//             let j = 0;
+//             j < this.mapFunctionalitieService.historic.length;
+//             j++
+//           ) {
+//             this.mapFunctionalitieService.historic[j].data.map(
+//               (x) => {
+//                 return (x['selected'] = false);
+//               }
+//             );
+//           }
+//         } else {
+//           resolve(res.data);
+//         }
+//       },
+//       async (err) => {
+//         reject(err);
+//       }
+//     );
+//   });
+// }
+
+//   async getHistoricTrip(data: any) {
+//   return new Promise((resolve, reject) => {
+//     this._historicService.getHistoriesTrip(data).subscribe(
+//       (res: any) => {
+//         resolve(res);
+//         this.mapFunctionalitieService.historicTrip = [];
+//         let historicTrip = res;
+
+//         for (
+//           let i = 0;
+//           i < this.mapFunctionalitieService.plateHistoric.length;
+//           i++
+//         ) {
+//           const element =
+//             this.mapFunctionalitieService.plateHistoric[i];
+
+//           let encontrado = historicTrip.plates.filter((x) => {
+//             return x.plate == element;
+//           });
+
+//           let data = [];
+//           let trip = [];
+//           if (encontrado.length > 0) {
+//             data = historicTrip.data.filter((x) => {
+//               return x.plate == element;
+//             });
+
+//             trip = historicTrip.trips.filter((x) => {
+//               return x.plate == element;
+//             });
+
+//             let trips = [];
+//             for (let j = 0; j < trip.length; j++) {
+//               const element = trip[j];
+//               trips.push({
+//                 ...element,
+//                 item: j + 1,
+//                 color: getRandomColor(),
+//               });
+//             }
+
+//             this.mapFunctionalitieService.historicTrip.push({
+//               plate: element,
+//               color: getRandomColor(),
+//               ...data[0],
+//               trips: trips,
+//               selected: false,
+//               tiene_data: true,
+//             });
+//           } else {
+//             this.mapFunctionalitieService.historicTrip.push({
+//               plate: element,
+//               tiene_data: false,
+//             });
+//           }
+//         }
+//       },
+//       async (err) => {
+//         reject(err);
+//       }
+//     );
+//   });
+// }

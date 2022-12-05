@@ -5,8 +5,7 @@ import { TrackingRoutingModule } from './tracking-routing.module';
 
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     TrackingRoutingModule

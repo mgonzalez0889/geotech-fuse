@@ -6,9 +6,6 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'maps2',
-        loadChildren: () => import('./osm-maps/osm-maps.module').then(m => m.OsmMapsModule)
-      }, {
         path: 'maps',
         loadChildren: () => import('./maps/maps.module').then(m => m.MapsModule)
       }, {

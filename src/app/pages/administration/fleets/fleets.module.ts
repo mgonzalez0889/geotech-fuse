@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FleetsRoutingModule } from './fleets-routing.module';
 import { FormFleetComponent } from './form-fleet/form-fleet.component';
 import { GridFleetComponent } from './grid-fleet/grid-fleet.component';
-import { GridMobileFleetComponent } from './grid-mobile-fleet/grid-mobile-fleet.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +15,6 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { GridMobileFleetAssinedComponent } from './grid-mobile-fleet-assined/grid-mobile-fleet-assined.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -24,32 +22,30 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-    declarations: [
-        FormFleetComponent,
-        GridFleetComponent,
-        GridMobileFleetComponent,
-        GridMobileFleetAssinedComponent,
-    ],
-    imports: [
-        CommonModule,
-        FleetsRoutingModule,
-        MatFormFieldModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatInputModule,
-        CdkScrollableModule,
-        MatTabsModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatSelectModule,
-        FormsModule,
-        MatPaginatorModule,
-        MatSidenavModule,
-        MatSortModule,
-        MatTooltipModule,
-        MatListModule,
-        MatProgressSpinnerModule,
-    ],
+  declarations: [
+    FormFleetComponent,
+    GridFleetComponent,
+  ],
+  imports: [
+    CommonModule,
+    FleetsRoutingModule,
+    MatFormFieldModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatInputModule,
+    CdkScrollableModule,
+    MatTabsModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    FormsModule,
+    MatPaginatorModule,
+    MatSidenavModule,
+    MatSortModule,
+    MatTooltipModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+  ],
 })
-export class FleetsModule {}
+export class FleetsModule { }

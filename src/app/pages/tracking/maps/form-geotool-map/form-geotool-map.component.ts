@@ -51,7 +51,6 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy {
         this.mapService.setMarkers(data, true);
       });
     this.mapService.deleteEventMap();
-    this.mapService.deleteEventMap('zoom');
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -95,10 +94,6 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy {
       shape: [[]],
       diameter: [12],
     });
-
-    if (this.typeGeo === 'owner_maps') {
-      this.formGeotool.removeControl('code');
-    }
   }
 }
 

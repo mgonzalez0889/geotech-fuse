@@ -53,7 +53,5 @@ export class DateTools {
 
     return converDateInit && converDateEnd ? { converDateInit, converDateEnd } : null;
   }
-
-
 }
 

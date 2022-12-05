@@ -20,10 +20,6 @@ export class NavigationService {
     private _appSettings: AppSettingsService
   ) { }
 
-  // -----------------------------------------------------------------------------------------------------
-  // @ Accessors
-  // -----------------------------------------------------------------------------------------------------
-
   /**
    * Getter for navigation
    */
@@ -31,23 +27,10 @@ export class NavigationService {
     return this._navigation.asObservable();
   }
 
-  // -----------------------------------------------------------------------------------------------------
-  // @ Public methods
-  // -----------------------------------------------------------------------------------------------------
-
   /**
    * Get all navigation data
    */
-  //   get(): Observable<Navigation>
-  // {
-  //     return this._httpClient.get<Navigation>('api/common/navigation').pipe(
-  //         tap((navigation) => {
-  //             this._navigation.next(navigation);
-  //         })
-  //     );
-  // }
   get(): Observable<Navigation> {
-
     const params = { method: 'show_menu_user' };
     let navigations: any = {
       compact: [],
