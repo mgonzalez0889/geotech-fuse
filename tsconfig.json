@@ -17,7 +17,13 @@
             "es2018",
             "es2019",
             "dom"
-        ]
+        ],
+        "paths": {
+          "@services/*": ["app/core/services/*"],
+          "@tools/*": ["app/core/tools/*"],
+          "@interface/*": ["app/core/interfaces/*"],
+          "@pages/*": ["app/pages/*"],
+        }
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OwnerPlateService } from 'app/core/services/api/owner-plate.service';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { SocketIoClientService } from 'app/core/services/socket/socket-io-client.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { DriverService } from 'app/core/services/api/driver.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-mobiles',
@@ -13,15 +14,15 @@ import { DriverService } from 'app/core/services/api/driver.service';
   styleUrls: ['./form-mobiles.component.scss'],
 })
 export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
-  public mobiles: any = [];
+  @Input() dataMobile: any = null;
+  @Output() closeForm = new EventEmitter<void>();
+  public detailMobile: any = {};
   public editMode: boolean = false;
-  public opened: boolean = true;
-  public mobilForm: FormGroup;
-  public subscription: Subscription;
+  public mobilForm: FormGroup = this.fb.group({});
   public typeMobile: any = [];
   public models: any = [];
   public drivers: any = [];
-  public typeSrvices: any = [
+  public typeServices: any = [
     {
       id: 0,
       name: 'Comercial',
@@ -43,57 +44,47 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       name: 'Publico',
     },
   ];
-  public weightUnit: any = [
-    {
-      id: 0,
-      name: 'Kg',
-    },
-    {
-      id: 1,
-      name: 'Ton',
-    },
-  ];
 
+  private unsubscribe$ = new Subject<void>();
   constructor(
     private fb: FormBuilder,
     private ownerPlateService: OwnerPlateService,
     private socketIoService: SocketIoClientService,
     private mapToolsService: MapToolsService,
     private driverService: DriverService
-  ) { }
+  ) {
+    this.buildForm();
+  }
 
   ngOnInit(): void {
-    //abre el socket y manda el token del usuario
-    this.socketIoService.sendMessage('authorization');
-    //escucha el socket de new position
-    this.socketIoService.listenin('new_position').subscribe((data: any) => {
-      this.mapToolsService.moveMarker(data);
-    });
-    this.listenObservables();
-    this.createMobileForm();
-    this.getTypePlate();
+    this.listenChanelSocket();
+    this.ownerPlateService
+      .getInfoOwnerPlate(this.dataMobile.plate_id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+        this.detailMobile = { ...data };
+        this.mobilForm.patchValue({ ...data });
+      });
+
+    this.driverService.getDrivers()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.drivers = res.data;
+      });
+
+    this.ownerPlateService.getTypePlate()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.typeMobile = res.data;
+      });
     this.getModels();
-    this.getDriver();
   }
-  /**
-   * @description: Cierra el menu lateral de la derecha
-   */
-  public closeMenu(): void {
-    this.ownerPlateService.behaviorSubjectMobileGrid.next({
-      opened: false,
-      reload: false,
-    });
-    this.mapToolsService.clearMap();
-  }
-  /**
-   * @description: Destruye el observable
-   */
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
-  /**
-   * @description: Para cargar el mapa
-   */
+
   ngAfterViewInit(): void {
     this.mapToolsService.initMap({
       fullscreenControl: true,
@@ -101,34 +92,26 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       zoom: 20,
       attributionControl: false,
     });
+
+    this.mapToolsService.setMarker(
+      this.dataMobile,
+    );
   }
-  /**
-   * @description: Escucha el observable behavior y busca al vehiculo
-   */
-  private listenObservables(): void {
-    this.subscription =
-      this.ownerPlateService.behaviorSubjectMobileForm.subscribe(
-        ({ id }) => {
-          if (id) {
-            this.ownerPlateService
-              .getInfoOwnerPlate(id)
-              .subscribe((res) => {
-                this.mobiles = res.data;
-                delete this.mobiles.id;
-                this.mobiles.id = this.mobiles.mobile_id;
-                this.mapToolsService.clearMap();
-                this.mapToolsService.setMarkers(
-                  [this.mobiles],
-                );
-              });
-          }
-        }
-      );
-  }
-  private getTypePlate(): any {
-    this.ownerPlateService.getTypePlate().subscribe((res) => {
-      this.typeMobile = res.data;
+
+  public sendData(): void {
+    const formData = this.mobilForm.value;
+    console.log(formData);
+    this.ownerPlateService.putOwnerPlate(formData, this.detailMobile.id).subscribe((data) => {
+      console.log('data', data);
     });
+  }
+
+  /**
+   * @description: Cierra el menu lateral de la derecha
+   */
+  public closeMenu(): void {
+    this.closeForm.emit();
+    this.mapToolsService.clearMap();
   }
 
   private getModels(): any {
@@ -137,29 +120,30 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       this.models.push(i);
     }
   }
-  /**
-   * @description: Buscar los dispositivos aptos para crear un despacho
-   */
-  private getDriver(): void {
-    this.driverService.getDrivers().subscribe((res) => {
-      this.drivers = res.data;
-    });
+
+  private listenChanelSocket(): void {
+    this.socketIoService.sendMessage('authorization');
+    this.socketIoService.listenin('new_position')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: any) => {
+        console.log('ay', data);
+        this.mapToolsService.moveMakerSelect(data);
+      });
   }
 
   /**
    * @description: Inicializa el formulario de moviles
    */
-  private createMobileForm(): void {
+  private buildForm(): void {
     this.mobilForm = this.fb.group({
-      id: [''],
-      brand: [''],
-      color: [''],
+      brand: ['', [Validators.required]],
+      color: ['', [Validators.required]],
       type_mobile_id: [''],
       mobile_model: [''],
       owner_driver_id: [''],
       weight_capacity: [''],
-      number_chassis: [''],
-      number_engine: [''],
+      number_chassis: ['', [Validators.required]],
+      number_engine: ['', [Validators.required]],
       type_of_service_id: [''],
       weight_unit: [0],
       number_passengers: [''],

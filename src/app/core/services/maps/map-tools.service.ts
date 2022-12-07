@@ -30,6 +30,7 @@ export class MapToolsService {
   private latlng: { lat: number; lng: number }[] = [];
   private map: L.Map;
   private markerCluster = L.markerClusterGroup();
+  private marker = {};
   private markers: any = {};
   private markersPoint: any = {};
   private markersRoutes: any = {};
@@ -88,7 +89,23 @@ export class MapToolsService {
     this.map.on('zoom', (data) => {
       this.zoom = data.target.getZoom();
     });
+    this.zoom = this.map.getZoom();
     L.control.layers(baseLayers).addTo(this.map);
+  }
+
+  public setMarker(mobile: any): void {
+    this.marker[mobile.id] = new L.Marker([mobile.x, mobile.y], {
+      icon: this.setIcon(mobile),
+    });
+    this.marker[mobile.id].options.rotationAngle =
+      this.rotationIcon(mobile);
+    this.marker[mobile.id].bindTooltip(mobile.plate, {
+      permanent: true,
+      direction: 'bottom',
+      offset: L.point({ x: 0, y: 18 }),
+    });
+    this.marker[mobile.id].addTo(this.map);
+    this.map.fitBounds([this.marker[mobile.id].getLatLng()]);
   }
 
   /**
@@ -101,21 +118,10 @@ export class MapToolsService {
     mobiles.forEach((data: any) => {
       this.markers[data.id] = new L.Marker([data.x, data.y], {
         icon: this.setIcon(data),
+        title: data.plate
       });
 
-      if (this.verLabel) {
-        this.markers[data.id].bindTooltip(data.plate, {
-          permanent: true,
-          direction: 'bottom',
-          offset: L.point({ x: 0, y: 18 }),
-        });
-      } else {
-        this.markers[data.id].bindTooltip(data.plate, {
-          permanent: false,
-          direction: 'bottom',
-          offset: L.point({ x: 0, y: 18 }),
-        });
-      }
+      this.makerBindTooltip(this.verLabel);
 
       if (this.verCluster) {
         this.markers[data.id].addTo(this.markerCluster);
@@ -136,14 +142,14 @@ export class MapToolsService {
         this.rotationIcon(data);
     });
 
-    this.map.fitBounds(this.pointLatLens);
+    this.map.fitBounds(this.pointLatLens, {});
   }
 
   /**
    * @description: Asigna los iconos para el marcador deacuerdo al estado
    */
   public setIcon(data: any): L.Icon<L.IconOptions> {
-    const typeService = data.class_mobile_name.toLowerCase();
+    const typeService = data?.class_mobile_name?.toLowerCase() || 'vehicular';
     const diffDays = moment(new Date()).diff(
       moment(data.date_entry),
       'days'
@@ -157,40 +163,40 @@ export class MapToolsService {
       });
     }
 
-    if (typeService === 'geobolt') {
-      if (+data.speed === 0) {
-        if (Number(data.status) === 0) {
-          return L.icon({
-            iconUrl: './assets/icons/iconMap/status_open_color.svg',
-            iconSize: [25, 25],
-            iconAnchor: [12.5, 12.5],
-          });
-        } else {
-          return L.icon({
-            iconUrl: './assets/icons/iconMap/status_close_color.svg',
-            iconSize: [25, 25],
-            iconAnchor: [12.5, 12.5],
-          });
-        }
-      }
-    } else if (typeService === 'vehicular') {
-      if (Number(data.status) === 0) {
+    if (Number(data.status) === 0 && Number(data.speed) === 0) {
+      if (typeService === 'geobolt') {
+        return L.icon({
+          iconUrl: './assets/icons/iconMap/status_open_color.svg',
+          iconSize: [25, 25],
+          iconAnchor: [12.5, 12.5],
+        });
+      } else if (typeService === 'vehicular') {
         return L.icon({
           iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
           iconSize: [25, 25],
           iconAnchor: [12.5, 12.5],
         });
       }
+    } else {
+      if (Number(data.speed) === 0) {
+        if (typeService === 'geobolt') {
+          return L.icon({
+            iconUrl: './assets/icons/iconMap/status_close_color.svg',
+            iconSize: [25, 25],
+            iconAnchor: [12.5, 12.5],
+          });
+        } else if (typeService === 'vehicular') {
+          return L.icon({
+            iconUrl:
+              '../assets/icons/iconMap/engine_ignition.svg',
+            iconSize: [25, 25],
+            iconAnchor: [12.5, 12.5],
+          });
+        }
+      }
     }
 
-    if (+data.speed === 0) {
-      return L.icon({
-        iconUrl:
-          '../assets/icons/iconMap/engine_ignition.svg',
-        iconSize: [25, 25],
-        iconAnchor: [12.5, 12.5],
-      });
-    } else {
+    if (Number(data.speed) > 0) {
       return L.icon({
         iconUrl: '../assets/icons/iconMap/arrow.svg',
         iconSize: [36, 36],
@@ -199,6 +205,21 @@ export class MapToolsService {
     }
   }
 
+  public moveMakerSelect(data: any): void {
+    console.log(this.marker[data.id_mobile]);
+    if (this.marker[data.id_mobile]) {
+      this.marker[data.id_mobile].slideTo([data.x, data.y], {
+        duration: 2000,
+        icon: this.setIcon(data),
+      });
+      this.marker[data.id_mobile].options.rotationAngle =
+        this.rotationIcon(data);
+      this.marker[data.id_mobile].setIcon(this.setIcon(data));
+      const location = this.marker[data.id_mobile].getLatLng();
+      console.log(location);
+      this.map.setView(this.marker[data.id_mobile].getLatLng(), this.zoom);
+    }
+  }
   /**
    * @description: Realiza el cambio de orientacion de los iconos del mapa
    */
@@ -274,6 +295,23 @@ export class MapToolsService {
 
   public deleteEventMap(event: string = 'click'): void {
     this.map.removeEventListener(event);
+  }
+
+  public makerBindTooltip(check: boolean): void {
+    for (const point in this.markers) {
+      if (this.markers.hasOwnProperty(point)) {
+        const data = this.markers[point];
+        if (check) {
+          this.markers[point].bindTooltip(data.options.title, {
+            permanent: true,
+            direction: 'bottom',
+            offset: L.point({ x: 0, y: 18 }),
+          });
+        } else {
+          this.markers[point].unbindTooltip();
+        }
+      }
+    }
   }
 
   /**

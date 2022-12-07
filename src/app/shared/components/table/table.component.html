@@ -1,7 +1,6 @@
 <div [hidden]="!this.dataRow.length">
 
   <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
-
     <table mat-table [dataSource]="this.dataSource" matSort class="w-full">
       <ng-container [matColumnDef]="dataOption.name" *ngFor="let dataOption of this.dataOptionTable">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text}} </th>
@@ -9,7 +8,7 @@
           <td class="cursor-pointer" [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row"
             (click)="actionSelectRow(row)">
             <span class="whitespace-nowrap">
-              {{ row[dataOption.name] | dataTable:dataOption.typeField }}
+              {{ row[dataOption.name] || dataOption.defaultValue | dataTable:dataOption.typeField }}
             </span>
           </td>
         </ng-container>

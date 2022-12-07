@@ -20,31 +20,33 @@ import { FormsModule } from '@angular/forms';
 import { PipeFilterPipe } from 'app/pages/tracking/commands/commands-dashboard/filter-fleet.pipe';
 import { PipeFilterPlatePipe } from 'app/pages/tracking/commands/commands-dashboard/filter-plate.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
-    declarations: [
-        CommandsDashboardComponent,
-        PipeFilterPipe,
-        PipeFilterPlatePipe,
-    ],
-    imports: [
-        CommonModule,
-        CommandsRoutingModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatTabsModule,
-        MatSelectModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatDatepickerModule,
-        MatButtonModule,
-        MatInputModule,
-        MatTooltipModule,
-        MatCheckboxModule,
-        MatListModule,
-        FormsModule,
-        MatProgressSpinnerModule,
-    ],
+  declarations: [
+    CommandsDashboardComponent,
+    PipeFilterPipe,
+    PipeFilterPlatePipe,
+  ],
+  imports: [
+    CommonModule,
+    CommandsRoutingModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatTabsModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    MatInputModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatListModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    SharedModule
+  ],
 })
-export class CommandsModule {}
+export class CommandsModule { }

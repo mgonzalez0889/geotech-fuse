@@ -87,6 +87,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         zoomControl: true,
       });
     }, 100);
+
     this.mobilesService.mobiles$
       .pipe(
         filter(data => !!data.length),
@@ -106,15 +107,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mapService.verCluster = checked;
     this.mapService.clearMap();
     this.mapService.setMarkers(this.mobiles, true);
-  }
 
-  /**
-   * @description: Filtra por tipo de servicio o dispositivo
-   */
-  public changeViewLabel(checked: boolean): void {
-    this.mapService.verLabel = checked;
-    this.mapService.clearMap();
-    this.mapService.setMarkers(this.mobiles, true);
   }
 
   private listenChanelsSocket(): void {

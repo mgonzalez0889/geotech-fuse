@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { OwnerPlateService } from 'app/core/services/api/owner-plate.service';
-import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MobileService } from '@services/api/mobile.service';
+import { IOptionTable } from 'app/core/interfaces';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-grid-mobiles',
@@ -11,76 +10,83 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./grid-mobiles.component.scss'],
 })
 export class GridMobilesComponent implements OnInit, OnDestroy {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  public subscription: Subscription;
+  public titlePage: string = 'Moviles';
+  public subTitlepage: string = '';
+  public dataFilter: string = '';
+  public mobileSelect: any = null;
+  public mobilesData: any[] = [];
   public opened: boolean = false;
-  public dataTableMobiles: MatTableDataSource<any>;
-  public mobilesCount: number = 0;
-  public columnsMobiles: string[] = [
-    'plate',
-    'internal_code',
-    'driver',
-    'model',
-    'type_mobile',
+  public optionsTable: IOptionTable[] = [
+    {
+      name: 'plate',
+      text: 'Placa',
+      typeField: 'text',
+    },
+    {
+      name: 'internal_code',
+      text: 'Codigo interno',
+      typeField: 'text',
+    },
+    {
+      name: 'name_driver',
+      text: 'Conductor',
+      typeField: 'text',
+      defaultValue: 'Sin conductor',
+    },
+    {
+      name: 'battery',
+      text: 'Bateria',
+      typeField: 'percentage',
+    },
+    {
+      name: 'mobile_model',
+      text: 'Modelo',
+      typeField: 'text',
+    },
+    {
+      name: 'name_type',
+      text: 'Tipo de vehiculo',
+      typeField: 'text',
+    },
   ];
+  public columnsMobiles: string[] = this.optionsTable.map(({ name }) => name);
+  private unsubscribe$ = new Subject<void>();
 
-  constructor(private ownerPlateService: OwnerPlateService) { }
+  constructor(private ownerPlateService: MobileService) { }
 
   ngOnInit(): void {
     this.getMobiles();
-    this.listenObservables();
   }
-  /**
-   * @description: Trae todos los moviles del cliente
-   */
-  public getMobiles(): void {
-    this.ownerPlateService.getOwnerPlates().subscribe((res) => {
-      if (res.data) {
-        this.mobilesCount = res.data.length;
-      } else {
-        this.mobilesCount = 0;
-      }
-      this.dataTableMobiles = new MatTableDataSource(res.data);
-      this.dataTableMobiles.paginator = this.paginator;
-      this.dataTableMobiles.sort = this.sort;
-    });
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
+
+  public selectMobile(data: any): void {
+    this.opened = true;
+    this.mobileSelect = { ...data };
+  }
+
   /**
    * @description: Filtrar datos de la tabla
    */
   public filterTable(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataTableMobiles.filter = filterValue.trim().toLowerCase();
+    this.dataFilter = filterValue.trim().toLowerCase();
   }
+
   /**
-   * @description: Guarda el ID del mobil para abrirlo en el formulario
+   * @description: Trae todos los moviles del cliente
    */
-  public actionsContact(id: number): void {
-    this.opened = true;
-    this.ownerPlateService.behaviorSubjectMobileForm.next({
-      id: id,
-      isEdit: false,
-    });
-  }
-  /**
-   * @description: Destruye el observable
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-  /**
-   * @description: Escucha el observable behavior
-   */
-  private listenObservables(): void {
-    this.subscription =
-      this.ownerPlateService.behaviorSubjectMobileGrid.subscribe(
-        ({ reload, opened }) => {
-          this.opened = opened;
-          if (reload) {
-            this.getMobiles();
-          }
-        }
-      );
+  private getMobiles(): void {
+    this.ownerPlateService.getMobiles()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+        this.subTitlepage = data
+          ? `${data.length} moviles`
+          : 'Sin moviles';
+        this.mobilesData = [...data || []];
+      });
   }
 }

@@ -13,7 +13,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IOptionTable, IButtonOptions } from '../../../core/interfaces/components/table.interface';
 
-
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',

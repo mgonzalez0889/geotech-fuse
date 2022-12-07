@@ -10,6 +10,8 @@ import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalImportGeojsonComponent } from '../modal-import-geojson/modal-import-geojson.component';
 import { TypeGeotool } from 'app/core/interfaces';
+import { NgxPermissionsObject } from 'ngx-permissions';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
   selector: 'app-panel-map-geotools',
@@ -24,6 +26,12 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   public openedForm: boolean = false;
   public dataUpdate: any = null;
   public columnTable: string[] = ['checkbox', 'color', 'name', 'delete', 'edit'];
+  private listPermission: NgxPermissionsObject;
+  private permissionValid: { [key: string]: string } = {
+    create: 'seguimientos:mapas:create',
+    update: 'seguimientos:mapas:update',
+    delete: 'seguimientos:mapas:delete',
+  };
   private dataGeo: any[] = [];
   private unsubscribe$ = new Subject<void>();
 
@@ -34,6 +42,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     private geotoolMapService: GeotoolMapService,
     private confirmationService: ConfirmationService,
     private dialog: MatDialog,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -51,6 +60,12 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
         this.dataGeo = [...data || []];
         this.dataSource = new MatTableDataSource([...data || []]);
       });
+
+    this.authService.permissionList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((permission) => {
+        this.listPermission = permission;
+      });
   }
 
   ngOnDestroy(): void {
@@ -59,6 +74,14 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   }
 
   public openModalImportGeojson(): void {
+    if (!this.listPermission[this.permissionValid.create]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'No tienes permisos suficientes para realizar esta acción.',
+      });
+      return;
+    }
+
     const dialogRef = this.dialog.open(ModalImportGeojsonComponent, {
       maxWidth: '360px',
       minWidth: '340px',
@@ -116,6 +139,15 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   }
 
   public actionAdd(): void {
+
+    if (!this.listPermission[this.permissionValid.create]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'No tienes permisos suficientes para realizar esta acción.',
+      });
+      return;
+    }
+
     if (this.typePanel === 'punts') {
       this.mapService.createPoint();
     } else {
@@ -125,13 +157,26 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   }
 
   public actionEdit(data: any): void {
-
-    console.log(data);
+    if (!this.listPermission[this.permissionValid.update]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'No tienes permisos suficientes para realizar esta acción.',
+      });
+      return;
+    }
     this.dataUpdate = { ...data };
     this.openedForm = true;
   }
 
   public deleteGeo(geoId: number): void {
+    if (!this.listPermission[this.permissionValid.delete]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'No tienes permisos suficientes para realizar esta acción.',
+      });
+      return;
+    }
+
     const confirmation = this.confirmationService.open();
     confirmation.afterClosed()
       .pipe(

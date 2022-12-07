@@ -19,7 +19,7 @@
   </div>
 
   <div class="bg-white py-1 px-3 rounded">
-    <mat-checkbox (change)="this.changeViewLabel($event.checked)" [checked]="mapService.verLabel">
+    <mat-checkbox (change)="this.mapService.makerBindTooltip($event.checked)" [checked]="mapService.verLabel">
       Ver label
     </mat-checkbox>
   </div>

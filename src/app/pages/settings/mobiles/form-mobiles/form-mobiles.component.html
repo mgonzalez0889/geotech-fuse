@@ -1,218 +1,196 @@
-<div class="flex flex-col w-full pl-0 md:pl-6">
-    <div class="overflow-auto bg-card shadow rounded-2xl min-h-180">
-        <div [hidden]="editMode">
-            <div class="flex items-center justify-end pt-1 pr-1">
-                <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
-                    <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
-                </button>
+<div class="flex flex-col w-full  sm:pl-6">
+  <div class="overflow-auto bg-card shadow rounded-2xl min-h-auto">
+
+    <div [hidden]="editMode">
+
+      <div class="flex items-center justify-end">
+        <button mat-icon-button matTooltip="Cerrar" (click)="closeMenu()">
+          <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+        </button>
+      </div>
+
+      <div #map id="map" class="h-64 rounded-2xl"></div>
+
+      <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+        <div class="w-full max-w-3xl">
+          <div class="flex items-center my-3">
+            <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
+              Información del vehículo
             </div>
-            <div class="px-6">
-                <div #map id="map" class="h-64 rounded-2xl">
-                </div>
+            <div class="flex items-center ml-auto">
+              <button mat-stroked-button (click)="editMode = true">
+                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil-alt"></mat-icon>
+                <span class="ml-2">Editar</span>
+              </button>
             </div>
-            <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
-                <div class="w-full max-w-3xl">
-                    <div class="flex items-center my-3">
-                        <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
-                            Información del vehículo
-                        </div>
-                        <div class="flex items-center ml-auto">
-                            <button mat-stroked-button (click)="editMode = true">
-                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                                <span class="ml-2">Editar</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex flex-col mt-4 pt-6 border-t space-y-6">
-                        <ng-container *ngIf="mobiles['plate']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Placa'">local_shipping</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['plate']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['internal_code']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Codigo interno'">pin</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['internal_code']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['brand']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Marca'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['brand']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['color']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Color'">lens</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['color']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['type_machine']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Tipo de vehiculo'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['type_machine']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['plate']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Placa'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['plate']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['mobile_model']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Modelo'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['mobile_model']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['capacity']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Numero de pasajeros'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['capacity']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['chassis_number']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Numero de chasis'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['chassis_number']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="mobiles['engine_number']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Placa'">branding_watermark</mat-icon>
-                                <div class="ml-6 leading-6">{{mobiles['engine_number']}}</div>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <div class="flex items-center my-4 border-b">
-                        <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
-                            Información del conductor
-                        </div>
-                    </div>
-                </div>
+          </div>
+
+          <div class="flex flex-col border-t space-y-6">
+            <div class="flex sm:items-center" *ngIf="detailMobile['plate']">
+              <mat-icon matTooltip="Placa">local_shipping</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['plate']}}</p>
             </div>
+            <div class="flex sm:items-center" *ngIf="detailMobile['brand']">
+              <mat-icon matTooltip="Marca">branding_watermark</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['brand']}}</p>
+            </div>
+            <div class="flex sm:items-center" *ngIf="detailMobile['color']">
+              <mat-icon matTooltip="Color">lens</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['color']}}</p>
+            </div>
+            <div class="flex sm:items-center" *ngIf="detailMobile['type_machine']">
+              <mat-icon matTooltip="Tipo de vehiculo">branding_watermark</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['type_machine']}}</p>
+            </div>
+            <div class="flex sm:items-center" *ngIf="detailMobile['capacity']">
+              <mat-icon matTooltip="Numero de pasajeros">branding_watermark</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['capacity']}}</p>
+            </div>
+            <div class="flex sm:items-center" *ngIf="detailMobile['chassis_number']">
+              <mat-icon matTooltip="Numero de chasis">branding_watermark</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['chassis_number']}}</p>
+            </div>
+            <div class="flex sm:items-center" *ngIf="detailMobile['engine_number']">
+              <mat-icon matTooltip="Placa">branding_watermark</mat-icon>
+              <p class="ml-6 leading-6">{{detailMobile['engine_number']}}</p>
+            </div>
+          </div>
+          <!-- 
+          <div class="flex items-center my-4 border-b">
+            <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
+              Información del conductor
+            </div>
+          </div> -->
+
         </div>
-        <div [hidden]="!editMode">
-            <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
-                <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-                    <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
-                        <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
-                    </button>
-                </div>
-            </div>
-            <form [formGroup]="mobilForm">
-                <div class="px-6 py-3">
-                    <div>
-                        <span class="text-base font-semibold">Informacion del vehiculo</span>
-                        <span class="text-lg font-bold"> | {{mobiles['plate']}}</span>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Código interno</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'internal_code'"
-                                [placeholder]="'Código interno'">
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Color</mat-label>
-                            <input matInput type="color" [formControlName]="'color'" required placeholder="Color">
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript">
-                            <mat-label>Marca</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'brand'" [placeholder]="'Marca'">
-                        </mat-form-field>
-                        <mat-form-field class="fuse-mat-no-subscript">
-                            <mat-label>Modelo</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                            <mat-select [formControlName]="'mobile_model'">
-                                <mat-option *ngFor="let model of models" [value]="model">
-                                    {{model}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript ">
-                            <mat-label>Tipo de vehículo</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                            <mat-select [formControlName]="'type_mobile_id'">
-                                <mat-option *ngFor="let type of typeMobile" [value]="type.id">
-                                    {{type.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field class="fuse-mat-no-subscript">
-                            <mat-label>Tipo de servicio</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <mat-select [formControlName]="'type_of_service_id'">
-                                <mat-option *ngFor="let type of typeSrvices" [value]="type.id">
-                                    {{type.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript">
-                            <mat-label>Numero de pasajeros</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'number_passengers'"
-                                [placeholder]="'Numero de pasajeros'">
-                        </mat-form-field>
-                        <mat-form-field class="fuse-mat-no-subscript">
-                            <mat-label>Capacidad de carga </mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'weight_capacity'"
-                                [placeholder]="'Capacidad de carga'" type="number" pattern="^[0-9]+">
-                            <mat-select class="mr-1.5" [formControlName]="'weight_unit'" matSuffix>
-                                <mat-option *ngFor="let unit of weightUnit" [value]="unit.id">
-                                    {{unit.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Numero de chasis </mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'number_chassis'"
-                                [placeholder]="'Numero de chasis'">
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Numero de motor</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            <input matInput required [formControlName]="'number_engine'"
-                                [placeholder]="'Numero de motor'">
-                        </mat-form-field>
-                    </div>
-                    <div class="mt-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Conductor</mat-label>
-                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-                            <mat-select [formControlName]="'owner_driver_id'">
-                                <mat-option *ngFor="let driver of drivers" [value]="driver.id">
-                                    {{driver.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div> {{ mobilForm | json }}</div>
-            </form>
-        </div>
+
+      </div>
     </div>
+
+    <div [hidden]="!editMode">
+
+      <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
+        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+          <button mat-icon-button matTooltip="Cerrar" (click)="closeMenu()">
+            <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-4" (submit)="this.sendData()">
+
+        <mat-form-field class="fuse-mat-dense w-full">
+          <mat-label>Código interno</mat-label>
+          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+          </mat-icon>
+          <input matInput formControlName="internal_code" placeholder="Código interno">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense w-full">
+          <mat-label>Conductor</mat-label>
+          <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+          <mat-select [formControlName]="'owner_driver_id'">
+            <mat-option *ngFor="let driver of drivers" [value]="driver.id">
+              {{driver.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense w-full">
+          <mat-label>Color</mat-label>
+          <input matInput type="color" formControlName="color" placeholder="Color">
+        </mat-form-field>
+
+        <div class="flex justify-between gap-2">
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Marca</mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            </mat-icon>
+            <input matInput formControlName="brand" placeholder="Marca">
+          </mat-form-field>
+
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Modelo</mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+            <mat-select formControlName="mobile_model">
+              <mat-option *ngFor="let model of models" [value]="model">
+                {{model}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="flex justify-between gap-2">
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Tipo de vehículo</mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+            <mat-select formControlName="type_mobile_id">
+              <mat-option *ngFor="let type of typeMobile" [value]="type.id">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Tipo de servicio</mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            </mat-icon>
+            <mat-select formControlName="type_of_service_id">
+              <mat-option *ngFor="let type of typeServices" [value]="type.id">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="flex justify-between gap-2">
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Numero de pasajeros</mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            </mat-icon>
+            <input matInput formControlName="number_passengers" placeholder="Numero de pasajeros">
+          </mat-form-field>
+
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>Capacidad de carga </mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            </mat-icon>
+            <input matInput formControlName="weight_capacity" placeholder="Capacidad de carga" type="text"
+              pattern="^[0-9]+">
+            <mat-select class="mr-1.5" formControlName="weight_unit" matSuffix>
+              <mat-option [value]="0">Kg</mat-option>
+              <mat-option [value]="1">Ton</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="fuse-mat-dense w-full">
+          <mat-label>Numero de chasis </mat-label>
+          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+          </mat-icon>
+          <input matInput formControlName="number_chassis" placeholder="Numero de chasis">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense w-full">
+          <mat-label>Numero de motor</mat-label>
+          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+          </mat-icon>
+          <input matInput formControlName="number_engine" placeholder="Numero de motor">
+        </mat-form-field>
+
+        <div class="flex items-center mt-4 -mx-6 sm:-mx-12 pr-4 pl-1 sm:pr-12 sm:pl-7">
+          <button type="button" class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
+            Cancelar
+          </button>
+
+          <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.mobilForm.invalid"
+            matTooltip="Guardar">
+            Guardar
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
 </div>
