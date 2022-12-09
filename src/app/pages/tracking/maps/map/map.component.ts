@@ -81,6 +81,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.mapService.initMap({
         fullscreenControl: true,
+        fullscreenControlOptions: {
+          position: 'topright',
+        },
         center: [11.004313, -74.808137],
         zoom: 8,
         attributionControl: false,

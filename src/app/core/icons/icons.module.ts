@@ -92,7 +92,7 @@ export class IconsModule {
           configIcon['text'] = 'Cerrado';
           break;
       }
-    } else if (typeService === 'vehicular') {
+    } else if (typeService === 'vehicular' || typeService === 'telemetria') {
       switch (Number(data.status)) {
         case 0:
           configIcon['icon'] = 'engine_shutdown';

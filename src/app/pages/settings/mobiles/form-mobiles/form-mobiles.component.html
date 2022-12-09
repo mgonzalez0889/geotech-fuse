@@ -1,17 +1,17 @@
 <div class="flex flex-col w-full  sm:pl-6">
-  <div class="overflow-auto bg-card shadow rounded-2xl min-h-auto">
+  <div class="relative overflow-auto bg-card shadow rounded-2xl min-h-auto">
 
-    <div [hidden]="editMode">
 
-      <div class="flex items-center justify-end">
-        <button mat-icon-button matTooltip="Cerrar" (click)="closeMenu()">
-          <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
-        </button>
-      </div>
+    <div class="absolute z-999 right-2 top-2">
+      <button mat-icon-button matTooltip="Cerrar" class="bg-white shadow-xl" (click)="closeMenu()">
+        <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+      </button>
+    </div>
 
-      <div #map id="map" class="h-64 rounded-2xl"></div>
+    <div #map id="map" class="h-64 rounded-2xl"></div>
 
-      <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+      <div [hidden]="editMode">
         <div class="w-full max-w-3xl">
           <div class="flex items-center my-3">
             <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
@@ -26,33 +26,21 @@
           </div>
 
           <div class="flex flex-col border-t space-y-6">
-            <div class="flex sm:items-center" *ngIf="detailMobile['plate']">
+            <div class="flex sm:items-center" *ngIf="detailMobile['plate'] as plate">
               <mat-icon matTooltip="Placa">local_shipping</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['plate']}}</p>
+              <p class="ml-6 leading-6">{{plate}}</p>
             </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['brand']">
+            <div class="flex sm:items-center" *ngIf="detailMobile['brand'] as brand">
               <mat-icon matTooltip="Marca">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['brand']}}</p>
+              <p class="ml-6 leading-6">{{brand}}</p>
             </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['color']">
-              <mat-icon matTooltip="Color">lens</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['color']}}</p>
+            <div class="flex sm:items-center" *ngIf="detailMobile['color'] as color">
+              <mat-icon matTooltip="Color" [ngStyle]="{'color': color}">lens</mat-icon>
+              <p class="ml-6 leading-6">Color</p>
             </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['type_machine']">
-              <mat-icon matTooltip="Tipo de vehiculo">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['type_machine']}}</p>
-            </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['capacity']">
+            <div class="flex sm:items-center" *ngIf="detailMobile['capacity'] as capacity">
               <mat-icon matTooltip="Numero de pasajeros">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['capacity']}}</p>
-            </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['chassis_number']">
-              <mat-icon matTooltip="Numero de chasis">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['chassis_number']}}</p>
-            </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['engine_number']">
-              <mat-icon matTooltip="Placa">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{detailMobile['engine_number']}}</p>
+              <p class="ml-6 leading-6">{{capacity}}</p>
             </div>
           </div>
           <!-- 
@@ -61,31 +49,12 @@
               Información del conductor
             </div>
           </div> -->
-
         </div>
-
       </div>
     </div>
 
     <div [hidden]="!editMode">
-
-      <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
-        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-          <button mat-icon-button matTooltip="Cerrar" (click)="closeMenu()">
-            <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
-          </button>
-        </div>
-      </div>
-
       <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-4" (submit)="this.sendData()">
-
-        <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Código interno</mat-label>
-          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
-          </mat-icon>
-          <input matInput formControlName="internal_code" placeholder="Código interno">
-        </mat-form-field>
-
         <mat-form-field class="fuse-mat-dense w-full">
           <mat-label>Conductor</mat-label>
           <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
@@ -97,8 +66,10 @@
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Color</mat-label>
-          <input matInput type="color" formControlName="color" placeholder="Color">
+          <mat-label>Código interno</mat-label>
+          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+          </mat-icon>
+          <input matInput formControlName="internal_code" placeholder="Código interno">
         </mat-form-field>
 
         <div class="flex justify-between gap-2">
@@ -118,6 +89,9 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+
+          <app-input-color [form]="this.mobilForm" labelControl="color"></app-input-color>
+
         </div>
 
         <div class="flex justify-between gap-2">

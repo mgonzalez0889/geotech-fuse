@@ -139,7 +139,6 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   }
 
   public actionAdd(): void {
-
     if (!this.listPermission[this.permissionValid.create]) {
       this.toastAlert.toasAlertWarn({
         message:
@@ -189,6 +188,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
           this.toastAlert.toasAlertSuccess({
             message: `${this.titlePanel} eliminado correctamente.`
           });
+          this.mapService.removeLayer({ id: geoId }, this.typePanel);
           const indexGeo = this.dataGeo.findIndex(({ id }) => id === geoId);
           if (indexGeo >= 0) {
             this.dataGeo.splice(indexGeo, 1);

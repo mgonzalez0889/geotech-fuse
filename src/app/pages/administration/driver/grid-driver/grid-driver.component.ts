@@ -44,8 +44,6 @@ export class GridDriverComponent implements OnInit, OnDestroy {
     this.listenObservables();
     this.subscription = this.permissionsService.permissions$.subscribe(
       (data: any) => {
-        console.log(data, 'a ver');
-
         this.listPermission = data ?? [];
       }
     );

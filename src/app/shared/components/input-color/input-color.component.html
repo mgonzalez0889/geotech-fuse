@@ -1,0 +1,21 @@
+<div [formGroup]="form">
+  <mat-form-field class="fuse-mat-dense w-16">
+    <mat-label>Color</mat-label>
+    <mat-select formControlName="color" matPrefix>
+      <mat-select-trigger class="h-6">
+        <span class="flex w-6 h-6 rounded-full" [ngStyle]="{'background-color': form.get(labelControl).value}"></span>
+      </mat-select-trigger>
+      <div class="px-4 pt-5 text-xl font-semibold">Colores</div>
+      <div class="flex flex-wrap w-48 my-4 mx-3 -mr-4">
+        <ng-container *ngFor="let color of colors">
+          <mat-option class="relative flex w-12 h-12 p-0 cursor-pointer rounded-full bg-transparent" [value]="color"
+            #matOption="matOption">
+            <mat-icon *ngIf="matOption.selected" class="absolute m-2 text-white" svgIcon="heroicons_outline:check">
+            </mat-icon>
+            <span class="flex w-8 h-8 m-1 rounded-full" [ngStyle]="{'background-color': color}"></span>
+          </mat-option>
+        </ng-container>
+      </div>
+    </mat-select>
+  </mat-form-field>
+</div>

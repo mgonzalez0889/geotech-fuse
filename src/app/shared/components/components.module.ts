@@ -15,6 +15,7 @@ import { MultiSelectFilterComponent } from './multi-select-filter/multi-select-f
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InputColorComponent } from './input-color/input-color.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TableComponent,
     DataTablePipe,
     FilterListPipe,
-    MultiSelectFilterComponent
+    MultiSelectFilterComponent,
+    InputColorComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TableComponent,
     DataTablePipe,
     FilterListPipe,
-    MultiSelectFilterComponent
+    MultiSelectFilterComponent,
+    InputColorComponent
   ],
 })
 export class ComponentsModule { }

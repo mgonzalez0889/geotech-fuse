@@ -72,25 +72,22 @@ export class MapToolsService {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }
     );
-    const baseLayers = {
-      'Google Maps': GoogleMaps,
-      'Google Hibrido': GoogleHybrid,
+    const baseLayers: L.Control.LayersObject = {
+      GoogleMaps,
+      GoogleHybrid,
     };
     this.map = L.map('map', {
-      ...optionsMap,
-      fullscreenControlOptions: {
-        position: 'topright',
-      },
       zoomAnimation: true,
       layers: [GoogleMaps],
       inertia: true,
       worldCopyJump: true,
+      ...optionsMap,
     });
     this.map.on('zoom', (data) => {
       this.zoom = data.target.getZoom();
     });
     this.zoom = this.map.getZoom();
-    L.control.layers(baseLayers).addTo(this.map);
+    L.control.layers(baseLayers, {}, { position: optionsMap.fullscreenControlOptions.position }).addTo(this.map);
   }
 
   public setMarker(mobile: any): void {
@@ -150,6 +147,7 @@ export class MapToolsService {
    */
   public setIcon(data: any): L.Icon<L.IconOptions> {
     const typeService = data?.class_mobile_name?.toLowerCase() || 'vehicular';
+
     const diffDays = moment(new Date()).diff(
       moment(data.date_entry),
       'days'
@@ -170,7 +168,7 @@ export class MapToolsService {
           iconSize: [25, 25],
           iconAnchor: [12.5, 12.5],
         });
-      } else if (typeService === 'vehicular') {
+      } else if (typeService === 'vehicular' || typeService === 'telemetria') {
         return L.icon({
           iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
           iconSize: [25, 25],
@@ -185,7 +183,7 @@ export class MapToolsService {
             iconSize: [25, 25],
             iconAnchor: [12.5, 12.5],
           });
-        } else if (typeService === 'vehicular') {
+        } else if (typeService === 'vehicular' || typeService === 'telemetria') {
           return L.icon({
             iconUrl:
               '../assets/icons/iconMap/engine_ignition.svg',
@@ -203,27 +201,31 @@ export class MapToolsService {
         iconAnchor: [10, 10],
       });
     }
+
+    return L.icon({
+      iconUrl: '../assets/icons/iconMap/no_report.svg',
+      iconSize: [25, 25],
+      iconAnchor: [12.5, 12.5],
+    });
   }
 
   public moveMakerSelect(data: any): void {
-    console.log(this.marker[data.id_mobile]);
     if (this.marker[data.id_mobile]) {
       this.marker[data.id_mobile].slideTo([data.x, data.y], {
         duration: 2000,
         icon: this.setIcon(data),
+        keepAtCenter: true
       });
       this.marker[data.id_mobile].options.rotationAngle =
         this.rotationIcon(data);
       this.marker[data.id_mobile].setIcon(this.setIcon(data));
-      const location = this.marker[data.id_mobile].getLatLng();
-      console.log(location);
-      this.map.setView(this.marker[data.id_mobile].getLatLng(), this.zoom);
     }
   }
   /**
    * @description: Realiza el cambio de orientacion de los iconos del mapa
    */
   public moveMarker(data: any): void {
+    // .slideCancel()
     if (this.markers.hasOwnProperty(data.id_mobile)) {
       this.markers[data.id_mobile].slideTo([data.x, data.y], {
         duration: 2000,
@@ -422,7 +424,7 @@ export class MapToolsService {
       return { lat: x, lng: y };
     });
 
-    this.map.setView([arrayPointRoute[0].lat, arrayPointRoute[0].lng], 7);
+    this.map.setView([arrayPointRoute[0].lat, arrayPointRoute[0].lng], this.zoom);
 
     this.markersZones[data.id] = L.polygon(arrayPointRoute, {
       color: data.color,

@@ -64,7 +64,7 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
   }
 
   public selectMobile(data: any): void {
-    this.opened = true;
+    this.opened = this.opened ? false : true;
     this.mobileSelect = { ...data };
   }
 

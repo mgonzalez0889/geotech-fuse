@@ -7,6 +7,7 @@ import { SocketIoClientService } from 'app/core/services/socket/socket-io-client
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { DriverService } from 'app/core/services/api/driver.service';
 import { takeUntil } from 'rxjs/operators';
+import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-mobiles',
@@ -51,13 +52,67 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
     private ownerPlateService: OwnerPlateService,
     private socketIoService: SocketIoClientService,
     private mapToolsService: MapToolsService,
-    private driverService: DriverService
+    private driverService: DriverService,
+    private toastAlert: ToastAlertService
   ) {
     this.buildForm();
   }
 
   ngOnInit(): void {
     this.listenChanelSocket();
+    this.readDataForm();
+    this.getModels();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  ngAfterViewInit(): void {
+    this.mapToolsService.initMap({
+      fullscreenControl: true,
+      fullscreenControlOptions: {
+        position: 'topleft',
+      },
+      center: [11.004313, -74.808137],
+      zoom: 20,
+      attributionControl: false,
+    });
+
+    this.mapToolsService.setMarker(
+      this.dataMobile,
+    );
+  }
+
+  public sendData(): void {
+    const formData = this.mobilForm.value;
+    this.ownerPlateService.putOwnerPlate(formData, this.detailMobile.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ code }) => {
+        if (code === 200) {
+          this.closeForm.emit();
+          this.mapToolsService.clearMap();
+          this.toastAlert.toasAlertSuccess({
+            message: '¡Vehiculo modificado con exito!'
+          });
+        } else {
+          this.toastAlert.toasAlertWarn({
+            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+          });
+        }
+      });
+  }
+
+  /**
+   * @description: Cierra el menu lateral de la derecha
+   */
+  public closeMenu(): void {
+    this.closeForm.emit();
+    this.mapToolsService.clearMap();
+  }
+
+  private readDataForm(): void {
     this.ownerPlateService
       .getInfoOwnerPlate(this.dataMobile.plate_id)
       .pipe(takeUntil(this.unsubscribe$))
@@ -77,41 +132,6 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((res) => {
         this.typeMobile = res.data;
       });
-    this.getModels();
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  ngAfterViewInit(): void {
-    this.mapToolsService.initMap({
-      fullscreenControl: true,
-      center: [11.004313, -74.808137],
-      zoom: 20,
-      attributionControl: false,
-    });
-
-    this.mapToolsService.setMarker(
-      this.dataMobile,
-    );
-  }
-
-  public sendData(): void {
-    const formData = this.mobilForm.value;
-    console.log(formData);
-    this.ownerPlateService.putOwnerPlate(formData, this.detailMobile.id).subscribe((data) => {
-      console.log('data', data);
-    });
-  }
-
-  /**
-   * @description: Cierra el menu lateral de la derecha
-   */
-  public closeMenu(): void {
-    this.closeForm.emit();
-    this.mapToolsService.clearMap();
   }
 
   private getModels(): any {
@@ -126,7 +146,7 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
     this.socketIoService.listenin('new_position')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
-        console.log('ay', data);
+        console.log('socket', data);
         this.mapToolsService.moveMakerSelect(data);
       });
   }

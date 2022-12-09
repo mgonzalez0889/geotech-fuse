@@ -12,7 +12,7 @@ export class SocketIoClientService {
 
   constructor() {
     this.socket = io.connect(this.url, {
-      secure: true,
+      secure: false,
       reconnectionDelay: 500,
       reconnection: true,
       forceNew: true,
