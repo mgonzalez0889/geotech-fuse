@@ -73,6 +73,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.mapToolsService.initMap({
       fullscreenControl: true,
+      fullscreenControlOptions: {
+        position: 'topleft',
+      },
       center: [11.004313, -74.808137],
       zoom: 20,
       attributionControl: false,

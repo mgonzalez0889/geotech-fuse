@@ -22,6 +22,7 @@ export class FleetsService {
     private _http: HttpClient,
     private _appSettings: AppSettingsService
   ) { }
+
   /**
    * @description: Ver todos las flotas
    */
@@ -29,6 +30,7 @@ export class FleetsService {
     const params = { method: 'index_all_fleet' };
     return this._http.get(this._appSettings.fleets.url.base, { params });
   }
+
   /**
    * @description: Crear una flota
    */
@@ -38,6 +40,7 @@ export class FleetsService {
       params,
     });
   }
+
   /**
    * @description: Eliminar una flota
    */
@@ -47,6 +50,7 @@ export class FleetsService {
       params,
     });
   }
+
   /**
    * @description: Editar una flota
    */
@@ -60,50 +64,5 @@ export class FleetsService {
       { params }
     );
   }
-  /**
-   * @description: Traer una sola flota
-   */
-  public getFleet(id: number): Observable<any> {
-    const params = { method: 'show_fleet' };
-    return this._http.get(this._appSettings.fleets.url.base + '/' + id, {
-      params,
-    });
-  }
-  /**
-   * @description: Obtiene las flotas por Id
-   */
-  public getFleetsPlatesAssigned(id: number): Observable<any> {
-    const params = { method: 'index_all_fleet_plate', fleet_id: id };
-    return this._http.get(this._appSettings.fleets.url.fleePlate, {
-      params,
-    });
-  }
-  /**
-   * @description:
-   */
-  public getFleetsPlateAssignedMap(id: number): Observable<any> {
-    const params = { method: 'index_all_fleet_plate_map', fleet_id: id };
-    return this._http.get(this._appSettings.fleets.url.fleePlate, {
-      params,
-    });
-  }
-  /**
-   * @description: Crear una flota
-   */
-  public postFleetsPlate(data: any): Observable<any> {
-    const params = { method: 'create_fleet_plate' };
-    return this._http.post(this._appSettings.fleets.url.fleePlate, data, {
-      params,
-    });
-  }
-  /**
-   * @description: Elimina una placa de la flota
-   */
-  public deleteFleetsPlate(id: number): Observable<any> {
-    const params = { method: 'delete_fleet_plate' };
-    return this._http.delete(
-      `${this._appSettings.fleets.url.fleePlate}/${id}`,
-      { params }
-    );
-  }
+
 }

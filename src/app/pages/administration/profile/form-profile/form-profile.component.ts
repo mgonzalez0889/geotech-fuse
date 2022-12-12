@@ -63,7 +63,9 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     private fleetsService: FleetsService,
     private menuOptionsService: MenuOptionsService,
     private mobilesService: MobileService
-  ) { }
+  ) {
+    this.buildForm();
+  }
 
   /**
    * @description: se llaman todos los servicios y se crea el formulario reactivo.
@@ -81,7 +83,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       });
 
     this.readAndParseOptionModules();
-    this.buildForm();
   }
 
 
@@ -272,11 +273,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       fleets: [[]],
       module: this.fb.array([]),
     });
-
-    if (this.dataUpdate) {
-      this.assignedModules = [...this.dataUpdate.modules];
-      this.profileForm.patchValue({ ...this.dataUpdate });
-    }
   }
 
 }

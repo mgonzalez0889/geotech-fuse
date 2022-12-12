@@ -8,7 +8,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewEncapsulation
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, mergeMap, takeUntil } from 'rxjs/operators';
@@ -23,7 +22,6 @@ import { ProfilesService } from '../../../../core/services/api/profiles.service'
   selector: 'app-form-user',
   templateUrl: './form-user.component.html',
   styleUrls: ['./form-user.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
@@ -35,7 +33,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   public hidePasswordConfirm: boolean = false;
   public editMode: boolean = false;
   public countries: any[] = [];
-  public countrieFlagInit: string = '';
+  public countrieFlag: { code: string; flagImagePos: string } = { code: '+57', flagImagePos: '' };
   public profile$: Observable<any>;
   public validUsername: boolean = false;
   public editPassword: boolean = false;
@@ -46,7 +44,9 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
     private profileService: ProfilesService,
     private userService: UsersService,
     private iconService: IconsModule
-  ) { }
+  ) {
+    this.buildForm();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.changeControlsForm();
@@ -64,7 +64,6 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
         }))
       ),
     );
-    this.buildForm();
     this.validateUsernameRepeat();
     this.readCountries();
   }
@@ -125,12 +124,14 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
    * @description: Lectura de la informacion de cudiades y codigos y se pinta en el select de telefono
    */
   private readCountries(): void {
-    this.iconService.getCountries().pipe(takeUntil(this.unsubscribe$)).subscribe((res) => {
-      this.countries = res;
-      const compareCode = this.formUser?.controls['indicative'].value || '+57';
-      const countrieInit = this.countries.find(({ code }) => code === compareCode);
-      this.countrieFlagInit = countrieInit.flagImagePos;
-    });
+    this.iconService.getCountries()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.countries = res;
+        const compareCode = this.formUser.controls['indicative'].value;
+        const countrieInit = this.countries.find(({ code }) => code === compareCode);
+        this.countrieFlag = { ...countrieInit };
+      });
   }
 
   /**
@@ -139,18 +140,26 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   private changeControlsForm(): void {
     if (this.dataUpdate) {
       this.formUser.addControl('change_password', this.fb.control(false));
-      this.formUser.controls['password_digest']?.clearValidators();
-      this.formUser.controls['confirm_password']?.clearValidators();
+      this.formUser.controls['password_digest'].clearValidators();
+      this.formUser.controls['confirm_password'].clearValidators();
       this.editMode = false;
       this.formUser.patchValue({ ...this.dataUpdate });
     } else {
-      this.formUser.controls['password_digest']?.setValidators([Validators.required]);
-      this.formUser.controls['confirm_password']?.setValidators([Validators.required]);
-      this.editMode = false;
+      this.formUser.controls['password_digest'].setValidators([Validators.required]);
+      this.formUser.controls['confirm_password'].setValidators([Validators.required]);
       this.formUser.reset();
+      this.formUser.controls['indicative'].setValue('+57');
+      this.editMode = false;
     }
-    this.formUser.controls['password_digest']?.updateValueAndValidity();
-    this.formUser.controls['confirm_password']?.updateValueAndValidity();
+    this.formUser.controls['password_digest'].updateValueAndValidity();
+    this.formUser.controls['confirm_password'].updateValueAndValidity();
+
+    this.formUser.controls['indicative'].valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        const countrieInit = this.countries.find(({ code }) => code === data);
+        this.countrieFlag = { ...countrieInit };
+      });
   }
 
   /**
@@ -182,7 +191,8 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   private validateUsernameRepeat(): void {
     const usernameControl = this.formUser.controls['user_login'];
     usernameControl.valueChanges.pipe(
-      mergeMap(valueControl => this.userService.validUsername(valueControl))
+      mergeMap(valueControl => this.userService.validUsername(valueControl)),
+      takeUntil(this.unsubscribe$)
     ).subscribe(({ message }) => {
       if (message === 'User No Exists' || this.dataUpdate) {
         if (usernameControl.hasError('existUsername')) {

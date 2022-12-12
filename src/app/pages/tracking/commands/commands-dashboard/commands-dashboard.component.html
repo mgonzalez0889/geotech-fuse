@@ -99,12 +99,12 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
               <td mat-cell *matCellDef="let row">
                 <span
-                  class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                  class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase leading-relaxed whitespace-nowrap"
                   [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.state === 'EXPIRADO',
                                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': row.state === 'CONFIRMADO',
                                                 'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': row.state === 'PENDIENTE'
                                             }">
-                  <span class="leading-relaxed whitespace-nowrap">{{row.state}}</span>
+                 {{row.state}}
                 </span>
               </td>
             </ng-component>

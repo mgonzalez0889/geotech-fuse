@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -158,14 +159,11 @@ export class FormFleetComponent implements OnInit, OnDestroy {
               this.fleetForm.reset();
             }
           }
+
           if (payload?.id) {
             this.fleets = payload;
             this.fleetForm.patchValue(this.fleets);
-            this.fleetService
-              .getFleetsPlatesAssigned(payload.id)
-              .subscribe((res) => {
-                this.fleetsPlate = res.data;
-              });
+            this.fleetForm.patchValue({ plates: payload.plates.map(({ owner_plate_id }) => owner_plate_id )});
           }
         }
       );

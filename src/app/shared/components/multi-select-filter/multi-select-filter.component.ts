@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 
@@ -7,7 +7,7 @@ import { MatOption } from '@angular/material/core';
   templateUrl: './multi-select-filter.component.html',
   styleUrls: ['./multi-select-filter.component.scss']
 })
-export class MultiSelectFilterComponent implements OnInit {
+export class MultiSelectFilterComponent {
   @Input() form: FormGroup;
   @Input() labelControl: string;
   @Input() placeholder: string;
@@ -20,8 +20,6 @@ export class MultiSelectFilterComponent implements OnInit {
   public valueFilter: string = '';
 
   constructor() { }
-
-  ngOnInit(): void { }
 
   public allSelection(): void {
     if (this.allSelected.selected) {

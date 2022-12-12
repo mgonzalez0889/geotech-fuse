@@ -64,7 +64,7 @@
               </mat-form-field>
             </div>
 
-            <div class="flex gap-2 items-center mt-4">
+            <div class="flex gap-2 items-center mt-4 mb-2">
               <mat-label>Buscar por:</mat-label>
               <mat-radio-group class="flex gap-2" [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}">
                 <mat-radio-button *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
@@ -73,22 +73,22 @@
             </div>
 
             <div *ngIf="selectTrasport === 'mobiles'">
-              <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione vehiculos'"
+              <app-multi-select-filter [form]="this.profileForm" [placeholder]="'Seleccione vehiculos'"
                 [options]="{data:this.plates, key:'plate_id', keyView:'plate'}" labelControl="plates">
               </app-multi-select-filter>
             </div>
 
             <div *ngIf="selectTrasport === 'fleet'">
-              <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione flotas'"
+              <app-multi-select-filter [form]="this.profileForm" [placeholder]="'Seleccione flotas'"
                 [options]="{data:this.fleets, key:'id', keyView:'name'}" labelControl="fleets">
               </app-multi-select-filter>
             </div>
 
-            <div class="flex justify-between gap-3 mt-2 h-80 overflow-auto">
+            <div class="flex justify-between gap-3 mt-2 h-80">
 
-              <div class="w-full h-auto ">
-                <mat-label>Modulos Disponibles</mat-label>
-
+              <div class="w-full h-auto overflow-auto">
+                <mat-label class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">Modulos
+                  Disponibles</mat-label>
                 <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList
                   #availableList="cdkDropList" [cdkDropListData]="availableModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[assignedList]" (cdkDropListDropped)="drop($event)">
@@ -96,14 +96,14 @@
                 </div>
               </div>
 
-              <div class="w-full h-auto ">
-                <mat-label>Modulos asignados</mat-label>
-                <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList
-                  #assignedList="cdkDropList" [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
+              <div class="w-full h-auto overflow-auto">
+                <mat-label class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">Modulos
+                  asignados</mat-label>
+                <div class="h-full overflow-hidden bg-white rounded shadow mt-4" cdkDropList #assignedList="cdkDropList"
+                  [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)">
 
                   <div class="example-box" *ngFor="let item of assignedModules" cdkDrag>
-
                     <mat-accordion class="w-full">
                       <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                         <mat-expansion-panel-header>
@@ -111,7 +111,7 @@
                             {{item.title}}
                           </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <div class="flex justify-center gap-3">
+                        <div class="flex flex-wrap justify-center gap-3">
                           <mat-checkbox [checked]="item.option.create"
                             (change)="asingOption($event.checked, 'create', item.id)" *ngIf="item.create_option">Crear
                           </mat-checkbox>

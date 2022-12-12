@@ -37,10 +37,10 @@
                   <div class="ml-6 leading-6">{{fleets['description']}}</div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="fleetsPlate">
+              <ng-container *ngIf="fleets['plates'] as plates">
                 <div class="sm:items-center">
                   <mat-icon [matTooltip]="'Vehículos'">local_shipping</mat-icon>
-                  <mat-list *ngFor="let x of fleetsPlate">
+                  <mat-list *ngFor="let x of plates">
                     <mat-list-item role="listitem">{{x.plate}}</mat-list-item>
                   </mat-list>
                 </div>

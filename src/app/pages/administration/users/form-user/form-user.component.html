@@ -129,8 +129,8 @@
                   <span class="flex items-center">
                     <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
                       [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
-                      [style.backgroundSize]="'24px 3876px'" [style.backgroundPosition]="this.countrieFlagInit"></span>
-                    <span class="sm:mx-0.5 font-medium text-default">{{formUser.get('indicative').value}}</span>
+                      [style.backgroundSize]="'24px 3876px'" [style.backgroundPosition]="this.countrieFlag.flagImagePos"></span>
+                    <span class="sm:mx-0.5 font-medium text-default">{{this.formUser.controls['indicative'].value}}</span>
                   </span>
                 </mat-select-trigger>
                 <ng-container *ngFor="let country of countries">
