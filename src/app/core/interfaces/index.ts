@@ -10,6 +10,7 @@ export * from './services/navigation.interface';
 export * from './services/fleets.interface';
 export * from './services/api-response.interface';
 export * from './services/map.interface';
+export * from './services/alert.interface';
 
 export * from './other/date.interface';
 export * from './other/icon.interface';

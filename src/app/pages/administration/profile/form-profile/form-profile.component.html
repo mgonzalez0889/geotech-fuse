@@ -99,7 +99,7 @@
               <div class="w-full h-auto overflow-auto">
                 <mat-label class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">Modulos
                   asignados</mat-label>
-                <div class="h-full overflow-hidden bg-white rounded shadow mt-4" cdkDropList #assignedList="cdkDropList"
+                <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList #assignedList="cdkDropList"
                   [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)">
 

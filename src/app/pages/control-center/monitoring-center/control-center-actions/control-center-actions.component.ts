@@ -19,7 +19,7 @@ import { MapToolsService } from 'app/core/services/maps/map-tools.service';
   templateUrl: './control-center-actions.component.html',
   styleUrls: ['./control-center-actions.component.scss'],
 })
-export class ControlCenterActionsComponent implements OnInit, OnDestroy {
+export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('paginatorContactsControlCenter')
   paginatorContactsControlCenter: MatPaginator;
   @ViewChild('sortContactsControlCenter') sortContactsControlCenter: MatSort;
@@ -68,7 +68,8 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private matDialog: MatDialog,
     private mapToolsService: MapToolsService
-  ) { }
+  ) {
+    }
 
   ngOnInit(): void {
     this.mapToolsService.initMap({
@@ -87,6 +88,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     this.getReportAlarmsAttens();
   }
 
+  ngAfterViewInit(): void {
+
+  }
   /**
    * @description: Modal para agregar nuevo contacto
    */

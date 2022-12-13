@@ -7,7 +7,6 @@ import { takeUntil } from 'rxjs/operators';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { AuthService } from 'app/core/auth/auth.service';
-
 @Component({
   selector: 'app-grid-user',
   templateUrl: './grid-user.component.html',
@@ -41,7 +40,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
       name: 'email',
       text: 'Correo electrónico',
       typeField: 'text',
-      classTailwind: 'hover:underline text-primary-500',
+      classTailwind: 'hover:underline text-primary-500'
     },
     {
       name: 'enable_user',

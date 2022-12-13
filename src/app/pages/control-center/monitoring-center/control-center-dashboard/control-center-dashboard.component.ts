@@ -27,7 +27,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
   public opened: boolean = false;
   public dataAlarms: MatTableDataSource<any>;
   public selection = new SelectionModel<any>(true, []);
-
+  private interval: any;
   @ViewChild('management') management: MatPaginator;
   @ViewChild('silencedd') silencedd: MatPaginator;
   @ViewChild('all') all: MatPaginator;
@@ -55,7 +55,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getInfoUser();
     this.listenObservables();
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.getAllAlarms();
     }, 20000);
   }
@@ -208,10 +208,12 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
       payload: this.dataAlarmSelect,
     });
   }
+
   /**
    * @description: Destruye el observable
    */
   ngOnDestroy(): void {
+    clearInterval(this.interval);
     this.subscription.unsubscribe();
   }
 }

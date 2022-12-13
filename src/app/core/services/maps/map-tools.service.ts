@@ -72,9 +72,17 @@ export class MapToolsService {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }
     );
+    const OpenStreetMap = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+      {
+        maxZoom: 20,
+        minZoom: 3,
+      }
+    );
+
     const baseLayers: L.Control.LayersObject = {
       GoogleMaps,
       GoogleHybrid,
+      OpenStreetMap
     };
     this.map = L.map('map', {
       zoomAnimation: true,

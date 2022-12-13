@@ -108,7 +108,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
                   opened: false,
                 }
               );
-              this.toastAlert.toasAlertWarn({
+              this.toastAlert.toasAlertSuccess({
                 message: 'Contacto eliminado con exito!',
 
               });
@@ -127,7 +127,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
    */
   public getCountryByIso(code: string): any {
     if (code) {
-      return this.countries.find((country) => country.code === code);
+      return this.countries.find(country => country.code === code);
     }
   }
   /**

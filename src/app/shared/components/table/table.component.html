@@ -7,13 +7,13 @@
         <ng-container *ngIf="dataOption.typeField !== 'switch'">
           <td class="cursor-pointer" [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row"
             (click)="actionSelectRow(row)">
-            <span class="whitespace-nowrap">
+            <span class="whitespace-nowrap" [ngClass]="dataOption.classTailwind">
               {{ row[dataOption.name] || dataOption.defaultValue | dataTable:dataOption.typeField }}
             </span>
           </td>
         </ng-container>
         <ng-container *ngIf="dataOption.typeField === 'switch'">
-          <td [ngClass]="dataOption.classTailwind" mat-cell *matCellDef="let row">
+          <td  mat-cell *matCellDef="let row">
             <span class="w-full h-full" *ngIf="dataOption.typeField === 'switch'">
               <mat-slide-toggle matTooltip="Cambiar estado" (change)="actionSwitch($event, row)" color="primary"
                 [checked]="row[dataOption.name]" [value]="row[dataOption.name]">

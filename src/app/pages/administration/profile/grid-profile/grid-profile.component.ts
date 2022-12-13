@@ -155,26 +155,29 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ formData, typeAction, profileId }) => {
         if (typeAction === 'add') {
-          this.profileService.postProfile(formData).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-            this.opened = false;
-            this.getProfiles();
-            this.toastAlert.toasAlertSuccess({
-              message: `Perfil ${formData.name} creado con exito.`,
+          this.profileService.postProfile(formData)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+              this.opened = false;
+              this.getProfiles();
+              this.toastAlert.toasAlertSuccess({
+                message: `Perfil ${formData.name} creado con exito.`,
+              });
             });
-          });
         } else if (typeAction === 'edit') {
           if (!this.listPermission[this.permissionValid.updateProfile]) {
             this.toastAlert.toasAlertWarn({
               message: 'No tienes permisos suficientes para realizar esta acción.',
             });
           } else {
-            this.profileService.putProfile(formData, profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-              this.opened = false;
-              this.getProfiles();
-              this.toastAlert.toasAlertSuccess({
-                message: 'Perfil modificado con exito.',
+            this.profileService.putProfile(formData, profileId)
+              .pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+                this.opened = false;
+                this.getProfiles();
+                this.toastAlert.toasAlertSuccess({
+                  message: 'Perfil modificado con exito.',
+                });
               });
-            });
           }
         } else if (typeAction === 'delete') {
           this.deleteProfile(formData.id);

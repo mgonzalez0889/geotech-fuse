@@ -26,6 +26,11 @@ const routes: Routes = [
             m => m.MobilesModule
           ),
       },
+      {
+        path: 'alert',
+        loadChildren: (): Promise<any> =>
+          import('./alert/alert.module').then(m => m.AlertModule)
+      }
     ],
   },
 ];
