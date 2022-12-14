@@ -19,6 +19,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TranslocoModule } from '@ngneat/transloco';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   imports: [
@@ -41,6 +45,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
+    TranslocoModule,
     MatSidenavModule,
     MatTableModule,
     MatTooltipModule,
@@ -56,7 +61,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSlideToggleModule,
     MatDatepickerModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatOptionModule,
+    MatSortModule,
+    MatInputModule,
   ],
 })
 export class SharedModule { }

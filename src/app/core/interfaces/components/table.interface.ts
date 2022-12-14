@@ -4,6 +4,7 @@ export interface IOptionTable {
   typeField: 'text' | 'percentage' | 'date' | 'switch';
   defaultValue?: string;
   classTailwind?: string;
+  color?: (data: any) => string;
 }
 
 export interface IButtonOptions<T> {

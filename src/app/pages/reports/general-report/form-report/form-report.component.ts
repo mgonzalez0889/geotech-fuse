@@ -26,11 +26,11 @@ export class FormReportComponent implements OnInit, OnDestroy {
   public listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
-      text: 'Moviles',
+      text: 'historical.formPage.optionVehiculo',
     },
     {
       name: 'fleet',
-      text: 'Flota',
+      text: 'historical.formPage.optionFleets',
     },
   ];
 

@@ -1,12 +1,14 @@
 import { Subject } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UsersService } from '../../../../core/services/api/users.service';
-import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { takeUntil } from 'rxjs/operators';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { delay, takeUntil } from 'rxjs/operators';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { AuthService } from 'app/core/auth/auth.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { IOptionTable } from '@interface/index';
+import { UsersService } from '@services/api/users.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
+
 @Component({
   selector: 'app-grid-user',
   templateUrl: './grid-user.component.html',
@@ -14,7 +16,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 })
 export class GridUserComponent implements OnInit, OnDestroy {
   public subTitlePage: string = '';
-  public titlePage: string = 'Usuarios';
+  public titlePage: string = '';
   public titleForm: string = '';
   public opened: boolean = false;
   public userData: any[] = [];
@@ -23,28 +25,28 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'user_login',
-      text: 'Usuario',
+      text: 'users.tablePage.username',
       typeField: 'text',
     },
     {
       name: 'full_name',
-      text: 'Nombre',
+      text: 'users.tablePage.fullname',
       typeField: 'text',
     },
     {
       name: 'profile',
-      text: 'Perfil',
+      text: 'users.tablePage.profile',
       typeField: 'text',
     },
     {
       name: 'email',
-      text: 'Correo electrónico',
+      text: 'users.tablePage.email',
       typeField: 'text',
-      classTailwind: 'hover:underline text-primary-500'
+      classTailwind: 'hover:underline text-primary-500',
     },
     {
       name: 'enable_user',
-      text: 'Estado',
+      text: 'users.tablePage.state',
       typeField: 'switch',
     },
   ];
@@ -63,7 +65,8 @@ export class GridUserComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
     private toastAlert: ToastAlertService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -73,6 +76,15 @@ export class GridUserComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((permission) => {
         this.listPermission = permission;
+      });
+
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(100))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData.length } });
+        const { titlePage } = this.translocoService.getTranslation('users');
+        this.titlePage = titlePage;
+        this.subTitlePage = subTitlePage;
       });
   }
 
@@ -92,7 +104,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
       });
     } else {
       this.opened = true;
-      this.titleForm = 'Crear usuario';
+      this.titleForm = 'users.formPage.formNameCreate';
       this.userDataUpdate = null;
     }
   }
@@ -103,7 +115,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public selectUserTable(dataUser: any): void {
     this.userDataUpdate = { ...dataUser };
     this.opened = true;
-    this.titleForm = 'Editar usuario';
+    this.titleForm = 'users.formPage.formNameUpdate';
   }
 
   /**
@@ -150,9 +162,8 @@ export class GridUserComponent implements OnInit, OnDestroy {
       .getUsers()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
-        this.subTitlePage = data
-          ? `${data.length} Usuarios`
-          : 'Sin usuarios';
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: data.length } });
+        this.subTitlePage = subTitlePage;
         this.userData = [...(data || [])];
       });
   }

@@ -1,5 +1,20 @@
 {
-    "welcome-back": "Welcome back",
-    "Project": "Project",
-    "Analytics": "Analytics"
+  "buttons": {
+    "buttonEdit": "Edit",
+    "buttonDelete": "Delete",
+    "buttonSave": "Save",
+    "buttonClose": "Close",
+    "buttonCancel": "Cancel"
+  },
+  "table": {
+    "warningTitle": "Notice",
+    "warningDescription": "Sorry, no data found.",
+    "pagination": {
+      "itemsPerPageLabel": "Items per page:",
+      "firstPageLabel": "Previous page",
+      "previousPageLabel": "Previous page",
+      "nextPageLabel": "Next page",
+      "lastPageLabel": "Last page"
+    }
+  }
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,12 +17,22 @@ export class AppComponent {
   constructor(
     private dateAdapter: DateAdapter<any>,
     private paginatorIntl: MatPaginatorIntl,
+    private translocoService: TranslocoService
   ) {
-    this.dateAdapter.setLocale('es');
-    this.paginatorIntl.itemsPerPageLabel = 'Items por página:';
-    this.paginatorIntl.firstPageLabel = 'Página anterior';
-    this.paginatorIntl.previousPageLabel = 'Pagina anterior';
-    this.paginatorIntl.nextPageLabel = 'Siguiente página';
-    this.paginatorIntl.lastPageLabel = 'Última página';
+    this.dateAdapter.setLocale('en');
+    this.traslatePagination();
+  }
+
+  traslatePagination(): void {
+    this.translocoService.langChanges$
+      .pipe(delay(100))
+      .subscribe(() => {
+        const { pagination, } = this.translocoService.translateObject('table');
+        this.paginatorIntl.itemsPerPageLabel = pagination.itemsPerPageLabel;
+        this.paginatorIntl.firstPageLabel = pagination.firstPageLabel;
+        this.paginatorIntl.previousPageLabel = pagination.previousPageLabel;
+        this.paginatorIntl.nextPageLabel = pagination.lastPageLabel;
+        this.paginatorIntl.lastPageLabel = pagination.nextPageLabel;
+      });
   }
 }

@@ -1,0 +1,33 @@
+{
+  "titlePage": "Users",
+  "subTitlePage": "{{ value }} users",
+  "searchPage": "Search user",
+  "buttonsPage": {
+    "buttonAdd": "Add user"
+  },
+  "tablePage": {
+    "username": "Username",
+    "fullname": "Name",
+    "profile": "Profile",
+    "email": "E-mail address",
+    "state": "State",
+    "switch": "Change state"
+  },
+  "formPage": {
+    "formNameCreate": "Create User",
+    "formNameUpdate": "Edit User",
+    "fieldFullname": "Full name",
+    "fieldUsername": "User name",
+    "fieldProfile": "Select profile",
+    "fieldEmail": "E-mail address",
+    "fieldPassword": "Password",
+    "fieldChangePassword": "¿Change password?",
+    "fieldPasswordConfirm": "Confirm password",
+    "fieldPhone": "Cell phone number",
+    "fieldAddress": "Address",
+    "errorForm": {
+      "validUsername": "User name already exists.",
+      "passwordValid": "Passwords do not match."
+    }
+  }
+}

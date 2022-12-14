@@ -1,0 +1,30 @@
+{
+  "titlePage": "Historical and events",
+  "buttonsPage": {
+    "buttonGenerate": "Generate report",
+    "buttonDowloand": "Dowloand report",
+    "buttonTimeLine": "View time line"
+  },
+  "tablePage": {
+    "plate": "Plate",
+    "date": "Date",
+    "event": "Events",
+    "adrress": "Address",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "speed": "Speed",
+    "battery": "Battery",
+    "viewMap": "View map"
+  },
+  "formPage": {
+    "formNameCreate": "Generate Report",
+    "fieldRangeDate": "Select a date range",
+    "fieldtypeVehiculo": "Search by:",
+    "fieldVehiculos": "Select vehicles",
+    "fieldEvents": "Select events",
+    "fieldFleets": "Select Fleets",
+    "optionVehiculo": "Vehiculos",
+    "optionFleets": "Fleets",
+    "errorForm": {}
+  }
+}

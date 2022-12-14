@@ -1,0 +1,33 @@
+{
+  "titlePage": "Usuarios",
+  "subTitlePage": "{{ value }} usuarios",
+  "searchPage": "Buscar usuario",
+  "buttonsPage": {
+    "buttonAdd": "Agregar usuario"
+  },
+  "tablePage": {
+    "username": "Usuario",
+    "fullname": "Nombre",
+    "profile": "Perfil",
+    "email": "Correo electronico",
+    "state": "Estado",
+    "switch": "Cambiar estado"
+  },
+  "formPage": {
+    "formNameCreate": "Crear Usuario",
+    "formNameUpdate": "Editar Usuario",
+    "fieldFullname": "Nombre completo",
+    "fieldUsername": "Nombre de usuario",
+    "fieldProfile": "Seleccione el perfil",
+    "fieldEmail": "Correo electronico",
+    "fieldPassword": "Contraseña",
+    "fieldChangePassword": "¿Cambiar contraseña?",
+    "fieldPasswordConfirm": "Confirmar contraseña",
+    "fieldPhone": "Numero de celular",
+    "fieldAddress": "Direccion",
+    "errorForm": {
+      "validUsername": "Nombre de usuario ya existe.",
+      "passwordValid": "Las contraseñas no coinciden."
+    }
+  }
+}

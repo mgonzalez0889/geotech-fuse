@@ -3,7 +3,7 @@
 
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button matTooltip="Cerrar" (click)="this.closeForm()">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.closeForm()">
           <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
         </button>
       </div>
@@ -24,19 +24,19 @@
             <div class="flex items-center ml-auto mb-1">
               <button mat-stroked-button (click)="editMode = true">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                <span class="ml-2">Editar</span>
+                <span class="ml-2">{{'buttons.buttonEdit' | transloco}}</span>
               </button>
             </div>
           </div>
-          <div class="mt-3 text-4xl font-bold truncate">{{this.titleForm}}</div>
+          <div class="mt-3 text-4xl font-bold truncate">{{ titleForm | transloco}}</div>
           <div class="flex flex-col mt-4 pt-6 border-t space-y-8" *ngIf="this.dataUpdate">
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Dirección" svgIcon="heroicons_solid:user-circle">
+              <mat-icon [matTooltip]="'users.formPage.fieldFullname' | transloco" svgIcon="heroicons_solid:user-circle">
               </mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['full_name']}}</div>
             </div>
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Correo electrónico" svgIcon="heroicons_outline:mail">
+              <mat-icon [matTooltip]="'users.formPage.fieldEmail' | transloco" svgIcon="heroicons_outline:mail">
               </mat-icon>
               <div class="ml-6 leading-6">
                 <a class="hover:underline text-primary-500" [href]="'mailto:' + dataUpdate['email']" target="_blank">
@@ -45,11 +45,11 @@
               </div>
             </div>
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Celular" svgIcon="heroicons_outline:phone"></mat-icon>
+              <mat-icon [matTooltip]="'users.formPage.fieldPhone' | transloco" svgIcon="heroicons_outline:phone"></mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['phone']}}</div>
             </div>
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Dirección" svgIcon="heroicons_outline:location-marker">
+              <mat-icon [matTooltip]="'users.formPage.fieldAddress' | transloco" svgIcon="heroicons_outline:location-marker">
               </mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['address']}}</div>
             </div>
@@ -60,25 +60,25 @@
           <form [formGroup]="this.formUser" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 pt-6">
 
             <mat-form-field class="w-full fuse-mat-dense">
-              <mat-label>Nombre completo</mat-label>
+              <mat-label>{{'users.formPage.fieldFullname' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user-circle"></mat-icon>
-              <input type="text" matInput placeholder="Nombre completo" formControlName="full_name">
+              <input type="text" matInput [placeholder]="'users.formPage.fieldFullname' | transloco" formControlName="full_name">
             </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
-              <mat-label>Nombre de usuario</mat-label>
+              <mat-label>{{'users.formPage.fieldUsername' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user"></mat-icon>
-              <input type="text" placeholder="Nombre de usuario" matInput formControlName="user_login">
+              <input type="text" [placeholder]="'users.formPage.fieldUsername' | transloco" matInput formControlName="user_login">
 
               <mat-error *ngIf="this.validUsername">
-                Este nombre de usuario ya existe
+                {{'users.formPage.errorForm.validUsername' | transloco}}
               </mat-error>
             </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
-              <mat-label>Perfil</mat-label>
+              <mat-label>{{'users.formPage.fieldProfile' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="mat_outline:verified_user"></mat-icon>
-              <mat-select formControlName="user_profile_id" placeholder="Seleccione su perfil">
+              <mat-select formControlName="user_profile_id" [placeholder]="'users.formPage.fieldProfile' | transloco">
                 <mat-option *ngFor="let item of (profile$ | async)" [value]="item.id">
                   {{item.name}}
                 </mat-option>
@@ -86,7 +86,7 @@
             </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
-              <mat-label>Correo electrónico</mat-label>
+              <mat-label>{{'users.formPage.fieldEmail' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:mail">
               </mat-icon>
               <input matInput formControlName="email" placeholder="example@gmail.com">
@@ -94,14 +94,14 @@
 
             <ng-container *ngIf="this.dataUpdate">
               <div class="flex gap-6">
-                <mat-label>¿Cambiar contraseña?</mat-label>
+                <mat-label>{{'users.formPage.fieldChangePassword' | transloco}}</mat-label>
                 <mat-slide-toggle formControlName="change_password" color="primary">
                 </mat-slide-toggle>
               </div>
             </ng-container>
 
             <mat-form-field *ngIf="!this.dataUpdate || valueControlChangePassword" class="w-full fuse-mat-dense">
-              <mat-label>Contraseña</mat-label>
+              <mat-label>{{'users.formPage.fieldPassword' | transloco}}</mat-label>
               <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="password_digest">
               <mat-icon class="cursor-pointer" matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ?
                 'visibility_off' :
@@ -109,22 +109,22 @@
             </mat-form-field>
 
             <mat-form-field *ngIf="!this.dataUpdate || valueControlChangePassword" class="w-full fuse-mat-dense">
-              <mat-label>Confirmar contraseña</mat-label>
+              <mat-label>{{'users.formPage.fieldPasswordConfirm' | transloco}}</mat-label>
               <input matInput [type]="hidePasswordConfirm ? 'text' : 'password'" formControlName="confirm_password">
               <mat-icon class="cursor-pointer" matSuffix (click)="hidePasswordConfirm = !hidePasswordConfirm">
                 {{hidePasswordConfirm ?
                 'visibility_off' :
                 'visibility'}}</mat-icon>
               <mat-error *ngIf="errorMustMatch">
-                La contraseña no coincide
+               {{'users.formPage.errorForm.passwordValid' | transloco}}
               </mat-error>
             </mat-form-field>
 
 
             <mat-form-field class="w-full fuse-mat-dense">
-              <mat-label>Celular</mat-label>
-              <input matInput [formControlName]="'phone'" [placeholder]="'Celular'" type="number">
-              <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
+              <mat-label>{{'users.formPage.fieldPhone' | transloco}}</mat-label>
+              <input matInput formControlName="phone" [placeholder]="'users.formPage.fieldPhone' | transloco" type="number">
+              <mat-select class="mr-1.5" formControlName="indicative" matPrefix>
                 <mat-select-trigger>
                   <span class="flex items-center">
                     <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
@@ -149,24 +149,23 @@
             </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
-              <mat-label>Dirección</mat-label>
+              <mat-label>{{'users.formPage.fieldAddress' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:location-marker">
               </mat-icon>
-              <input matInput formControlName="address" placeholder="Dirección">
+              <input matInput formControlName="address" [placeholder]="'users.formPage.fieldAddress' | transloco">
             </mat-form-field>
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-              <button type="button" *ngIf="this.dataUpdate" mat-button color="warn" matTooltip="Eliminar"
+              <button type="button" *ngIf="this.dataUpdate" mat-button color="warn"
                 (click)="this.deleteUser()">
-                Eliminar
+                {{'buttons.buttonDelete' | transloco}}
               </button>
 
-              <button type="button" class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
-                Cancelar
+              <button type="button" class="ml-auto" mat-button (click)="this.editMode = false">
+                {{'buttons.buttonCancel' | transloco}}
               </button>
 
-              <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formUser.invalid"
-                matTooltip="Guardar">
-                Guardar
+              <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formUser.invalid">
+                {{'buttons.buttonSave' | transloco}}
               </button>
             </div>
           </form>
