@@ -1,4 +1,6 @@
 {
+  "search": "Search",
+  "selectAll": "Select all",
   "buttons": {
     "buttonEdit": "Edit",
     "buttonDelete": "Delete",

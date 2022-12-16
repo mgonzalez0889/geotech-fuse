@@ -1,0 +1,31 @@
+{
+  "titlePage": "Profile Management",
+  "subTitlePage": "{{ value }} profiles",
+  "searchPage": "Search profile",
+  "buttonsPage": {
+    "buttonAdd": "Add profile"
+  },
+  "tablePage": {
+    "name": "Name",
+    "description": "Description"
+  },
+  "formPage": {
+    "formNameCreate": "Create Profile",
+    "formNameUpdate": "Edit Profile",
+    "fieldName": "Name",
+    "fieldDescription": "Description",
+    "fieldtypeVehiculo": "Search by:",
+    "optionVehiculo": "Vehiculos",
+    "optionFleets": "Fleets",
+    "fieldEvents": "Select events",
+    "fieldFleets": "Seleccione fleets",
+    "availableModules": "Available Modules",
+    "assignedModules": "Assigned Modules",
+    "optionsPermission": {
+      "create": "create",
+      "update": "update",
+      "delete": "delete"
+    },
+    "errorForm": {}
+  }
+}

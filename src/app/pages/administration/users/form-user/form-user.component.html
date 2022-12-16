@@ -45,11 +45,13 @@
               </div>
             </div>
             <div class="flex sm:items-center">
-              <mat-icon [matTooltip]="'users.formPage.fieldPhone' | transloco" svgIcon="heroicons_outline:phone"></mat-icon>
+              <mat-icon [matTooltip]="'users.formPage.fieldPhone' | transloco"
+                svgIcon="heroicons_outline:phone"></mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['phone']}}</div>
             </div>
             <div class="flex sm:items-center">
-              <mat-icon [matTooltip]="'users.formPage.fieldAddress' | transloco" svgIcon="heroicons_outline:location-marker">
+              <mat-icon [matTooltip]="'users.formPage.fieldAddress' | transloco"
+                svgIcon="heroicons_outline:location-marker">
               </mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['address']}}</div>
             </div>
@@ -62,13 +64,15 @@
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>{{'users.formPage.fieldFullname' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user-circle"></mat-icon>
-              <input type="text" matInput [placeholder]="'users.formPage.fieldFullname' | transloco" formControlName="full_name">
+              <input type="text" matInput [placeholder]="'users.formPage.fieldFullname' | transloco"
+                formControlName="full_name">
             </mat-form-field>
 
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>{{'users.formPage.fieldUsername' | transloco}}</mat-label>
               <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user"></mat-icon>
-              <input type="text" [placeholder]="'users.formPage.fieldUsername' | transloco" matInput formControlName="user_login">
+              <input type="text" [placeholder]="'users.formPage.fieldUsername' | transloco" matInput
+                formControlName="user_login">
 
               <mat-error *ngIf="this.validUsername">
                 {{'users.formPage.errorForm.validUsername' | transloco}}
@@ -116,21 +120,24 @@
                 'visibility_off' :
                 'visibility'}}</mat-icon>
               <mat-error *ngIf="errorMustMatch">
-               {{'users.formPage.errorForm.passwordValid' | transloco}}
+                {{'users.formPage.errorForm.passwordValid' | transloco}}
               </mat-error>
             </mat-form-field>
 
 
             <mat-form-field class="w-full fuse-mat-dense">
               <mat-label>{{'users.formPage.fieldPhone' | transloco}}</mat-label>
-              <input matInput formControlName="phone" [placeholder]="'users.formPage.fieldPhone' | transloco" type="number">
+              <input matInput formControlName="phone" [placeholder]="'users.formPage.fieldPhone' | transloco"
+                type="number">
               <mat-select class="mr-1.5" formControlName="indicative" matPrefix>
                 <mat-select-trigger>
                   <span class="flex items-center">
                     <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
                       [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
-                      [style.backgroundSize]="'24px 3876px'" [style.backgroundPosition]="this.countrieFlag.flagImagePos"></span>
-                    <span class="sm:mx-0.5 font-medium text-default">{{this.formUser.controls['indicative'].value}}</span>
+                      [style.backgroundSize]="'24px 3876px'"
+                      [style.backgroundPosition]="this.countrieFlag.flagImagePos"></span>
+                    <span
+                      class="sm:mx-0.5 font-medium text-default">{{this.formUser.controls['indicative'].value}}</span>
                   </span>
                 </mat-select-trigger>
                 <ng-container *ngFor="let country of countries">
@@ -155,8 +162,7 @@
               <input matInput formControlName="address" [placeholder]="'users.formPage.fieldAddress' | transloco">
             </mat-form-field>
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-              <button type="button" *ngIf="this.dataUpdate" mat-button color="warn"
-                (click)="this.deleteUser()">
+              <button type="button" *ngIf="this.dataUpdate" mat-button color="warn" (click)="this.deleteUser()">
                 {{'buttons.buttonDelete' | transloco}}
               </button>
 

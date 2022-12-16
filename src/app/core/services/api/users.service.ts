@@ -27,6 +27,11 @@ export class UsersService {
     return this._http.put(`${this._appSettings.user.url.base}/${userId}`, { enable_user }, { params });
   }
 
+  public setLocate(): Observable<any> {
+    const params = { method: 'set_locate', language: 'es' };
+    return this._http.put(this._appSettings.user.url.base, { params });
+  }
+
   /**
    * @description: Todos los usuarios
    */

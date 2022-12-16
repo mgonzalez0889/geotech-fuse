@@ -16,7 +16,6 @@ import { ConfirmationService } from '@services/confirmation/confirmation.service
 })
 export class GridUserComponent implements OnInit, OnDestroy {
   public subTitlePage: string = '';
-  public titlePage: string = '';
   public titleForm: string = '';
   public opened: boolean = false;
   public userData: any[] = [];
@@ -82,8 +81,6 @@ export class GridUserComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$), delay(100))
       .subscribe(() => {
         const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData.length } });
-        const { titlePage } = this.translocoService.getTranslation('users');
-        this.titlePage = titlePage;
         this.subTitlePage = subTitlePage;
       });
   }

@@ -1,4 +1,6 @@
 {
+  "search": "Buscar",
+  "selectAll": "Seleccionar todos",
   "buttons": {
     "buttonEdit": "Editar",
     "buttonDelete": "Eliminar",

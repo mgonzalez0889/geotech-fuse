@@ -23,6 +23,9 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -65,6 +68,9 @@ import { MatInputModule } from '@angular/material/input';
     MatOptionModule,
     MatSortModule,
     MatInputModule,
+    MatExpansionModule,
+    DragDropModule,
+    CdkAccordionModule
   ],
 })
 export class SharedModule { }

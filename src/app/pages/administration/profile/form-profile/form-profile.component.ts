@@ -48,11 +48,11 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   public listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
-      text: 'Moviles',
+      text: 'profile.formPage.optionVehiculo',
     },
     {
       name: 'fleet',
-      text: 'Flota',
+      text: 'profile.formPage.optionFleets',
     },
   ];
   private unsubscribe$ = new Subject<void>();

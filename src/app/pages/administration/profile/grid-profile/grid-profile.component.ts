@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProfilesService } from 'app/core/services/api/profiles.service';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { NgxPermissionsService } from 'ngx-permissions';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
-import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
+import { IOptionTable } from '@interface/index';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay, map, takeUntil } from 'rxjs/operators';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ProfilesService } from '@services/api/profiles.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-grid-profile',
@@ -13,9 +14,8 @@ import { ToastAlertService } from '../../../../core/services/toast-alert/toast-a
   styleUrls: ['./grid-profile.component.scss'],
 })
 export class GridProfileComponent implements OnInit, OnDestroy {
-  public titlePage: string = 'Gestion de perfiles';
   public titleForm: string = '';
-  public subTitlepage: string = '';
+  public subTitlePage: string = '';
   public opened: boolean = false;
   public dataFilter: string = '';
   public profileDataUpdate: any = null;
@@ -25,12 +25,12 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'name',
-      text: 'Nombre',
+      text: 'profile.tablePage.name',
       typeField: 'text',
     },
     {
       name: 'description',
-      text: 'Descripción',
+      text: 'profile.tablePage.description',
       typeField: 'text',
     },
   ];
@@ -45,7 +45,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     private permissionsService: NgxPermissionsService,
     private confirmationService: ConfirmationService,
     private profileService: ProfilesService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +57,13 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.listPermission = data ?? [];
+      });
+
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(100))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: this.profileData.length } });
+        this.subTitlePage = subTitlePage;
       });
   }
 
@@ -82,7 +90,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       });
     } else {
       this.opened = true;
-      this.titleForm = 'Crear Perfil';
+      this.titleForm = 'profile.formPage.formNameCreate';
       this.profileDataUpdate = null;
     }
   }
@@ -93,7 +101,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public actionSelectTable(data: any): void {
     this.opened = true;
     this.profileDataUpdate = { ...data };
-    this.titleForm = 'Editar perfil';
+    this.titleForm = 'profile.formPage.formNameUpdate';
   }
 
   /**
@@ -113,10 +121,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((profileData) => {
-        this.subTitlepage = profileData
-          ? `${profileData.length} perfiles`
-          : 'Sin perfiles';
-
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: profileData.length } });
+        this.subTitlePage = subTitlePage;
         this.profileData = profileData || [];
       });
   }

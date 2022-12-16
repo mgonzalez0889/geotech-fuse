@@ -1,4 +1,4 @@
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { delay, filter, takeUntil } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DowloadTools } from '../../../../core/tools/dowload.tool';
@@ -12,7 +12,6 @@ import { TranslocoService } from '@ngneat/transloco';
   styleUrls: ['./grid-report.component.scss'],
 })
 export class GridReportComponent implements OnInit, OnDestroy {
-  public titlePage: string = '';
   public historicData: any[] = [];
   public dataSendTimeLine: any;
   public opened: boolean = false;
@@ -82,19 +81,10 @@ export class GridReportComponent implements OnInit, OnDestroy {
   constructor(
     private dowloadTools: DowloadTools,
     private _historicService: HistoriesService,
-    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
     this.listenObservablesReport();
-
-    this.translocoService.langChanges$
-      .pipe(takeUntil(this.unsubscribe$), delay(100))
-      .subscribe(() => {
-        const { titlePage } = this.translocoService.getTranslation('historical');
-        this.titlePage = titlePage;
-      });
-
   }
 
   ngOnDestroy(): void {

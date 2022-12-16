@@ -46,19 +46,19 @@
           </div>
 
           <div *ngIf="selectTrasport === 'mobiles'">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldVehiculos' | transloco"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldVehiculos'"
               [options]="{data:this.plates, key:'plate', keyView:'plate'}" labelControl="plates">
             </app-multi-select-filter>
           </div>
 
           <div *ngIf="selectTrasport === 'fleet'">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldFleets' | transloco"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldFleets'"
               [options]="{data:this.fleets, key:'id', keyView:'name'}" labelControl="fleets">
             </app-multi-select-filter>
           </div>
 
           <div class="mt-3">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldEvents' | transloco"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldEvents'"
               [options]="{data:this.events, key:'event_id', keyView:'event_name'}" labelControl="events">
             </app-multi-select-filter>
           </div>
