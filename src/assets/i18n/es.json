@@ -6,7 +6,9 @@
     "buttonDelete": "Eliminar",
     "buttonSave": "Guardar",
     "buttonCancel": "Cancelar",
-    "buttonClose": "Cerrar"
+    "buttonClose": "Cerrar",
+    "buttonAdd": "Agregar",
+    "buttonImport": "Importar"
   },
   "table": {
     "warningTitle": "Aviso",

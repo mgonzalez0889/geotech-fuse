@@ -1,0 +1,31 @@
+{
+  "vehicles": "Vehicles",
+  "viewCluster": "View cluster",
+  "viewLabel": "View label",
+  "panelMain": {
+    "optionVehicles": "Vehicles",
+    "optionFleets": "Fleets",
+    "selectAll": "All",
+    "notAssingVehicles": "You have no assigned vehicles.",
+    "notAssingFleet": "You have no assigned fleets.",
+    "icons": {
+      "iconTextOpen": "Open",
+      "iconTextClose": "Close",
+      "iconTextOff": "Off",
+      "iconTextOn": "On"
+    }
+  },
+  "panelGeotools": {
+    "routeTitle": "Routes",
+    "zoneTitle": "Zones",
+    "pointControlTitle": "Points Control",
+    "mapaTitle": "Maps",
+    "form": {
+      "new": "New",
+      "code": "Code",
+      "name": "Name",
+      "color": "Color",
+      "description": "Description"
+    }
+  }
+}

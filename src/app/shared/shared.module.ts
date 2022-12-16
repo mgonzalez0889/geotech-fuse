@@ -26,6 +26,9 @@ import { MatInputModule } from '@angular/material/input';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FuseDrawerModule } from '@fuse/components/drawer';
 
 @NgModule({
   imports: [
@@ -70,7 +73,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatInputModule,
     MatExpansionModule,
     DragDropModule,
-    CdkAccordionModule
+    CdkAccordionModule,
+    MatTabsModule,
+    MatButtonToggleModule,
+    MatDialogModule,
+    FuseDrawerModule
   ],
 })
 export class SharedModule { }

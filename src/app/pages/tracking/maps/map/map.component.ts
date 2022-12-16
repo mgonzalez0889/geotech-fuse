@@ -20,34 +20,34 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   public optionsMap: OptionsMap[] = [
     {
       icon: 'route-map',
-      text: 'Rutas',
+      text: 'map.panelGeotools.routeTitle',
       actionClick: (): void => {
         this.selectOption = 'Rutas';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Rutas', typePanel: 'routes' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'map.panelGeotools.routeTitle', typePanel: 'routes' });
       },
     },
     {
       icon: 'zone-map',
-      text: 'Zonas',
+      text: 'map.panelGeotools.zoneTitle',
       actionClick: (): void => {
         this.selectOption = 'Zonas';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Zonas', typePanel: 'zones' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'map.panelGeotools.zoneTitle', typePanel: 'zones' });
       },
     },
     {
-      text: 'Puntos',
+      text: 'map.panelGeotools.pointControlTitle',
       icon: 'point-map',
       actionClick: (): void => {
         this.selectOption = 'Puntos';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'map.panelGeotools.pointControlTitle', typePanel: 'punts' });
       },
     },
     {
-      text: 'Mapas',
+      text: 'map.panelGeotools.mapaTitle',
       icon: 'map',
       actionClick: (): void => {
         this.selectOption = 'Mapas';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
+        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'map.panelGeotools.mapaTitle', typePanel: 'owner_maps' });
       },
     },
   ];

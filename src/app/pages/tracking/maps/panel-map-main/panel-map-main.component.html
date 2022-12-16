@@ -9,12 +9,12 @@
     </div>
 
     <mat-tab-group *ngIf="drawer.opened">
-      <mat-tab label="Mobiles">
+      <mat-tab [label]="'map.panelMain.optionVehicles' | transloco">
         <div class="flex justify-between gap-3">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-select [(ngModel)]="typeServiceId" placeholder="Tipo Servicio"
+            <mat-select [(ngModel)]="typeServiceId"
               (selectionChange)="filterForTypeService($event)">
-              <mat-option [value]="0">Todos</mat-option>
+              <mat-option [value]="0">{{'map.panelMain.selectAll' | transloco}}</mat-option>
               <mat-option [value]="typeService.classMobileId" *ngFor="let typeService of typeServices">
                 {{typeService.classMobileName}}
               </mat-option>
@@ -23,7 +23,7 @@
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-icon matPrefix class="icon-size-5 " svgIcon="heroicons_solid:search"></mat-icon>
-            <input matInput placeholder="Buscar" (keyup)="applyFilter($event)">
+            <input matInput [placeholder]="'search'" (keyup)="applyFilter($event)">
           </mat-form-field>
         </div>
 
@@ -92,7 +92,7 @@
 
           <ng-container *ngIf="!mobileData.length">
             <div class="w-full h-20 bg-card border-2 flex justify-center items-center">
-              <p class="text-lg font-normal">No tienes placas asignadas.</p>
+              <p class="text-lg font-normal">{{'map.panelMain.notAssingVehicles' | transloco}}</p>
             </div>
           </ng-container>
 
@@ -100,7 +100,7 @@
 
       </mat-tab>
 
-      <mat-tab label="Flotas">
+      <mat-tab [label]="'map.panelMain.optionFleets' | transloco">
 
         <div class="flex flex-wrap">
           <mat-form-field class="fuse-mat-dense w-full">
@@ -128,7 +128,7 @@
 
           <ng-container *ngIf="!fleets.length">
             <div class="w-full h-20 bg-card border-2 flex justify-center items-center">
-              <p class="text-lg font-normal">No tienes flotas asignadas.</p>
+              <p class="text-lg font-normal">{{'map.panelMain.notAssingFleet' | transloco}}</p>
             </div>
           </ng-container>
 
@@ -146,7 +146,7 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <button class="bg-white py-1 px-2 shadow-sm rounded" matTooltip="Vehiculos" type="button" *ngIf="!drawer.opened"
+    <button class="bg-white py-1 px-2 shadow-sm rounded" [matTooltip]="'map.vehicles' | transloco" type="button" *ngIf="!drawer.opened"
       (click)="drawer.toggle()">
       <mat-icon class="self-center" svgIcon="mat_outline:arrow_forward"></mat-icon>
     </button>

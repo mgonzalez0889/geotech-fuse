@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
 import moment from 'moment';
 import { IDateValidate } from '../interfaces/other/date.interface';
 import { ToastAlertService } from '../services/toast-alert/toast-alert.service';
@@ -10,8 +11,10 @@ type DateFormatValidate = { converDateEnd: string; converDateInit: string };
 })
 export class DateTools {
 
-  constructor(private toastAlert: ToastAlertService) {
-    moment.locale('es');
+  constructor(private toastAlert: ToastAlertService) { }
+
+  set setLocale(locale: any) {
+    moment.locale(locale);
   }
 
   public convertDate(date: Date | string): string {

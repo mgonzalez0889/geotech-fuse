@@ -4,9 +4,9 @@
     <div class="w-full h-full py-2 px-3 bg-white flex flex-col gap-2">
       <div class="flex items-center justify-between border-b-2">
         <h2 class="text-xl font-semibold tracking-tight leading-6">
-          {{this.titlePanel}}
+          {{this.titlePanel | transloco}}
         </h2>
-        <button mat-icon-button matTooltip="Cerrar" matTooltipPosition="left"
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" matTooltipPosition="left"
           (click)="openedDrawer = false; this.typePanel='none';">
           <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
         </button>
@@ -15,17 +15,17 @@
       <div>
         <div class="flex justify-between gap-3">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-icon matPrefix class="icon-size-5 " svgIcon="heroicons_solid:search"></mat-icon>
-            <input matInput placeholder="Buscar" (keyup)="applyFilter($event)">
+            <mat-icon matPrefix class="icon-size-5" svgIcon="heroicons_solid:search"></mat-icon>
+            <input matInput [placeholder]="'search' | transloco" (keyup)="applyFilter($event)">
           </mat-form-field>
 
           <div class="w-auto flex gap-1">
-            <button mat-mini-fab matTooltip="Importar" *ngIf="typePanel === 'punts' || typePanel === 'owner_maps'"
+            <button mat-mini-fab [matTooltip]="'buttons.buttonImport' | transloco" *ngIf="typePanel === 'punts' || typePanel === 'owner_maps'"
               style="background: transparent !important; color:rgba(26, 25, 25, 0.548) !important"
               (click)="this.openModalImportGeojson()">
               <mat-icon svgIcon="mat_solid:import_export"></mat-icon>
             </button>
-            <button mat-mini-fab matTooltip="Agregar" color="accent" (click)="actionAdd()"
+            <button mat-mini-fab [matTooltip]="'buttons.buttonAdd' | transloco" color="accent" (click)="actionAdd()"
               *ngIf="typePanel !== 'owner_maps'">
               <mat-icon svgIcon="mat_outline:add"></mat-icon>
             </button>
@@ -62,7 +62,7 @@
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell class="w-5" *matCellDef="let row;">
-                <button matTooltip="Eliminar" color="warn" mat-icon-button (click)="deleteGeo(row.id)">
+                <button [matTooltip]="'buttons.buttonDelete' | transloco" color="warn" mat-icon-button (click)="deleteGeo(row.id)">
                   <mat-icon svgIcon="mat_solid:delete"></mat-icon>
                 </button>
               </td>
@@ -73,7 +73,7 @@
               <td mat-cell class="w-5" *matCellDef="let row;">
                 <ng-container *ngIf="this.typePanel !== 'owner_maps'">
 
-                  <button matTooltip="Editar" color="accent" mat-icon-button (click)="actionEdit(row)">
+                  <button [matTooltip]="'buttons.buttonEdit' | transloco" color="accent" mat-icon-button (click)="actionEdit(row)">
                     <mat-icon svgIcon="mat_solid:edit"></mat-icon>
                   </button>
                 </ng-container>
