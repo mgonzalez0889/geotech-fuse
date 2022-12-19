@@ -1,12 +1,9 @@
 import { Subscription } from 'rxjs';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HistoriesService } from '../../../../core/services/api/histories.service';
-import { IButtonOptions } from '../../../../core/interfaces/components/table.interface';
-import {
-  IOptionTable,
-} from '../../../../core/interfaces/components/table.interface';
 import { filter } from 'rxjs/operators';
-import { DowloadTools } from 'app/core/tools/dowload.tool';
+import { DowloadTools } from '@tools/dowload.tool';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { IButtonOptions, IOptionTable } from '@interface/index';
+import { HistoriesService } from '@services/api/histories.service';
 
 @Component({
   selector: 'app-grid-report',
@@ -14,7 +11,6 @@ import { DowloadTools } from 'app/core/tools/dowload.tool';
   styleUrls: ['./grid-report.component.scss'],
 })
 export class GridReportComponent implements OnInit, OnDestroy {
-  public titlePage: string = 'Consolidado de viajes';
   public consolidatorData: any[] = [];
   public tripsReportData: any[] = [];
   public tableData: any[] = [];
@@ -26,7 +22,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
 
   public buttonTableOption: IButtonOptions<any> = {
     icon: 'heroicons_solid:eye',
-    text: 'ver detalle',
+    text: 'consolidator.tablePage.viewMap',
     action: (data) => {
       this.detailDataReport = data;
       this.optionsTable = [...this.optionsTableTrips];
@@ -40,47 +36,47 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public optionsTableReport: IOptionTable[] = [
     {
       name: 'plate',
-      text: 'Placa',
+      text: 'consolidator.tablePage.plate',
       typeField: 'text',
     },
     {
       name: 'fecha_inicial',
-      text: 'Fecha inicial',
+      text: 'consolidator.tablePage.dateInit',
       typeField: 'date',
     },
     {
       name: 'fecha_final',
-      text: 'Fecha final',
+      text: 'consolidator.tablePage.dateEnd',
       typeField: 'date',
     },
     {
       name: 'direccion_inicial',
-      text: 'Dirección Inicial',
+      text: 'consolidator.tablePage.addressInitial',
       typeField: 'text',
     },
     {
       name: 'direccion_final',
-      text: 'Dirección Final',
+      text: 'consolidator.tablePage.addressEnd',
       typeField: 'text',
     },
     {
       name: 'viajes',
-      text: 'N° de Viajes',
+      text: 'consolidator.tablePage.cantTravel',
       typeField: 'text',
     },
     {
       name: 'tiempo',
-      text: 'Tiempo de viajes',
+      text: 'consolidator.tablePage.timeTravel',
       typeField: 'text',
     },
     {
       name: 'paradas',
-      text: 'N° de paradas',
+      text: 'consolidator.tablePage.cantStop',
       typeField: 'text',
     },
     {
       name: 'paradas_tiempo',
-      text: 'Tiempo de paradas',
+      text: 'consolidator.tablePage.timeStop',
       typeField: 'text',
     },
   ];
@@ -88,32 +84,32 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public optionsTableTrips: IOptionTable[] = [
     {
       name: 'plate',
-      text: 'Placa',
+      text: 'consolidator.tablePage.plate',
       typeField: 'text',
     },
     {
       name: 'fecha_inicial',
-      text: 'Fecha inicial',
+      text: 'consolidator.tablePage.dateInit',
       typeField: 'date',
     },
     {
       name: 'fecha_final',
-      text: 'Fecha final',
+      text: 'consolidator.tablePage.dateEnd',
       typeField: 'date',
     },
     {
       name: 'direccion_inicial',
-      text: 'Dirección Inicial',
+      text: 'consolidator.tablePage.addressInitial',
       typeField: 'text',
     },
     {
       name: 'direccion_final',
-      text: 'Dirección Final',
+      text: 'consolidator.tablePage.addressEnd',
       typeField: 'text',
     },
     {
       name: 'tiempo',
-      text: 'Tiempo de viajes',
+      text: 'consolidator.tablePage.timeTravel',
       typeField: 'text',
     },
   ];

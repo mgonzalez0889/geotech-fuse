@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslocoService } from '@ngneat/transloco';
+import moment from 'moment';
 import { delay } from 'rxjs/operators';
-import { DateTools } from './core/tools/date.tool';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +19,7 @@ export class AppComponent {
     private dateAdapter: DateAdapter<any>,
     private paginatorIntl: MatPaginatorIntl,
     private translocoService: TranslocoService,
-    private dateTool: DateTools
   ) {
-    this.dateAdapter.setLocale('en');
     this.traslatePagination();
   }
 
@@ -29,7 +27,8 @@ export class AppComponent {
     this.translocoService.langChanges$
       .pipe(delay(100))
       .subscribe((locale) => {
-        // this.dateTool.setLocale('a');
+        this.dateAdapter.setLocale(locale);
+        moment.locale(locale);
         const { pagination, } = this.translocoService.translateObject('table');
         this.paginatorIntl.itemsPerPageLabel = pagination.itemsPerPageLabel;
         this.paginatorIntl.firstPageLabel = pagination.firstPageLabel;

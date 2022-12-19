@@ -7,13 +7,7 @@
     "optionFleets": "Flotas",
     "selectAll": "Todos",
     "notAssingVehicles": "No tienes vehiculos asignados.",
-    "notAssingFleet": "No tienes flotas asignadas.",
-    "icons": {
-      "iconTextOpen": "Abierto",
-      "iconTextClose": "Cerrado",
-      "iconTextOff": "Apagado",
-      "iconTextOn": "Encendido"
-    }
+    "notAssingFleet": "No tienes flotas asignadas."
   },
   "panelGeotools": {
     "routeTitle": "Rutas",
@@ -27,5 +21,21 @@
       "color": "Color",
       "description": "Descripcion"
     }
+  },
+  "icons": {
+    "iconTextOpen": "Abierto",
+    "iconTextClose": "Cerrado",
+    "iconTextOff": "Apagado",
+    "iconTextOn": "Encendido",
+    "iconTextReport": "Sin reportar"
+  },
+  "popup": {
+    "lastTransmission": "Ultima transmision",
+    "speed": "Velocidad",
+    "lastPosition": "Ultima Posicion",
+    "driver": "Conductor",
+    "notDriver": "sin conductor",
+    "spreadsheet": "Planilla",
+    "notSpreadsheet": "sin planilla"
   }
 }

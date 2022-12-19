@@ -1,0 +1,35 @@
+{
+  "titlePage": "Consolidado de viajes",
+  "buttonsPage": {
+    "buttonGenerate": "Generar consolidado",
+    "buttonDowloand": "Descargar consolidado"
+  },
+  "tablePage": {
+    "plate": "Placa",
+    "dateInit": "Fecha inical",
+    "dateEnd": "Fecha final",
+    "addressInitial": "Direccion inicial",
+    "addressEnd": "Direccion final",
+    "cantTravel": "N° de Viajes",
+    "timeTravel": "Tiempo de viajes",
+    "cantStop": "N° de paradas",
+    "timeStop": "Tiempo de paradas",
+    "viewMap": "Ver detalle"
+  },
+  "formPage": {
+    "formNameCreate": "Generar Consolidado",
+    "fieldRangeDate": "Seleccione un rango de fecha",
+    "fieldVehiculos": "Seleccione vehiculos",
+    "errorForm": {}
+  },
+  "datail": {
+    "odometer": "odometro",
+    "horometro": "horometro",
+    "ralenti": "ralenti",
+    "fuel": "Combustible",
+    "averageOdometer": "Promedio de odometro",
+    "averageHorometro": "Promedio de horometro",
+    "averageRalenti": "Promedio de ralentí",
+    "averageFuel": "Promedio de combustible"
+  }
+}

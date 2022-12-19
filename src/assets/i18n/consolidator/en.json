@@ -1,0 +1,36 @@
+{
+  "titlePage": "Travel consolidation",
+  "buttonsPage": {
+    "buttonGenerate": "Generate consolidator",
+    "buttonDowloand": "Dowloand consolidator"
+  },
+  "tablePage": {
+    "plate": "Plate",
+    "dateInit": "Initial date",
+    "dateEnd": "End date",
+    "event": "Event",
+    "addressInitial": "Initial address",
+    "addressEnd": "End address",
+    "cantTravel": "N° of trips",
+    "timeTravel": "Travel time",
+    "cantStop": "N° of stops",
+    "timeStop": "Stopping time",
+    "viewMap": "View detail"
+  },
+  "formPage": {
+    "formNameCreate": "Generate consolidator",
+    "fieldRangeDate": "Select a date range",
+    "fieldVehiculos": "Select vehicles",
+    "errorForm": {}
+  },
+  "datail": {
+    "odometer": "odometer",
+    "horometro": "horometro",
+    "ralenti": "ralenti",
+    "fuel": "fuel",
+    "averageOdometer": "average odometer",
+    "averageHorometro": "average horometro",
+    "averageRalenti": "average ralenti",
+    "averageFuel": "average fuel"
+  }
+}

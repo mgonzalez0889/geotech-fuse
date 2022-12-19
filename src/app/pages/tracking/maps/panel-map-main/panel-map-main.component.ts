@@ -2,12 +2,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { IMobiles } from '@interface/index';
+import { FleetsService } from '@services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { DateTools } from '@tools/date.tool';
 import { IconsModule } from 'app/core/icons/icons.module';
-import { IMobiles } from 'app/core/interfaces/other/mobiles.interface';
-import { FleetsService } from 'app/core/services/api/fleets.service';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { MobileService } from 'app/core/services/api/mobile.service';
-import { DateTools } from 'app/core/tools/date.tool';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FormReportMapComponent } from '../form-report-map/form-report-map.component';
@@ -97,6 +97,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       this.mapService.clearMap();
       this.mapService.setMarkers(this.selectPlates, true);
     }
+
     if (this.mapService.compRef) { this.mapService.compRef.destroy(); };
   }
 

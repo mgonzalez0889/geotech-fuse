@@ -3,9 +3,9 @@
   <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
     <table mat-table [dataSource]="this.dataSource" matSort class="w-full">
       <ng-container [matColumnDef]="dataOption.name" *ngFor="let dataOption of this.dataOptionTable">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text | transloco}} </th>
+        <th class="pl-2" mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text | transloco}} </th>
         <ng-container *ngIf="dataOption.typeField !== 'switch'">
-          <td class="cursor-pointer" mat-cell *matCellDef="let row" (click)="actionSelectRow(row)">
+          <td class="cursor-pointer pl-2" mat-cell *matCellDef="let row" (click)="actionSelectRow(row)">
             <span *ngIf="!!!dataOption['color']" class="whitespace-nowrap" [ngClass]="dataOption.classTailwind">
               {{ row[dataOption.name] || dataOption.defaultValue | dataTable:dataOption.typeField }}
             </span>

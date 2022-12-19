@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/naming-convention */
 import * as L from 'leaflet';
 import moment from 'moment';
 import 'leaflet.markercluster';
@@ -11,7 +10,7 @@ import 'leaflet-hotline';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PopupMapComponent } from '../../../pages/tracking/maps/popup-map/popup-map.component';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
-import { IOptionPanelGeotools, IOptionPanelMap } from 'app/core/interfaces/services/map.interface';
+import { IOptionPanelGeotools, IOptionPanelMap } from '@interface/index';
 
 @Injectable({
   providedIn: 'root',
@@ -84,6 +83,7 @@ export class MapToolsService {
       GoogleHybrid,
       OpenStreetMap
     };
+
     this.map = L.map('map', {
       zoomAnimation: true,
       layers: [GoogleMaps],
@@ -98,6 +98,9 @@ export class MapToolsService {
     L.control.layers(baseLayers, {}, { position: optionsMap.fullscreenControlOptions.position }).addTo(this.map);
   }
 
+  /**
+   * @description: Crea un solo marcador en el mapa
+   */
   public setMarker(mobile: any): void {
     this.marker[mobile.id] = new L.Marker([mobile.x, mobile.y], {
       icon: this.setIcon(mobile),
@@ -152,6 +155,7 @@ export class MapToolsService {
 
   /**
    * @description: Asigna los iconos para el marcador deacuerdo al estado
+   * @param data - informacion del vehiculo
    */
   public setIcon(data: any): L.Icon<L.IconOptions> {
     const typeService = data?.class_mobile_name?.toLowerCase() || 'vehicular';
@@ -217,6 +221,10 @@ export class MapToolsService {
     });
   }
 
+  /**
+   * @description: mueve el icono si el vehiculo esta en movimiento
+   * @param data - informacion del vehiculo
+   */
   public moveMakerSelect(data: any): void {
     if (this.marker[data.id_mobile]) {
       this.marker[data.id_mobile].slideTo([data.x, data.y], {
@@ -229,8 +237,10 @@ export class MapToolsService {
       this.marker[data.id_mobile].setIcon(this.setIcon(data));
     }
   }
+
   /**
    * @description: Realiza el cambio de orientacion de los iconos del mapa
+   * @param data - informacion del vehiculo
    */
   public moveMarker(data: any): void {
     // .slideCancel()
@@ -245,6 +255,9 @@ export class MapToolsService {
     }
   }
 
+  /**
+   * @description: Crea un punto en el mapa
+   */
   public createPoint(): void {
     this.clearMap();
     this.map.getContainer().style.cursor = 'crosshair';
@@ -273,6 +286,10 @@ export class MapToolsService {
     });
   }
 
+  /**
+   * @description: Crea una zona o una ruta en el mapa
+   * @param type - tipo puede ser rutas o zonas
+   */
   createGeometry(type: string): void {
     this.clearMap();
     this.map.getContainer().style.cursor = 'crosshair';
@@ -307,6 +324,10 @@ export class MapToolsService {
     this.map.removeEventListener(event);
   }
 
+  /**
+   * @description: muestra o quita la e
+   * @param layer - informacion del punto, ruta o zona en el mapa
+   */
   public makerBindTooltip(check: boolean): void {
     for (const point in this.markers) {
       if (this.markers.hasOwnProperty(point)) {
@@ -325,7 +346,7 @@ export class MapToolsService {
   }
 
   /**
-   * @description: Limpia el mapa
+   * @description:Limpia todo lo que contenga el mapa
    */
   public clearMap(): void {
     for (const point in this.markers) {
@@ -359,6 +380,11 @@ export class MapToolsService {
     this.markerCluster.clearLayers();
   }
 
+  /**
+   * @description: Muestra los puntos seleccionado en el mapa
+   * @param layer - informacion del punto, ruta o zona en el mapa
+   * @param type - tipo puede ser punto, rutas o zonas
+   */
   public removeLayer(layer: any, type: string): void {
     this.map.getContainer().style.cursor = 'grab';
     switch (type) {
@@ -380,6 +406,10 @@ export class MapToolsService {
     }
   }
 
+  /**
+   * @description: Muestra los puntos seleccionado en el mapa
+   * @param data - informacion del vehiculo
+   */
   public viewPoint(data: any): void {
     const iconUrl = 'data:image/svg+xml,' +
       encodeURIComponent(
@@ -403,6 +433,10 @@ export class MapToolsService {
     this.markersPoint[data.id].addTo(this.map);
   }
 
+  /**
+   * @description: Muestra las rutas seleccionada en el mapa
+   * @param data - informacion del vehiculo
+   */
   public viewRoutes(data: any): void {
     if (data.shape === 'x, y') { return; }
     const shape: string[] = JSON.parse(data.shape);
@@ -422,6 +456,10 @@ export class MapToolsService {
     this.markersRoutes[data.id].addTo(this.map);
   }
 
+  /**
+   * @description: Muestra la zona seleccionada en el mapa
+   * @param data - informacion del vehiculo
+   */
   public viewZones(data: any): void {
     if (!data.shape) { return; }
 
@@ -441,6 +479,10 @@ export class MapToolsService {
     this.markersZones[data.id].addTo(this.map);
   }
 
+  /**
+   * @description: Se encarga de construir el componente que muestra el detalle del vehiculo en el mapa
+   * @param data - informacion del vehiculo
+   */
   private makePopup(data: any): void {
     this.markers[data.id].on('click', (e: any) => {
       if (this.compRef) { this.compRef.destroy(); }
@@ -467,11 +509,15 @@ export class MapToolsService {
 
   /**
    * @description: Asigna la rotacion de los iconos
+   * @param data - la informacion del vehiculo
    */
   private rotationIcon(data: any): number | null {
     return data.speed > 0 ? data.orientation : null;
   }
 
+  /**
+   * @description: Utilizamos funcion del navegador para consultar la latitud y longitud
+   */
   private getPosition(): Promise<{ lng: number; lat: number }> {
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(

@@ -1,0 +1,28 @@
+{
+  "titlePage": "Moviles",
+  "subTitlePage": "{{ value }} moviles",
+  "tablePage": {
+    "plate": "Placa",
+    "internalCode": "Codigo interno",
+    "driver": "Conductor",
+    "battery": "Bateria",
+    "model": "Modelo",
+    "typeVehicles": "Tipo de vehiculo",
+    "notDriver": "without driver"
+  },
+  "formPage": {
+    "formNameInfo": "Informacion del vehiculo",
+    "fieldDriver": "Conductor",
+    "fieldInternalCode": "Codigo interno",
+    "fieldColor": "Color",
+    "fieldBrand": "Marca",
+    "fieldModel": "Modelo",
+    "fieldTypeVehicle": "Tipo de vehiculo",
+    "fieldTypeServices": "Tipo de servicio",
+    "fieldCantPassenger": "Numero de pasajeros",
+    "fieldLoadCapacity": "Capacidad de carga",
+    "fieldChassisNumber": "Numero de chasis",
+    "fieldEngineNumber": "Numero de motor",
+    "errorForm": {}
+  }
+}

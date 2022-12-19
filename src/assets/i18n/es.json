@@ -1,6 +1,8 @@
 {
   "search": "Buscar",
   "selectAll": "Seleccionar todos",
+  "dateInit": "Desde",
+  "dateEnd": "Hasta",
   "buttons": {
     "buttonEdit": "Editar",
     "buttonDelete": "Eliminar",

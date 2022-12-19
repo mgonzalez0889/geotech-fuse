@@ -1,6 +1,8 @@
 {
   "search": "Search",
   "selectAll": "Select all",
+  "dateInit": "From",
+  "dateEnd": "To",
   "buttons": {
     "buttonEdit": "Edit",
     "buttonDelete": "Delete",

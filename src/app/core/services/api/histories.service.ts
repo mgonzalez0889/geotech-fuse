@@ -37,44 +37,4 @@ export class HistoriesService {
       params,
     });
   }
-
-  /**
-   * @description: Obtiene el historico por vehiculo con paginacion
-   */
-  public getHistoricPlate(data: any): Observable<any> {
-    const params = { method: 'create_report_historic' };
-    return this._http.post(this._appSettings.histories.url.base, data, {
-      params,
-    });
-  }
-
-  /**
-   * @description: Obtiene el historico por flota con paginacion
-   */
-  public getGistoricFleet(data: any): Observable<any> {
-    const params = { method: 'create_report_historic_fleet' };
-    return this._http.post(this._appSettings.histories.url.base, data, {
-      params,
-    });
-  }
-
-  /**
-   * @description: Genera el reporte por vehiculo en .CSV
-   */
-  public getHistoricExportMovile(data: any): Observable<any> {
-    const params = { method: 'create_report_historic_export' };
-    return this._http.post(this._appSettings.histories.url.base, data, {
-      params,
-    });
-  }
-
-  /**
-   * @description: Genera el reporte por flota en .CSV
-   */
-  public getHistoricExportFleet(data: any): Observable<any> {
-    const params = { method: 'create_report_historic_fleet_export' };
-    return this._http.post(this._appSettings.histories.url.base, data, {
-      params,
-    });
-  }
 }

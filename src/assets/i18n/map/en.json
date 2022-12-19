@@ -7,13 +7,7 @@
     "optionFleets": "Fleets",
     "selectAll": "All",
     "notAssingVehicles": "You have no assigned vehicles.",
-    "notAssingFleet": "You have no assigned fleets.",
-    "icons": {
-      "iconTextOpen": "Open",
-      "iconTextClose": "Close",
-      "iconTextOff": "Off",
-      "iconTextOn": "On"
-    }
+    "notAssingFleet": "You have no assigned fleets."
   },
   "panelGeotools": {
     "routeTitle": "Routes",
@@ -27,5 +21,21 @@
       "color": "Color",
       "description": "Description"
     }
+  },
+  "icons": {
+    "iconTextOpen": "Open",
+    "iconTextClose": "Close",
+    "iconTextOff": "Off",
+    "iconTextOn": "On",
+    "iconTextReport": "Unreported"
+  },
+  "popup": {
+    "lastTransmission": "Last transmission",
+    "speed": "Speed",
+    "lastPosition": "Last position",
+    "driver": "Driver",
+    "notDriver": "without driver",
+    "spreadsheet": "Spreadsheet",
+    "notSpreadsheet": "without payroll"
   }
 }
