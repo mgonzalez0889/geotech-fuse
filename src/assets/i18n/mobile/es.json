@@ -8,7 +8,7 @@
     "battery": "Bateria",
     "model": "Modelo",
     "typeVehicles": "Tipo de vehiculo",
-    "notDriver": "without driver"
+    "notDriver": "Sin conductor"
   },
   "formPage": {
     "formNameInfo": "Informacion del vehiculo",
@@ -23,6 +23,13 @@
     "fieldLoadCapacity": "Capacidad de carga",
     "fieldChassisNumber": "Numero de chasis",
     "fieldEngineNumber": "Numero de motor",
+    "listTypeService": {
+      "commercial": "Comercial",
+      "special": "Especial",
+      "international": "Internacional",
+      "private": "Privado",
+      "public": "Publico"
+    },
     "errorForm": {}
   }
 }

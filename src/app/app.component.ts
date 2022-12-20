@@ -21,6 +21,11 @@ export class AppComponent {
     private translocoService: TranslocoService,
   ) {
     this.traslatePagination();
+
+    // const locale = window.navigator.language.slice(0, 2);
+    // if (locale === 'es' || locale === 'en') {
+    //   this.translocoService.setActiveLang(locale);
+    // }
   }
 
   traslatePagination(): void {
@@ -29,7 +34,7 @@ export class AppComponent {
       .subscribe((locale) => {
         this.dateAdapter.setLocale(locale);
         moment.locale(locale);
-        const { pagination, } = this.translocoService.translateObject('table');
+        const { pagination } = this.translocoService.translateObject('table');
         this.paginatorIntl.itemsPerPageLabel = pagination.itemsPerPageLabel;
         this.paginatorIntl.firstPageLabel = pagination.firstPageLabel;
         this.paginatorIntl.previousPageLabel = pagination.previousPageLabel;

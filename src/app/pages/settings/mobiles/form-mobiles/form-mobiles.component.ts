@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OwnerPlateService } from 'app/core/services/api/owner-plate.service';
-import { Subject } from 'rxjs';
-import { SocketIoClientService } from 'app/core/services/socket/socket-io-client.service';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { DriverService } from 'app/core/services/api/driver.service';
-import { takeUntil } from 'rxjs/operators';
-import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
+import { DriverService } from '@services/api/driver.service';
+import { OwnerPlateService } from '@services/api/owner-plate.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { SocketIoClientService } from '@services/socket/socket-io-client.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-mobiles',
@@ -26,23 +25,23 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
   public typeServices: any = [
     {
       id: 0,
-      name: 'Comercial',
+      name: 'mobile.formPage.listTypeService.commercial',
     },
     {
       id: 1,
-      name: 'Especial',
+      name: 'mobile.formPage.listTypeService.special',
     },
     {
       id: 2,
-      name: 'Internacional',
+      name: 'mobile.formPage.listTypeService.international',
     },
     {
       id: 3,
-      name: 'Privado',
+      name: 'mobile.formPage.listTypeService.private',
     },
     {
       id: 4,
-      name: 'Publico',
+      name: 'mobile.formPage.listTypeService.public',
     },
   ];
 
@@ -137,7 +136,7 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
   private getModels(): any {
     const year = new Date().getFullYear();
     for (let i = 1990; i <= year + 1; i++) {
-      this.models.push(i);
+      this.models.push(`${i}`);
     }
   }
 

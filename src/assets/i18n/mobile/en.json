@@ -4,25 +4,32 @@
   "tablePage": {
     "plate": "Plate",
     "internalCode": "Internal code",
-    "driver": "Conductor",
-    "battery": "Bateria",
-    "model": "Modelo",
-    "typeVehicles": "Tipo de vehiculo",
+    "driver": "Driver",
+    "battery": "Battery",
+    "model": "Model",
+    "typeVehicles": "Type vehicles",
     "notDriver": "without driver"
   },
   "formPage": {
-    "formNameInfo": "Informacion del vehiculo",
-    "fieldDriver": "Conductor",
-    "fieldInternalCode": "Codigo interno",
+    "formNameInfo": "Vehicle information",
+    "fieldDriver": "Driver",
+    "fieldInternalCode": "Internal code",
     "fieldColor": "Color",
-    "fieldBrand": "Marca",
-    "fieldModel": "Modelo",
-    "fieldTypeVehicle": "Tipo de vehiculo",
-    "fieldTypeServices": "Tipo de servicio",
-    "fieldCantPassenger": "Numero de pasajeros",
-    "fieldLoadCapacity": "Capacidad de carga",
-    "fieldChassisNumber": "Numero de chasis",
-    "fieldEngineNumber": "Numero de motor",
+    "fieldBrand": "Brand",
+    "fieldModel": "Model",
+    "fieldTypeVehicle": "Type vehicle",
+    "fieldTypeServices": "Type service",
+    "fieldCantPassenger": "Number passenger",
+    "fieldLoadCapacity": "Load capacity",
+    "fieldChassisNumber": "Chassis number",
+    "fieldEngineNumber": "Engine number",
+    "listTypeService": {
+      "commercial": "Commercial",
+      "special": "Special",
+      "international": "International",
+      "private": "Private",
+      "public": "Public"
+    },
     "errorForm": {}
   }
 }
