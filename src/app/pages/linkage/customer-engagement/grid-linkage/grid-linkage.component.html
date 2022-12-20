@@ -1,0 +1,47 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full mx-auto p-6">
+  
+      <div class="w-full">
+        <app-header-page [title]="this.titlePage" [subTitle]="this.subTitlePage"></app-header-page>
+      </div>
+  
+      <div class="flex flex-wrap w-full py-6">
+        <div class="w-full overflow-hidden">
+          <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+            <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
+              class="w-full md:w-128 bg-gray-100 border-none">
+              <ng-container *ngIf="opened">
+                <app-form-linkage [listUsers]="this.userData" [dataUpdate]="this.userDataUpdate"
+                  (emitCloseForm)="this.opened = false" [titleForm]="this.titleForm"></app-form-linkage>
+              </ng-container>
+            </mat-drawer>
+
+            <mat-drawer-content class="bg-card shadow rounded-2xl overflow-hidden">
+              <div class="flex flex-col md:flex-row border-b p-6">
+                <div class="flex border-2 rounded-full p-2 ">
+                  <input autocomplete="off" matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                  <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+                </div>
+                <div class="pt-3 md:pt-0 md:pl-6">
+                  <button   (click)="this.addUserForm()" class="fuse-mat-button-rounded w-full md:w-auto" mat-flat-button color="accent">
+                    <mat-icon class="icon-size-5">add</mat-icon>
+                    <span class="ml-2">Agregar contrato cliente</span>
+                     
+                  </button>
+                </div>
+              </div>
+  
+              <div>
+                <app-table [dataColumn]="this.displayedColumns" [dataRow]="this.userData"
+                  [dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
+                  (emitSelectRow)="this.selectUserTable($event)" >
+                </app-table>
+              </div>
+  
+            </mat-drawer-content>
+          </mat-drawer-container>
+        </div>
+      </div>
+    </div>
+  </div>
+

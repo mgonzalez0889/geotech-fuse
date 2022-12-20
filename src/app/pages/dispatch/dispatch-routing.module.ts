@@ -7,9 +7,9 @@ const routes: Routes = [
         children: [
             {
                 path: 'general-dispatch',
-                loadChildren: () =>
+                loadChildren: (): Promise<any> =>
                     import('./general-dispatch/general-dispatch.module').then(
-                        (m) => m.GeneralDispatchModule
+                        m => m.GeneralDispatchModule
                     ),
             },
         ],

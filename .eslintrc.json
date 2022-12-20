@@ -79,7 +79,8 @@
                 "quotes": [
                     "error",
                     "single"
-                ]
+                ],
+                "@typescript-eslint/naming-convention": "off"
             }
         },
         {

@@ -451,7 +451,7 @@ export class MapToolsService {
       this.appRef.attachView(this.compRef.hostView);
 
       this.compRef.onDestroy(() => {
-        this.popup.close();
+        this.popup.closePopup();
         this.appRef.detachView(this.compRef.hostView);
       });
     });

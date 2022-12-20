@@ -17,11 +17,14 @@
           </mat-drawer>
 
           <mat-drawer-content class="bg-card shadow rounded-2xl overflow-hidden">
+
             <div class="flex flex-col md:flex-row border-b p-6">
+
               <div class="flex border-2 rounded-full p-2 ">
                 <input matInput placeholder="Buscar" (keyup)="filterTable($event)">
                 <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
               </div>
+
               <div class="pt-3 md:pt-0 md:pl-6">
                 <button class="fuse-mat-button-rounded w-full md:w-auto" mat-flat-button color="accent"
                   (click)="this.addUserForm()">
@@ -29,6 +32,7 @@
                   <span class="ml-2">Agregar usuario</span>
                 </button>
               </div>
+              
             </div>
 
             <div>
