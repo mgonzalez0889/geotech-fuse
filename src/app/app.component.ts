@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { DateAdapter } from '@angular/material/core';
-import { MatPaginatorIntl } from '@angular/material/paginator';
-import { TranslocoService } from '@ngneat/transloco';
 import moment from 'moment';
 import { delay } from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
+import { TranslocoService } from '@ngneat/transloco';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +21,6 @@ export class AppComponent {
     private translocoService: TranslocoService,
   ) {
     this.traslatePagination();
-
-    // const locale = window.navigator.language.slice(0, 2);
-    // if (locale === 'es' || locale === 'en') {
-    //   this.translocoService.setActiveLang(locale);
-    // }
   }
 
   traslatePagination(): void {

@@ -10,7 +10,8 @@
     "buttonCancel": "Cancelar",
     "buttonClose": "Cerrar",
     "buttonAdd": "Agregar",
-    "buttonImport": "Importar"
+    "buttonImport": "Importar",
+    "buttonDowloand": "Descargar"
   },
   "table": {
     "warningTitle": "Aviso",

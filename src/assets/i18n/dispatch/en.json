@@ -1,0 +1,44 @@
+{
+  "titlePage": "Dispatch",
+  "dispatch0": "No dispatch",
+  "dispatch1": "Dispatch",
+  "dispatchOther": "Dispatchs",
+  "preDispatch": "Pre dispatch",
+  "finishedDispatch": "Finished",
+  "buttonsPage": {
+    "buttonAdd": "New dispatch"
+  },
+  "tablePage": {
+    "spreadsheet": "Spreadsheet",
+    "stateDispath": "Status dispatch",
+    "dateCreate": "Creation date",
+    "dateInitDispatch": "Dispatch start date",
+    "dateEndDispatch": "Date of completion of dispatch",
+    "vehicle": "Vehicle",
+    "device": "Device",
+    "container": "Container",
+    "securitySeal": "Security seal",
+    "origin": "Origin",
+    "destination": "Destination",
+    "notFountData": "There is no data matching the search:"
+  },
+  "formPage": {
+    "formNameCreate": "New dispatch",
+    "fieldSpreadsheet": "Spreadsheet",
+    "fieldDeclaration": "Declaration number",
+    "fieldClient": "Name client",
+    "fieldState": "State",
+    "fieldOrigin": "Origin",
+    "fieldDestination": "Destination",
+    "fieldPlate": "Plate",
+    "fieldDriver": "Driver",
+    "fliedDevice": "Device",
+    "fieldSecuritySeal": "Security seal",
+    "fieldContainerNumber": "Container number",
+    "startDispatch": "Start dispatch",
+    "finishDespatch": "Finish dispatch",
+    "initDispatch": "Start / automatic termination",
+    "fieldRemarks": "Remarks",
+    "errorForm": {}
+  }
+}

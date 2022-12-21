@@ -74,7 +74,9 @@ export class LanguagesComponent implements OnInit, OnDestroy {
   setActiveLang(lang: string): void {
     // Set the active lang
     const info = JSON.parse(localStorage.getItem('infoUser'));
-    this._userService.setLocate(+info.id, lang).subscribe((data) => { });
+    this._userService.setLocate(+info.id, lang).subscribe((data) => {
+      localStorage.setItem('language', data.language);
+    });
     this._translocoService.setActiveLang(lang);
   }
 

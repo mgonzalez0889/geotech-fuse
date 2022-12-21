@@ -29,6 +29,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FuseDrawerModule } from '@fuse/components/drawer';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import { FuseDrawerModule } from '@fuse/components/drawer';
     MatTabsModule,
     MatButtonToggleModule,
     MatDialogModule,
+    MatAutocompleteModule,
     FuseDrawerModule
   ],
 })

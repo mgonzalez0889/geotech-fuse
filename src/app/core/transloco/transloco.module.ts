@@ -46,8 +46,18 @@ import { isDevMode } from '@angular/core';
         (translocoService: TranslocoService): any =>
           (): Promise<Translation> => {
             const defaultLang = translocoService.getDefaultLang();
-            translocoService.setActiveLang(defaultLang);
-            return translocoService.load(defaultLang).toPromise();
+            // const locale = window.navigator.language.slice(0, 2);
+            const locale = localStorage.getItem('language');
+            let loadLang: string;
+            if (locale === 'es' || locale === 'en') {
+              loadLang = locale;
+              translocoService.setActiveLang(locale);
+            } else {
+              loadLang = defaultLang;
+              translocoService.setActiveLang(defaultLang);
+            }
+
+            return translocoService.load(loadLang).toPromise();
           },
       multi: true,
     },

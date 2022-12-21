@@ -287,7 +287,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
           this.editMode = isEdit;
           if (newDispatch) {
             this.dispatches = [];
-            this.dispatches['client'] = newDispatch;
+            // this.dispatches['client'] = newDispatch;
             if (this.dispatchForm) {
               this.dispatchForm.reset();
             }
