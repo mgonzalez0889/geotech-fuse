@@ -2,7 +2,7 @@
   <div class="bg-card shadow rounded-2xl min-h-180">
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="closeMenu()">
           <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
       </div>
@@ -23,7 +23,7 @@
             <div class="flex items-center ml-auto mb-1">
               <button mat-stroked-button (click)="editMode = true">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                <span class="ml-2">Editar</span>
+                <span class="ml-2">{{'contacts.formPage.edit' | transloco}}</span>
               </button>
             </div>
           </div>
@@ -33,7 +33,7 @@
             <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
               <ng-container *ngIf="contacts['email']">
                 <div class="flex sm:items-center">
-                  <mat-icon [matTooltip]="'Correo electrónico'" [svgIcon]="'heroicons_outline:mail'">
+                  <mat-icon [matTooltip]="'contacts.formPage.emailAddress' | transloco" [svgIcon]="'heroicons_outline:mail'">
                   </mat-icon>
                   <div class="ml-6 leading-6">
                     <a class="hover:underline text-primary-500" [href]="'mailto:' + contacts['email']" target="_blank">
@@ -44,20 +44,20 @@
               </ng-container>
               <ng-container *ngIf="contacts['phone']">
                 <div class="flex sm:items-center">
-                  <mat-icon [matTooltip]="'Celular'" svgIcon="heroicons_outline:phone"></mat-icon>
+                  <mat-icon [matTooltip]="'contacts.formPage.cellPhone' | transloco" svgIcon="heroicons_outline:phone"></mat-icon>
                   <div class="ml-6 leading-6">{{contacts['phone']}}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="contacts['identification']">
                 <div class="flex sm:items-center">
-                  <mat-icon [matTooltip]="'Identificación'" svgIcon="heroicons_outline:identification">
+                  <mat-icon [matTooltip]="'contacts.formPage.identification' | transloco" svgIcon="heroicons_outline:identification">
                   </mat-icon>
                   <div class="ml-6 leading-6">{{contacts['identification']}}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="contacts['address']">
                 <div class="flex sm:items-center">
-                  <mat-icon [matTooltip]="'Dirección'" [svgIcon]="'heroicons_outline:location-marker'">
+                  <mat-icon [matTooltip]="'contacts.formPage.address' | transloco" [svgIcon]="'heroicons_outline:location-marker'">
                   </mat-icon>
                   <div class="ml-6 leading-6">{{contacts['address']}}</div>
                 </div>
@@ -68,32 +68,32 @@
           <form [formGroup]="contactForm">
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Nombre completo</mat-label>
+                <mat-label>{{'contacts.formPage.fullName' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:user-circle'">
                 </mat-icon>
-                <input matInput [formControlName]="'full_name'" [placeholder]="'Nombre completo'" required>
+                <input matInput [formControlName]="'full_name'" [placeholder]="'contacts.formPage.fullName' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Identificación</mat-label>
+                <mat-label>{{'contacts.formPage.identification' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:identification'">
                 </mat-icon>
-                <input matInput [formControlName]="'identification'" [placeholder]="'Identificación'" required>
+                <input matInput [formControlName]="'identification'" [placeholder]="'contacts.formPage.identification' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Correo electrónico</mat-label>
+                <mat-label>{{'contacts.formPage.emailAddress' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:mail'">
                 </mat-icon>
-                <input matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'" required>
+                <input matInput [formControlName]="'email'" [placeholder]="'contacts.formPage.emailAddress' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Celular</mat-label>
-                <input matInput [formControlName]="'phone'" [placeholder]="'Celular'" required type="number">
+                <mat-label>{{'contacts.formPage.cellPhone' | transloco}}</mat-label>
+                <input matInput [formControlName]="'phone'" [placeholder]="'contacts.formPage.cellPhone' | transloco" required type="number">
                 <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
                   <mat-select-trigger>
                     <span class="flex items-center">
@@ -122,26 +122,26 @@
             </div>
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Dirección</mat-label>
+                <mat-label>{{'contacts.formPage.address' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:location-marker'">
                 </mat-icon>
-                <input matInput [formControlName]="'address'" [placeholder]="'Dirección'" required>
+                <input matInput [formControlName]="'address'" [placeholder]="'contacts.formPage.address' | transloco" required>
               </mat-form-field>
             </div>
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
               <!-- Eliminar -->
-              <button *ngIf="contacts['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+              <button *ngIf="contacts['id']" mat-button [color]="'warn'" [matTooltip]="'buttons.buttonDelete' | transloco"
                 (click)="deleteContact(contacts['id'])">
-                Eliminar </button>
+                {{'buttons.buttonDelete' | transloco}} </button>
               <!-- Cancelar -->
-              <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
-                Cancelar
+              <button class="ml-auto" mat-button [matTooltip]="'buttons.buttonCancel' | transloco" (click)="editMode = false">
+                {{'buttons.buttonCancel' | transloco}}
               </button>
               <!-- Guardar -->
               <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="contactForm.invalid"
-                [matTooltip]="'Guardar'" (click)="onSave()">
+                [matTooltip]="'buttons.buttonSave' | transloco" (click)="onSave()">
                 <span *ngIf="!contactForm.disabled">
-                  Guardar
+                  {{'buttons.buttonSave' | transloco}}
                 </span>
                 <mat-progress-spinner *ngIf="contactForm.disabled" [diameter]="24" [mode]="'indeterminate'">
                 </mat-progress-spinner>

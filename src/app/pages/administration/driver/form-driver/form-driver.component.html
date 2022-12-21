@@ -2,7 +2,7 @@
     <div class="bg-card shadow rounded-2xl min-h-180">
         <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
             <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-                <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+                <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="closeMenu()">
                     <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
                 </button>
             </div>
@@ -24,7 +24,7 @@
                         <div class="flex items-center ml-auto mb-1">
                             <button mat-stroked-button (click)="editMode = true">
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                                <span class="ml-2">Editar</span>
+                                <span class="ml-2">{{'buttons.buttonEdit' | transloco}}</span>
                             </button>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                     <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
                         <ng-container *ngIf="drivers['email']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Correo electrónico'" [svgIcon]="'heroicons_outline:mail'">
+                                <mat-icon [matTooltip]="'driver.formPage.emailAddress' | transloco" [svgIcon]="'heroicons_outline:mail'">
                                 </mat-icon>
                                 <div class="ml-6 leading-6">
                                     <a class="hover:underline text-primary-500" [href]="'mailto:' + drivers['email']"
@@ -44,34 +44,34 @@
                         </ng-container>
                         <ng-container *ngIf="drivers['phone']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Celular'" svgIcon="heroicons_outline:phone"></mat-icon>
+                                <mat-icon [matTooltip]="'driver.formPage.cellPhone' | transloco" svgIcon="heroicons_outline:phone"></mat-icon>
                                 <div class="ml-6 leading-6">{{drivers['phone']}}</div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="drivers['identification']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Identificación'" svgIcon="heroicons_outline:identification">
+                                <mat-icon [matTooltip]="'driver.formPage.identification' | transloco" svgIcon="heroicons_outline:identification">
                                 </mat-icon>
                                 <div class="ml-6 leading-6">{{drivers['identification']}}</div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="drivers['license']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'No. licencia'">recent_actors
+                                <mat-icon [matTooltip]="'driver.formPage.licenseNumber' | transloco">recent_actors
                                 </mat-icon>
                                 <div class="ml-6 leading-6">{{drivers['license']}}</div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="drivers['license_end']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Fecha de vencimiento de la licencia'">event
+                                <mat-icon [matTooltip]="'driver.formPage.licenseExpirationDate' | transloco">event
                                 </mat-icon>
                                 <div class="ml-6 leading-6">{{drivers['license_end']}}</div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="drivers['address']">
                             <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Dirección'" [svgIcon]="'heroicons_outline:location-marker'">
+                                <mat-icon [matTooltip]="'driver.formPage.address' | transloco" [svgIcon]="'heroicons_outline:location-marker'">
                                 </mat-icon>
                                 <div class="ml-6 leading-6">{{drivers['address']}}</div>
                             </div>
@@ -82,37 +82,38 @@
                     <form [formGroup]="driverForm">
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Nombre completo</mat-label>
+                                <mat-label>{{'driver.formPage.fullName' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_solid:user-circle'">
                                 </mat-icon>
-                                <input matInput [formControlName]="'name'" [placeholder]="'Nombre completo'" required>
+                                <input matInput [formControlName]="'name'" [placeholder]="'driver.formPage.fullName' | transloco" required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Identificación</mat-label>
+                                <mat-label>{{'driver.formPage.identification' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:identification'">
                                 </mat-icon>
-                                <input matInput [formControlName]="'identification'" [placeholder]="'Identificación'"
+                                <input matInput [formControlName]="'identification'" [placeholder]="'driver.formPage.identification' | transloco"
                                     required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Correo electrónico</mat-label>
+                                <mat-label>{{'driver.formPage.emailAddress' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:mail'">
                                 </mat-icon>
-                                <input matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'"
+                                <input matInput [formControlName]="'email'" [placeholder]="'driver.formPage.emailAddress' | transloco"
                                     required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Celular</mat-label>
-                                <input matInput [formControlName]="'phone'" [placeholder]="'Celular'" required
+                                <mat-label>{{'driver.formPage.cellPhone' | transloco}}</mat-label>
+                                <input matInput [formControlName]="'phone'" 
+                                [placeholder]="'driver.formPage.cellPhone' | transloco" required
                                     type="number">
                                 <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
                                     <mat-select-trigger>
@@ -142,17 +143,18 @@
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Numero de la licencia</mat-label>
+                                <mat-label>{{'driver.formPage.licenseNumber' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:identification'">
                                 </mat-icon>
-                                <input matInput [formControlName]="'license'" [placeholder]="'Numero de la licencia'"
+                                <input matInput [formControlName]="'license'" 
+                                [placeholder]="'driver.formPage.licenseNumber' | transloco"
                                     required>
                             </mat-form-field>
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Fecha de vencimiento de la licencia</mat-label>
+                                <mat-label>{{'driver.formPage.licenseExpirationDate' | transloco}}</mat-label>
                                 <input matInput [matDatepicker]="picker" [formControlName]="'license_end'" required>
                                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
@@ -160,24 +162,28 @@
                         </div>
                         <div class="mt-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Dirección</mat-label>
+                                <mat-label>{{'driver.formPage.address' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:location-marker'">
                                 </mat-icon>
-                                <input matInput [formControlName]="'address'" [placeholder]="'Dirección'" required>
+                                <input matInput [formControlName]="'address'" 
+                                [placeholder]="'driver.formPage.address' | transloco" required>
                             </mat-form-field>
                         </div>
                         <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-                            <button *ngIf="drivers['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                            <button *ngIf="drivers['id']" mat-button [color]="'warn'" 
+                            [matTooltip]="'buttons.buttonDelete' | transloco"
                                 (click)="deleteContact(drivers['id'])">
-                                Eliminar </button>
-                            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
-                                Cancelar
+                                {{'buttons.buttonDelete' | transloco}}
+                            </button>
+                            <button class="ml-auto" mat-button 
+                            [matTooltip]="'buttons.buttonCancel' | transloco" (click)="editMode = false">
+                                {{'buttons.buttonCancel' | transloco}}
                             </button>
                             <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="driverForm.invalid"
-                                [matTooltip]="'Guardar'" (click)="onSave()">
+                                [matTooltip]="'buttons.buttonSave' | transloco" (click)="onSave()">
                                 <span *ngIf="!driverForm.disabled">
-                                    Guardar
+                                    {{'buttons.buttonSave' | transloco}}
                                 </span>
                                 <mat-progress-spinner *ngIf="driverForm.disabled" [diameter]="24"
                                     [mode]="'indeterminate'">

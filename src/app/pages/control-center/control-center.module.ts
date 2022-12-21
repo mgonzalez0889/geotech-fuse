@@ -8,7 +8,8 @@ import { ControlCenterRoutingModule } from './control-center-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    ControlCenterRoutingModule
-  ]
+    ControlCenterRoutingModule,
+  ],
+
 })
 export class ControlCenterModule { }

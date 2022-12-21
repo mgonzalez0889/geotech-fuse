@@ -7,15 +7,18 @@
     <form [formGroup]="contactForm">
         <div class="mt-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Nombre completo</mat-label>
+                <mat-label>{{'monitoringCenter.modalPageContacts.fullName' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:user-circle'">
                 </mat-icon>
-                <input matInput required [formControlName]="'full_name'" [placeholder]="'Nombre completo'">
+                <input matInput required [formControlName]="'full_name'" 
+                [placeholder]="'monitoringCenter.modalPageContacts.fullName' | transloco">
             </mat-form-field>
         </div>
         <div class="mt-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Tipo de contacto</mat-label>
+                <mat-label>
+                    {{'monitoringCenter.modalPageContacts.typeOfContact' | transloco}}
+                </mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user">
                 </mat-icon>
                 <mat-select required [formControlName]="'type_contact_id'">
@@ -26,16 +29,23 @@
         </div>
         <div class="mt-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Correo electrónico</mat-label>
+                <mat-label>
+                    {{'monitoringCenter.modalPageContacts.email' | transloco}}
+                </mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:mail'">
                 </mat-icon>
-                <input required matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'">
+                <input required matInput [formControlName]="'email'" 
+                [placeholder]="'monitoringCenter.modalPageContacts.email' | transloco">
             </mat-form-field>
         </div>
         <div class="mt-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Celular</mat-label>
-                <input matInput [formControlName]="'phone'" [placeholder]="'Celular'" required type="number">
+                <mat-label>
+                    {{'monitoringCenter.modalPageContacts.cellPhone' | transloco}}
+                </mat-label>
+                <input matInput [formControlName]="'phone'" 
+                [placeholder]="'monitoringCenter.modalPageContacts.cellPhone' | transloco"
+                required type="number">
                 <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
                     <mat-select-trigger>
                         <span class="flex items-center">
@@ -64,23 +74,32 @@
         </div>
         <div class="mt-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Identificación</mat-label>
+                <mat-label>
+                    {{'monitoringCenter.modalPageContacts.identification' | transloco}}
+                </mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:identification'">
                 </mat-icon>
-                <input required matInput [formControlName]="'identification'" [placeholder]="'Identificación'">
+                <input required matInput [formControlName]="'identification'" 
+                [placeholder]="'monitoringCenter.modalPageContacts.identification' | transloco"
+                >
             </mat-form-field>
         </div>
         <div class="mt-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Dirección</mat-label>
+                <mat-label>
+                    {{'monitoringCenter.modalPageContacts.address' | transloco}}
+                </mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:location-marker'">
                 </mat-icon>
-                <input required matInput [formControlName]="'address'" [placeholder]="'Dirección'">
+                <input required matInput [formControlName]="'address'" 
+                [placeholder]="'monitoringCenter.modalPageContacts.address' | transloco" >
             </mat-form-field>
         </div>
         <div class="mt-4">
             <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                <mat-label>Descripción </mat-label>
+                <mat-label>
+                    {{'monitoringCenter.modalPageContacts.description' | transloco}}
+                </mat-label>
                 <textarea [formControlName]="'description'" matInput matTextareaAutosize></textarea>
             </mat-form-field>
         </div>
@@ -100,7 +119,10 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close [matTooltip]="'Cancelar'">Cancelar</button>
+    <button mat-button mat-dialog-close [matTooltip]="'buttons.buttonCancel' | transloco">{{'buttons.buttonCancel' | transloco}}
+    </button>
     <button mat-button [mat-dialog-close]="true" [color]="'accent'" [disabled]="contactForm.invalid"
-        [matTooltip]="'Guardar'" (click)="onSave()">Guardar</button>
+        [matTooltip]="'buttons.buttonSave' | transloco" (click)="onSave()">
+    {{'buttons.buttonSave' | transloco}}
+    </button>
 </mat-dialog-actions>

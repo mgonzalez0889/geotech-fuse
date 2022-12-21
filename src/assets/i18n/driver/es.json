@@ -1,0 +1,28 @@
+{
+    "tittlepage" : "Conductores",
+    "addDriver" : "Agregar conductor",
+    "table" : {
+        "emptyDriverList" : "Lo sentimos no se encontraron datos",
+        "name" : "Nombre",
+        "identification" : "identificación",
+        "address" : "Dirección",
+        "email" : "Correo electrónico",
+        "cellPhone" : "Celular",
+        "matNoDataRow" : "No hay datos que coincidan con la busqueda : "
+    },
+    "subtitlepage" : {
+        "driver0" : "Sin conductores",
+        "driver1" : "Conductor",
+        "drivers" : "Conductores"
+    },
+    "formPage" : {
+        "fullName" : "Nombre completo",
+        "identification" : "Identificación",
+        "emailAddress" : "Correo electrónico",
+        "cellPhone" : "Celular",
+        "licenseNumber" : "Numero de la licencia",
+        "licenseExpirationDate" : "Fecha de vencimiento de la licencia",
+        "address" : "Dirección"  
+    }
+  
+}

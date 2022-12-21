@@ -3,16 +3,16 @@
     <!--Title-->
     <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
       <div>
-        <h2 class="text-3xl font-semibold tracking-tight leading-8">Contactos para atención de alarmas</h2>
+        <h2 class="text-3xl font-semibold tracking-tight leading-8">{{ 'controlCenter.tittlepage' | transloco }}</h2>
         <div class="ml-0.5 font-medium text-secondary">
           <ng-container *ngIf="contactsCount > 0">
             {{contactsCount}}
           </ng-container>
           {{contactsCount | i18nPlural: {
-          '=0' : 'Sin contactos',
-          '=1' : 'Contacto',
-          'other': 'Contactos'
-          } }}
+          '=0' : 'controlCenter.subtitlepage.contact0',
+          '=1' : 'controlCenter.subtitlepage.contact1',
+          'other': 'controlCenter.subtitlepage.contact0'
+          } | transloco}}
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
                   <div class="flex items-center">
                     <div class="">
                       <div class="font-medium text-secondary ml-2">
-                        <span *ngIf="!ownerSelect">Seleccione un cliente</span>
+                        <span *ngIf="!ownerSelect">{{'controlCenter.table.ownerSelect'}}</span>
                         <span>{{ownerSelect}}</span>
                       </div>
                     </div>
@@ -50,20 +50,20 @@
                 </div>
               </div>
               <div class="flex border-2 rounded-full p-2">
-                <input class="ml-2" #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                <input class="ml-2" #input matInput [placeholder]="'search' | transloco" (keyup)="filterTable($event)">
                 <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
               </div>
               <div class="pt-3 md:pt-0 md:pl-6">
                 <button class="fuse-mat-button-rounded w-full md:w-auto" mat-flat-button [color]="'accent'"
                   (click)="newContact()">
                   <mat-icon class="icon-size-5">add</mat-icon>
-                  <span class="ml-2">Agregar contacto</span>
+                  <span class="ml-2">{{'buttons.buttonAdd' | transloco}}</span>
                 </button>
               </div>
             </div>
             <div [hidden]="contactsCount > 0" class="pt-3 w-full h-full items-center justify-center">
               <div class="flex items-center justify-center">
-                <div class="text-base font-semibold text-secondary">Lo sentimos no se encontraron datos
+                <div class="text-base font-semibold text-secondary">{{'controlCenter.table.emptyContactList' | transloco}}
                 </div>
               </div>
             </div>
@@ -73,7 +73,7 @@
                 <table mat-table [dataSource]="dataTableContactsControlCenter" matSort class="w-full">
                   <!-- full_name Column -->
                   <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'controlCenter.table.name' | transloco }} </th>
                     <td mat-cell *matCellDef="let row">
                       <span class="pr-6 whitespace-nowrap">
                         {{row.full_name}} </span>
@@ -81,7 +81,7 @@
                   </ng-container>
                   <!-- identification Column -->
                   <ng-container matColumnDef="identification">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> identification </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'controlCenter.table.identification' | transloco}} </th>
                     <td mat-cell *matCellDef="let row">
                       <span class="pr-6 whitespace-nowrap">
                         {{row.identification}} </span>
@@ -89,7 +89,7 @@
                   </ng-container>
                   <!-- type_contacs Column -->
                   <ng-container matColumnDef="type_contacs">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de contacto </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'controlCenter.table.typeOfContact' | transloco}}</th>
                     <td mat-cell *matCellDef="let row">
                       <span class="pr-6 whitespace-nowrap">
                         {{row.type_contact_description}} </span>
@@ -97,7 +97,7 @@
                   </ng-container>
                   <!-- address Column -->
                   <ng-container matColumnDef="address">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'controlCenter.table.address' | transloco}}</th>
                     <td mat-cell *matCellDef="let row">
                       <span class="pr-6 whitespace-nowrap">
                         {{row.address}} </span>
@@ -105,7 +105,7 @@
                   </ng-container>
                   <!-- email Column -->
                   <ng-component matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo electrónico </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'controlCenter.table.email' | transloco}} </th>
                     <td mat-cell *matCellDef="let row">
                       <a class="hover:underline text-primary-500 pr-6 whitespace-nowrap" [href]="'mailto:' + row.email"
                         target="_blank">
@@ -115,7 +115,7 @@
                   </ng-component>
                   <!-- phone Column -->
                   <ng-container matColumnDef="cellPhone">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Celular</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'controlCenter.table.cellPhone' | transloco}}</th>
                     <td mat-cell *matCellDef="let row">
                       <span class="pr-6 whitespace-nowrap">
                         {{row.phone}} </span>
@@ -127,8 +127,7 @@
                   </tr>
                   <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
                   <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="6">No hay datos que coincidan
-                      con la busqueda:
+                    <td class="mat-cell" colspan="6">{{'controlCenter.table.matNoDataRow' | transloco}}
                       "{{input.value}}"
                     </td>
                   </tr>

@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
     declarations: [FormContactComponent, GridContactComponent],
@@ -34,6 +36,9 @@ import { MatMenuModule } from '@angular/material/menu';
         MatSelectModule,
         MatSortModule,
         MatMenuModule,
+        SharedModule
     ],
+    providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'controlCenter' }],
+
 })
 export class ContactsControlCenterModule {}
