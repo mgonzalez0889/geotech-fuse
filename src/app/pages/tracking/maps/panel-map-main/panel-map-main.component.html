@@ -146,9 +146,9 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <button class="bg-white py-1 px-2 shadow-sm rounded" [matTooltip]="'map.vehicles' | transloco" type="button" *ngIf="!drawer.opened"
+    <button class="flex justify-center items-center bg-white py-1 px-2 shadow-sm rounded" [matTooltip]="'map.vehicles' | transloco" type="button" *ngIf="!drawer.opened"
       (click)="drawer.toggle()">
-      <mat-icon class="self-center" svgIcon="mat_outline:arrow_forward"></mat-icon>
+      <mat-icon class="self-center" svgIcon="share_location"></mat-icon>
     </button>
   </mat-drawer-content>
 

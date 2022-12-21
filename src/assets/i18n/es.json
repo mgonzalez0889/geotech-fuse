@@ -3,6 +3,7 @@
   "selectAll": "Seleccionar todos",
   "dateInit": "Desde",
   "dateEnd": "Hasta",
+  "logout": "Cerrar seción",
   "buttons": {
     "buttonEdit": "Editar",
     "buttonDelete": "Eliminar",
@@ -22,6 +23,11 @@
       "previousPageLabel": "Pagina anterior",
       "nextPageLabel": "Siguiente página",
       "lastPageLabel": "Última página"
-    }
+    },
+    "notFountData": "No hay datos que coincidan con la busqueda:"
+  },
+  "layoutVertical": {
+    "iconFix": "Fijar barra lateral",
+    "iconMenu": "{{value}} barra lateral"
   }
 }

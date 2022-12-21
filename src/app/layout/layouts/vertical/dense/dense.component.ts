@@ -15,6 +15,7 @@ import { NavigationService } from 'app/core/services/navigation/navigation.servi
 export class DenseLayoutComponent implements OnInit, OnDestroy {
   isScreenSmall: boolean;
   navigation: Navigation;
+  menuTooltip: boolean = true;
   navigationAppearance: 'default' | 'dense' = 'dense';
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -86,6 +87,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
    */
   toggleNavigation(name: string): void {
     // Get the navigation
+    this.menuTooltip = !this.menuTooltip;
     const navigation = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(name);
 
     if (navigation) {

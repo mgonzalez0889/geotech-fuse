@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { NavigationService } from '@services/navigation/navigation.service';
 
 @Component({
   selector: 'app-root',

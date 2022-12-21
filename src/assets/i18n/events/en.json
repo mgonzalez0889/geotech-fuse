@@ -1,0 +1,36 @@
+{
+  "titlePage": "System events",
+  "subtitlePage": {
+    "event0": "No Events",
+    "event1": "Event",
+    "eventOther": "Events"
+  },
+  "tablePage": {
+    "color": "Color",
+    "name": "Name",
+    "description": "Description",
+    "mailNoti": "Notification by mail",
+    "pageNoti": "Notification on platform",
+    "smsNoti": "SMS notification",
+    "soundNoti": "Audible notification"
+  },
+  "formPage": {
+    "formName": "Event editing",
+    "fieldColor": "Color",
+    "fieldName": "Name",
+    "fieldDescription": "Description",
+    "contact": {
+      "title": "Contact",
+      "subtitlepage": {
+        "contact0": "No contacts",
+        "contact1": "Contact",
+        "contacts": "Contacts"
+      },
+      "fullName": "Name",
+      "identification": "Identification",
+      "emailAddress": "Email",
+      "cellPhone": "Cell phone",
+      "address": "Address"
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { take } from 'rxjs/operators';
 import { AvailableLangs, TranslocoService } from '@ngneat/transloco';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { UsersService } from '@services/api/users.service';
+import { NavigationService } from '@services/navigation/navigation.service';
 
 @Component({
   selector: 'languages',
@@ -23,7 +24,8 @@ export class LanguagesComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _fuseNavigationService: FuseNavigationService,
     private _translocoService: TranslocoService,
-    private _userService: UsersService
+    private _userService: UsersService,
+    private navigationServices: NavigationService
   ) {
   }
 
@@ -76,6 +78,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
     const info = JSON.parse(localStorage.getItem('infoUser'));
     this._userService.setLocate(+info.id, lang).subscribe((data) => {
       localStorage.setItem('language', data.language);
+      this.navigationServices.get().toPromise();
     });
     this._translocoService.setActiveLang(lang);
   }

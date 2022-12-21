@@ -3,6 +3,7 @@
   "selectAll": "Select all",
   "dateInit": "From",
   "dateEnd": "To",
+  "logout": "Close session",
   "buttons": {
     "buttonEdit": "Edit",
     "buttonDelete": "Delete",
@@ -22,6 +23,11 @@
       "previousPageLabel": "Previous page",
       "nextPageLabel": "Next page",
       "lastPageLabel": "Last page"
-    }
+    },
+    "notFountData": "There is no data matching the search:"
+  },
+  "layoutVertical": {
+    "iconFix": "Fix sidebar",
+    "iconMenu": "{{value}} sidebar"
   }
 }
