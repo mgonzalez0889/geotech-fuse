@@ -25,9 +25,9 @@ export class FormFleetComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    addFleets: 'gestiondemobiles:flotas:create',
-    updateFleets: 'gestiondemobiles:flotas:update',
-    deleteFleets: 'gestiondemobiles:flotas:delete',
+    addFleets: 'gestion_de_mobiles:flotas:create',
+    updateFleets: 'gestion_de_mobiles:flotas:update',
+    deleteFleets: 'gestion_de_mobiles:flotas:delete',
   };
 
   constructor(
@@ -154,7 +154,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
           if (newFleet) {
             this.fleetsPlate = null;
             this.fleets = [];
-            this.fleets['name'] = newFleet;
+            // this.fleets['name'] = newFleet;
             if (this.fleetForm) {
               this.fleetForm.reset();
             }
@@ -163,7 +163,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
           if (payload?.id) {
             this.fleets = payload;
             this.fleetForm.patchValue(this.fleets);
-            this.fleetForm.patchValue({ plates: payload.plates.map(({ owner_plate_id }) => owner_plate_id )});
+            this.fleetForm.patchValue({ plates: payload.plates.map(({ owner_plate_id }) => owner_plate_id) });
           }
         }
       );

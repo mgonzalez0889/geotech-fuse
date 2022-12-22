@@ -1,9 +1,9 @@
 {
   "titlePage": "Eventos del sistema",
   "subtitlePage": {
-    "dispatch0": "Sin Eventos",
-    "dispatch1": "Evento",
-    "dispatchOther": "Eventos"
+    "event0": "Sin Eventos",
+    "event1": "Evento",
+    "eventOther": "Eventos"
   },
   "tablePage": {
     "color": "Color",

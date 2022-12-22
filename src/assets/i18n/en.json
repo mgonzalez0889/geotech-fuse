@@ -4,6 +4,8 @@
   "dateInit": "From",
   "dateEnd": "To",
   "logout": "Close session",
+  "show": "Show",
+  "hidden": "Hidden",
   "buttons": {
     "buttonEdit": "Edit",
     "buttonDelete": "Delete",
@@ -12,7 +14,8 @@
     "buttonCancel": "Cancel",
     "buttonAdd": "Add",
     "buttonImport": "Import",
-    "buttonDowloand": "Dowloand"
+    "buttonDowloand": "Dowloand",
+    "buttonGenerate": "Generate"
   },
   "table": {
     "warningTitle": "Notice",
@@ -28,6 +31,7 @@
   },
   "layoutVertical": {
     "iconFix": "Fix sidebar",
-    "iconMenu": "{{value}} sidebar"
+    "iconMenuShow": "Show sidebar",
+    "iconMenuHidden": "Hidden sidebar"
   }
 }

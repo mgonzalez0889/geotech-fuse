@@ -176,7 +176,7 @@ export class MapToolsService {
     if (Number(data.status) === 0 && Number(data.speed) === 0) {
       if (typeService === 'geobolt') {
         return L.icon({
-          iconUrl: './assets/icons/iconMap/status_open_color.svg',
+          iconUrl: './assets/icons/iconMap/geobolt_open.svg',
           iconSize: [25, 25],
           iconAnchor: [12.5, 12.5],
         });
@@ -191,7 +191,7 @@ export class MapToolsService {
       if (Number(data.speed) === 0) {
         if (typeService === 'geobolt') {
           return L.icon({
-            iconUrl: './assets/icons/iconMap/status_close_color.svg',
+            iconUrl: './assets/icons/iconMap/geobolt_close.svg',
             iconSize: [25, 25],
             iconAnchor: [12.5, 12.5],
           });

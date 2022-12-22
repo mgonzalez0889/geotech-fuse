@@ -28,9 +28,9 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
   public columnTable: string[] = ['checkbox', 'color', 'name', 'delete', 'edit'];
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    create: 'seguimientos:mapas:create',
-    update: 'seguimientos:mapas:update',
-    delete: 'seguimientos:mapas:delete',
+    create: 'seguimientos:mapa:create',
+    update: 'seguimientos:mapa:update',
+    delete: 'seguimientos:mapa:delete',
   };
   private dataGeo: any[] = [];
   private unsubscribe$ = new Subject<void>();

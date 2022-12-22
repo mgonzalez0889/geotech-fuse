@@ -173,7 +173,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
           this.editMode = isEdit;
           if (newContact) {
             this.contacts = [];
-            this.contacts['full_name'] = newContact;
+            // this.contacts['full_name'] = newContact;
             if (this.contactForm) {
               this.contactForm.reset();
               this.contactForm.controls['indicative'].setValue(

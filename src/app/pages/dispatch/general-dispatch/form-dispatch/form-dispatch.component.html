@@ -2,7 +2,7 @@
   <div class="overflow-auto bg-card shadow rounded-2xl min-h-180">
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button [matTooltip]="'buttons.buttonClose'" (click)="closeMenu()">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="closeMenu()">
           <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
       </div>
@@ -152,7 +152,7 @@
             <button *ngIf="dispatches['status'] ===1" (click)="finishDispatch()" class="ml-2" mat-flat-button
               [color]="'accent'">
               <span *ngIf="!dispatchForm.disabled">
-                {{'dispatch.formPage.finishDespatch'}}
+                {{'dispatch.formPage.finishDespatch' | transloco}}
               </span>
               <mat-progress-spinner *ngIf="dispatchForm.disabled" [diameter]="24" [mode]="'indeterminate'">
               </mat-progress-spinner>
@@ -163,10 +163,10 @@
           <form [formGroup]="dispatchForm">
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>{{'dispatch.formPage.fieldPlate' | transloco}}</mat-label>
+                <mat-label>{{'dispatch.formPage.fieldSpreadsheet' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">assignment</mat-icon>
                 <input matInput [formControlName]="'spreadsheet'"
-                  [placeholder]="'dispatch.formPage.fieldPlate' | transloco" required>
+                  [placeholder]="'dispatch.formPage.fieldSpreadsheet' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
@@ -183,7 +183,7 @@
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                   [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                 <input matInput [formControlName]="'client'"
-                  [placeholder]="'dispatch.formPage.fieldClient' | transloco">
+                  [placeholder]="'dispatch.formPage.fieldClient' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
@@ -227,7 +227,7 @@
               <mat-form-field class="fuse-mat-no-subscript w-full">
                 <mat-label>{{'dispatch.formPage.fieldPlate' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">local_shipping</mat-icon>
-                <input matInput [formControlName]="'plate'" [placeholder]="'dispatch.formPage.fieldPlate' | transloco">
+                <input matInput [formControlName]="'plate'" required [placeholder]="'dispatch.formPage.fieldPlate' | transloco">
               </mat-form-field>
             </div>
             <div class="mt-4">
@@ -245,7 +245,7 @@
               <mat-form-field class="fuse-mat-no-subscript w-full">
                 <mat-label>{{'dispatch.formPage.fliedDevice' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">lock</mat-icon>
-                <mat-select [formControlName]="'device'">
+                <mat-select [formControlName]="'device'" required>
                   <mat-option *ngFor="let device of devices" [value]="device.id">
                     {{device.plate}}
                   </mat-option>

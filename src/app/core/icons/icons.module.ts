@@ -70,11 +70,11 @@ export class IconsModule {
     this._matIconRegistry.addSvgIcon('not-signal-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'));
     this._matIconRegistry.addSvgIcon('fixed-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/fixed-movil.svg'));
     this._matIconRegistry.addSvgIcon('historic', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/historic.svg'));
-    this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown.svg'));
-    this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition.svg'));
+    this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown_icon.svg'));
+    this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition_icon.svg'));
     this._matIconRegistry.addSvgIcon('plus-border', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/plus-border.svg'));
     this._matIconRegistry.addSvgIcon('close-geo', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/close.svg'));
-    this._matIconRegistry.addSvgIcon('no_report', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/no_report.svg'));
+    this._matIconRegistry.addSvgIcon('no_report', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'));
   }
 
   public iconStatus(data: any): IConfigIcon {

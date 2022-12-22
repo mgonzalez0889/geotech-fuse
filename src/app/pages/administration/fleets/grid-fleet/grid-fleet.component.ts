@@ -23,9 +23,9 @@ export class GridFleetComponent implements OnInit, OnDestroy {
   public columnsFleet: string[] = ['name', 'description'];
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    addFleets: 'gestiondemobiles:flotas:create',
-    updateFleets: 'gestiondemobiles:flotas:update',
-    deleteFleets: 'gestiondemobiles:flotas:delete',
+    addFleets: 'gestion_de_mobiles:flotas:create',
+    updateFleets: 'gestion_de_mobiles:flotas:update',
+    deleteFleets: 'gestion_de_mobiles:flotas:delete',
   };
   constructor(
     private fleetService: FleetsService,

@@ -12,7 +12,8 @@
     "buttonClose": "Cerrar",
     "buttonAdd": "Agregar",
     "buttonImport": "Importar",
-    "buttonDowloand": "Descargar"
+    "buttonDowloand": "Descargar",
+    "buttonGenerate": "Generar"
   },
   "table": {
     "warningTitle": "Aviso",
@@ -28,6 +29,7 @@
   },
   "layoutVertical": {
     "iconFix": "Fijar barra lateral",
-    "iconMenu": "{{value}} barra lateral"
+    "iconMenuShow": "Mostrar barra lateral",
+    "iconMenuHidden": "Ocultar barra lateral"
   }
 }

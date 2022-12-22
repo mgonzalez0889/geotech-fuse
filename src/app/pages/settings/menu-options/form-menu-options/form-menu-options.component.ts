@@ -37,9 +37,9 @@ export class FormMenuOptionsComponent implements OnInit, OnDestroy {
   ];
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    addMenuOption: 'configuración:gestiondemenú:create',
-    updateMenuOption: 'configuración:gestiondemenú:update',
-    deleteMenuOption: 'configuración:gestiondemenú:delete',
+    addMenuOption: 'configuración:gestion_de_menú:create',
+    updateMenuOption: 'configuración:gestion_de_menú:update',
+    deleteMenuOption: 'configuración:gestion_de_menú:delete',
   };
   constructor(
     private menuOptionsService: MenuOptionsService,

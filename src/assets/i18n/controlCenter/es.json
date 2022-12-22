@@ -1,29 +1,29 @@
-{    
- "tittlepage" : "Contactos para atención de alarmas",
- "subtitlepage" : {
-  "contact0" : "Sin contactos",
-  "contact1" : "Contacto",
-  "contacts" : "Contactos"
-    },
- "table": { 
-    "emptyContactList" : "Lo sentimos no se encontraron datos",
-    "matNoDataRow" : "No hay datos que coincidan con la busqueda : ",
-    "ownerSelect" : "Seleccione un cliente",
-    "name" : "Nombre",
-    "identification" : "identificación",
-    "typeOfContact" : "Tipo de contacto",
-    "address" : "Dirección",
-    "email" : "Correo electrónico",
-    "cellPhone" : "Celular"
-   },
- "formPage" : {
-    "typeOfContact" : "Tipo de contacto",
-    "email" : "Correo electrónico",
-    "cellPhone" : "Celular",
-    "identification" : "Identificación",
-    "address" : "Dirección",
-    "description" : "Descripción",
-    "fullName" : "Nombre completo"
-   }
- }
- 
+{
+  "tittlepage": "Contactos para atención de alarmas",
+  "subtitlepage": {
+    "contact0": "Sin contactos",
+    "contact1": "Contacto",
+    "contacts": "Contactos"
+  },
+  "table": {
+    "emptyContactList": "Lo sentimos no se encontraron datos",
+    "matNoDataRow": "No hay datos que coincidan con la busqueda : ",
+    "ownerSelect": "Seleccione un cliente",
+    "name": "Nombre",
+    "identification": "identificación",
+    "typeOfContact": "Tipo de contacto",
+    "address": "Dirección",
+    "email": "Correo electrónico",
+    "cellPhone": "Celular"
+  },
+  "formPage": {
+    "formName": "Nuevo contacto",
+    "typeOfContact": "Tipo de contacto",
+    "email": "Correo electrónico",
+    "cellPhone": "Celular",
+    "identification": "Identificación",
+    "address": "Dirección",
+    "description": "Descripción",
+    "fullName": "Nombre completo"
+  }
+}
