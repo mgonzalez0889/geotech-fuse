@@ -1,0 +1,71 @@
+{    
+ "tittlepage" : "Monitoring Center",
+ "notAttended" : "Not Attended",
+ "inRecovery" : "In Recovery",
+ "onTrack" : "On Track",
+ "silenced" : "Silenced",
+ "alarms" : "Alarms",
+ "attendAlarm" : "Attend alarm",
+ "table" : {
+  "state" : "Status",
+  "plate" : "Plate",
+  "internalCode" : "Internal code",
+  "noCode" : "No code",
+  "quantity" : "Quantity",
+  "address" : "Address" ,
+  "seeOnTheMap" : "See on the map",
+  "date" : "Date",
+  "matNoDataRow" : "There is no data matching the filter : ",
+  "underManagement" : "In management",
+  "silenced" : "Silenced",
+  "all" : "All"
+  },
+  "formPage" : {
+    "followUp" : "Follow up",
+    "customer" : "Customer",
+    "address" : "Address",
+    "alarm" : "Alarm",
+    "initialDate" : "Initial date",
+    "finalDate" : "Final date",
+    "dateOfGeneration" : "Date of generation",
+    "attentionReport" : "Attention report",
+    "table" : {
+      "dateOfEntry" : "date of entry",
+      "startDateOfAttention" : "Start date of attention",
+      "reactionTime" : "Reaction time",
+      "dateOfAttention" : "Attention date",
+      "timeOfAttention" : "Attention time",
+      "user" : "User",
+      "attention" : "Attention"
+    }
+  },
+  "tableIsAttended" : {
+    "alarmAttention" : "Alarm attention",
+    "attentionStatus" : "Attention status",
+    "addDetails" : "Add details",
+    "generateAlarmAgain" : "Generate alarm again",
+    "buttonOk" : "Ok",
+    "causeOfAlarm" : "Cause of alarm",
+    "events" : "Events",
+    "buttonAttend" : "Attend"
+  },
+  "formPageContacts" : {
+    "contacts" : "Contacts",
+    "newContact" : "New contact",
+    "name" : "Name",
+    "identification" : "Identification",
+    "cellPhone" : "Cell phone",
+    "typeOfContact" : "Type of contact",
+    "email" : "Email",
+    "observations" : "Observations"
+  },
+  "modalPageContacts" : {
+    "fullName" : "Full name",
+    "typeOfContact" : "Contact type",
+    "email" : "Email",
+    "cellPhone" : "Cell phone",
+    "identification" : "Identification",
+    "address" : "Address",
+    "description" : "Description"
+  }
+}

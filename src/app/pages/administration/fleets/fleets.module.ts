@@ -21,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../../../shared/shared.module';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 @NgModule({
   declarations: [
@@ -49,5 +50,6 @@ import { SharedModule } from '../../../shared/shared.module';
     MatProgressSpinnerModule,
     SharedModule
   ],
+  providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'fleets' }],
 })
 export class FleetsModule { }

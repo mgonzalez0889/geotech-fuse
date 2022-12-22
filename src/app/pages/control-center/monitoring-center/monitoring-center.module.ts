@@ -24,6 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalContactsComponent } from './modal-contacts/modal-contacts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { SharedModule } from 'app/shared/shared.module';
 
 
 @NgModule({
@@ -53,7 +55,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         ReactiveFormsModule,
         MatTooltipModule,
         MatDialogModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        SharedModule
     ],
+    providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'monitoringCenter' }],
+
 })
 export class MonitoringCenterModule {}

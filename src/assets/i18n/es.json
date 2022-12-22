@@ -16,11 +16,11 @@
   },
   "table": {
     "warningTitle": "Aviso",
-    "warningDescription": "Lo sentimos, no se encontraron datos.",
+    "warningDescription": "Lo sentimos, no se encontraron datos",
     "pagination": {
       "itemsPerPageLabel": "Items por página:",
       "firstPageLabel": "Página anterior",
-      "previousPageLabel": "Pagina anterior",
+      "previousPageLabel": "Página anterior",
       "nextPageLabel": "Siguiente página",
       "lastPageLabel": "Última página"
     },

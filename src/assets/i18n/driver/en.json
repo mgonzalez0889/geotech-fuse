@@ -1,0 +1,28 @@
+{
+  "tittlepage": "Drivers",
+  "addDriver": "Add driver",
+  "table": {
+    "emptyDriverList": "Sorry no data found",
+    "name": "Name",
+    "identification": "Identification",
+    "address": "Address",
+    "email": "Email",
+    "cellPhone": "Cell phone",
+    "matNoDataRow": "There is no data matching the search : "
+  },
+  "subtitlepage": {
+    "driver0": "No driver",
+    "driver1": "Driver",
+    "drivers": "Drivers"
+  },
+  "formPage": {
+    "titleForm": "New driver",
+    "fullName": "Full name",
+    "identification": "Identification",
+    "emailAddress": "Email address",
+    "cellPhone": "Cell phone",
+    "licenseNumber": "License number",
+    "licenseExpirationDate": "License expiration date",
+    "address": "Address"
+  }
+}

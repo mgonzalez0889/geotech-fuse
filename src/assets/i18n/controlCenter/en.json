@@ -1,0 +1,27 @@
+{    
+ "tittlepage" : "Contacts for alarm attention",
+ "subtitlepage" : {
+  "contact0" : "No contacts",
+  "contact1" : "Contact",
+  "contacts" : "Contacts"
+    },
+ "table" : { 
+    "emptyContactList" : "Sorry no data found",
+    "matNoDataRow" : "There is no data matching the search : ",
+    "ownerSelect" : "Select a customer",
+    "name" : "Name",
+    "identification" : "Identification",
+    "typeOfContact" : "Type of contact",
+    "address" : "Address",
+    "email" : "Email",
+    "cellPhone" : "Cell phone"
+   },
+ "formPage" : {
+    "email" : "Email",
+    "cellPhone" : "Cell phone",
+    "identification" : "Identification",
+    "address" : "Address",
+    "description" : "Description",
+    "fullName" : "Full name"
+   }
+ }

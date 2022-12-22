@@ -1,0 +1,26 @@
+{
+  "tittlepage": "Contactos",
+  "subtitlepage": {
+    "contact0": "Sin contactos",
+    "contact1": "Contacto",
+    "contacts": "Contactos"
+  },
+  "tablePage": {
+    "name": "Nombre",
+    "identification": "Identificación",
+    "address": "Dirección",
+    "emailAddress": "Correo electrónico",
+    "cellPhone": "Celular",
+    "emptyContactList": "Lo sentimos no se encontraron datos"
+  },
+  "matNoDataRow": "No hay datos que coincidan con la busqueda : ",
+  "formPage": {
+    "edit": "Editar",
+    "formName": "Nuevo contacto",
+    "fullName": "Nombre completo",
+    "identification": "Identificación",
+    "emailAddress": "Correo electrónico",
+    "cellPhone": "Celular",
+    "address": "Dirección"
+  }
+}

@@ -3,16 +3,16 @@
         <!--Title-->
         <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
             <div>
-                <h2 class="text-3xl font-semibold tracking-tight leading-8">Conductores</h2>
+                <h2 class="text-3xl font-semibold tracking-tight leading-8">{{'driver.tittlepage' | transloco}}</h2>
                 <div class="ml-0.5 font-medium text-secondary">
                     <ng-container *ngIf="driversCount > 0">
                         {{driversCount}}
                     </ng-container>
                     {{driversCount | i18nPlural: {
-                    '=0' : 'Sin conductores.',
-                    '=1' : 'Conductor',
-                    'other': 'Conductores'
-                    } }}
+                    '=0' : 'driver.subtitlepage.driver0',
+                    '=1' : 'driver.subtitlepage.driver1',
+                    'other': 'driver.subtitlepage.drivers'
+                    } | transloco }}
                 </div>
             </div>
         </div>
@@ -29,20 +29,21 @@
                         <!-- Acciones-->
                         <div class="flex border-b p-6">
                             <div class="flex border-2 rounded-full p-2 ">
-                                <input #input matInput placeholder="Buscar" (keyup)="filterTable($event)">
+                                <input #input matInput [placeholder]="'search' | transloco" (keyup)="filterTable($event)">
                                 <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
                             </div>
                             <div class="pl-6">
                                 <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'"
                                     (click)="newDriver()">
                                     <mat-icon class="icon-size-5">add</mat-icon>
-                                    <span class="ml-2">Agregar conductor</span>
+                                    <span class="ml-2">{{'driver.addDriver' | transloco}}</span>
                                 </button>
                             </div>
                         </div>
                         <div [hidden]="driversCount > 0" class="pt-3 w-full h-full items-center justify-center">
                             <div class="flex items-center justify-center">
-                                <div class="text-base font-semibold text-secondary">Lo sentimos no se encontraron datos
+                                <div class="text-base font-semibold text-secondary">
+                                    {{'driver.table.emptyDriverList' | transloco}}
                                 </div>
                             </div>
                         </div>
@@ -52,7 +53,9 @@
                                 <table mat-table [dataSource]="dataTableDriver" matSort class="w-full">
                                     <!-- full_name Column -->
                                     <ng-container matColumnDef="name">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            {{'driver.table.name' | transloco}}
+                                        </th>
                                         <td mat-cell *matCellDef="let row">
                                             <span class="pr-6 whitespace-nowrap">
                                                 {{row.name}} </span>
@@ -60,7 +63,9 @@
                                     </ng-container>
                                     <!-- identification Column -->
                                     <ng-container matColumnDef="identification">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Indentificación </th>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            {{'driver.table.identification' | transloco}}
+                                        </th>
                                         <td mat-cell *matCellDef="let row">
                                             <span class="pr-6 whitespace-nowrap">
                                                 {{row.identification}} </span>
@@ -68,7 +73,9 @@
                                     </ng-container>
                                     <!-- address Column -->
                                     <ng-container matColumnDef="address">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            {{'driver.table.address' | transloco}}
+                                        </th>
                                         <td mat-cell *matCellDef="let row">
                                             <span class="pr-6 whitespace-nowrap">
                                                 {{row.address}} </span>
@@ -76,7 +83,9 @@
                                     </ng-container>
                                     <!-- email Column -->
                                     <ng-component matColumnDef="email">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo electrónico </th>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            {{'driver.table.email' | transloco}}
+                                        </th>
                                         <td mat-cell *matCellDef="let row">
                                             <a class="hover:underline text-primary-500 pr-6 whitespace-nowrap"
                                                 [href]="'mailto:' + row.email" target="_blank">
@@ -86,7 +95,9 @@
                                     </ng-component>
                                     <!-- phone Column -->
                                     <ng-container matColumnDef="cellPhone">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Celular</th>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            {{'driver.table.cellPhone' | transloco}}
+                                        </th>
                                         <td mat-cell *matCellDef="let row">
                                             <span class="pr-6 whitespace-nowrap">
                                                 {{row.phone}}
@@ -99,7 +110,7 @@
                                     </tr>
                                     <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
                                     <tr class="mat-row" *matNoDataRow>
-                                        <td class="mat-cell" colspan="5">No hay datos que coincidan con la busqueda:
+                                        <td class="mat-cell" colspan="5">{{'driver.table.matNoDataRow' | transloco}}
                                             "{{input?.value}}"
                                         </td>
                                     </tr>

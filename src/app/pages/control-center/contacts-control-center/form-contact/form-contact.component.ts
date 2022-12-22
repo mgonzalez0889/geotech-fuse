@@ -24,9 +24,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
   public countries: any = [];
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    addContactControl: 'centrodemonitoreo:contactocentrodecontrol:create',
-    updateContactControl: 'centrodemonitoreo:contactocentrodecontrol:update',
-    deleteContactControl: 'centrodemonitoreo:contactocentrodecontrol:delete',
+    addContactControl: 'centro_de_monitoreo:contacto_centro_de_control:create',
+    updateContactControl: 'centro_de_monitoreo:contacto_centro_de_control:update',
+    deleteContactControl: 'centro_de_monitoreo:contacto_centro_de_control:delete',
   };
   constructor(
     private controlCenterService: ControlCenterService,

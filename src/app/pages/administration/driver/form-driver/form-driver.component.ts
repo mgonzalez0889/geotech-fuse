@@ -184,7 +184,7 @@ export class FormDriverComponent implements OnInit, OnDestroy {
           this.editMode = isEdit;
           if (newDriver) {
             this.drivers = [];
-            this.drivers['name'] = newDriver;
+            // this.drivers['name'] = newDriver;
             if (this.driverForm) {
               this.driverForm.reset();
               this.driverForm.controls['indicative'].setValue(

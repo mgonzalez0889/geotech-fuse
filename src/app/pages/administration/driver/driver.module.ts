@@ -18,6 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
     declarations: [FormDriverComponent, GridDriverComponent],
@@ -38,6 +40,8 @@ import { MatSelectModule } from '@angular/material/select';
         MatInputModule,
         MatButtonModule,
         MatSortModule,
+        SharedModule
     ],
+    providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'driver' }],
 })
 export class DriverModule {}

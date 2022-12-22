@@ -1,0 +1,20 @@
+{    
+ "tittlepage" : "fleets",
+ "subtitlepage" : {
+  "fleet0" : "No fleet",
+  "fleet1" : "Fleet",
+  "fleets" : "Fleets"
+    },
+ "table" : {
+   "name" : "Name",
+   "description" : "Description"
+},
+ "emptyFleetsList" : "There is no data matching the search : ",
+ "formPage" : {
+   "description" : "Description",
+   "vehicles" : "Vehicles",
+   "FleetName" : "Fleet Name",
+   "SelectVehicles" : "Select vehicles"
+ }
+
+}

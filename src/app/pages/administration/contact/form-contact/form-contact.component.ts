@@ -2,10 +2,10 @@ import { Subscription } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IconsModule } from '../../../../core/icons/icons.module';
-import { ContactService } from 'app/core/services/api/contact.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { ContactService } from '@services/api/contact.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-contact',
@@ -179,7 +179,6 @@ export class FormContactComponent implements OnInit, OnDestroy {
           this.editMode = isEdit;
           if (newContact) {
             this.contacts = [];
-            this.contacts['full_name'] = newContact;
             if (this.contactForm) {
               this.contactForm.reset();
               this.contactForm.controls['indicative'].setValue(
