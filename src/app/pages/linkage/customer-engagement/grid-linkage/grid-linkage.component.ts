@@ -5,6 +5,8 @@ import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.ser
 import { UsersService } from '@services/api/users.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ModalLinkageComponent } from '../modal-linkage/modal-linkage.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-grid-linkage',
@@ -62,6 +64,8 @@ export class GridLinkageComponent implements OnInit {
   constructor(
     private toastAlert: ToastAlertService,
     private usersService: UsersService,
+    private matDialog: MatDialog,
+
 
 
   ) { }
@@ -86,6 +90,18 @@ export class GridLinkageComponent implements OnInit {
     this.opened = true;
     this.titleForm = 'Editar cliente';
 
+  }
+  public newClient(): void {
+    const dialogRef = this.matDialog.open(ModalLinkageComponent, {
+      width: '600px',
+      height:'450px',
+      data: {
+
+      },
+    });
+    // dialogRef.afterClosed().subscribe((res) => {
+
+    // });
   }
 
 
