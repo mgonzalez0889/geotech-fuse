@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
   /*Api para produccion*/
-  urlApi: 'http://myapi.geotechsa.co:3200/api/v1/',
-  baseUrl: 'http://myapi.geotechsa.co:3200/',
+  urlApi: 'https://myapi.geotechsa.co:3200/api/v1/',
+  baseUrl: 'https://myapi.geotechsa.co:3200/',
 
   /*Api para pruebas en local Cristian*/
   // urlApi: 'http://192.168.190.56:3200/api/v1/',
