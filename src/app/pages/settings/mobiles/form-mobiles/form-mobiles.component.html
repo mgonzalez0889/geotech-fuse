@@ -2,7 +2,8 @@
   <div class="relative overflow-auto bg-card shadow rounded-2xl min-h-auto">
 
     <div class="absolute z-999 right-2 top-2">
-      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" class="bg-white shadow-xl" (click)="closeMenu()">
+      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" class="bg-white shadow-xl"
+        (click)="closeMenu()">
         <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
       </button>
     </div>
@@ -41,18 +42,18 @@
             <p class="ml-6 leading-6">{{capacity}}</p>
           </div>
         </div>
-        <!-- 
-          <div class="flex items-center my-4 border-b">
-            <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
-              Información del conductor
-            </div>
-          </div> -->
+
+        <div class="flex items-center my-4 border-b">
+          <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
+            Información del conductor
+          </div>
+        </div>
       </div>
     </div>
 
     <div [hidden]="!editMode">
-      <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-4" (submit)="this.sendData()">
-        <mat-form-field class="fuse-mat-dense w-full">
+      <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-8" (submit)="this.sendData()">
+        <mat-form-field class="fuse-mat-dense w-full" *ngIf="drivers.length">
           <mat-label>{{'mobile.formPage.fieldDriver' | transloco}}</mat-label>
           <mat-icon matPrefix>person</mat-icon>
           <mat-select [formControlName]="'owner_driver_id'">

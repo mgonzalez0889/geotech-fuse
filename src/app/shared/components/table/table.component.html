@@ -3,23 +3,23 @@
   <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto">
     <table mat-table [dataSource]="this.dataSource" matSort class="w-full">
       <ng-container [matColumnDef]="dataOption.name" *ngFor="let dataOption of this.dataOptionTable">
-        <th class="pl-2" mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text | transloco}} </th>
+        <th class="pl-4" mat-header-cell *matHeaderCellDef mat-sort-header> {{dataOption.text | transloco}} </th>
         <ng-container *ngIf="dataOption.typeField !== 'switch'">
-          <td class="cursor-pointer pl-2" mat-cell *matCellDef="let row" (click)="actionSelectRow(row)">
+          <td class="cursor-pointer pl-4" mat-cell *matCellDef="let row" (click)="actionSelectRow(row)">
             <span *ngIf="!!!dataOption['color']" class="whitespace-nowrap" [ngClass]="dataOption.classTailwind">
-              {{ row[dataOption.name] || dataOption.defaultValue | dataTable:dataOption.typeField }}
+              {{ row[dataOption.name] || (dataOption.defaultValue | transloco) | dataTable:dataOption.typeField }}
             </span>
             <span *ngIf="!!dataOption['color']" [ngStyle]="{color: dataOption.color() }" class="whitespace-nowrap"
               [ngClass]="dataOption.classTailwind">
-              {{ row[dataOption.name] || dataOption.defaultValue | dataTable:dataOption.typeField }}
+              {{ row[dataOption.name] || (dataOption.defaultValue | transloco) | dataTable:dataOption.typeField }}
             </span>
           </td>
         </ng-container>
         <ng-container *ngIf="dataOption.typeField === 'switch'">
           <td mat-cell *matCellDef="let row">
             <span class="w-full h-full" *ngIf="dataOption.typeField === 'switch'">
-              <mat-slide-toggle [matTooltip]="'users.tablePage.switch' | transloco" (change)="actionSwitch($event, row)" color="primary"
-                [checked]="row[dataOption.name]" [value]="row[dataOption.name]">
+              <mat-slide-toggle [matTooltip]="'users.tablePage.switch' | transloco" (change)="actionSwitch($event, row)"
+                color="primary" [checked]="row[dataOption.name]" [value]="row[dataOption.name]">
               </mat-slide-toggle>
             </span>
           </td>
@@ -29,8 +29,8 @@
       <ng-container *ngIf="this.buttonTable" matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let row">
-          <button class="ml-4" mat-icon-button [matTooltip]="this.buttonTable.text | transloco" matTooltipPosition="above"
-            (click)="this.buttonTable.action(row)">
+          <button class="ml-4" mat-icon-button [matTooltip]="this.buttonTable.text | transloco"
+            matTooltipPosition="above" (click)="this.buttonTable.action(row)">
             <mat-icon [svgIcon]="this.buttonTable.icon"></mat-icon>
           </button>
         </td>

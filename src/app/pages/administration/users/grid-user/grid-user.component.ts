@@ -97,7 +97,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.addUser]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;
@@ -122,7 +122,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.updateUser]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
       return;
     }
@@ -133,11 +133,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
         if (data.code === 400) {
           this.toastAlert.toasAlertWarn({
             message:
-              'No se puedo modificar el estado, intentelo de nuevo.',
+              'users.messageAlert.updateStateWarn',
           });
         } else {
           this.toastAlert.toasAlertSuccess({
-            message: 'Estado de Usuario modificado con exito.',
+            message: 'users.messageAlert.updateStateSuccess',
           });
         }
       });
@@ -184,11 +184,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
               if (data.code === 400) {
                 this.toastAlert.toasAlertWarn({
                   message:
-                    'No se puedo eliminar el usuario, intentelo de nuevo.',
+                    'users.messageAlert.deleteWarn',
                 });
               } else {
                 this.toastAlert.toasAlertSuccess({
-                  message: 'Usuario eliminado con exito.',
+                  message: 'users.messageAlert.deleteSuccess',
                 });
               }
             });
@@ -210,11 +210,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
             if (data.code === 400) {
               this.toastAlert.toasAlertWarn({
                 message:
-                  'No se puedo crear el usuario, intentelo de nuevo.',
+                  'users.messageAlert.createWarn',
               });
             } else {
               this.toastAlert.toasAlertSuccess({
-                message: `Usuario ${formData.full_name} creado con exito.`,
+                message: 'users.messageAlert.createSuccess',
               });
             }
           });
@@ -222,7 +222,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
           if (!this.listPermission[this.permissionValid.updateUser]) {
             this.toastAlert.toasAlertWarn({
               message:
-                'No tienes permisos suficientes para realizar esta acción.',
+                'messageAlert.messagePermissionWarn',
             });
             return;
           }
@@ -235,11 +235,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
               if (data.code === 400) {
                 this.toastAlert.toasAlertWarn({
                   message:
-                    'No se puedo modificar el usuario, intentelo de nuevo.',
+                    'users.messageAlert.updateWarn',
                 });
               } else {
                 this.toastAlert.toasAlertSuccess({
-                  message: 'Usuario modificado con exito.',
+                  message: 'users.messageAlert.updateSuccess',
                 });
               }
             });
@@ -247,7 +247,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
           if (!this.listPermission[this.permissionValid.deleteUser]) {
             this.toastAlert.toasAlertWarn({
               message:
-                'No tienes permisos suficientes para realizar esta acción.',
+                'messageAlert.messagePermissionWarn',
             });
           } else {
             this.deleteUser(formData.id);

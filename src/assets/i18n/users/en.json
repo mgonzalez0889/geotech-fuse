@@ -29,5 +29,15 @@
       "validUsername": "User name already exists.",
       "passwordValid": "Passwords do not match."
     }
+  },
+  "messageAlert": {
+    "updateStateWarn": "I cannot change the status, please try again.",
+    "updateStateSuccess": "User status successfully modified.",
+    "deleteWarn": "I cannot delete the user, please try again.",
+    "deleteSuccess": "User successfully deleted.",
+    "createWarn": "I can't create the user, try again.",
+    "createSuccess": "User successfully created.",
+    "updateWarn": "I can't change the user, try again.",
+    "updateSuccess": "User successfully modified."
   }
 }

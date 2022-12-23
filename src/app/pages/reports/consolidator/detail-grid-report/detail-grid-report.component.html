@@ -55,7 +55,7 @@
     <div class="items">
         <div class="item">
             <strong>{{'consolidator.datail.odometer' | transloco}}: </strong>
-            <span>{{ detailData.odometer }}</span>
+            <span>{{ detailData.odometer | number }}</span>
         </div>
 
         <div class="item">
@@ -77,12 +77,12 @@
     <div class="items">
         <div class="item">
             <strong>{{'consolidator.datail.averageOdometer' | transloco}}: </strong>
-            <span>{{ detailData.avg_odometer }}</span>
+            <span>{{ detailData.avg_odometer | number }}</span>
         </div>
 
         <div class="item">
             <strong>{{'consolidator.datail.averageHorometro' | transloco}}: </strong>
-            <span>{{ detailData.avg_horometer }}</span>
+            <span>{{ detailData.avg_horometer | number }}</span>
         </div>
 
         <div class="item">

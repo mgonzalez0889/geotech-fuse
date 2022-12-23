@@ -29,5 +29,15 @@
       "validUsername": "Nombre de usuario ya existe.",
       "passwordValid": "Las contraseñas no coinciden."
     }
+  },
+  "messageAlert": {
+    "updateStateWarn": "No se puedo modificar el estado, intentelo de nuevo.",
+    "updateStateSuccess": "Estado de Usuario modificado con exito.",
+    "deleteWarn": "No se puedo eliminar el usuario, intentelo de nuevo.",
+    "deleteSuccess": "Usuario eliminado con exito.",
+    "createWarn": "No se puedo crear el usuario, intentelo de nuevo.",
+    "createSuccess": "`Usuario creado con exito.`",
+    "updateWarn": "No se puedo modificar el usuario, intentelo de nuevo.",
+    "updateSuccess": "Usuario modificado con exito."
   }
 }

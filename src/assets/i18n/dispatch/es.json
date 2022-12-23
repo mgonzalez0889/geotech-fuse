@@ -9,6 +9,7 @@
     "buttonAdd": "Nuevo despacho"
   },
   "tablePage": {
+    "num": "No.",
     "spreadsheet": "Planilla",
     "stateDispath": "Estado del despacho",
     "dateCreate": "Fecha de creacion",

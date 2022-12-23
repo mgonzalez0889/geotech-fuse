@@ -1,10 +1,10 @@
 import { Subject } from 'rxjs';
 import { delay, filter, takeUntil } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DowloadTools } from '../../../../core/tools/dowload.tool';
-import { HistoriesService } from 'app/core/services/api/histories.service';
-import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/table.interface';
 import { TranslocoService } from '@ngneat/transloco';
+import { IButtonOptions, IOptionTable } from '@interface/index';
+import { DowloadTools } from '@tools/dowload.tool';
+import { HistoriesService } from '@services/api/histories.service';
 
 @Component({
   selector: 'app-grid-report',
@@ -13,7 +13,7 @@ import { TranslocoService } from '@ngneat/transloco';
 })
 export class GridReportComponent implements OnInit, OnDestroy {
   public historicData: any[] = [];
-  public dataSendTimeLine: any;
+  public dataForm: any;
   public opened: boolean = false;
 
   /**
@@ -78,13 +78,22 @@ export class GridReportComponent implements OnInit, OnDestroy {
     .concat('action');
 
   private unsubscribe$ = new Subject<void>();
+
   constructor(
     private dowloadTools: DowloadTools,
     private _historicService: HistoriesService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
     this.listenObservablesReport();
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        if (this.dataForm) {
+          this.readHistoryData();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -108,7 +117,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
    */
   public viewReportTimeLine(): void {
     let queryParams: string = '?';
-    Object.entries(this.dataSendTimeLine).forEach(([key, value]) => {
+    Object.entries(this.dataForm).forEach(([key, value]) => {
       queryParams += `${key}=${value}&`;
     });
     window.open(`/app/reports/general-report/time-line${queryParams}`);
@@ -125,14 +134,19 @@ export class GridReportComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         ({ payload }) => {
-          this.dataSendTimeLine = payload;
-          this._historicService
-            .getHistories(payload)
-            .subscribe((res) => {
-              this.historicData =
-                res.code === 400 ? [] : res.data;
-            });
+          this.dataForm = payload;
+          this.readHistoryData();
         }
       );
+  }
+
+  private readHistoryData(): void {
+    this._historicService
+      .getHistories(this.dataForm)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.historicData =
+          res.code === 400 ? [] : res.data;
+      });
   }
 }

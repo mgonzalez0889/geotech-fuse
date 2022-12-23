@@ -4,10 +4,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { AuthService } from 'app/core/auth/auth.service';
-import { EventsService } from 'app/core/services/api/events.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, delay } from 'rxjs/operators';
+import { TranslocoService } from '@ngneat/transloco';
+import { EventsService } from '@services/api/events.service';
 
 @Component({
   selector: 'app-grid-events',
@@ -35,7 +36,8 @@ export class GridEventsComponent implements OnInit, OnDestroy {
   constructor(
     private eventService: EventsService,
     private authService: AuthService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -45,6 +47,12 @@ export class GridEventsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((permission) => {
         this.listPermission = permission;
+      });
+
+    this.translocoService.langChanges$
+      .pipe(delay(100), takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.getEvents();
       });
   }
 

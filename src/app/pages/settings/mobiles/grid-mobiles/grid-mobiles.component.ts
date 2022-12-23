@@ -30,7 +30,7 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
       name: 'name_driver',
       text: 'mobile.tablePage.driver',
       typeField: 'text',
-      defaultValue: 'Sin conductor',
+      defaultValue: 'mobile.tablePage.notDriver',
     },
     {
       name: 'battery',
@@ -65,6 +65,13 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
   public selectMobile(data: any): void {
     this.opened = this.opened ? false : true;
     this.mobileSelect = { ...data };
+  }
+
+  closeForm(refresh: boolean): void {
+    this.opened = false;
+    if (refresh) {
+      this.getMobiles();
+    }
   }
 
   /**

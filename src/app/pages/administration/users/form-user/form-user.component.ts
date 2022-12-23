@@ -15,8 +15,8 @@ import { IconsModule } from 'app/core/icons/icons.module';
 import { FuseValidators } from '../../../../../@fuse/validators';
 import { fuseAnimations } from '../../../../../@fuse/animations';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UsersService } from '../../../../core/services/api/users.service';
-import { ProfilesService } from '../../../../core/services/api/profiles.service';
+import { ProfilesService } from '@services/api/profiles.service';
+import { UsersService } from '@services/api/users.service';
 
 @Component({
   selector: 'app-form-user',
@@ -37,6 +37,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
   public profile$: Observable<any>;
   public validUsername: boolean = false;
   public editPassword: boolean = false;
+  public userId: number;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -139,6 +140,12 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
    */
   private changeControlsForm(): void {
     if (this.dataUpdate) {
+      this.userId = JSON.parse(localStorage.getItem('infoUser')).id;
+      if (this.userId === this.dataUpdate.id) {
+        this.formUser.get('user_profile_id').disable();
+      } else {
+        this.formUser.get('user_profile_id').enable();
+      }
       this.formUser.addControl('change_password', this.fb.control(false));
       this.formUser.controls['password_digest'].clearValidators();
       this.formUser.controls['confirm_password'].clearValidators();

@@ -15,7 +15,7 @@ import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 })
 export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dataMobile: any = null;
-  @Output() closeForm = new EventEmitter<void>();
+  @Output() closeForm = new EventEmitter<{ refresh: boolean }>();
   public detailMobile: any = {};
   public editMode: boolean = false;
   public mobilForm: FormGroup = this.fb.group({});
@@ -90,7 +90,7 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ code }) => {
         if (code === 200) {
-          this.closeForm.emit();
+          this.closeForm.emit({ refresh: true });
           this.mapToolsService.clearMap();
           this.toastAlert.toasAlertSuccess({
             message: '¡Vehiculo modificado con exito!'
@@ -107,7 +107,7 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
    * @description: Cierra el menu lateral de la derecha
    */
   public closeMenu(): void {
-    this.closeForm.emit();
+    this.closeForm.emit({ refresh: false });
     this.mapToolsService.clearMap();
   }
 
@@ -116,6 +116,8 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       .getInfoOwnerPlate(this.dataMobile.plate_id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
+        // console.log('data', data);
+
         this.detailMobile = { ...data };
         this.mobilForm.patchValue({ ...data });
       });

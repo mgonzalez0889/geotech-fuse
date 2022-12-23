@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IConfirmationModal } from 'app/core/interfaces';
 import { merge } from 'lodash-es';
 import { DialogComponent } from './dialog/dialog.component';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Injectable()
 export class ConfirmationService {
@@ -31,7 +32,7 @@ export class ConfirmationService {
   /**
    * Constructor
    */
-  constructor(private _matDialog: MatDialog) { }
+  constructor(private _matDialog: MatDialog, private translocoService: TranslocoService) { }
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
@@ -39,6 +40,15 @@ export class ConfirmationService {
 
   open(config: IConfirmationModal = {}): MatDialogRef<DialogComponent> {
     // Merge the user config with the default config
+    const { messageConfirm, messageTitleConfirm } = this.translocoService.translateObject('messageAlert');
+    const messageClose = this.translocoService.translate('buttons.buttonClose');
+    const messageButtonConfirm = this.translocoService.translate('buttons.buttonConfirm');
+
+    this._defaultConfig.message = messageConfirm;
+    this._defaultConfig.title = messageTitleConfirm;
+    this._defaultConfig.actions.confirm.label = messageButtonConfirm;
+    this._defaultConfig.actions.cancel.label = messageClose;
+
     const userConfig = merge({}, this._defaultConfig, config);
 
     // Open the dialog

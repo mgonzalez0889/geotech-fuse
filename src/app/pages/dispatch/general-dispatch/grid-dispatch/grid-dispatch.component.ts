@@ -51,57 +51,57 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'id',
-      text: 'No.',
+      text: 'dispatch.tablePage.num',
       typeField: 'text'
     },
     {
       name: 'spreadsheet',
-      text: 'Planilla',
+      text: 'dispatch.tablePage.spreadsheet',
       typeField: 'text',
     },
     {
       name: 'created_at',
-      text: 'Fecha de creacion',
+      text: 'dispatch.tablePage.dateCreate',
       typeField: 'date'
     },
     {
       name: 'date_init_dispatch',
-      text: 'Fecha de inicio de despacho',
+      text: 'dispatch.tablePage.dateInitDispatch',
       typeField: 'date'
     },
     {
       name: 'date_end_dispatch',
-      text: 'Fecha de finalización del despacho',
+      text: 'dispatch.tablePage.dateEndDispatch',
       typeField: 'date',
     },
     {
       name: 'plate',
-      text: 'Vehiculo',
+      text: 'dispatch.tablePage.vehicle',
       typeField: 'text',
     },
     {
       name: 'device',
-      text: 'Dispositivo',
+      text: 'dispatch.tablePage.device',
       typeField: 'text',
     },
     {
       name: 'container_number',
-      text: 'Contenedor',
+      text: 'dispatch.tablePage.container',
       typeField: 'text'
     },
     {
       name: 'security_seal',
-      text: 'Sello de seguridad',
+      text: 'dispatch.tablePage.securitySeal',
       typeField: 'text'
     },
     {
       name: 'init_place',
-      text: 'Origen',
+      text: 'dispatch.tablePage.origin',
       typeField: 'text'
     },
     {
       name: 'end_place',
-      text: 'Destino',
+      text: 'dispatch.tablePage.destination',
       typeField: 'text'
     },
   ];

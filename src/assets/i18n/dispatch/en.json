@@ -9,6 +9,7 @@
     "buttonAdd": "New dispatch"
   },
   "tablePage": {
+    "num": "No.",
     "spreadsheet": "Spreadsheet",
     "stateDispath": "Status dispatch",
     "dateCreate": "Creation date",

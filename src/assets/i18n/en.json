@@ -15,7 +15,8 @@
     "buttonAdd": "Add",
     "buttonImport": "Import",
     "buttonDowloand": "Dowloand",
-    "buttonGenerate": "Generate"
+    "buttonGenerate": "Generate",
+    "buttonConfirm": "Confirm"
   },
   "table": {
     "warningTitle": "Notice",
@@ -50,5 +51,19 @@
     "passwordRequired": "Password is required",
     "description": "We generate value through data.",
     "descriptionLg": "All data analytics in one place for timely decision making for your operational strategy."
+  },
+  "messageAlert": {
+    "messagePermissionWarn": "You do not have sufficient permissions to perform this action.",
+    "messageConfirm": "Are you sure you want to confirm this action?",
+    "messageTitleConfirm": "Confirm action"
+  },
+  "popup": {
+    "lastTransmission": "Last transmission",
+    "speed": "Speed",
+    "lastPosition": "Last position",
+    "driver": "Driver",
+    "notDriver": "without driver",
+    "spreadsheet": "Spreadsheet",
+    "notSpreadsheet": "without payroll"
   }
 }

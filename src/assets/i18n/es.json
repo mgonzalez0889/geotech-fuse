@@ -13,7 +13,8 @@
     "buttonAdd": "Agregar",
     "buttonImport": "Importar",
     "buttonDowloand": "Descargar",
-    "buttonGenerate": "Generar"
+    "buttonGenerate": "Generar",
+    "buttonConfirm": "Confirmar"
   },
   "table": {
     "warningTitle": "Aviso",
@@ -48,5 +49,19 @@
     "passwordRequired": "Contraseña es requerido",
     "description": "Generamos valor a través de los datos.",
     "descriptionLg": "Toda la analítica de datos en un solo lugar para la oportuna toma de decisiones de su estrategia operativa."
+  },
+  "messageAlert": {
+    "messagePermissionWarn": "No tienes permisos suficientes para realizar esta acción.",
+    "messageConfirm": "¿Estás seguro de que quieres confirmar esta acción?",
+    "messageTitleConfirm": "Confirmar acción"
+  },
+  "popup": {
+    "lastTransmission": "Ultima transmision",
+    "speed": "Velocidad",
+    "lastPosition": "Ultima Posicion",
+    "driver": "Conductor",
+    "notDriver": "sin conductor",
+    "spreadsheet": "Planilla",
+    "notSpreadsheet": "sin planilla"
   }
 }
