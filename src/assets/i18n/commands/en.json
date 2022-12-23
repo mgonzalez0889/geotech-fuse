@@ -11,7 +11,8 @@
     "commandType" : "Command type",
     "user" : "User",
     "state" : "State",
-    "matNoDataRow" : "There is no data matching the filter : "
+    "matNoDataRow" : "There is no data matching the filter : ",
+    "resendCommand" : "Resend command"
   },
   "formPage" : {
     "titlePage" : "Mobile selection",
@@ -24,6 +25,11 @@
   "tabPage" : {
     "fleet" : "Fleet",
     "vehicle" : "Vehicle"
+  },
+  "commandStatus" : {
+    "commandExpired": "Expired",
+    "commandcConfirmed": "Confirmed",
+    "commandPending": "Pending"
   }
  
 }

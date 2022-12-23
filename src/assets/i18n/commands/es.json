@@ -11,7 +11,8 @@
     "commandType" : "Tipo de comando",
     "user" : "Usuario",
     "state" : "Estado",
-    "matNoDataRow" : "No hay datos que coincidan con el filtro : "
+    "matNoDataRow" : "No hay datos que coincidan con el filtro : ",
+    "resendCommand" : "Reenviar comando"
   },
   "formPage" : {
     "titlePage" : "Selección de moviles",
@@ -24,6 +25,11 @@
   "tabPage" : {
     "fleet" : "Flota",
     "vehicle" : "Vehiculo"
+  },
+  "commandStatus" : {
+    "commandExpired": "Expirado",
+    "commandcConfirmed": "Confirmado",
+    "commandPending": "Pendiente"
   }
  
 }

@@ -260,7 +260,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       if (this.fleets == null) {
         return;
       }
-      this.fleets.forEach((t) => (t.selected = completed));
+      this.fleets.forEach(t => (t.selected = completed));
     }
   }
   /**
@@ -272,7 +272,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
         return false;
       }
       return (
-        this.mobiles.filter((t) => t.selected).length > 0 &&
+        this.mobiles.filter(t => t.selected).length > 0 &&
         !this.allSelectedMobiles
       );
     } else if ('fleets') {
@@ -280,7 +280,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
         return false;
       }
       return (
-        this.fleets.filter((t) => t.selected).length > 0 &&
+        this.fleets.filter(t => t.selected).length > 0 &&
         !this.allSelectedFleets
       );
     }
