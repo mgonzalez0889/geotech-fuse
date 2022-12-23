@@ -15,9 +15,9 @@
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-label>{{'historical.formPage.fieldRangeDate' | transloco}}</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Desde" formControlName="date_init" />
-              <input matEndDate placeholder="Hasta" formControlName="date_end" />
+            <mat-date-range-input required [rangePicker]="picker">
+              <input matStartDate [placeholder]="'historical.formPage.fromDatePicker' | transloco" formControlName="date_init" />
+              <input matEndDate [placeholder]="'historical.formPage.toDatePicker' | transloco" formControlName="date_end" />
             </mat-date-range-input>
 
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -42,12 +42,12 @@
             <mat-label class="mb-3">{{'historical.formPage.fieldtypeVehiculo' | transloco}}</mat-label>
             <mat-radio-group [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}" class="mb-3">
               <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
-                [value]="trasport.name">{{ trasport.text | transloco }}</mat-radio-button>
+              [value]="trasport.name">{{ trasport.text | transloco }}</mat-radio-button>
             </mat-radio-group>
           </div>
 
           <div *ngIf="selectTrasport === 'mobiles'">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldVehiculos'"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.optionVehiculo' "
               [options]="{data:this.plates, key:'plate', keyView:'plate'}" labelControl="plates">
             </app-multi-select-filter>
           </div>

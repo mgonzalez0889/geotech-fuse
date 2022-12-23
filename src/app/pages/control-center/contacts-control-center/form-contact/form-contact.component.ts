@@ -157,8 +157,8 @@ export class FormContactComponent implements OnInit, OnDestroy {
       full_name: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
       phone: ['', [Validators.required]],
-      identification: ['', [Validators.required]],
-      address: ['', [Validators.required]],
+      identification: ['' ],
+      address: [''],
       description: [''],
       indicative: ['+57', [Validators.required]],
     });

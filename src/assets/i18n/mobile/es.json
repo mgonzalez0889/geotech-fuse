@@ -1,6 +1,10 @@
 {
   "titlePage": "Moviles",
-  "subTitlePage": "{{ value }} moviles",
+  "subTitlePage": {
+    "mobil0": "Sin movil",
+    "mobil1": "Movil",
+    "mobils": "Moviles"
+  },
   "tablePage": {
     "plate": "Placa",
     "internalCode": "Codigo interno",

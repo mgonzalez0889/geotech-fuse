@@ -17,6 +17,8 @@
     "viewMap": "Ver mapa"
   },
   "formPage": {
+    "fromDatePicker" : "Desde",
+    "toDatePicker" : "Hasta",
     "formNameCreate": "Generar Reporte",
     "fieldRangeDate": "Seleccione un rango de fecha",
     "fieldtypeVehiculo": "Buscar por:",

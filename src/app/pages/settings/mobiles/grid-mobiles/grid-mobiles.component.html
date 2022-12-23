@@ -2,7 +2,16 @@
   <div class="flex flex-wrap w-full mx-auto p-6">
     <!-- Cabecera de la vista -->
     <div class="w-full">
-      <app-header-page [title]="'mobile.titlePage' | transloco" [subTitle]="this.subTitlepage"></app-header-page>
+      <app-header-page [title]="'mobile.titlePage' | transloco" 
+      
+      [subTitle]="numberMovil +' ' + ( numberMovil | i18nPlural: {
+        '=0' : 'mobile.subTitlePage.mobil0',
+        '=1' : 'mobile.subTitlePage.mobil1',
+        'other': 'mobile.subTitlePage.mobils'
+        } | transloco )">
+      
+      </app-header-page>
+      
     </div>
 
     <div class="flex flex-wrap w-full py-6">

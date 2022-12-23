@@ -4,7 +4,7 @@
     <div class="w-full h-20 flex justify-between items-center px-2 pt-4 sm:px-12 border-b-2">
       <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'consolidator.formPage.formNameCreate' | transloco}}
       </h2>
-      <button mat-icon-button [matTooltip]="'buttons.buttonClose'" (click)="this.emitCloseForm.emit();">
+      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.emitCloseForm.emit();">
         <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
       </button>
     </div>
@@ -15,7 +15,7 @@
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-label>{{'consolidator.formPage.fieldRangeDate' | transloco}}</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
+            <mat-date-range-input required [rangePicker]="picker">
               <input matStartDate [placeholder]="'dateInit' | transloco" formControlName="date_init" />
               <input matEndDate [placeholder]="'dateEnd' | transloco" formControlName="date_end" />
             </mat-date-range-input>

@@ -49,6 +49,11 @@
     "events" : "Events",
     "buttonAttend" : "Attend"
   },
+  "subtitlepage" : {
+    "contact0" : "No contact",
+    "contact1" : "Contact",
+    "contacts" : "Contacts"
+  },
   "formPageContacts" : {
     "contacts" : "Contacts",
     "newContact" : "New contact",
@@ -67,5 +72,11 @@
     "identification" : "Identification",
     "address" : "Address",
     "description" : "Description"
+  },
+  "stateAlarms" : {
+    "notAttended" : "Not attended",
+    "Silenced" : "Silenced",
+    "inFollowUp" : "On track",
+    "inRecovery" : "In recovery"
   }
 }

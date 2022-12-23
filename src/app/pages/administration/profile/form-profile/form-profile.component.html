@@ -52,7 +52,7 @@
               <mat-form-field class="fuse-mat-no-subscript w-full">
                 <mat-label>{{'profile.formPage.fieldName' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
-                <input matInput formControlName="name" [placeholder]="'profile.formPage.fieldName' | transloco">
+                <input matInput formControlName="name" [placeholder]="'profile.formPage.fieldName' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
@@ -61,7 +61,7 @@
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles
                 </mat-icon>
                 <input matInput formControlName="description"
-                  [placeholder]="'profile.formPage.fieldDescription' | transloco">
+                  [placeholder]="'profile.formPage.fieldDescription' | transloco" required>
               </mat-form-field>
             </div>
 

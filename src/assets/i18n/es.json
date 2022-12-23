@@ -63,5 +63,9 @@
     "notDriver": "sin conductor",
     "spreadsheet": "Planilla",
     "notSpreadsheet": "sin planilla"
+  },
+  "colorInput": {
+    "titleColor": "Color",
+    "subtitleColor": "Colores"
   }
 }

@@ -43,11 +43,11 @@
           </div>
         </div>
 
-        <div class="flex items-center my-4 border-b">
+        <!-- <div class="flex items-center my-4 border-b">
           <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
             Información del conductor
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -73,7 +73,7 @@
               [placeholder]="'mobile.formPage.fieldInternalCode' | transloco">
           </mat-form-field>
 
-          <app-input-color [form]="this.mobilForm" labelControl="color"></app-input-color>
+          <app-input-color [form]="this.mobilForm" labelControl="color" required></app-input-color>
         </div>
 
 
@@ -82,13 +82,13 @@
             <mat-label>{{'mobile.formPage.fieldBrand' | transloco}}</mat-label>
             <mat-icon matPrefix svgIcon="mat_outline:branding_watermark">
             </mat-icon>
-            <input matInput formControlName="brand" [placeholder]="'mobile.formPage.fieldBrand' | transloco">
+            <input required matInput formControlName="brand" [placeholder]="'mobile.formPage.fieldBrand' | transloco">
           </mat-form-field>
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-label>{{'mobile.formPage.fieldModel' | transloco}}</mat-label>
-            <mat-icon matPrefix svgIcon="mat_outline:model_training"></mat-icon>
-            <mat-select formControlName="mobile_model">
+            <mat-icon matPrefix svgIcon="mat_outline:calendar_today"></mat-icon>
+            <mat-select required formControlName="mobile_model">
               <mat-option *ngFor="let model of models" [value]="model">
                 {{model}}
               </mat-option>
@@ -100,7 +100,7 @@
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-label>{{'mobile.formPage.fieldTypeVehicle' | transloco}}</mat-label>
             <mat-icon matPrefix svgIcon="mat_outline:directions_car"></mat-icon>
-            <mat-select formControlName="type_mobile_id">
+            <mat-select required formControlName="type_mobile_id">
               <mat-option *ngFor="let type of typeMobile" [value]="type.id">
                 {{type.name}}
               </mat-option>
@@ -109,9 +109,9 @@
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-label>{{'mobile.formPage.fieldTypeServices' | transloco}}</mat-label>
-            <mat-icon matPrefix svgIcon="mat_outline:directions_car">
+            <mat-icon matPrefix svgIcon="mat_outline:car_repair">
             </mat-icon>
-            <mat-select formControlName="type_of_service_id">
+            <mat-select formControlName="type_of_service_id" required>
               <mat-option *ngFor="let type of typeServices" [value]="type.id">
                 {{type.name | transloco}}
               </mat-option>
@@ -130,7 +130,7 @@
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-label>{{'mobile.formPage.fieldLoadCapacity' | transloco}}</mat-label>
-            <mat-icon matPrefix svgIcon="reduce_capacity">
+            <mat-icon matPrefix svgIcon="mat_outline:line_weight">
             </mat-icon>
             <input matInput formControlName="weight_capacity"
               [placeholder]="'mobile.formPage.fieldLoadCapacity' | transloco" type="text" pattern="^[0-9]+">
@@ -146,7 +146,7 @@
           <mat-icon matPrefix svgIcon="mat_outline:directions_car">
           </mat-icon>
           <input matInput formControlName="number_chassis"
-            [placeholder]="'mobile.formPage.fieldChassisNumber' | transloco">
+            [placeholder]="'mobile.formPage.fieldChassisNumber' | transloco" required>
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense w-full">
@@ -154,7 +154,7 @@
           <mat-icon matPrefix svgIcon="mat_outline:engineering">
           </mat-icon>
           <input matInput formControlName="number_engine"
-            [placeholder]="'mobile.formPage.fieldEngineNumber' | transloco">
+            [placeholder]="'mobile.formPage.fieldEngineNumber' | transloco" required>
         </mat-form-field>
 
         <div class="flex items-center">

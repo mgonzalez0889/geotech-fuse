@@ -1,0 +1,29 @@
+{
+  "titlePage": "Comandos",
+  "subtitlePage" : "Comandos enviados",
+  "pendingStatus" : "Pendientes",
+  "stateSent" : "Enviados",
+  "statusExpired" : "Expirados",
+  "commandsSent" : "Comandos enviados",
+  "tablePage" : {
+    "plate" : "Placa",
+    "dateOfShipment" : "Fecha del envio",
+    "commandType" : "Tipo de comando",
+    "user" : "Usuario",
+    "state" : "Estado",
+    "matNoDataRow" : "No hay datos que coincidan con el filtro : "
+  },
+  "formPage" : {
+    "titlePage" : "Selección de moviles",
+    "searchVehicle" : "Buscar vehiculo",
+    "checkboxSelectAll" : "Seleccionar todo",
+    "commandSelection" : "Selección de comandos",
+    "sendCommandButton" : "Enviar comando",
+    "fleetSearch" : "Buscar flota"
+  },
+  "tabPage" : {
+    "fleet" : "Flota",
+    "vehicle" : "Vehiculo"
+  }
+ 
+}

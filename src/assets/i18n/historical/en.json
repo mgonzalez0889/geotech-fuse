@@ -17,13 +17,15 @@
     "viewMap": "View map"
   },
   "formPage": {
+    "fromDatePicker" : "From",
+    "toDatePicker" : "To",
     "formNameCreate": "Generate Report",
     "fieldRangeDate": "Select a date range",
     "fieldtypeVehiculo": "Search by:",
     "fieldVehiculos": "Select vehicles",
     "fieldEvents": "Select events",
     "fieldFleets": "Select Fleets",
-    "optionVehiculo": "Vehiculos",
+    "optionVehiculo": "Vehicles",
     "optionFleets": "Fleets",
     "errorForm": {}
   }

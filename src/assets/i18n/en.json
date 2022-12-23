@@ -65,5 +65,9 @@
     "notDriver": "without driver",
     "spreadsheet": "Spreadsheet",
     "notSpreadsheet": "without payroll"
+  },
+  "colorInput": {
+    "titleColor": "Color",
+    "subtitleColor": "Colors"
   }
 }
