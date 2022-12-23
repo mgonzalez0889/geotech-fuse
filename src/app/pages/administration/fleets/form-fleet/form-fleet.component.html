@@ -60,8 +60,7 @@
 
               
               <div class="flex flex-col gap-1">
-                <mat-label>{{'fleets.formPage.SelectVehicles' | transloco}}</mat-label>
-                <app-multi-select-filter [form]="this.fleetForm" [placeholder]="'fleets.formPage.SelectVehicles' | transloco"
+                <app-multi-select-filter  [form]="this.fleetForm" [placeholder]="'fleets.formPage.SelectVehicles' | transloco"
                   [options]="{data:this.mobiles, key:'plate_id', keyView:'plate'}" labelControl="plates">
                 </app-multi-select-filter>
               </div>

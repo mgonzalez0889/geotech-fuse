@@ -33,5 +33,9 @@
     "iconFix": "Fix sidebar",
     "iconMenuShow": "Show sidebar",
     "iconMenuHidden": "Hidden sidebar"
+  },
+  "colorInput" : {
+    "titleColor" : "Color",
+    "subtitleColor" : "Colors"
   }
 }

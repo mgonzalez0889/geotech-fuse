@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-modal-contacts',
@@ -15,6 +17,9 @@ export class ModalContactsComponent implements OnInit {
   public contactForm: FormGroup;
   public typeContacts: any = [];
   public countries: any = [];
+  public countrieFlag: { code: string; flagImagePos: string } = { code: '+57', flagImagePos: '' };
+  private unsubscribe$ = new Subject<void>();
+
 
   constructor(
     public dialogRef: MatDialogRef<ModalContactsComponent>,
@@ -28,21 +33,20 @@ export class ModalContactsComponent implements OnInit {
   ngOnInit(): void {
     this.createContactForm();
     this.typeContact();
-    this.iconService.getCountries().subscribe((res) => {
-      this.countries = res;
-    });
+    this.readCountries();
   }
   /**
    * @description:Trae la informacion que pertenece el indicativo en el formulario
    */
-  getCountryByIso(code: string): any {
-    if (code) {
-      return this.countries.find((country) => country.code === code);
-    }
-  }
+  // getCountryByIso(code: string): any {
+  //   if (code) {
+  //     return this.countries.find(country => country.code === code);
+  //   }
+  // }
   /**
    * @description: Valida si es edita o guarda un contacto nuevo
    */
+
   public onSave(): void {
     const data = this.contactForm.getRawValue();
     if (!data.id) {
@@ -62,6 +66,7 @@ export class ModalContactsComponent implements OnInit {
         this.typeContacts = res.data;
       });
   }
+
   /**
    * @description: Inicializa el formulario de contactos
    */
@@ -73,11 +78,12 @@ export class ModalContactsComponent implements OnInit {
       full_name: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
       phone: ['', [Validators.required]],
-      identification: ['', [Validators.required]],
-      address: ['', [Validators.required]],
+      identification: [''],
+      address: [''],
       description: [''],
       indicative: ['+57', [Validators.required]],
     });
+    console.log(this.infoContact);
     if (this.infoContact.id) {
       if (this.infoContact.owner_id_simulator === 1) {
         this.controlCenterService
@@ -89,6 +95,8 @@ export class ModalContactsComponent implements OnInit {
         this.controlCenterService
           .getContactOwner(this.infoContact.id)
           .subscribe((res) => {
+
+
             this.contactForm.patchValue(res.data);
           });
       }
@@ -96,6 +104,18 @@ export class ModalContactsComponent implements OnInit {
     this.contactForm.patchValue({
       owner_id: this.infoContact.owner_id,
     });
+  }
+
+  private readCountries(): void {
+    this.iconService.getCountries()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.countries = res;
+        const compareCode = this.contactForm.controls['indicative'].value;
+        const countrieInit = this.countries.find(({ code }) => code === compareCode);
+        this.countrieFlag = { ...countrieInit };
+        console.log(this.countrieFlag);
+      });
   }
   /**
    * @description: Editar un contacto

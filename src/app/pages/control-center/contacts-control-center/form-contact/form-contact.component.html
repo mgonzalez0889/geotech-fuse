@@ -145,7 +145,7 @@
                                 <mat-label>{{'controlCenter.formPage.identification' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:identification'"></mat-icon>
-                                <input required matInput [formControlName]="'identification'"
+                                <input matInput [formControlName]="'identification'"
                                     [placeholder]="'controlCenter.formPage.identification' | transloco">
                             </mat-form-field>
                         </div>
@@ -154,7 +154,7 @@
                                 <mat-label> {{'controlCenter.formPage.address' | transloco}}</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
-                                <input required matInput [formControlName]="'address'" [placeholder]="'controlCenter.formPage.address' | transloco">
+                                <input  matInput [formControlName]="'address'" [placeholder]="'controlCenter.formPage.address' | transloco">
                             </mat-form-field>
                         </div>
                         <div class="mt-4">

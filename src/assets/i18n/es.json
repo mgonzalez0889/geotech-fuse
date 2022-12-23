@@ -31,5 +31,9 @@
     "iconFix": "Fijar barra lateral",
     "iconMenuShow": "Mostrar barra lateral",
     "iconMenuHidden": "Ocultar barra lateral"
+  },
+  "colorInput" : {
+    "titleColor" : "Color",
+    "subtitleColor" : "Colores"
   }
 }

@@ -286,10 +286,10 @@
                                 {{contactsCount}}
                             </ng-container>
                             {{contactsCount | i18nPlural: {
-                            '=0' : 'Sin contactos',
-                            '=1' : 'Contacto',
-                            'other': 'Contactos'
-                            } }}
+                            '=0' : 'monitoringCenter.subtitlepage.contact0',
+                            '=1' : 'monitoringCenter.subtitlepage.contact1',
+                            'other': 'monitoringCenter.subtitlepage.contacts'
+                            } | transloco }}
                         </div>
                     </div>
                     <button class="ml-2 circ" mat-mini-fab [color]="'accent'" 

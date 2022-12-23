@@ -49,6 +49,11 @@
     "events" : "Sucesos",
     "buttonAttend" : "Atender"
   },
+  "subtitlepage" : {
+    "contact0" : "Sin contacto",
+    "contact1" : "Contacto",
+    "contacts" : "Contactos"
+  },
   "formPageContacts" : {
     "contacts" : "Contactos",
     "newContact" : "Nuevo contacto",
@@ -67,6 +72,12 @@
     "identification" : "Identificación",
     "address" : "Dirección",
     "description" : "Descripción"
+  },
+  "stateAlarms" : {
+    "notAttended" : "No Atendida",
+    "Silenced" : "Silenciada",
+    "inFollowUp" : "En Seguimiento",
+    "inRecovery" : "En Recuperación"
   }
 }
 

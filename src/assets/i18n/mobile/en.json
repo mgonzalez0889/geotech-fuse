@@ -1,6 +1,10 @@
 {
   "titlePage": "Mobiles",
-  "subTitlePage": "{{ value }} mobiles",
+  "subTitlePage": {
+    "mobil0": "No mobil",
+    "mobil1": "Mobil",
+    "mobils": "Mobiles"
+  },
   "tablePage": {
     "plate": "Plate",
     "internalCode": "Internal code",

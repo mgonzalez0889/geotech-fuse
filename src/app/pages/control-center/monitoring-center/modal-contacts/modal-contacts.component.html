@@ -52,9 +52,9 @@
                             <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
                                 [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
                                 [style.backgroundSize]="'24px 3876px'"
-                                [style.backgroundPosition]="getCountryByIso(contactForm.get('indicative').value).flagImagePos"></span>
+                                [style.backgroundPosition]="this.countrieFlag.flagImagePos"></span>
                             <span
-                                class="sm:mx-0.5 font-medium text-default">{{getCountryByIso(contactForm.get('indicative').value).code}}</span>
+                            class="sm:mx-0.5 font-medium text-default">{{this.contactForm.controls['indicative'].value}}</span>
                         </span>
                     </mat-select-trigger>
                     <ng-container *ngFor="let country of countries">
@@ -79,7 +79,7 @@
                 </mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:identification'">
                 </mat-icon>
-                <input required matInput [formControlName]="'identification'" 
+                <input  matInput [formControlName]="'identification'" 
                 [placeholder]="'monitoringCenter.modalPageContacts.identification' | transloco"
                 >
             </mat-form-field>
@@ -91,7 +91,7 @@
                 </mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:location-marker'">
                 </mat-icon>
-                <input required matInput [formControlName]="'address'" 
+                <input  matInput [formControlName]="'address'" 
                 [placeholder]="'monitoringCenter.modalPageContacts.address' | transloco" >
             </mat-form-field>
         </div>
@@ -121,7 +121,7 @@
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close [matTooltip]="'buttons.buttonCancel' | transloco">{{'buttons.buttonCancel' | transloco}}
     </button>
-    <button mat-button [mat-dialog-close]="true" [color]="'accent'" [disabled]="contactForm.invalid"
+    <button mat-button [mat-dialog-close]="true" mat-flat-button [color]="'accent'" [disabled]="contactForm.invalid"
         [matTooltip]="'buttons.buttonSave' | transloco" (click)="onSave()">
     {{'buttons.buttonSave' | transloco}}
     </button>
