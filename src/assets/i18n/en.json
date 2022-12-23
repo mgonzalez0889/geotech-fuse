@@ -33,5 +33,22 @@
     "iconFix": "Fix sidebar",
     "iconMenuShow": "Show sidebar",
     "iconMenuHidden": "Hidden sidebar"
+  },
+  "signOut": {
+    "logout": "Logging out",
+    "redirect": "Redirecting in",
+    "redirectNow": "You are now being redirected!",
+    "go": "Go to",
+    "login": "Login"
+  },
+  "login": {
+    "loginName": "Login",
+    "user": "User",
+    "userRequired": "User is required",
+    "userInvalid": "Please enter a valid username",
+    "password": "Password",
+    "passwordRequired": "Password is required",
+    "description": "We generate value through data.",
+    "descriptionLg": "All data analytics in one place for timely decision making for your operational strategy."
   }
 }

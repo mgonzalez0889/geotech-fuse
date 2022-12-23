@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { GeotoolMapService } from 'app/core/services/api/geotool-map.service';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { CommonTools } from 'app/core/tools/common.tool';
 import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
-import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalImportGeojsonComponent } from '../modal-import-geojson/modal-import-geojson.component';
 import { TypeGeotool } from 'app/core/interfaces';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { AuthService } from 'app/core/auth/auth.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { GeotoolMapService } from '@services/api/geotool-map.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-panel-map-geotools',

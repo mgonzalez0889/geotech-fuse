@@ -64,7 +64,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
     {
       name: 'speed',
       text: 'historical.tablePage.speed',
-      typeField: 'text',
+      typeField: 'speed',
     },
     {
       name: 'battery',

@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { EventsService } from 'app/core/services/api/events.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
-import { Subscription } from 'rxjs';
-import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-grid-events',
@@ -16,7 +17,6 @@ import { ToastAlertService } from '../../../../core/services/toast-alert/toast-a
 export class GridEventsComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  public subscription: Subscription;
   public opened: boolean = false;
   public dataTableEvents: MatTableDataSource<any>;
   public eventsCount: number = 0;
@@ -30,6 +30,7 @@ export class GridEventsComponent implements OnInit, OnDestroy {
     'notificationSound',
   ];
   private listPermission: NgxPermissionsObject;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private eventService: EventsService,
@@ -40,13 +41,16 @@ export class GridEventsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getEvents();
     this.listenObservables();
-    this.authService.permissionList.subscribe((permission) => {
-      this.listPermission = permission;
-    });
+    this.authService.permissionList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((permission) => {
+        this.listPermission = permission;
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   /**
@@ -56,6 +60,7 @@ export class GridEventsComponent implements OnInit, OnDestroy {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataTableEvents.filter = filterValue.trim().toLowerCase();
   }
+
   /**
    * @description: Guarda el ID del evento para aburirlo en el formulario
    */
@@ -76,8 +81,9 @@ export class GridEventsComponent implements OnInit, OnDestroy {
    * @description: Escucha el observable behavior
    */
   private listenObservables(): void {
-    this.subscription =
-      this.eventService.behaviorSubjectEventGrid.subscribe(
+    this.eventService.behaviorSubjectEventGrid
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
         ({ reload, opened }) => {
           this.opened = opened;
           if (reload) {
@@ -91,16 +97,18 @@ export class GridEventsComponent implements OnInit, OnDestroy {
    * @description: Mostrar todos los eventos
    */
   private getEvents(): void {
-    this.eventService.getEvents().subscribe((res) => {
-      if (res.data) {
-        this.eventsCount = res.data.length;
-      } else {
-        this.eventsCount = 0;
-      }
-      this.dataTableEvents = new MatTableDataSource(res.data);
-      this.dataTableEvents.paginator = this.paginator;
-      this.dataTableEvents.sort = this.sort;
-    });
+    this.eventService.getEvents()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        if (res.data) {
+          this.eventsCount = res.data.length;
+        } else {
+          this.eventsCount = 0;
+        }
+        this.dataTableEvents = new MatTableDataSource(res.data);
+        this.dataTableEvents.paginator = this.paginator;
+        this.dataTableEvents.sort = this.sort;
+      });
   }
 
 

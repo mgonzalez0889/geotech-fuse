@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -116,7 +115,10 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       this.mapService.clearMap();
       this.mapService.setMarkers(this.mobileData, true);
     } else {
-      const platesFLeets = this.selectFleet.flatMap(({ plates }) => plates);
+      const exitsPlate = {};
+      const platesFLeets = this.selectFleet
+        .flatMap(({ plates }) => plates)
+        .filter(({ plate }) => exitsPlate[plate] ? false : exitsPlate[plate] = true);
       this.mapService.clearMap();
       this.mapService.setMarkers(platesFLeets, true);
     }
@@ -153,6 +155,16 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     this.dataSourceFleets.filter = filterValue.trim().toLowerCase();
   }
 
+  closePanel(): void {
+    this.selectFleet = [];
+    this.selectPlates = [];
+    this.mapService.clearMap();
+    this.mapService.setMarkers(this.mobileData, true);
+  }
+
+  /**
+   * @description: refrescamos la data en el panel cuando llegue data por socket
+   */
   private refreshDataSocket(): void {
     this.mapService.mobileSocket$
       .pipe(takeUntil(this.unsubscribe$))
@@ -166,6 +178,9 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description: leemos toda la informacion de los moviles y la mostramos en el panel, y se parsea los tipos de servicios que vengan
+   */
   private readMobiles(): void {
     this.mobilesService.getMobiles()
       .pipe(takeUntil(this.unsubscribe$))

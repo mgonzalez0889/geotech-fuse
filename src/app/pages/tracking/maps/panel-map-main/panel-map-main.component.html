@@ -3,7 +3,7 @@
     class="w-full h-full shadow-xl bg-card rounded-lg pt-3 overflow-y-auto flex flex-col">
 
     <div class="ml-3 mt-1" [hidden]="!drawer.opened">
-      <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle()">
+      <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle(); closePanel()">
         <mat-icon svgIcon="mat_outline:arrow_back"></mat-icon>
       </button>
     </div>
@@ -12,8 +12,7 @@
       <mat-tab [label]="'map.panelMain.optionVehicles' | transloco">
         <div class="flex justify-between gap-3">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-select [(ngModel)]="typeServiceId"
-              (selectionChange)="filterForTypeService($event)">
+            <mat-select [(ngModel)]="typeServiceId" (selectionChange)="filterForTypeService($event)">
               <mat-option [value]="0">{{'map.panelMain.selectAll' | transloco}}</mat-option>
               <mat-option [value]="typeService.classMobileId" *ngFor="let typeService of typeServices">
                 {{typeService.classMobileName}}
@@ -136,7 +135,7 @@
       </mat-tab>
 
     </mat-tab-group>
-<!-- 
+    <!-- 
     <div class="absolute flex w-full justify-end bottom-4 -left-3 z-999" *ngIf="selectPlates.length ">
       <button matTooltip="Generar Reporte" mat-mini-fab (click)="generateReport()">
         <mat-icon svgIcon="mat_outline:history_toggle_off"></mat-icon>
@@ -146,8 +145,8 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <button class="flex justify-center items-center bg-white py-1 px-2 shadow-sm rounded" [matTooltip]="'map.vehicles' | transloco" type="button" *ngIf="!drawer.opened"
-      (click)="drawer.toggle()">
+    <button class="flex justify-center items-center bg-white py-1 px-2 shadow-sm rounded"
+      [matTooltip]="'map.vehicles' | transloco" type="button" *ngIf="!drawer.opened" (click)="drawer.toggle()">
       <mat-icon class="self-center" svgIcon="share_location"></mat-icon>
     </button>
   </mat-drawer-content>

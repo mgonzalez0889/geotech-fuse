@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { TypeGeotool } from 'app/core/interfaces';
 import { GeotoolMapService } from 'app/core/services/api/geotool-map.service';
 import { MobileService } from 'app/core/services/api/mobile.service';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
-import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-geotool-map',
@@ -58,6 +58,7 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
         this.mapService.clearMap();
         this.mapService.setMarkers(data, true);
       });
+    this.closeForm.emit({ closePanel: false, refreshData: false });
     this.mapService.deleteEventMap();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

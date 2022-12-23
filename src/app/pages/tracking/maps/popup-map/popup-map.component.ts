@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { IConfigIcon } from '@interface/index';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { DateTools } from '@tools/date.tool';
 import { IconsModule } from 'app/core/icons/icons.module';
-import { IConfigIcon } from 'app/core/interfaces/other/icon.interface';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { DateTools } from 'app/core/tools/date.tool';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-popup-map',
@@ -38,7 +37,6 @@ export class PopupMapComponent implements OnInit, OnDestroy {
     public mapService: MapToolsService,
     private iconService: IconsModule,
     private ref: ChangeDetectorRef,
-    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {

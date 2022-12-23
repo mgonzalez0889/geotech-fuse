@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AfterViewInit, OnInit } from '@angular/core';
-import { MobileService } from 'app/core/services/api/mobile.service';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { SocketIoClientService } from 'app/core/services/socket/socket-io-client.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { SocketIoClientService } from '@services/socket/socket-io-client.service';
 import { Subject } from 'rxjs';
-import { distinct, filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
 type OptionsMap = {
   icon: string;
@@ -26,9 +25,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: 'route-map',
       text: 'map.panelGeotools.routeTitle',
       actionClick: (): void => {
-        this.selectOption = 'Rutas';
+        this.selectOption = 'route-map';
         this.mapService.selectPanelGeoTools$.next({
-          titlePanel: 'Rutas',
+          titlePanel: 'map.panelGeotools.routeTitle',
           typePanel: 'routes',
         });
       },
@@ -37,9 +36,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: 'zone-map',
       text: 'map.panelGeotools.zoneTitle',
       actionClick: (): void => {
-        this.selectOption = 'Zonas';
+        this.selectOption = 'zone-map';
         this.mapService.selectPanelGeoTools$.next({
-          titlePanel: 'Zonas',
+          titlePanel: 'map.panelGeotools.zoneTitle',
           typePanel: 'zones',
         });
       },
@@ -48,20 +47,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       text: 'map.panelGeotools.pointControlTitle',
       icon: 'point-map',
       actionClick: (): void => {
-        this.selectOption = 'Puntos';
+        this.selectOption = 'point-map';
         this.mapService.selectPanelGeoTools$.next({
-          titlePanel: 'Puntos de control',
+          titlePanel: 'map.panelGeotools.pointControlTitle',
           typePanel: 'punts',
         });
       },
     },
     {
-      text: 'Mapas',
+      text: 'map.panelGeotools.mapaTitle',
       icon: 'map',
       actionClick: (): void => {
-        this.selectOption = 'Mapas';
+        this.selectOption = 'map';
         this.mapService.selectPanelGeoTools$.next({
-          titlePanel: 'Capas de mapas',
+          titlePanel: 'map.panelGeotools.mapaTitle',
           typePanel: 'owner_maps',
         });
       },
