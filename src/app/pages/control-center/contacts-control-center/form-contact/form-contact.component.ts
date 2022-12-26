@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-contact',
@@ -34,7 +35,8 @@ export class FormContactComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private iconService: IconsModule,
     private authService: AuthService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +61,7 @@ export class FormContactComponent implements OnInit, OnDestroy {
     } else {
       if (!this.listPermission[this.permissionValid.updateContactControl]) {
         this.toastAlert.toasAlertWarn({
-          message: 'No tienes permisos suficientes para realizar esta acción.',
+          message: 'messageAlert.messagePermissionWarn',
         });
         return;
       }
@@ -82,19 +84,15 @@ export class FormContactComponent implements OnInit, OnDestroy {
   public deleteContact(id: number): void {
     if (!this.listPermission[this.permissionValid.deleteContactControl]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
       return;
     }
     const confirmation = this.confirmationService.open({
-      title: 'Eliminar contacto',
+      title: this.translocoService.translate('controlCenter.alertMessage.titleMessageDelete'),
       message:
-        '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Eliminar',
-        },
-      },
+        this.translocoService.translate('controlCenter.alertMessage.messageDeleteConfirm'),
+
     });
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
@@ -109,13 +107,13 @@ export class FormContactComponent implements OnInit, OnDestroy {
                 }
               );
               this.toastAlert.toasAlertSuccess({
-                message: 'Contacto eliminado con exito!',
+                message: 'controlCenter.alertMessage.messageDeleteConfirmSuccess',
 
               });
             } else {
               this.toastAlert.toasAlertWarn({
                 message:
-                  'El contacto no se pudo eliminar, favor intente nuevamente.',
+                  'controlCenter.alertMessage.messageDeleteConfirmError',
               });
             }
           });
@@ -200,15 +198,10 @@ export class FormContactComponent implements OnInit, OnDestroy {
    */
   private editContact(data: any): void {
     let confirmation = this.confirmationService.open({
-      title: 'Editar contacto',
+      title: this.translocoService.translate('controlCenter.alertMessage.titleMessageEdit'),
       message:
-        '¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Editar',
-          color: 'accent',
-        },
-      },
+        this.translocoService.translate('controlCenter.alertMessage.messageEditConfirm'),
+
       icon: {
         name: 'heroicons_outline:pencil',
         color: 'info',
@@ -225,16 +218,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
               }
             );
             confirmation = this.confirmationService.open({
-              title: 'Editar contacto',
-              message: 'Contacto editado con exito!',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+              title: this.translocoService.translate('controlCenter.alertMessage.titleMessageEdit'),
+              message: this.translocoService.translate('controlCenter.alertMessage.messageEditConfirmSuccess'),
+
               icon: {
                 name: 'heroicons_outline:check-circle',
                 color: 'success',
@@ -242,17 +228,10 @@ export class FormContactComponent implements OnInit, OnDestroy {
             });
           } else {
             confirmation = this.confirmationService.open({
-              title: 'Editar contacto',
+              title: this.translocoService.translate('controlCenter.alertMessage.titleMessageEdit'),
               message:
-                'El contacto no se pudo actualizar, favor intente nuevamente.',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+                this.translocoService.translate('controlCenter.alertMessage.messageEditConfirmError'),
+
               icon: {
                 show: true,
                 name: 'heroicons_outline:exclamation',
@@ -275,16 +254,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
           opened: false,
         });
         const confirmation = this.confirmationService.open({
-          title: 'Crear contacto',
-          message: 'Contacto creado con exito!',
-          actions: {
-            cancel: {
-              label: 'Aceptar',
-            },
-            confirm: {
-              show: false,
-            },
-          },
+          title: this.translocoService.translate('controlCenter.alertMessage.titleMessageCreated'),
+          message: this.translocoService.translate('controlCenter.alertMessage.messageCreatedSuccess'),
+
           icon: {
             name: 'heroicons_outline:check-circle',
             color: 'success',
@@ -292,17 +264,10 @@ export class FormContactComponent implements OnInit, OnDestroy {
         });
       } else {
         const confirmation = this.confirmationService.open({
-          title: 'Crear contacto',
+          title:  this.translocoService.translate('controlCenter.alertMessage.titleMessageCreated'),
           message:
-            'El contacto no se pudo crear, favor intente nuevamente.',
-          actions: {
-            cancel: {
-              label: 'Aceptar',
-            },
-            confirm: {
-              show: false,
-            },
-          },
+          this.translocoService.translate('controlCenter.alertMessage.messageCreatedError'),
+
           icon: {
             show: true,
             name: 'heroicons_outline:exclamation',

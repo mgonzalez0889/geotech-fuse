@@ -16,5 +16,15 @@
     "vehicles": "Vehículos",
     "FleetName": "Nombre de la flota",
     "SelectVehicles": "Seleccione vehículos"
+  },
+  "alertMessage" : {
+    "titleAlertDelete" : "Eliminar flota",
+    "messageAlertDelete" : "¿Está seguro de que desea eliminar esta flota? ¡Esta acción no se puede deshacer!",
+    "toastAlertDeleteSuccess" : "Flota eliminada con exito",
+    "toastAlertDeleteError" : "La flota no pudo ser eliminada, favor intente nuevamente.",
+    "toastAlertSuccessEdit" : "Flota editada con exito!",
+    "toastAlertErrorEdit" : "La flota no se pudo actualizar, favor intente nuevamente.",
+    "toastAlertSuccessCreated" : "¡Flota creada con exito!",
+    "toastAlertErrorCreated" : "¡Lo sentimos algo ha salido mal, vuelva a intentarlo!"
   }
 }

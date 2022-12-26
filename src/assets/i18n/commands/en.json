@@ -30,6 +30,17 @@
     "commandExpired": "Expired",
     "commandcConfirmed": "Confirmed",
     "commandPending": "Pending"
+  }, 
+  "commandAlert" : {
+    "titleAlert" : "Send command",
+    "messageAlert" : "Are you sure you want to send this command, this action cannot be undone!",
+    "buttonConfirm" : "Send",
+    "successCommand" : "Command sent successfully!",
+    "buttonAccept" : "Accept",
+    "alertMessageError" : "Command could not be sent, please try again!", 
+    "alertMessageSelectionError" : "Please select a vehicle or a fleet",
+    "buttonClosed" : "Close"
+
   }
  
 }

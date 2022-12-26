@@ -32,5 +32,10 @@
       "cellPhone": "Cell phone",
       "address": "Address"
     }
+  },
+  "alertMessage" : {
+    "editMessageTitle" : "Edit event",
+    "editMessageTitleSuccess" : "¿Are you sure you want to edit this event?",
+    "editMessageTitleError" : "Event could not be serviced, please try again"   
   }
 }

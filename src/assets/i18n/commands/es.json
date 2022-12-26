@@ -30,6 +30,17 @@
     "commandExpired": "Expirado",
     "commandcConfirmed": "Confirmado",
     "commandPending": "Pendiente"
+  }, 
+  "commandAlert" : {
+    "titleAlert" : "Enviar comando",
+    "messageAlert" : "¿Está seguro de que desea enviar este comando? ¡Esta acción no se puede deshacer!",
+    "buttonConfirm" : "Enviar",
+    "successCommand" : "Comando enviado con exito!",
+    "buttonAccept" : "Aceptar",
+    "alertMessageError" : "El comando no se pudo enviar, favor intente nuevamente!",
+    "alertMessageSelectionError" : "Favor seleccione un Vehículo o una flota.",
+    "buttonClosed" : "Cerrar"
+
   }
  
 }

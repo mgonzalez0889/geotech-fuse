@@ -35,5 +35,9 @@
       "public": "Public"
     },
     "errorForm": {}
+  },
+  "toastAlert" : {
+    "toastAlertSuccess" : "Vehicle modified successfully!",
+    "toastAlertWarn" : "Sorry something went wrong, try again!"
   }
 }

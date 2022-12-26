@@ -78,6 +78,21 @@
     "Silenced" : "Silenciada",
     "inFollowUp" : "En Seguimiento",
     "inRecovery" : "En Recuperación"
+  },
+  "alertMessage" : {
+    "titleMessageAlert" : "Atención de alarma",
+    "messageAlert" : "Alarma atendida con exito!",
+    "messageAlertError" : "La alarma no se pudo atender, favor intente nuevamente",
+    "titleMessageAlertDelete" : "Eliminar contacto",
+    "messageAlertDelete" : "¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!",
+    "messageAlertDeleteSuccess" : "Contacto eliminado con exito!",
+    "messageAlertDeleteError" : "El contacto no se pudo eliminar, favor intente nuevamente.",
+    "titleMessageAlertContact" : "Crear contacto",
+    "messageAlertContactSuccess" : "Contacto creado con exito!",
+    "messageAlertContactError" : "El contacto no se pudo crear, favor intente nuevamente",
+    "titleMessageAlertContactEdit" : "Editar contacto",
+    "titleMessageAlertContactEditSuccess" : "Contacto editado con exito!",
+    "titleMessageAlertContactEditError" : "'El contacto no se pudo actualizar, favor intente nuevamente"
   }
 }
 

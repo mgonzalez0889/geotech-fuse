@@ -78,5 +78,20 @@
     "Silenced" : "Silenced",
     "inFollowUp" : "On track",
     "inRecovery" : "In recovery"
+  },
+  "alertMessage" : {
+    "titleMessageAlert" : "Alarm attention",
+    "messageAlert" : "Alarm successfully attended!",
+    "messageAlertError" : "Alarm could not be attended, please try again",
+    "titleMessageAlertDelete" : "Delete contact", 
+    "messageAlertDelete" : "Are you sure you want to delete this contact, this action cannot be undone!",
+    "messageAlertDeleteSuccess" : "Contact deleted successfully!",
+    "messageAlertDeleteError" : "Contact could not be deleted, please try again",
+    "titleMessageAlertContact" : "Create contact",
+    "messageAlertContactSuccess" : "Contact created successfully!",
+    "messageAlertContactError" : "The contact could not be created, please try again",
+    "titleMessageAlertContactEdit" : "Edit contact",
+    "titleMessageAlertContactEditSuccess" : "Contact successfully edited!",
+    "titleMessageAlertContactEditError" : "The contact could not be updated, please try again"
   }
 }

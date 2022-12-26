@@ -9,6 +9,7 @@ import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.ser
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subject } from 'rxjs';
 import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-fleet',
@@ -36,7 +37,8 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private toastAlert: ToastAlertService,
     private authService: AuthService,
-    private mobilesService: MobileService
+    private mobilesService: MobileService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -64,7 +66,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
     } else {
       if (!this.listPermission[this.permissionValid.updateFleets]) {
         this.toastAlert.toasAlertWarn({
-          message: 'No tienes permisos suficientes para realizar esta acción.',
+          message: 'messageAlert.messagePermissionWarn',
         });
       } else {
         this.editFleet(data);
@@ -88,13 +90,13 @@ export class FormFleetComponent implements OnInit, OnDestroy {
   public deleteContact(id: number): void {
     if (!this.listPermission[this.permissionValid.deleteFleets]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       const confirmation = this.confirmationService.open({
-        title: 'Eliminar flota',
+        title: this.translocoService.translate('fleets.alertMessage.titleAlertDelete'),
         message:
-          '¿Está seguro de que desea eliminar esta flota? ¡Esta acción no se puede deshacer!',
+        this.translocoService.translate('fleets.alertMessage.messageAlertDelete'),
       });
       confirmation.afterClosed()
         .pipe(
@@ -110,12 +112,12 @@ export class FormFleetComponent implements OnInit, OnDestroy {
               opened: false,
             });
             this.toastAlert.toasAlertSuccess({
-              message: 'Flota eliminada con exito.'
+              message: 'fleets.alertMessage.toastAlertDeleteSuccess'
             });
           } else {
             this.toastAlert.toasAlertWarn({
               message:
-                'La flota no pudo ser eliminada, favor intente nuevamente.',
+                'fleets.alertMessage.toastAlertDeleteError',
             });
           }
         });
@@ -188,12 +190,12 @@ export class FormFleetComponent implements OnInit, OnDestroy {
             opened: false,
           });
           this.toastAlert.toasAlertSuccess({
-            message: 'Flota editada con exito!',
+            message: 'fleets.alertMessage.toastAlertSuccessEdit',
           });
         } else {
           this.toastAlert.toasAlertWarn({
             message:
-              'La flota no se pudo actualizar, favor intente nuevamente.',
+              'fleets.alertMessage.toasAlertErrorEdit'
           });
         }
       });
@@ -213,11 +215,11 @@ export class FormFleetComponent implements OnInit, OnDestroy {
             opened: false,
           });
           this.toastAlert.toasAlertSuccess({
-            message: '¡Flota creada con exito!'
+            message: 'fleets.alertMessage.toastAlertSuccessCreated'
           });
         } else {
           this.toastAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'fleets.alertMessage.toastAlertErrorCreated'
           });
         }
       });

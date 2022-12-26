@@ -41,5 +41,19 @@
     "initDispatch": "Start / automatic termination",
     "fieldRemarks": "Remarks",
     "errorForm": {}
+  },
+  "commandAlert" : {
+    "commandAlertTitle" : "Edit dispatch",
+    "commandAlertMessageError" : "Dispatch could not be updated, please try again",
+    "commandAlertMessageErrorUpdate" : "The dispatch could not be finalized, please try again",
+    "finalizeDispatchTitle" : "Finalize dispatch",
+    "finalizeDispatchMessage" : "Are you sure you want to finalize this dispatch, this action cannot be undone!", 
+    "finalizeDispatchMessageSuccess" : "Dispatch successfully completed!", 
+    "finalizeDispatchMessageEdit" : "Are you sure you want to edit this dispatch? This action cannot be undone!", 
+    "modifyDispatchMessageSuccess" : "Dispatch successfully modified!", 
+    "modifyDispatchMessageError" : "Dispatch could not be modified, please try again",
+    "successfullyCreatedFirm" : "Dispatch successfully created", 
+    "errorMessageCreatedFirm" : "The dispatch could not be created, please try again"
+    
   }
 }
