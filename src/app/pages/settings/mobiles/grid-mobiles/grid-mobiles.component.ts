@@ -1,9 +1,8 @@
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MobileService } from '@services/api/mobile.service';
 import { IOptionTable } from 'app/core/interfaces';
 import { Subject } from 'rxjs';
-import {  takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-grid-mobiles',
@@ -11,7 +10,6 @@ import {  takeUntil } from 'rxjs/operators';
   styleUrls: ['./grid-mobiles.component.scss'],
 })
 export class GridMobilesComponent implements OnInit, OnDestroy {
-  public subTitlepage: string = '';
   public dataFilter: string = '';
   public mobileSelect: any = null;
   public mobilesData: any[] = [];
@@ -56,12 +54,10 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
 
   constructor(
     private ownerPlateService: MobileService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.getMobiles();
-
-
   }
 
   ngOnDestroy(): void {
@@ -96,15 +92,10 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
     this.ownerPlateService.getMobiles()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
-        this.subTitlepage = data.length
-          ? `${data.length} moviles`
-          : 'Sin moviles';
         this.mobilesData = [...data || []];
-        this.numberMovil  = data.length;
-
+        this.numberMovil = data.length;
       });
   }
-
 
 }
 

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DriverService } from 'app/core/services/api/driver.service';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { DriverService } from '@services/api/driver.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 
@@ -87,7 +87,7 @@ export class GridDriverComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.addDriver]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;

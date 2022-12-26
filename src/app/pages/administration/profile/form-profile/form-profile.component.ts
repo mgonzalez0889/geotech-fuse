@@ -14,13 +14,13 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatOption } from '@angular/material/core';
 import { MatRadioChange } from '@angular/material/radio';
-import { FleetsService } from 'app/core/services/api/fleets.service';
-import { IListModules, IOptionPermission } from 'app/core/interfaces';
-import { ProfilesService } from 'app/core/services/api/profiles.service';
-import { MenuOptionsService } from 'app/core/services/api/menu-options.service';
 import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { MobileService } from 'app/core/services/api/mobile.service';
+import { IListModules, IOptionPermission } from '@interface/index';
+import { ProfilesService } from '@services/api/profiles.service';
+import { FleetsService } from '@services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MenuOptionsService } from '@services/api/menu-options.service';
 
 @Component({
   selector: 'app-form-profile',

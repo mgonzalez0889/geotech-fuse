@@ -24,5 +24,17 @@
     "licenseNumber": "Numero de la licencia",
     "licenseExpirationDate": "Fecha de vencimiento de la licencia",
     "address": "Dirección"
+  },
+  "messageAlert": {
+    "deleteDriver": "Eliminar conductor",
+    "deleteDriverMessage": "¿Está seguro de que desea eliminar este conductor? ¡Esta acción no se puede deshacer!",
+    "deleteSuccess": "Conductor eliminado con éxito.",
+    "deleteFailure": "No se puedo eliminar este conductor,por favor intente nuevamente.",
+    "editDriver": "Editar conductor",
+    "editDriverMessage": "¿Está seguro de que desea editar este conductor? ¡Esta acción no se puede deshacer!",
+    "editSuccess": "Conductor modificado con exito.",
+    "editFailure": "El conductor no se pudo actualizar,por favor intente nuevamente.",
+    "addsuccess": "Conductor creado con exito.",
+    "addFailure": "El conductor no se pudo crear, favor intente nuevamente."
   }
 }

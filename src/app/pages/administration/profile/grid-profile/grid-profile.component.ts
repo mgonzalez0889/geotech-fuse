@@ -86,7 +86,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public addProfileForm(): void {
     if (!this.listPermission[this.permissionValid.addProfile]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;
@@ -133,7 +133,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   private deleteProfile(profileId: number): void {
     if (!this.listPermission[this.permissionValid.deleteProfile]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       const confirmation = this.confirmationService.open();
@@ -145,7 +145,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
               this.opened = false;
               this.getProfiles();
               this.toastAlert.toasAlertSuccess({
-                message: 'Perfil eliminado con exito.',
+                message: 'profile.messageAlert.editSuccess',
               });
             });
           }
@@ -167,13 +167,13 @@ export class GridProfileComponent implements OnInit, OnDestroy {
               this.opened = false;
               this.getProfiles();
               this.toastAlert.toasAlertSuccess({
-                message: `Perfil ${formData.name} creado con exito.`,
+                message: 'profile.messageAlert.addSuccess',
               });
             });
         } else if (typeAction === 'edit') {
           if (!this.listPermission[this.permissionValid.updateProfile]) {
             this.toastAlert.toasAlertWarn({
-              message: 'No tienes permisos suficientes para realizar esta acción.',
+              message: 'messageAlert.messagePermissionWarn',
             });
           } else {
             this.profileService.putProfile(formData, profileId)
@@ -181,7 +181,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
                 this.opened = false;
                 this.getProfiles();
                 this.toastAlert.toasAlertSuccess({
-                  message: 'Perfil modificado con exito.',
+                  message: 'profile.messageAlert.editSuccess',
                 });
               });
           }

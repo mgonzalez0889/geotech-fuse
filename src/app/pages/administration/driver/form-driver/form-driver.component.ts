@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DriverService } from '@services/api/driver.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { IconsModule } from 'app/core/icons/icons.module';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { DriverService } from 'app/core/services/api/driver.service';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-driver',
@@ -34,7 +35,8 @@ export class FormDriverComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private iconService: IconsModule,
     private permissionsService: NgxPermissionsService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -65,7 +67,7 @@ export class FormDriverComponent implements OnInit, OnDestroy {
       if (!this.listPermission[this.permissionValid.updateDriver]) {
         this.toastAlert.toasAlertWarn({
           message:
-            'No tienes permisos suficientes para realizar esta acción.',
+            'messageAlert.messagePermissionWarn',
         });
       } else {
         this.editDriver(data);
@@ -88,20 +90,14 @@ export class FormDriverComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.deleteDriver]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
-
       return;
     }
-    let confirmation = this.confirmationService.open({
-      title: 'Eliminar conductor',
+    const confirmation = this.confirmationService.open({
+      title: this.translocoService.translate('driver.messageAlert.deleteDriver'),
       message:
-        '¿Está seguro de que desea eliminar este conductor? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Eliminar',
-        },
-      },
+        this.translocoService.translate('driver.messageAlert.deleteDriverMessage'),
     });
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
@@ -111,41 +107,14 @@ export class FormDriverComponent implements OnInit, OnDestroy {
               reload: true,
               opened: false,
             });
-            confirmation = this.confirmationService.open({
-              title: 'Eliminar conductor',
-              message: 'Conductor eliminado con exito!',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
-              icon: {
-                name: 'heroicons_outline:exclamation',
-                color: 'warn',
-              },
+
+            this.toastAlert.toasAlertSuccess({
+              message: 'driver.messageAlert.deleteSuccess'
             });
           } else {
-            confirmation = this.confirmationService.open({
-              title: 'Eliminar conductor',
-              message:
-                'El conductor no se pudo eliminar, favor intente nuevamente.',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
-              icon: {
-                show: true,
-                name: 'heroicons_outline:exclamation',
-                color: 'warn',
-              },
-            });
+            this.toastAlert.toasAlertWarn(
+              { message: 'driver.messageAlert.deleteFailure' }
+            );
           }
         });
       }
@@ -211,16 +180,10 @@ export class FormDriverComponent implements OnInit, OnDestroy {
    */
   private editDriver(data: any): void {
     this.driverForm.disable();
-    let confirmation = this.confirmationService.open({
-      title: 'Editar conductor',
+    const confirmation = this.confirmationService.open({
+      title: this.translocoService.translate('driver.messageAlert.editDriver'),
       message:
-        '¿Está seguro de que desea editar este conductor? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Editar',
-          color: 'accent',
-        },
-      },
+        this.translocoService.translate('driver.messageAlert.editDriverMessage'),
       icon: {
         name: 'heroicons_outline:pencil',
         color: 'info',
@@ -235,41 +198,14 @@ export class FormDriverComponent implements OnInit, OnDestroy {
               reload: true,
               opened: false,
             });
-            confirmation = this.confirmationService.open({
-              title: 'Editar conductor',
-              message: 'Conductor editado con exito!',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
-              icon: {
-                name: 'heroicons_outline:check-circle',
-                color: 'success',
-              },
+
+            this.toastAlert.toasAlertSuccess({
+              message: 'driver.messageAlert.addsuccess.'
             });
           } else {
-            confirmation = this.confirmationService.open({
-              title: 'Editar conductor',
-              message:
-                'El conductor no se pudo actualizar, favor intente nuevamente.',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
-              icon: {
-                show: true,
-                name: 'heroicons_outline:exclamation',
-                color: 'warn',
-              },
-            });
+            this.toastAlert.toasAlertWarn(
+              { message: 'driver.messageAlert.addFailure' }
+            );
           }
         });
       }
@@ -287,41 +223,14 @@ export class FormDriverComponent implements OnInit, OnDestroy {
           reload: true,
           opened: false,
         });
-        const confirmation = this.confirmationService.open({
-          title: 'Crear conductor',
-          message: 'Conductor creado con exito!',
-          actions: {
-            cancel: {
-              label: 'Aceptar',
-            },
-            confirm: {
-              show: false,
-            },
-          },
-          icon: {
-            name: 'heroicons_outline:check-circle',
-            color: 'success',
-          },
+
+        this.toastAlert.toasAlertSuccess({
+          message: 'Conductor creado con exito.'
         });
       } else {
-        const confirmation = this.confirmationService.open({
-          title: 'Crear conductor',
-          message:
-            'El conductor no se pudo crear, favor intente nuevamente.',
-          actions: {
-            cancel: {
-              label: 'Aceptar',
-            },
-            confirm: {
-              show: false,
-            },
-          },
-          icon: {
-            show: true,
-            name: 'heroicons_outline:exclamation',
-            color: 'warn',
-          },
-        });
+        this.toastAlert.toasAlertWarn(
+          { message: 'El conductor no se pudo crear, favor intente nuevamente.' }
+        );
       }
     });
   }

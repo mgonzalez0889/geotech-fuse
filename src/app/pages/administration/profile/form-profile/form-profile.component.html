@@ -65,7 +65,7 @@
               </mat-form-field>
             </div>
 
-            <div class="flex gap-2 items-center mt-4 mb-2">
+            <div class="flex gap-2 items-center mt-4 mb-4">
               <mat-label>{{'profile.formPage.fieldtypeVehiculo' | transloco}}</mat-label>
               <mat-radio-group class="flex gap-2" [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}">
                 <mat-radio-button *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
@@ -129,7 +129,6 @@
                         </div>
                       </mat-expansion-panel>
                     </mat-accordion>
-
                   </div>
                 </div>
               </div>

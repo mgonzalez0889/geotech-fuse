@@ -29,7 +29,8 @@ export class MultiSelectFilterComponent implements OnChanges {
   filterList(value: string): void {
     const valueSelects = this.options.data.filter(
       (dataValue: any) =>
-        dataValue[this.options.key]
+        dataValue[this.options.keyView]
+          .toString()
           .toLowerCase()
           .includes(value.toLowerCase())
     );

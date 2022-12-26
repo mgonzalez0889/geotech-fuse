@@ -22,5 +22,17 @@
     "emailAddress": "Correo electrónico",
     "cellPhone": "Celular",
     "address": "Dirección"
+  },
+  "messageAlert": {
+    "addSuccess": "Contacto creado con exito!",
+    "addFailure": "El contacto no se pudo crear, favor intente nuevamente.",
+    "editSuccess": "Contacto editado con exito!",
+    "editFailure": "El contacto no se pudo actualizar, favor intente nuevamente.",
+    "editContact": "Editar contacto",
+    "editContactMessage": "¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!",
+    "deleteSuccess": "Contacto eliminado con exito!",
+    "deleteFailure": "El contacto no se pudo eliminar, favor intente nuevamente.",
+    "deleteContact": "Eliminar contacto",
+    "deleteContactMessage": "¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!"
   }
 }

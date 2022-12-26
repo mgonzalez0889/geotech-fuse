@@ -49,34 +49,36 @@ export class GridContactComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getContact();
     this.listenObservables();
-    this.subscription = this.permissionsService.permissions$.subscribe(
-      (data) => {
-        this.listPermission = data ?? [];
-      }
-    );
+    this.subscription = this.permissionsService.permissions$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        (data) => {
+          this.listPermission = data ?? [];
+        }
+      );
     this.translocoService.langChanges$
-    .pipe(takeUntil(this.unsubscribe$), delay(100))
-    .subscribe(() => {
-      const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData.length } });
-      this.subTitlePage = subTitlePage;
-    });
-
-
+      .pipe(takeUntil(this.unsubscribe$), delay(100))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData?.length } });
+        this.subTitlePage = subTitlePage;
+      });
   }
   /**
    * @description: Trae todos los contactos del cliente
    */
   public getContact(): void {
-    this.contactService.getContacts().subscribe((res) => {
-      if (res.data) {
-        this.contactsCount = res.data.length;
-      } else {
-        this.contactsCount = 0;
-      }
-      this.dataTableContact = new MatTableDataSource(res.data);
-      this.dataTableContact.paginator = this.paginator;
-      this.dataTableContact.sort = this.sort;
-    });
+    this.contactService.getContacts()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        if (res.data) {
+          this.contactsCount = res.data.length;
+        } else {
+          this.contactsCount = 0;
+        }
+        this.dataTableContact = new MatTableDataSource(res.data);
+        this.dataTableContact.paginator = this.paginator;
+        this.dataTableContact.sort = this.sort;
+      });
   }
   /**
    * @description: Filtrar datos de la tabla
@@ -102,7 +104,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.addContacto]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;

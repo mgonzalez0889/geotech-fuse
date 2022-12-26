@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { delay, takeUntil } from 'rxjs/operators';
+import { delay, filter, takeUntil, mergeMap } from 'rxjs/operators';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { AuthService } from 'app/core/auth/auth.service';
 import { TranslocoService } from '@ngneat/transloco';
@@ -172,26 +172,23 @@ export class GridUserComponent implements OnInit, OnDestroy {
     const confirmation = this.confirmationService.open();
     confirmation
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((result) => {
-        if (result === 'confirmed') {
-          this.usersService
-            .deleteUser(userId)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((data) => {
-              this.readDataUser();
-              this.opened = false;
-              if (data.code === 400) {
-                this.toastAlert.toasAlertWarn({
-                  message:
-                    'users.messageAlert.deleteWarn',
-                });
-              } else {
-                this.toastAlert.toasAlertSuccess({
-                  message: 'users.messageAlert.deleteSuccess',
-                });
-              }
-            });
+      .pipe(
+        filter(result => result === 'confirmed'),
+        mergeMap(() => this.usersService.deleteUser(userId)),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((data) => {
+        this.opened = false;
+        if (data.code === 400) {
+          this.toastAlert.toasAlertWarn({
+            message:
+              'users.messageAlert.deleteWarn',
+          });
+        } else {
+          this.readDataUser();
+          this.toastAlert.toasAlertSuccess({
+            message: 'users.messageAlert.deleteSuccess',
+          });
         }
       });
   }

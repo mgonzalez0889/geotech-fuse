@@ -27,5 +27,10 @@
       "delete": "delete"
     },
     "errorForm": {}
+  },
+  "messageAlert": {
+    "deleteSuccess": "Profile successfully deleted.",
+    "addSuccess": "Profile successfully created.",
+    "editSuccess": "Profile successfully modified."
   }
 }
