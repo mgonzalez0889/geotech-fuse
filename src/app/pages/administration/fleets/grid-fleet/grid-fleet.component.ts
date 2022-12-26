@@ -65,7 +65,7 @@ export class GridFleetComponent implements OnInit, OnDestroy {
   public newFleet(): void {
     if (!this.listPermission[this.permissionValid.addFleets]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;

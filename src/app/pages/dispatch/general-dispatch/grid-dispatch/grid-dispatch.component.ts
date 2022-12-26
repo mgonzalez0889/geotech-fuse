@@ -10,6 +10,7 @@ import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-grid-dispatch',
@@ -117,7 +118,8 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     private dispatchService: DispatchService,
     private dateAdapter: DateAdapter<any>,
     private authService: AuthService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) {
     this.dateAdapter.setLocale('es');
   }
@@ -199,7 +201,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   public newDispatch(): void {
     if (!this.listPermission[this.permissionValid.addDispatch]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: this.translocoService.translate('messageAlert.messagePermissionWarn'),
 
       });
     } else {

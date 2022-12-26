@@ -32,5 +32,11 @@
       "cellPhone": "Celular",
       "address": "Direccion"
     }
+  },
+  "alertMessage" : {
+    "editMessageTitle" : "Editar evento",
+    "editMessageTitleSuccess" : "¿Está seguro de que desea editar este evento?",
+    "editMessageTitleError" : "El evento no se pudo atender, favor intente nuevamente.",
+    "toastMEssageSuccess" : "Evento editado con exito!"   
   }
 }

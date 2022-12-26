@@ -7,6 +7,7 @@ import { OwnerPlateService } from '@services/api/owner-plate.service';
 import { MapToolsService } from '@services/maps/map-tools.service';
 import { SocketIoClientService } from '@services/socket/socket-io-client.service';
 import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-mobiles',
@@ -52,7 +53,8 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
     private socketIoService: SocketIoClientService,
     private mapToolsService: MapToolsService,
     private driverService: DriverService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) {
     this.buildForm();
   }
@@ -93,11 +95,11 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
           this.closeForm.emit({ refresh: true });
           this.mapToolsService.clearMap();
           this.toastAlert.toasAlertSuccess({
-            message: '¡Vehiculo modificado con exito!'
+            message: 'mobile.toastAlert.toastAlertSuccess'
           });
         } else {
           this.toastAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'mobile.toastAlert.toastAlertSuccess'
           });
         }
       });

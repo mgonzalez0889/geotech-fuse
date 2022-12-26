@@ -75,7 +75,7 @@ export class GridEventsComponent implements OnInit, OnDestroy {
   public actionsEvent(id: number): void {
     if (!this.listPermission['configuración:eventos:update']) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;

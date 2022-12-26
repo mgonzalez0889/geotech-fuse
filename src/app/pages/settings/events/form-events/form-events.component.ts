@@ -11,6 +11,8 @@ import { ContactService } from 'app/core/services/api/contact.service';
 import { EventsService } from 'app/core/services/api/events.service';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TranslocoService } from '@ngneat/transloco';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-events',
@@ -41,7 +43,10 @@ export class FormEventsComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
-    private contactService: ContactService
+    private contactService: ContactService,
+    private translocoService: TranslocoService,
+    private toastAlert: ToastAlertService,
+
   ) { }
 
   ngOnInit(): void {
@@ -122,34 +127,20 @@ export class FormEventsComponent implements OnInit, OnDestroy {
             reload: true,
           });
           this.confirmationService.open({
-            title: 'Editar evento',
-            message: 'Evento editado con exito!',
-            actions: {
-              cancel: {
-                label: 'Aceptar',
-              },
-              confirm: {
-                show: false,
-              },
-            },
+            title: this.translocoService.translate('events.alertMessage.editMessageTitle'),
+            message: this.translocoService.translate('events.alertMessage.editMessageTitleSuccess'),
             icon: {
               name: 'heroicons_outline:check-circle',
               color: 'success',
             },
           });
+
         } else {
           this.confirmationService.open({
-            title: 'Editar evento',
+            title: this.translocoService.translate('events.alertMessage.editMessageTitle'),
             message:
-              'El evento no se pudo atender, favor intente nuevamente.',
-            actions: {
-              cancel: {
-                label: 'Aceptar',
-              },
-              confirm: {
-                show: false,
-              },
-            },
+            this.translocoService.translate('events.alertMessage.editMessageTitleError'),
+
             icon: {
               show: true,
               name: 'heroicons_outline:exclamation',
@@ -159,6 +150,8 @@ export class FormEventsComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+
 
   /**
    * @description: Funcion boton cancelar

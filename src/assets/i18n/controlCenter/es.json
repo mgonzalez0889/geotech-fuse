@@ -25,5 +25,19 @@
     "address": "Dirección",
     "description": "Descripción",
     "fullName": "Nombre completo"
+  },
+  "alertMessage" : {
+    "titleMessageDelete" : "Eliminar contacto",
+    "messageDeleteConfirm" : "¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!",
+    "messageDeleteConfirmSuccess" : "Contacto eliminado con exito",
+    "messageDeleteConfirmError" : "El contacto no se pudo eliminar, favor intente nuevamente",
+    "titleMessageEdit" : "Editar contacto",
+    "messageEditConfirm" : "¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!",
+    "messageEditConfirmSuccess" : "Contacto editado con exito!",
+    "messageEditConfirmError" : "El contacto no se pudo actualizar, favor intente nuevamente",
+    "titleMessageCreated" : "Crear contacto",
+    "messageCreatedSuccess" : "Contacto creado con exito!",
+    "messageCreatedError" : "El contacto no se pudo crear, favor intente nuevamente"
+
   }
 }

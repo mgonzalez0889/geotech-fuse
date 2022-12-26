@@ -41,5 +41,19 @@
     "initDispatch": "Iniciar / finalizar de forma automatica",
     "fieldRemarks": "Observaciones",
     "errorForm": {}
+  },
+  "commandAlert" : {
+    "commandAlertTitle" : "Editar despacho",
+    "commandAlertMessageError" : "El despacho no se pudo actualizar, favor intente nuevamente.",
+    "commandAlertMessageErrorUpdate" : "El despacho no se pudo finalizar, favor intente nuevamente",
+    "finalizeDispatchTitle" : "Finalizar despacho",
+    "finalizeDispatchMessage" : "¿Está seguro de que desea finalizar este despacho? ¡Esta acción no se puede deshacer!",
+    "finalizeDispatchMessageSuccess" : "Despacho finalizado con exito!",
+    "finalizeDispatchMessageEdit" : "¿Está seguro de que desea editar este despacho? ¡Esta acción no se puede deshacer!",
+    "modifyDispatchMessageSuccess" : "Despacho modificado con exito",
+    "modifyDispatchMessageError" : "El despacho no se pudo modificar, favor intente nuevamente",
+    "successfullyCreatedFirm" : "Despacho creado con exito.",
+    "errorMessageCreatedFirm" : "El despacho no se pudo crear, favor intente nuevamente"
+    
   }
 }
