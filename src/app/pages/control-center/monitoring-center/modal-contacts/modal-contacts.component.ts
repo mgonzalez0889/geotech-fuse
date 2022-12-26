@@ -37,7 +37,7 @@ export class ModalContactsComponent implements OnInit {
    */
   getCountryByIso(code: string): any {
     if (code) {
-      return this.countries.find((country) => country.code === code);
+      return this.countries.find(country => country.code === code);
     }
   }
   /**
