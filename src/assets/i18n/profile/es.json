@@ -30,7 +30,10 @@
   },
   "messageAlert": {
     "deleteSuccess": "Perfil eliminado con exito.",
+    "deleteFailure": "No se puedo eliminar el perfil, intentelo de nuevo.",
     "addSuccess": "Perfil creado con exito.",
-    "editSuccess": "Perfil modificado con exito."
+    "addFailure": "No se puedo crear el perfil, intentelo de nuevo.",
+    "editSuccess": "Perfil modificado con exito.",
+    "editFailure": "No se puedo modificar el perfil, intentelo de nuevo."
   }
 }

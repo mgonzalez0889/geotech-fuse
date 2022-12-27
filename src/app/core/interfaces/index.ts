@@ -1,4 +1,5 @@
 export * from './components/table.interface';
+export * from './components/header.interface';
 export * from './components/fuse-confirmation-config';
 
 export * from './form/report-historic.interface';

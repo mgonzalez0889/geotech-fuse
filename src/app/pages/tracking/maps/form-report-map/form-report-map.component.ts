@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatOption } from '@angular/material/core';
@@ -6,8 +5,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventsService } from 'app/core/services/api/events.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { DateTools } from '../../../../core/tools/date.tool';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { DateTools } from '@tools/date.tool';
 
 @Component({
   selector: 'app-form-report-map',

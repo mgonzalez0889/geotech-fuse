@@ -230,7 +230,7 @@
                 <input matInput [formControlName]="'plate'" required [placeholder]="'dispatch.formPage.fieldPlate' | transloco">
               </mat-form-field>
             </div>
-            <div class="mt-4" *ngIf="drivers.length">
+            <div class="mt-4" *ngIf="drivers?.length">
               <mat-form-field class="fuse-mat-no-subscript w-full">
                 <mat-label>{{'dispatch.formPage.fieldDriver' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>

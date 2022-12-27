@@ -22,12 +22,14 @@ import { PipeFilterPlatePipe } from 'app/pages/tracking/commands/commands-dashbo
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../../../shared/shared.module';
 import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { FormCommandsComponent } from './form-commands/form-commands.component';
 
 @NgModule({
   declarations: [
     CommandsDashboardComponent,
     PipeFilterPipe,
     PipeFilterPlatePipe,
+    FormCommandsComponent,
   ],
   imports: [
     CommonModule,

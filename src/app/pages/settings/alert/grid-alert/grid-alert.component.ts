@@ -41,8 +41,6 @@ export class GridAlertComponent implements OnInit, OnDestroy {
       .subscribe(({ data }) => {
         this.subTitlepage = data.length ? `${data.length} alertas` : 'No hay alertas';
         this.alertData = [...data];
-        console.log('alert', this.alertData);
-
       });
   }
 

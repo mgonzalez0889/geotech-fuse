@@ -11,7 +11,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { IOptionTable, IButtonOptions } from '../../../core/interfaces/components/table.interface';
+import { IButtonOptions, IOptionTable } from '@interface/index';
 
 @Component({
   selector: 'app-table',

@@ -1,0 +1,87 @@
+<div class="flex flex-col w-full sm:pl-6">
+  <div class="bg-card shadow rounded-2xl min-h-auto">
+    <div class="w-full h-20 flex justify-between items-center px-2 pt-4 sm:px-12 border-b-2">
+      <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'Envio de comandos' | transloco}}
+      </h2>
+      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.emitCloseForm.emit();">
+        <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+      </button>
+    </div>
+
+
+  </div>
+</div>
+
+
+   <!-- <div class="w-full md:w-2/5 pl-6">
+        <div class="bg-card shadow rounded-2xl overflow-hidden  md:pt-6">
+          <div class="mr-4 p-6 text-2xl font-medium tracking-tight leading-6 truncate">
+            {{'commands.formPage.titlePage' | transloco}}
+          </div>
+          <mat-tab-group [animationDuration]="'0'" (selectedTabChange)="typeOfSelection($event)">
+            <mat-tab [label]="'commands.tabPage.vehicle' | transloco">
+              <div class="flex border-2 rounded-full p-2 overflow-hidden">
+                <input matInput [placeholder]="'commands.formPage.searchVehicle' | transloco" #searchMobile
+                  [(ngModel)]="searchPlate">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
+                </mat-icon>
+              </div>
+              <mat-selection-list class="h-80 ">
+                <mat-checkbox *ngIf="!searchPlate" checkboxPosition="before" (change)="setAll($event.checked,'mobiles')"
+                  [indeterminate]="someComplete('mobiles')" [selected]="allSelectedMobiles">
+                  {{'commands.formPage.checkboxSelectAll' | transloco}}
+                </mat-checkbox>
+                <mat-list-option checkboxPosition="before"
+                  *ngFor="let mobile of mobiles | pipeFilterPlate: searchMobile.value" [selected]="mobile.selected"
+                  (click)="mobile.selected = !mobile.selected;" [value]="mobile.plate">
+                  <span>{{mobile.plate}}</span>
+                </mat-list-option>
+              </mat-selection-list>
+            </mat-tab>
+            <mat-tab [label]="'commands.tabPage.fleet' | transloco">
+              <div class="flex border-2 rounded-full p-2">
+                <input matInput [placeholder]="'commands.formPage.fleetSearch' | transloco" #searchFleet
+                  [(ngModel)]="searchFleets">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
+                </mat-icon>
+              </div>
+              <mat-selection-list class="h-80">
+                <mat-checkbox *ngIf="!searchFleets" checkboxPosition="before" (change)="setAll($event.checked,'fleets')"
+                  [indeterminate]="someComplete('fleets')" [selected]="allSelectedFleets">
+                  {{'commands.formPage.checkboxSelectAll' | transloco}}
+                </mat-checkbox>
+                <mat-list-option checkboxPosition="before"
+                  *ngFor="let fleet of fleets | pipeFilterFleet: searchFleet.value" [value]="fleet.id"
+                  (click)="fleet.selected = !fleet.selected;" [selected]="fleet.selected">
+                  <span>{{fleet.name}}</span>
+                </mat-list-option>
+              </mat-selection-list>
+            </mat-tab>
+          </mat-tab-group>
+          <div class="p-7 overflow-hidden">
+            <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate">
+              {{'commands.formPage.commandSelection' | transloco}}
+            </div>
+            <div class="pt-3">
+              <mat-form-field class="w-full">
+                <mat-label>{{'commands.titlePage' | transloco}}</mat-label>
+                <mat-select [(ngModel)]="selectedTypeCommand">
+                  <mat-option *ngFor="let command of typeCommands" [value]="command.id">
+                    {{command.description_command}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="flex justify-end">
+                <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="sentCommands()"
+                  [disabled]="!selectedTypeCommand">
+                  <mat-icon *ngIf="!show" class="icon-size-5">send</mat-icon>
+                  <span *ngIf="!show" class="ml-2">
+                    {{'commands.formPage.sendCommandButton' | transloco}}
+                  </span>
+                  <mat-progress-spinner *ngIf="show" [diameter]="24" [mode]="'indeterminate'">
+                  </mat-progress-spinner>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->

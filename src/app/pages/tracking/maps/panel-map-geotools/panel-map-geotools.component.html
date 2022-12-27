@@ -7,7 +7,7 @@
           {{this.titlePanel | transloco}}
         </h2>
         <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" matTooltipPosition="left"
-          (click)="openedDrawer = false; this.typePanel='none';">
+          (click)="openedDrawer = false; this.typePanel='none'; this.mapService.clearGeoTools()">
           <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
         </button>
       </div>

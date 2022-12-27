@@ -18,14 +18,11 @@ export class PanelMapHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.mapService.selectPanelMap$.subscribe(({ data }) => {
-      console.log('histori', data);
       this.dataHistory = data.dataHistory;
       this.historicService.getHistories(this.dataHistory).subscribe((his) => {
-        console.log('his', his);
       });
 
       this.historicService.getHistoriesTrip(data.dataHistoryTrips).subscribe((trip) => {
-        console.log('trips', trip);
       });
     });
   }

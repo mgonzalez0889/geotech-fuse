@@ -26,6 +26,10 @@ export class MultiSelectFilterComponent implements OnChanges {
     this.optionDataCopy = [...this.options.data];
   }
 
+  get valueControl(): string {
+    return this.form.controls[this.labelControl].value;
+  }
+
   filterList(value: string): void {
     const valueSelects = this.options.data.filter(
       (dataValue: any) =>
@@ -34,7 +38,15 @@ export class MultiSelectFilterComponent implements OnChanges {
           .toLowerCase()
           .includes(value.toLowerCase())
     );
+
     this.optionDataCopy = [...valueSelects];
+
+    if (
+      value === '' &&
+      (this.valueControl.length !== this.optionDataCopy.length)
+    ) {
+      this.allSelected.deselect();
+    }
   }
 
   public allSelection(): void {
@@ -43,6 +55,22 @@ export class MultiSelectFilterComponent implements OnChanges {
         .patchValue([...this.optionDataCopy.map(item => item[this.options.key]), 0]);
     } else {
       this.form.controls[this.labelControl].patchValue([]);
+    }
+  }
+
+  public openedSelection(): void {
+    if (this.valueControl?.length === this.optionDataCopy.length) {
+      this.allSelected.select();
+    }
+  }
+
+  public verifyAll(): void {
+    if (this.valueControl.length !== this.optionDataCopy.length) {
+      this.allSelected.deselect();
+    }
+
+    if ((this.valueControl.length + 1) === this.optionDataCopy.length) {
+      this.allSelected.select();
     }
   }
 }

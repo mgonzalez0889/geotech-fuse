@@ -8,7 +8,7 @@ import {
 } from '@ngneat/transloco';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { TranslocoHttpLoader } from 'app/core/transloco/transloco.http-loader';
-import { isDevMode } from '@angular/core';
+import { environment } from 'environments/environment';
 
 @NgModule({
   exports: [TranslocoModule],
@@ -30,7 +30,7 @@ import { isDevMode } from '@angular/core';
         defaultLang: 'en',
         fallbackLang: 'en',
         reRenderOnLangChange: true,
-        prodMode: !isDevMode(),
+        prodMode: environment.production,
       }),
     },
     {

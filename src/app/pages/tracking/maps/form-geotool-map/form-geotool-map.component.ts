@@ -70,7 +70,7 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
 
     if (!shapeData.length) {
       this.toasAlert.toasAlertWarn({
-        message: '¡Debes crear un punto, ruta o zona en el mapa!'
+        message: 'map.panelGeotools.messageAlert.messageRequired'
       });
       return;
     }
@@ -95,11 +95,11 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
         if (data.code === 200) {
           this.closeForm.emit({ closePanel: false, refreshData: true });
           this.toasAlert.toasAlertSuccess({
-            message: '¡Geometria creada con exito!'
+            message: 'map.panelGeotools.messageAlert.createSuccess'
           });
         } else {
           this.toasAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'map.panelGeotools.messageAlert.createFailure'
           });
           this.closeForm.emit({ closePanel: false, refreshData: false });
         }
@@ -115,11 +115,11 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
         if (result.code === 200) {
           this.closeForm.emit({ closePanel: false, refreshData: true });
           this.toasAlert.toasAlertSuccess({
-            message: '¡Geometria modificada con exito!'
+            message: 'map.panelGeotools.messageAlert.editSuccess'
           });
         } else {
           this.toasAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'map.panelGeotools.messageAlert.createFailure'
           });
           this.closeForm.emit({ closePanel: false, refreshData: false });
         }

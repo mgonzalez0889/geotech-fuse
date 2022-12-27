@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { delay, filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { IButtonOptions, IOptionTable } from '@interface/index';
