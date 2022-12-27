@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { IOptionTable } from '@interface/index';
 import { TranslocoService } from '@ngneat/transloco';
-import { delay, map, takeUntil } from 'rxjs/operators';
+import { delay, map, takeUntil, filter, mergeMap } from 'rxjs/operators';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProfilesService } from '@services/api/profiles.service';
@@ -60,7 +60,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       });
 
     this.translocoService.langChanges$
-      .pipe(takeUntil(this.unsubscribe$), delay(100))
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
       .subscribe(() => {
         const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: this.profileData.length } });
         this.subTitlePage = subTitlePage;
@@ -138,15 +138,21 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     } else {
       const confirmation = this.confirmationService.open();
       confirmation.afterClosed()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((result) => {
-          if (result === 'confirmed') {
-            this.profileService.deleteProfile(profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-              this.opened = false;
-              this.getProfiles();
-              this.toastAlert.toasAlertSuccess({
-                message: 'profile.messageAlert.editSuccess',
-              });
+        .pipe(
+          filter(result => result === 'confirmed'),
+          mergeMap(() => this.profileService.deleteProfile(profileId)),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe(({ code }) => {
+          this.opened = false;
+          if (code === 200) {
+            this.getProfiles();
+            this.toastAlert.toasAlertSuccess({
+              message: 'profile.messageAlert.deleteSuccess',
+            });
+          } else {
+            this.toastAlert.toasAlertWarn({
+              message: 'profile.messageAlert.deleteFailure'
             });
           }
         });
@@ -163,12 +169,18 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         if (typeAction === 'add') {
           this.profileService.postProfile(formData)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
+            .subscribe(({ code }) => {
               this.opened = false;
-              this.getProfiles();
-              this.toastAlert.toasAlertSuccess({
-                message: 'profile.messageAlert.addSuccess',
-              });
+              if (code === 200) {
+                this.getProfiles();
+                this.toastAlert.toasAlertSuccess({
+                  message: 'profile.messageAlert.addSuccess',
+                });
+              } else {
+                this.toastAlert.toasAlertWarn({
+                  message: 'profile.messageAlert.addFailure',
+                });
+              }
             });
         } else if (typeAction === 'edit') {
           if (!this.listPermission[this.permissionValid.updateProfile]) {
@@ -177,12 +189,19 @@ export class GridProfileComponent implements OnInit, OnDestroy {
             });
           } else {
             this.profileService.putProfile(formData, profileId)
-              .pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe(({ code }) => {
                 this.opened = false;
-                this.getProfiles();
-                this.toastAlert.toasAlertSuccess({
-                  message: 'profile.messageAlert.editSuccess',
-                });
+                if (code === 200) {
+                  this.getProfiles();
+                  this.toastAlert.toasAlertSuccess({
+                    message: 'profile.messageAlert.editSuccess',
+                  });
+                } else {
+                  this.toastAlert.toasAlertWarn({
+                    message: 'profile.messageAlert.editFailure'
+                  });
+                }
               });
           }
         } else if (typeAction === 'delete') {

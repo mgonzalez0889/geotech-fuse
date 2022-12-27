@@ -50,7 +50,7 @@ export class GridEventsComponent implements OnInit, OnDestroy {
       });
 
     this.translocoService.langChanges$
-      .pipe(delay(100), takeUntil(this.unsubscribe$))
+      .pipe(delay(500), takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.getEvents();
       });

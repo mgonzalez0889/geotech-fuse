@@ -17,14 +17,14 @@
     "FleetName": "Fleet Name",
     "SelectVehicles": "Select vehicles"
   },
-  "alertMessage" : {
-    "titleAlertDelete" : "Delete fleet",
-    "messageAlertDelete" : "Are you sure you want to delete this fleet, this action cannot be undone!",
-    "toasAlertDeleteSuccess" : "Fleet successfully deleted",
-    "toastAlertDeleteError" : "Fleet could not be deleted", 
-    "toastAlertSuccessEdit" : "Fleet successfully edited!", 
-    "toastAlertErrorEdit" : "Fleet could not be updated", 
-    "toastAlertSuccessCreated" : "Fleet created with success!",
-    "toastAlertErrorCreated" : "Sorry something went wrong, please try again!"
+  "alertMessage": {
+    "titleAlertDelete": "Delete fleet",
+    "messageAlertDelete": "Are you sure you want to delete this fleet, this action cannot be undone!",
+    "toastAlertDeleteSuccess": "Fleet successfully deleted",
+    "toastAlertDeleteError": "Fleet could not be deleted",
+    "toastAlertSuccessEdit": "Fleet successfully edited!",
+    "toastAlertErrorEdit": "Fleet could not be updated",
+    "toastAlertSuccessCreated": "Fleet created with success!",
+    "toastAlertErrorCreated": "Sorry something went wrong, please try again!"
   }
 }

@@ -117,6 +117,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     }
     this.dataUpdate = null;
     this.openedForm = false;
+    this.mapService.clearGeoTools();
     this.mapService.removeLayer({ id: 999999 }, this.typePanel);
   }
 

@@ -57,7 +57,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
         }
       );
     this.translocoService.langChanges$
-      .pipe(takeUntil(this.unsubscribe$), delay(100))
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
       .subscribe(() => {
         const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData?.length } });
         this.subTitlePage = subTitlePage;

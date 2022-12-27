@@ -248,7 +248,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
    */
   private getDriver(): void {
     this.driverService.getDrivers().subscribe((res) => {
-      this.drivers = res.data;
+      this.drivers = res.data || [];
     });
   }
   /**
@@ -287,7 +287,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
       title: this.transloco.translate('dispatch.commandAlert.commandAlertTitle'),
 
       message:
-      this.transloco.translate('dispatch.commandAlert.finalizeDispatchMessageEdit'),
+        this.transloco.translate('dispatch.commandAlert.finalizeDispatchMessageEdit'),
 
       icon: {
         name: 'heroicons_outline:pencil',

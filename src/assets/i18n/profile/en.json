@@ -15,7 +15,7 @@
     "fieldName": "Name",
     "fieldDescription": "Description",
     "fieldtypeVehiculo": "Search by:",
-    "optionVehiculo": "Vehiculos",
+    "optionVehiculo": "Vehicles",
     "optionFleets": "Fleets",
     "fieldEvents": "Select events",
     "fieldFleets": "Seleccione fleets",
@@ -30,7 +30,10 @@
   },
   "messageAlert": {
     "deleteSuccess": "Profile successfully deleted.",
+    "deleteFailure": "I cannot delete the profile, please try again.",
     "addSuccess": "Profile successfully created.",
-    "editSuccess": "Profile successfully modified."
+    "addFailure": "I can't create the profile, try again.",
+    "editSuccess": "Profile successfully modified.",
+    "editFailure": "I can't change the profile, try again."
   }
 }

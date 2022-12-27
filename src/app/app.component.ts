@@ -26,7 +26,7 @@ export class AppComponent {
 
   traslatePagination(): void {
     this.translocoService.langChanges$
-      .pipe(delay(100))
+      .pipe(delay(500))
       .subscribe((locale) => {
         this.dateAdapter.setLocale(locale);
         moment.locale(locale);

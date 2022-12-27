@@ -84,7 +84,7 @@ export class ControlCenterService {
    */
   public getAllStatusAttends(): Observable<any> {
     const params = { method: 'index_all_alarm_status_attens' };
-    return this._http.get(this._appSettings.controlCenter.url.base, {
+    return this._http.get(this._appSettings.controlCenterOwner.url.base, {
       params,
     });
   }

@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, Inject, OnInit } from '@angular/core';
 import { IconsModule } from '../../../../core/icons/icons.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ControlCenterService } from 'app/core/services/api/control-center.service';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
-import { transferArrayItem } from '@angular/cdk/drag-drop';
+import { ControlCenterService } from '@services/api/control-center.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-modal-contacts',
@@ -22,7 +20,6 @@ export class ModalContactsComponent implements OnInit {
   public countrieFlag: { code: string; flagImagePos: string } = { code: '+57', flagImagePos: '' };
   private unsubscribe$ = new Subject<void>();
 
-
   constructor(
     public dialogRef: MatDialogRef<ModalContactsComponent>,
     @Inject(MAT_DIALOG_DATA) public infoContact,
@@ -31,24 +28,21 @@ export class ModalContactsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private iconService: IconsModule,
     private translocoService: TranslocoService
-  ) { }
+  ) {
+
+    this.createContactForm();
+  }
 
   ngOnInit(): void {
-    this.createContactForm();
     this.typeContact();
     this.readCountries();
+    this.contactForm.controls['indicative'].valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        const countrieInit = this.countries.find(({ code }) => code === data);
+        this.countrieFlag = { ...countrieInit };
+      });
   }
-  /**
-   * @description:Trae la informacion que pertenece el indicativo en el formulario
-   */
-  // getCountryByIso(code: string): any {
-  //   if (code) {
-  //     return this.countries.find(country => country.code === code);
-  //   }
-  // }
-  /**
-   * @description: Valida si es edita o guarda un contacto nuevo
-   */
 
   public onSave(): void {
     const data = this.contactForm.getRawValue();
@@ -86,7 +80,7 @@ export class ModalContactsComponent implements OnInit {
       description: [''],
       indicative: ['+57', [Validators.required]],
     });
-    console.log(this.infoContact);
+
     if (this.infoContact.id) {
       if (this.infoContact.owner_id_simulator === 1) {
         this.controlCenterService
@@ -98,17 +92,19 @@ export class ModalContactsComponent implements OnInit {
         this.controlCenterService
           .getContactOwner(this.infoContact.id)
           .subscribe((res) => {
-
-
             this.contactForm.patchValue(res.data);
           });
       }
     }
+
     this.contactForm.patchValue({
       owner_id: this.infoContact.owner_id,
     });
   }
 
+  /**
+   * @description: Lectura de la informacion de cudiades y codigos y se pinta en el select de telefono
+   */
   private readCountries(): void {
     this.iconService.getCountries()
       .pipe(takeUntil(this.unsubscribe$))
@@ -117,9 +113,9 @@ export class ModalContactsComponent implements OnInit {
         const compareCode = this.contactForm.controls['indicative'].value;
         const countrieInit = this.countries.find(({ code }) => code === compareCode);
         this.countrieFlag = { ...countrieInit };
-        console.log(this.countrieFlag);
       });
   }
+
   /**
    * @description: Editar un contacto
    */
@@ -242,7 +238,7 @@ export class ModalContactsComponent implements OnInit {
             this.confirmationService.open({
               title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContact'),
               message:
-              this.translocoService.translate('monitoringCenter.alertMessage.messageAlertContactSuccess'),
+                this.translocoService.translate('monitoringCenter.alertMessage.messageAlertContactSuccess'),
 
               icon: {
                 show: true,

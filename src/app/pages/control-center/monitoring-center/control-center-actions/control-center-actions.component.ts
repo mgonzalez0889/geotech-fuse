@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,13 +13,14 @@ import moment from 'moment';
 import { HistoriesService } from 'app/core/services/api/histories.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
 import { TranslocoService } from '@ngneat/transloco';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-control-center-actions',
   templateUrl: './control-center-actions.component.html',
   styleUrls: ['./control-center-actions.component.scss'],
 })
-export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ControlCenterActionsComponent implements OnInit, OnDestroy {
   @ViewChild('paginatorContactsControlCenter')
   paginatorContactsControlCenter: MatPaginator;
   @ViewChild('sortContactsControlCenter') sortContactsControlCenter: MatSort;
@@ -70,9 +70,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterVi
     private matDialog: MatDialog,
     private mapToolsService: MapToolsService,
     private translocoService: TranslocoService
-
-  ) {
-    }
+  ) { }
 
   ngOnInit(): void {
     this.mapToolsService.initMap({
@@ -89,11 +87,15 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterVi
     this.getAllStatusAttends();
     this.createContactForm();
     this.getReportAlarmsAttens();
+
+    this.translocoService.langChanges$
+      .pipe(delay(500))
+      .subscribe(() => {
+        this.getAllCausalAttends();
+        this.getAllStatusAttends();
+      });
   }
 
-  ngAfterViewInit(): void {
-
-  }
   /**
    * @description: Modal para agregar nuevo contacto
    */
@@ -113,6 +115,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterVi
       }
     });
   }
+
   /**
    * @description: Modal para editar un contacto
    */
@@ -214,7 +217,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy, AfterVi
       this.confirmationService.open({
         title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlert'),
         message:
-         this.translocoService.translate('monitoringCenter.alertMessage.messageAlertError'),
+          this.translocoService.translate('monitoringCenter.alertMessage.messageAlertError'),
 
         icon: {
           show: true,

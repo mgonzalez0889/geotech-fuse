@@ -7,7 +7,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ControlCenterService } from 'app/core/services/api/control-center.service';
 import { UsersService } from 'app/core/services/api/users.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-control-center-dashboard',
@@ -17,7 +19,6 @@ import { Subscription } from 'rxjs';
 export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
   public owner_id_simulator: number;
   public alarms: any = [];
-  public subscription: Subscription;
   public filterAlarms: number = 0;
   public notAttended: number = 0;
   public silenced: number = 0;
@@ -46,10 +47,12 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     'address',
     'date_entry',
   ];
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private controlCenterService: ControlCenterService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private trasnlocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -58,15 +61,23 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       this.getAllAlarms();
     }, 20000);
+
+    this.trasnlocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        this.getAllAlarms();
+      });
   }
   /**
    * @description: Trae la informacion del usuario
    */
   public getInfoUser(): void {
-    this.usersService.getInfoUser().subscribe((res) => {
-      this.owner_id_simulator = res.data.owner_id_simulator;
-      this.getAllAlarms();
-    });
+    this.usersService.getInfoUser()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.owner_id_simulator = res.data.owner_id_simulator;
+        this.getAllAlarms();
+      });
   }
   /**
    * @description Si el número de elementos seleccionados coincide con el número total de filas.
@@ -95,6 +106,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     if (this.owner_id_simulator === 1) {
       this.controlCenterService
         .getAllAlarms(this.filterAlarms)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((res) => {
           this.getAlarms(res);
         });
@@ -102,6 +114,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
       //Centro de control de los clientes
       this.controlCenterService
         .getAllAlarmsOwner(this.filterAlarms)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((res) => {
           this.getAlarms(res);
         });
@@ -143,8 +156,9 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
    * @description: Escucha el observable behavior
    */
   private listenObservables(): void {
-    this.subscription =
-      this.controlCenterService.behaviorSubjectContactGrid.subscribe(
+    this.controlCenterService.behaviorSubjectContactGrid
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
         ({ reload, opened }) => {
           this.opened = opened;
           if (reload) {
@@ -171,6 +185,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
     if (this.owner_id_simulator === 1) {
       this.controlCenterService
         .getInitAttention(data.id)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((res) => {
           if (res.code === 200) {
             this.getAllAlarms();
@@ -180,17 +195,20 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
       //Centro de control de los clientes
       this.controlCenterService
         .getInitAttentionOwner(data.id)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((res) => {
           if (res.code === 200) {
             this.getAllAlarms();
           }
         });
     }
-    this.controlCenterService.getInitAttention(data.id).subscribe((res) => {
-      if (res.code === 200) {
-        this.getAllAlarms();
-      }
-    });
+    this.controlCenterService.getInitAttention(data.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        if (res.code === 200) {
+          this.getAllAlarms();
+        }
+      });
     this.opened = true;
     this.dataAlarmSelect = data;
     this.dataAlarmSelect['owner_id_simulator'] = this.owner_id_simulator;
@@ -214,6 +232,7 @@ export class ControlCenterDashboardComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     clearInterval(this.interval);
-    this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

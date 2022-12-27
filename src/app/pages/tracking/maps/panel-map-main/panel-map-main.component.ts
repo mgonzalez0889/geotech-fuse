@@ -8,8 +8,9 @@ import { MapToolsService } from '@services/maps/map-tools.service';
 import { DateTools } from '@tools/date.tool';
 import { IconsModule } from 'app/core/icons/icons.module';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { delay, takeUntil } from 'rxjs/operators';
 import { FormReportMapComponent } from '../form-report-map/form-report-map.component';
+import { TranslocoService } from '@ngneat/transloco';
 
 type TypeService = { classMobileId: number; classMobileName: string };
 
@@ -38,19 +39,26 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private fleetService: FleetsService,
     private mobilesService: MobileService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
     setTimeout(() => {
       this.readMobiles();
-    }, 1000);
+    }, 700);
 
     this.fleetService.getFleets()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
         this.fleets = [...data || []];
         this.dataSourceFleets = new MatTableDataSource([...data || []]);
+      });
+
+    this.translocoService.langChanges$
+      .pipe(delay(500), takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.ref.markForCheck();
       });
 
     this.refreshDataSocket();
@@ -155,7 +163,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     this.dataSourceFleets.filter = filterValue.trim().toLowerCase();
   }
 
-  closePanel(): void {
+  public closePanel(): void {
     this.selectFleet = [];
     this.selectPlates = [];
     this.mapService.clearMap();

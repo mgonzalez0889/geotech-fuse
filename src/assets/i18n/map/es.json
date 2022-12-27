@@ -20,6 +20,12 @@
       "name": "Nombre",
       "color": "Color",
       "description": "Descripcion"
+    },
+    "messageAlert": {
+      "messageRequired": "¡Debes crear un punto, ruta o zona en el mapa!",
+      "createSuccess": "¡Geometria creada con exito!",
+      "createFailure": "¡Lo sentimos algo ha salido mal, vuelva a intentarlo!",
+      "editSuccess": "¡Geometria modificada con exito!"
     }
   },
   "icons": {
@@ -27,7 +33,10 @@
     "iconTextClose": "Cerrado",
     "iconTextOff": "Apagado",
     "iconTextOn": "Encendido",
-    "iconTextReport": "Sin reportar"
+    "iconTextReport": "Sin reportar",
+    "iconTextGpsExcellent": "Excelente",
+    "iconTextGpsRegular": "Regular",
+    "iconTextGpsBad": "Mala"
   },
   "popup": {
     "lastTransmission": "Ultima transmision",
@@ -37,5 +46,10 @@
     "notDriver": "sin conductor",
     "spreadsheet": "Planilla",
     "notSpreadsheet": "sin planilla"
+  },
+  "modalImport": {
+    "title": "Importar GeoJson",
+    "message": "Por medio de esta opción podrás importar en formato Geojson.",
+    "selectFile": "Seleccione un archivo"
   }
 }

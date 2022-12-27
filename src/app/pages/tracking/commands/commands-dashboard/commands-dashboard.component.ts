@@ -7,9 +7,10 @@ import { MatSort } from '@angular/material/sort';
 import { FleetsService } from 'app/core/services/api/fleets.service';
 import { MobileService } from 'app/core/services/api/mobile.service';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
 import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { takeUntil, delay } from 'rxjs/operators';
 
 
 @Component({
@@ -54,7 +55,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
     'state',
     'resend',
   ];
-
+  private unsubscribe$ = new Subject<void>();
   constructor(
     private commandsService: CommandsService,
     private mobilesService: MobileService,
@@ -62,7 +63,6 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private translocoService: TranslocoService,
     private toastAlertService: ToastAlertService
-
   ) { }
 
   ngOnInit(): void {
@@ -70,18 +70,28 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
     this.getSentCommands();
     this.getFleets();
     this.getMobiles();
-    this.subscription = this.intervallTimer.subscribe(() =>
-      this.getSentCommands()
-    );
+    this.intervallTimer
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() =>
+        this.getSentCommands()
+      );
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        this.getSentCommands();
+        this.getTypeCommand();
+      });
   }
 
   /**
    * @description: Muestra los tipos de comandos del cliente
    */
   private getTypeCommand(): void {
-    this.commandsService.getTypeCommands().subscribe((data) => {
-      this.typeCommands = data.data;
-    });
+    this.commandsService.getTypeCommands()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.typeCommands = data.data;
+      });
   }
   /**
    * @description: Obtiene los comandos enviados
@@ -91,42 +101,48 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
       dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
     };
-    this.commandsService.postSearchCommandsSend(date).subscribe((res) => {
-      if (res.data_count) {
-        this.send = res.data_count[1]?.count_state;
-        this.expired = res.data_count[2]?.count_state;
-        this.pending = res.data_count[0]?.count_state;
-      } else {
-        this.send = 0;
-        this.expired = 0;
-        this.pending = 0;
-      }
-      this.dataCommandsSent = new MatTableDataSource(res.data);
-      this.dataCommandsSent.paginator = this.paginator;
-      this.dataCommandsSent.sort = this.sort;
-    });
+    this.commandsService.postSearchCommandsSend(date)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        if (res.data_count) {
+          this.send = res.data_count[1]?.count_state;
+          this.expired = res.data_count[2]?.count_state;
+          this.pending = res.data_count[0]?.count_state;
+        } else {
+          this.send = 0;
+          this.expired = 0;
+          this.pending = 0;
+        }
+        this.dataCommandsSent = new MatTableDataSource(res.data);
+        this.dataCommandsSent.paginator = this.paginator;
+        this.dataCommandsSent.sort = this.sort;
+      });
   }
   /**
    * @description: Obtiene los vehiculos del cliente
    */
   private getMobiles(): void {
-    this.mobilesService.getMobiles().subscribe((data) => {
-      this.mobiles = data.data.map((x) => {
-        x['selected'] = false;
-        return x;
+    this.mobilesService.getMobiles()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.mobiles = data.data.map((x) => {
+          x['selected'] = false;
+          return x;
+        });
       });
-    });
   }
   /**
    * @description: Obtiene las flotas del cliente
    */
   private getFleets(): void {
-    this.fleetService.getFleets().subscribe((data) => {
-      this.fleets = data.data.map((x) => {
-        x['selected'] = false;
-        return x;
+    this.fleetService.getFleets()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.fleets = data.data.map((x) => {
+          x['selected'] = false;
+          return x;
+        });
       });
-    });
   }
   /**
    * @description: Funcion del filtro en la tabla
@@ -181,7 +197,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       let confirmation = this.confirmationService.open({
         title: this.translocoService.translate('commands.commandAlert.titleAlert'),
         message:
-        this.translocoService.translate('commands.commandAlert.messageAlert'),
+          this.translocoService.translate('commands.commandAlert.messageAlert'),
       });
       confirmation.afterClosed().subscribe((result) => {
         if (result === 'confirmed') {
@@ -208,7 +224,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       });
     } else {
       this.toastAlertService.toasAlertWarn({
-        message:'commands.commandAlert.alertMessageSelectionError'
+        message: 'commands.commandAlert.alertMessageSelectionError'
       });
     }
   }
@@ -264,6 +280,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
    * @description: Destruye el observable
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

@@ -15,7 +15,7 @@
       <div class="flex gap-2 justify-between">
         <mat-form-field class="fuse-mat-dense w-full">
           <mat-label>{{'map.panelGeotools.form.code' | transloco}}</mat-label>
-          <input matInput formControlName="code" [placeholder]="'map.panelGeotools.form.code' | transloco">
+          <input matInput formControlName="code" [placeholder]="'map.panelGeotools.form.code' | transloco" required>
         </mat-form-field>
 
         <div>
@@ -25,7 +25,7 @@
 
       <mat-form-field class="fuse-mat-dense">
         <mat-label>{{'map.panelGeotools.form.name' | transloco}}</mat-label>
-        <input matInput formControlName="name" [placeholder]="'map.panelGeotools.form.name' | transloco">
+        <input matInput formControlName="name" [placeholder]="'map.panelGeotools.form.name' | transloco" required>
       </mat-form-field>
 
       <mat-form-field class="fuse-mat-dense">

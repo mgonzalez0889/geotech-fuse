@@ -127,15 +127,15 @@ export class IconsModule {
     switch (statusGps) {
       case 'excelente':
         configIcon['icon'] = 'status_gps_green';
-        configIcon['text'] = `${data.status_gps}`;
+        configIcon['text'] = 'map.icons.iconTextGpsExcellent';
         break;
       case 'regular':
         configIcon['icon'] = 'status_gps_orange';
-        configIcon['text'] = `${data.status_gps}`;
+        configIcon['text'] = 'map.icons.iconTextGpsRegular';
         break;
       case 'mala':
         configIcon['icon'] = 'status_gps_red';
-        configIcon['text'] = `${data.status_gps}`;
+        configIcon['text'] = 'map.icons.iconTextGpsBad';
         break;
     }
     return configIcon;

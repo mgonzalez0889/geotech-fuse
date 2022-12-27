@@ -355,6 +355,16 @@ export class MapToolsService {
       }
     }
 
+    this.clearGeoTools();
+
+    this.countPointId = 0;
+    this.latlng = [];
+    this.shapeGeo = [];
+    this.pointLatLens = [];
+    this.markerCluster.clearLayers();
+  }
+
+  public clearGeoTools(): void {
     for (const pointView in this.markersPoint) {
       if (this.markersPoint.hasOwnProperty(pointView)) {
         this.map.removeLayer(this.markersPoint[pointView]);
@@ -372,12 +382,6 @@ export class MapToolsService {
         this.map.removeLayer(this.markersRoutes[pointView]);
       }
     }
-
-    this.countPointId = 0;
-    this.latlng = [];
-    this.shapeGeo = [];
-    this.pointLatLens = [];
-    this.markerCluster.clearLayers();
   }
 
   /**
@@ -512,7 +516,11 @@ export class MapToolsService {
    * @param data - la informacion del vehiculo
    */
   private rotationIcon(data: any): number | null {
-    return data.speed > 0 ? data.orientation : null;
+    const diffDays = moment(new Date()).diff(
+      moment(data.date_entry),
+      'days'
+    );
+    return data.speed > 0 && !(diffDays >= 1 || isNaN(diffDays)) ? data.orientation : null;
   }
 
   /**

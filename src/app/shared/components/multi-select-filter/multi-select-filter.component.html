@@ -1,21 +1,21 @@
 <div [formGroup]="form">
-  <mat-form-field class="fuse-mat-dense w-full" appearance="fill" >
-    <mat-label >{{placeholder | transloco}}</mat-label>
-    <mat-select multiple [formControlName]="labelControl" required>
+  <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
+    <mat-label>{{placeholder | transloco}}</mat-label>
+    <mat-select multiple (closed)="this.allSelected.deselect()" (opened)="openedSelection()"
+      [formControlName]="labelControl" required>
       <div class="option-all">
         <div class="flex items-center gap-2 px-4 py-2">
           <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">
           </mat-icon>
           <input class="w-full min-w-0 py-1 border-0" type="text" [(ngModel)]="valueFilter"
-            [ngModelOptions]="{standalone: true}"
-            (ngModelChange)="filterList($event)" [placeholder]="'search' | transloco"
-            [maxLength]="30">
+            [ngModelOptions]="{standalone: true}" (ngModelChange)="filterList($event)"
+            [placeholder]="'search' | transloco" [maxLength]="30">
         </div>
         <mat-option #allSelected (click)="this.allSelection()" [value]="0">
           {{'selectAll' | transloco}}
         </mat-option>
       </div>
-      <mat-option [value]="data[options.key]"
+      <mat-option (onSelectionChange)="verifyAll()" [value]="data[options.key]"
         *ngFor="let data of this.optionDataCopy">
         {{ data[options.keyView] }}
       </mat-option>
