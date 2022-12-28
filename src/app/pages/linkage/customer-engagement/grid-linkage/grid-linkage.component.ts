@@ -1,22 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { IOptionTable } from '@interface/index';
-import { NgxPermissionsObject } from 'ngx-permissions';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
-import { UsersService } from '@services/api/users.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ModalLinkageComponent } from '../modal-linkage/modal-linkage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { LinkageService } from '../../../../core/services/api/linkage.service';
-import { LinkageModule } from '../../linkage.module';
 
 @Component({
   selector: 'app-grid-linkage',
   templateUrl: './grid-linkage.component.html',
   styleUrls: ['./grid-linkage.component.scss']
 })
-
-
 export class GridLinkageComponent implements OnInit {
   public titlePage: string = 'Vinculación';
   public subTitlePage: string = 'Contrato Clientes';
@@ -56,21 +50,15 @@ export class GridLinkageComponent implements OnInit {
       typeField: 'text',
     },
   ];
+
   public displayedColumns: string[] = [
     ...this.optionsTable.map(({ name }) => name),
   ];
-  private listPermission: NgxPermissionsObject;
   private unsubscribe$ = new Subject<void>();
 
-
   constructor(
-    private toastAlert: ToastAlertService,
-    private usersService: UsersService,
     private matDialog: MatDialog,
     private linkageService: LinkageService
-
-
-
   ) { }
 
   ngOnInit(): void {
@@ -83,9 +71,9 @@ export class GridLinkageComponent implements OnInit {
   }
 
   public addUserForm(): void {
-      this.opened = true;
-      this.titleForm = 'Crear cliente';
-      this.userDataUpdate = null;
+    this.opened = true;
+    this.titleForm = 'Crear cliente';
+    this.userDataUpdate = null;
   }
 
   public selectUserTable(dataUser: any): void {
@@ -97,12 +85,9 @@ export class GridLinkageComponent implements OnInit {
   public newClient(): void {
     const dialogRef = this.matDialog.open(ModalLinkageComponent, {
       width: '500px',
-      height:'430px',
-
+      height: '430px',
     });
-
   }
-
 
   private readDataUser(): void {
     this.linkageService
@@ -115,11 +100,4 @@ export class GridLinkageComponent implements OnInit {
         this.userData = [...(data || [])];
       });
   }
-
-
-
-
-
-
-
 }

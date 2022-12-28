@@ -7,19 +7,14 @@ import { Observable, Subject ,  } from 'rxjs';
   providedIn: 'root'
 })
 export class LinkageService {
-
   activeInstances$: Subject<number> = new Subject();
   modalRef: ComponentRef<any>[] = [];
   public activeInstances: number;
   public userForm$: Subject<{ typeAction: 'add' | 'edit' | 'delete'; formData: any }> = new Subject();
 
-
-
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService,
-
-
   ) { }
 
    /**
@@ -45,12 +40,4 @@ export class LinkageService {
 
 
   }
-
-
-
-
-
-
-
-
 }
