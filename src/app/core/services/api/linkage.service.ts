@@ -39,6 +39,13 @@ export class LinkageService {
     return this._http.get(this._appSettings.user.url.base, { params });
   }
 
+  public getUsersModal(): Observable<any> {
+    const params = { method: 'index_all_user' };
+    return this._http.get(this._appSettings.user.url.base, { params });
+
+
+  }
+
 
 
 

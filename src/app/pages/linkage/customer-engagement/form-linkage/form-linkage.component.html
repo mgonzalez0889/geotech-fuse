@@ -14,24 +14,24 @@
       
           <div class="flex flex-auto items-end -mt-16">
             <!-- Avatar -->
-            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
-              <div
-                class="flex items-center justify-center w-full h-full rounded overflow-hidden text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                <mat-icon [svgIcon]="'heroicons_solid:clipboard'" class="icon-size-14"></mat-icon>
-              </div>
-            </div>
+            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card"><div
+                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                    {{dataUpdate['full_name']?.charAt(0)}}
+                        </div>
+                     </div>
             <!-- Actions -->
             <div class="flex items-center ml-auto mb-1">
               <button mat-stroked-button (click)="editMode = true">
-                <mat-icon *ngIf="!this.dataUpdate" class="icon-size-5" [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                <mat-icon *ngIf="!this.dataUpdate" class="icon-size-5" [svgIcon]="'heroicons_outline:pencil-alt'"></mat-icon>
                 <span class="ml-2">{{dataUpdate ? 'editar' : 'Buscar'}}</span>
               </button>
             </div>
           </div>
-          <div class="mt-3 text-4xl font-bold truncate">{{this.titleForm}}</div>
+          
+          <div class="mt-3 text-4xl font-bold truncate">{{dataUpdate['full_name']}}</div>
             <div class="flex flex-col mt-4 pt-6 border-t space-y-8" *ngIf="this.dataUpdate">
               <div class="flex sm:items-center">
-                <mat-icon matTooltip="Dirección" svgIcon="heroicons_solid:user-circle">
+                <mat-icon matTooltip="Nombre usuario" svgIcon="heroicons_solid:user-circle">
                 </mat-icon>
                 <div class="ml-6 leading-6">{{dataUpdate['full_name']}}</div>
               </div>
@@ -61,55 +61,42 @@
         
            
         <div class="w-full" [hidden]="!editMode">
-          <form [formGroup]="this.formUser" autocomplete="off" class="flex flex-col gap-3 pt-6">
-
-              <div class="flex border-2 rounded-full p-2 ">
-                <input 
-                type="text" 
-                matInput 
-                placeholder="Buscar cliente" >
-             
-
-                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
-              </div>
-              <mat-error>
-                Cliente no existe
-              </mat-error>
+          <form [formGroup]="this.formUser" autocomplete="off" class="flex flex-col gap-3 pt-6">          
 
               <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Nombre completo</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user-circle"></mat-icon>
-                <input type="text" matInput placeholder="Nombre completo" formControlName="full_name">
+                <input disabled type="text" matInput placeholder="Nombre completo" formControlName="full_name">
               </mat-form-field>
 
               <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Telefono</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:phone"></mat-icon>
-                <input type="number" matInput placeholder="Telefono" formControlName="Phone">
+                <input disabled type="number" matInput placeholder="Telefono" formControlName="Phone">
               </mat-form-field>
 
               <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Correo</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:mail"></mat-icon>
-                <input type="mail" matInput placeholder="Email" formControlName="Email">
+                <input disabled type="mail" matInput placeholder="Email" formControlName="Email">
               </mat-form-field>
 
               <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Estado</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:chart-square-bar"></mat-icon>
-                <input type="text" matInput placeholder="Estado" formControlName="condition">
+                <input disabled type="text" matInput placeholder="Estado" formControlName="condition">
               </mat-form-field>
 
               <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Score</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:information-circle"></mat-icon>
-                <input type="number" matInput placeholder="Score" formControlName="Score">
+                <input disabled type="number" matInput placeholder="Score" formControlName="Score">
               </mat-form-field>
 
               <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Puntaje Telecomunicaciones</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:information-circle"></mat-icon>
-                <input type="number" matInput placeholder="Puntaje Telecomunicaciones" formControlName="Score_telecommunications">
+                <input disabled type="number" matInput placeholder="Puntaje Telecomunicaciones" formControlName="Score_telecommunications">
               </mat-form-field>
 
               

@@ -19,6 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSidenavModule,
     MatTableModule,
     MatTooltipModule,
+    MatAutocompleteModule
   ],
   exports: [
     CommonModule,
@@ -56,7 +58,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSlideToggleModule,
     MatDatepickerModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatAutocompleteModule
   ],
 })
 export class SharedModule { }

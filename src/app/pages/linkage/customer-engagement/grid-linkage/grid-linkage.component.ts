@@ -7,6 +7,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ModalLinkageComponent } from '../modal-linkage/modal-linkage.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LinkageService } from '../../../../core/services/api/linkage.service';
+import { LinkageModule } from '../../linkage.module';
 
 @Component({
   selector: 'app-grid-linkage',
@@ -65,6 +67,7 @@ export class GridLinkageComponent implements OnInit {
     private toastAlert: ToastAlertService,
     private usersService: UsersService,
     private matDialog: MatDialog,
+    private linkageService: LinkageService
 
 
 
@@ -93,20 +96,16 @@ export class GridLinkageComponent implements OnInit {
   }
   public newClient(): void {
     const dialogRef = this.matDialog.open(ModalLinkageComponent, {
-      width: '600px',
-      height:'450px',
-      data: {
+      width: '500px',
+      height:'430px',
 
-      },
     });
-    // dialogRef.afterClosed().subscribe((res) => {
 
-    // });
   }
 
 
   private readDataUser(): void {
-    this.usersService
+    this.linkageService
       .getUsers()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
