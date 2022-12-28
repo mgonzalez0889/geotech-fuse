@@ -1,13 +1,16 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AfterViewInit, OnInit } from '@angular/core';
-import { MobileService } from 'app/core/services/api/mobile.service';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { SocketIoClientService } from 'app/core/services/socket/socket-io-client.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { SocketIoClientService } from '@services/socket/socket-io-client.service';
 import { Subject } from 'rxjs';
-import { distinct, filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
-type OptionsMap = { icon: string; text: string; actionClick: (data: any) => void };
+type OptionsMap = {
+  icon: string;
+  text: string;
+  actionClick: (data: any) => void;
+};
 
 @Component({
   selector: 'app-map',
@@ -20,34 +23,46 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   public optionsMap: OptionsMap[] = [
     {
       icon: 'route-map',
-      text: 'Rutas',
+      text: 'map.panelGeotools.routeTitle',
       actionClick: (): void => {
-        this.selectOption = 'Rutas';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Rutas', typePanel: 'routes' });
+        this.selectOption = 'route-map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.routeTitle',
+          typePanel: 'routes',
+        });
       },
     },
     {
       icon: 'zone-map',
-      text: 'Zonas',
+      text: 'map.panelGeotools.zoneTitle',
       actionClick: (): void => {
-        this.selectOption = 'Zonas';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Zonas', typePanel: 'zones' });
+        this.selectOption = 'zone-map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.zoneTitle',
+          typePanel: 'zones',
+        });
       },
     },
     {
-      text: 'Puntos',
+      text: 'map.panelGeotools.pointControlTitle',
       icon: 'point-map',
       actionClick: (): void => {
-        this.selectOption = 'Puntos';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Puntos de control', typePanel: 'punts' });
+        this.selectOption = 'point-map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.pointControlTitle',
+          typePanel: 'punts',
+        });
       },
     },
     {
-      text: 'Mapas',
+      text: 'map.panelGeotools.mapaTitle',
       icon: 'map',
       actionClick: (): void => {
-        this.selectOption = 'Mapas';
-        this.mapService.selectPanelGeoTools$.next({ titlePanel: 'Capas de mapas', typePanel: 'owner_maps' });
+        this.selectOption = 'map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.mapaTitle',
+          typePanel: 'owner_maps',
+        });
       },
     },
   ];
@@ -58,12 +73,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public mapService: MapToolsService,
     private socketIoService: SocketIoClientService,
-    private mobilesService: MobileService,
+    private mobilesService: MobileService
   ) { }
 
   ngOnInit(): void {
     this.listenChanelsSocket();
-
     this.mapService.selectPanelMap$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ panel }) => {
@@ -97,7 +111,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe((data) => {
-        this.mobiles = [...data || []];
+        this.mobiles = [...(data || [])];
         this.mapService.clearMap();
         this.mapService.setMarkers(data, true);
       });
@@ -110,12 +124,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mapService.verCluster = checked;
     this.mapService.clearMap();
     this.mapService.setMarkers(this.mobiles, true);
-
   }
 
   private listenChanelsSocket(): void {
     this.socketIoService.sendMessage('authorization');
-    this.socketIoService.listenin('new_position')
+    this.socketIoService
+      .listenin('new_position')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
         console.log('socket', data);

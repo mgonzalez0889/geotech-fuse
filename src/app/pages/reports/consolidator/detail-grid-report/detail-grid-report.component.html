@@ -10,88 +10,88 @@
 
     <div class="items">
         <div class="item">
-            <strong>Fecha inicial: </strong>
+            <strong>{{'consolidator.tablePage.dateInit' | transloco}}: </strong>
             <span>{{ detailData.fecha_inicial | date: "short" }}</span>
         </div>
 
         <div class="item">
-            <strong>Dirección incial: </strong>
+            <strong>{{'consolidator.tablePage.addressInitial' | transloco}}: </strong>
             <span>{{ detailData.direccion_inicial }}</span>
         </div>
 
         <div class="item">
-            <strong>Fecha final: </strong>
+            <strong>{{'consolidator.tablePage.dateEnd' | transloco}}: </strong>
             <span>{{ detailData.fecha_final | date: "short" }}</span>
         </div>
 
         <div class="item">
-            <strong>Dirección final: </strong>
+            <strong>{{'consolidator.tablePage.addressEnd' | transloco}}: </strong>
             <span>{{ detailData.direccion_final }}</span>
         </div>
     </div>
 
     <div class="items">
         <div class="item">
-            <strong>N° de Viajes: </strong>
+            <strong>{{'consolidator.tablePage.cantTravel' | transloco}}: </strong>
             <span>{{ detailData.viajes }}</span>
         </div>
 
         <div class="item">
-            <strong>Tiempo de viajes: </strong>
+            <strong>{{'consolidator.tablePage.timeTravel' | transloco}}: </strong>
             <span>{{ detailData.tiempo }}</span>
         </div>
 
         <div class="item">
-            <strong>N° de Paradas: </strong>
+            <strong>{{'consolidator.tablePage.cantStop' | transloco}}: </strong>
             <span>{{ detailData.paradas }}</span>
         </div>
 
         <div class="item">
-            <strong>Tiempo de paradas: </strong>
+            <strong>{{'consolidator.tablePage.timeStop' | transloco}}: </strong>
             <span>{{ detailData.paradas_tiempo }}</span>
         </div>
     </div>
 
     <div class="items">
         <div class="item">
-            <strong>Odometro: </strong>
-            <span>{{ detailData.odometer }}</span>
+            <strong>{{'consolidator.datail.odometer' | transloco}}: </strong>
+            <span>{{ detailData.odometer | number }}</span>
         </div>
 
         <div class="item">
-            <strong>Horometro: </strong>
+            <strong>{{'consolidator.datail.horometro' | transloco}}: </strong>
             <span>{{ detailData.horometer }}</span>
         </div>
 
         <div class="item">
-            <strong>Ralentí: </strong>
+            <strong>{{'consolidator.datail.ralenti' | transloco}}: </strong>
             <span>{{ detailData.ralenti }}</span>
         </div>
 
         <div class="item">
-            <strong>Combustible: </strong>
+            <strong>{{'consolidator.datail.fuel' | transloco}}: </strong>
             <span>{{ detailData.fuel_consumed }}</span>
         </div>
     </div>
 
     <div class="items">
         <div class="item">
-            <strong>Promedio de odometro: </strong>
-            <span>{{ detailData.avg_odometer }}</span>
+            <strong>{{'consolidator.datail.averageOdometer' | transloco}}: </strong>
+            <span>{{ detailData.avg_odometer | number }}</span>
         </div>
 
         <div class="item">
-            <strong>Promedio de horometro: </strong>
-            <span>{{ detailData.avg_horometer }}</span>
+            <strong>{{'consolidator.datail.averageHorometro' | transloco}}: </strong>
+            <span>{{ detailData.avg_horometer | number }}</span>
         </div>
 
         <div class="item">
-            <strong>Promedio de ralentí: </strong>
+            <strong>{{'consolidator.datail.averageRalenti' | transloco}}: </strong>
             <span>{{ detailData.avg_ralenti }}</span>
         </div>
 
         <div class="item">
-            <strong>Promedio de combustible: </strong>
+            <strong>{{'consolidator.datail.averageFuel' | transloco}}: </strong>
             <span>{{ detailData.avg_fuel_consumed }}</span>
         </div>
     </div>

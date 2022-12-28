@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { IOptionTable } from '../interfaces';
 import * as XLSX from 'xlsx';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DowloadTools {
 
+  constructor(private translocoService: TranslocoService) { }
   public dowloadCsv<T = any>(options: IOptionTable[], dataRow: T[], nameFile: string): void {
     const csvTemp: string[] = [];
-    const headers: string[] = options.map(({ text }) => text);
+    const headers: string[] = options.map(({ text }) => this.translocoService.translate(text));
     csvTemp[0] = headers.join(',');
 
     dataRow.forEach((data) => {
@@ -33,7 +35,8 @@ export class DowloadTools {
     dataRow.forEach((row) => {
       const obj = {};
       options.forEach(({ name, text }) => {
-        obj[text] = row[name];
+        const textTransalte = this.translocoService.translate(text);
+        obj[textTransalte] = row[name];
       });
       parseArray.push(obj);
     });

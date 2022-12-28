@@ -2,14 +2,14 @@
 import moment from 'moment';
 import { Subject } from 'rxjs';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { MobileService } from '../../../../core/services/api/mobile.service';
-import { EventsService } from '../../../../core/services/api/events.service';
-import { HistoriesService } from '../../../../core/services/api/histories.service';
-import { FleetsService } from '../../../../core/services/api/fleets.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IBodyHistoric } from '../../../../core/interfaces/form/report-historic.interface';
 import { takeUntil } from 'rxjs/operators';
+import { MobileService } from '@services/api/mobile.service';
+import { EventsService } from '@services/api/events.service';
+import { HistoriesService } from '@services/api/histories.service';
+import { FleetsService } from '@services/api/fleets.service';
+import { IBodyHistoric } from '@interface/index';
 
 @Component({
   selector: 'app-form-report',
@@ -26,11 +26,11 @@ export class FormReportComponent implements OnInit, OnDestroy {
   public listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
-      text: 'Moviles',
+      text: 'historical.formPage.optionVehiculo',
     },
     {
       name: 'fleet',
-      text: 'Flota',
+      text: 'historical.formPage.optionFleets',
     },
   ];
 

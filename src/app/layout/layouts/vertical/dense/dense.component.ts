@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -15,6 +14,7 @@ import { NavigationService } from 'app/core/services/navigation/navigation.servi
 export class DenseLayoutComponent implements OnInit, OnDestroy {
   isScreenSmall: boolean;
   navigation: Navigation;
+  menuTooltip: boolean = true;
   navigationAppearance: 'default' | 'dense' = 'dense';
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -22,8 +22,6 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
    * Constructor
    */
   constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _router: Router,
     private _navigationService: NavigationService,
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _fuseNavigationService: FuseNavigationService
@@ -86,6 +84,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
    */
   toggleNavigation(name: string): void {
     // Get the navigation
+    this.menuTooltip = !this.menuTooltip;
     const navigation = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(name);
 
     if (navigation) {

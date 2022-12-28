@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +12,8 @@ import { ModalContactsComponent } from '../modal-contacts/modal-contacts.compone
 import moment from 'moment';
 import { HistoriesService } from 'app/core/services/api/histories.service';
 import { MapToolsService } from 'app/core/services/maps/map-tools.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-control-center-actions',
@@ -67,7 +68,8 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private matDialog: MatDialog,
-    private mapToolsService: MapToolsService
+    private mapToolsService: MapToolsService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -85,6 +87,13 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     this.getAllStatusAttends();
     this.createContactForm();
     this.getReportAlarmsAttens();
+
+    this.translocoService.langChanges$
+      .pipe(delay(500))
+      .subscribe(() => {
+        this.getAllCausalAttends();
+        this.getAllStatusAttends();
+      });
   }
 
   /**
@@ -106,6 +115,7 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * @description: Modal para editar un contacto
    */
@@ -195,16 +205,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
         reload: true,
       });
       this.confirmationService.open({
-        title: 'Atención de alarma',
-        message: 'Alarma atendida con exito!',
-        actions: {
-          cancel: {
-            label: 'Aceptar',
-          },
-          confirm: {
-            show: false,
-          },
-        },
+        title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlert'),
+        message: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlert'),
+
         icon: {
           name: 'heroicons_outline:check-circle',
           color: 'success',
@@ -212,17 +215,10 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
       });
     } else {
       this.confirmationService.open({
-        title: 'Atención de alarma',
+        title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlert'),
         message:
-          'La alarma no se pudo atender, favor intente nuevamente.',
-        actions: {
-          cancel: {
-            label: 'Aceptar',
-          },
-          confirm: {
-            show: false,
-          },
-        },
+          this.translocoService.translate('monitoringCenter.alertMessage.messageAlertError'),
+
         icon: {
           show: true,
           name: 'heroicons_outline:exclamation',
@@ -336,14 +332,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
    */
   public deleteContacts(id: number): void {
     const confirmation = this.confirmationService.open({
-      title: 'Eliminar contacto',
+      title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertDelete'),
       message:
-        '¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Eliminar',
-        },
-      },
+        this.translocoService.translate('monitoringCenter.alertMessage.messageAlertDelete'),
     });
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
@@ -367,16 +358,9 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
     if (data.code === 200) {
       this.getContact();
       this.confirmationService.open({
-        title: 'Eliminar contacto',
-        message: 'Contacto eliminado con exito!',
-        actions: {
-          cancel: {
-            label: 'Aceptar',
-          },
-          confirm: {
-            show: false,
-          },
-        },
+        title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertDelete'),
+        message: this.translocoService.translate('monitoringCenter.alertMessage.messageAlertDeleteSuccess'),
+
         icon: {
           name: 'heroicons_outline:exclamation',
           color: 'warn',
@@ -384,17 +368,10 @@ export class ControlCenterActionsComponent implements OnInit, OnDestroy {
       });
     } else {
       this.confirmationService.open({
-        title: 'Eliminar contacto',
+        title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertDelete'),
         message:
-          'El contacto no se pudo eliminar, favor intente nuevamente.',
-        actions: {
-          cancel: {
-            label: 'Aceptar',
-          },
-          confirm: {
-            show: false,
-          },
-        },
+          this.translocoService.translate('monitoringCenter.alertMessage.messageAlertDeleteError'),
+
         icon: {
           show: true,
           name: 'heroicons_outline:exclamation',

@@ -1,0 +1,42 @@
+{
+  "titlePage": "Eventos del sistema",
+  "subtitlePage": {
+    "event0": "Sin Eventos",
+    "event1": "Evento",
+    "eventOther": "Eventos"
+  },
+  "tablePage": {
+    "color": "Color",
+    "name": "Nombre",
+    "description": "Descripción",
+    "mailNoti": "Notificación por correo",
+    "pageNoti": "Notificación en plataforma",
+    "smsNoti": "Notificación por SMS",
+    "soundNoti": "Notificación sonora"
+  },
+  "formPage": {
+    "formName": "Edición de eventos",
+    "fieldColor": "Color",
+    "fieldName": "Nombre",
+    "fieldDescription": "Descripción",
+    "contact": {
+      "title": "Contactos",
+      "subtitlepage": {
+        "contact0": "Sin contactos",
+        "contact1": "Contacto",
+        "contacts": "Contactos"
+      },
+      "fullName": "Nombre",
+      "identification": "Indentificacion",
+      "emailAddress": "Correo eletronico",
+      "cellPhone": "Celular",
+      "address": "Direccion"
+    }
+  },
+  "alertMessage" : {
+    "editMessageTitle" : "Editar evento",
+    "editMessageTitleSuccess" : "¿Está seguro de que desea editar este evento?",
+    "editMessageTitleError" : "El evento no se pudo atender, favor intente nuevamente.",
+    "toastMEssageSuccess" : "Evento editado con exito!"   
+  }
+}

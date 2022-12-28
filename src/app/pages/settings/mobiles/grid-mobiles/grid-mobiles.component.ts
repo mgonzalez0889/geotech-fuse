@@ -10,8 +10,6 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./grid-mobiles.component.scss'],
 })
 export class GridMobilesComponent implements OnInit, OnDestroy {
-  public titlePage: string = 'Moviles';
-  public subTitlepage: string = '';
   public dataFilter: string = '';
   public mobileSelect: any = null;
   public mobilesData: any[] = [];
@@ -19,40 +17,44 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'plate',
-      text: 'Placa',
+      text: 'mobile.tablePage.plate',
       typeField: 'text',
     },
     {
       name: 'internal_code',
-      text: 'Codigo interno',
+      text: 'mobile.tablePage.internalCode',
       typeField: 'text',
     },
     {
       name: 'name_driver',
-      text: 'Conductor',
+      text: 'mobile.tablePage.driver',
       typeField: 'text',
-      defaultValue: 'Sin conductor',
+      defaultValue: 'mobile.tablePage.notDriver',
     },
     {
       name: 'battery',
-      text: 'Bateria',
+      text: 'mobile.tablePage.battery',
       typeField: 'percentage',
     },
     {
       name: 'mobile_model',
-      text: 'Modelo',
+      text: 'mobile.tablePage.model',
       typeField: 'text',
     },
     {
       name: 'name_type',
-      text: 'Tipo de vehiculo',
+      text: 'mobile.tablePage.typeVehicles',
       typeField: 'text',
     },
   ];
   public columnsMobiles: string[] = this.optionsTable.map(({ name }) => name);
+  public userData: any[] = [];
+  public numberMovil: number;
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private ownerPlateService: MobileService) { }
+  constructor(
+    private ownerPlateService: MobileService,
+  ) { }
 
   ngOnInit(): void {
     this.getMobiles();
@@ -66,6 +68,13 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
   public selectMobile(data: any): void {
     this.opened = this.opened ? false : true;
     this.mobileSelect = { ...data };
+  }
+
+  closeForm(refresh: boolean): void {
+    this.opened = false;
+    if (refresh) {
+      this.getMobiles();
+    }
   }
 
   /**
@@ -83,10 +92,10 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
     this.ownerPlateService.getMobiles()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
-        this.subTitlepage = data
-          ? `${data.length} moviles`
-          : 'Sin moviles';
         this.mobilesData = [...data || []];
+        this.numberMovil = data.length;
       });
   }
+
 }
+

@@ -1,0 +1,43 @@
+{
+  "titlePage": "Moviles",
+  "subTitlePage": {
+    "mobil0": "Sin movil",
+    "mobil1": "Movil",
+    "mobils": "Moviles"
+  },
+  "tablePage": {
+    "plate": "Placa",
+    "internalCode": "Codigo interno",
+    "driver": "Conductor",
+    "battery": "Bateria",
+    "model": "Modelo",
+    "typeVehicles": "Tipo de vehiculo",
+    "notDriver": "Sin conductor"
+  },
+  "formPage": {
+    "formNameInfo": "Informacion del vehiculo",
+    "fieldDriver": "Conductor",
+    "fieldInternalCode": "Codigo interno",
+    "fieldColor": "Color",
+    "fieldBrand": "Marca",
+    "fieldModel": "Modelo",
+    "fieldTypeVehicle": "Tipo de vehiculo",
+    "fieldTypeServices": "Tipo de servicio",
+    "fieldCantPassenger": "Numero de pasajeros",
+    "fieldLoadCapacity": "Capacidad de carga",
+    "fieldChassisNumber": "Numero de chasis",
+    "fieldEngineNumber": "Numero de motor",
+    "listTypeService": {
+      "commercial": "Comercial",
+      "special": "Especial",
+      "international": "Internacional",
+      "private": "Privado",
+      "public": "Publico"
+    },
+    "errorForm": {}
+  },
+  "toastAlert" : {
+    "toastAlertSuccess" : "¡Vehiculo modificado con exito!",
+    "toastAlertWarn" : "¡Lo sentimos algo ha salido mal, vuelva a intentarlo!"
+  }
+}

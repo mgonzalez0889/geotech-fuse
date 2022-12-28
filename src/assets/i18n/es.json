@@ -1,5 +1,71 @@
 {
-    "welcome-back": "Welcome back",
-    "Project": "Project",
-    "Analytics": "Analytics"
+  "search": "Buscar",
+  "selectAll": "Seleccionar todos",
+  "dateInit": "Desde",
+  "dateEnd": "Hasta",
+  "logout": "Cerrar seción",
+  "buttons": {
+    "buttonEdit": "Editar",
+    "buttonDelete": "Eliminar",
+    "buttonSave": "Guardar",
+    "buttonCancel": "Cancelar",
+    "buttonClose": "Cerrar",
+    "buttonAdd": "Agregar",
+    "buttonImport": "Importar",
+    "buttonDowloand": "Descargar",
+    "buttonGenerate": "Generar",
+    "buttonConfirm": "Confirmar"
+  },
+  "table": {
+    "warningTitle": "Aviso",
+    "warningDescription": "Lo sentimos, no se encontraron datos",
+    "pagination": {
+      "itemsPerPageLabel": "Items por página:",
+      "firstPageLabel": "Página anterior",
+      "previousPageLabel": "Página anterior",
+      "nextPageLabel": "Siguiente página",
+      "lastPageLabel": "Última página"
+    },
+    "notFountData": "No hay datos que coincidan con la busqueda:"
+  },
+  "layoutVertical": {
+    "iconFix": "Fijar barra lateral",
+    "iconMenuShow": "Mostrar barra lateral",
+    "iconMenuHidden": "Ocultar barra lateral"
+  },
+  "signOut": {
+    "logout": "Cerrando sesión",
+    "redirect": "Redirigiendo en",
+    "redirectNow": "Ahora estás siendo redirigido!",
+    "go": "Ir a",
+    "login": "Iniciar Sesión"
+  },
+  "login": {
+    "loginName": "Iniciar Sesión",
+    "user": "Usuario",
+    "userRequired": "Usuario es requerido",
+    "userInvalid": "Por favor ingrese un usuario valido",
+    "password": "Contraseña",
+    "passwordRequired": "Contraseña es requerido",
+    "description": "Generamos valor a través de los datos.",
+    "descriptionLg": "Toda la analítica de datos en un solo lugar para la oportuna toma de decisiones de su estrategia operativa."
+  },
+  "messageAlert": {
+    "messagePermissionWarn": "No tienes permisos suficientes para realizar esta acción.",
+    "messageConfirm": "¿Estás seguro de que quieres confirmar esta acción?",
+    "messageTitleConfirm": "Confirmar acción"
+  },
+  "popup": {
+    "lastTransmission": "Ultima transmision",
+    "speed": "Velocidad",
+    "lastPosition": "Ultima Posicion",
+    "driver": "Conductor",
+    "notDriver": "sin conductor",
+    "spreadsheet": "Planilla",
+    "notSpreadsheet": "sin planilla"
+  },
+  "colorInput": {
+    "titleColor": "Color",
+    "subtitleColor": "Colores"
+  }
 }

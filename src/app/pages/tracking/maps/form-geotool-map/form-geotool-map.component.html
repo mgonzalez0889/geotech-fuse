@@ -2,7 +2,7 @@
 
   <div class="flex items-center justify-between border-b-2">
     <h2 class="text-xl font-semibold tracking-tight leading-6">
-      {{'Nuevo ' + titleForm}}
+      {{'map.panelGeotools.form.new'| transloco}} {{titleForm | transloco}}
     </h2>
     <button mat-icon-button matTooltip="Cerrar" matTooltipPosition="left"
       (click)="this.closeForm.emit({ closePanel: false, refreshData: false })">
@@ -14,8 +14,8 @@
     <form [formGroup]="this.formGeotool" (submit)="this.onSubmit()" class="flex flex-col">
       <div class="flex gap-2 justify-between">
         <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Codigo</mat-label>
-          <input matInput formControlName="code" placeholder="codigo">
+          <mat-label>{{'map.panelGeotools.form.code' | transloco}}</mat-label>
+          <input matInput formControlName="code" [placeholder]="'map.panelGeotools.form.code' | transloco" required>
         </mat-form-field>
 
         <div>
@@ -24,19 +24,19 @@
       </div>
 
       <mat-form-field class="fuse-mat-dense">
-        <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" placeholder="nombre">
+        <mat-label>{{'map.panelGeotools.form.name' | transloco}}</mat-label>
+        <input matInput formControlName="name" [placeholder]="'map.panelGeotools.form.name' | transloco" required>
       </mat-form-field>
 
       <mat-form-field class="fuse-mat-dense">
-        <mat-label>Descripcion</mat-label>
+        <mat-label>{{'map.panelGeotools.form.description' | transloco}}</mat-label>
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
 
       <div class="flex gap-2 self-end">
         <button type="button" mat-flat-button
-          (click)="this.closeForm.emit({ closePanel: false, refreshData: false })">Cancelar</button>
-        <button type="submit" mat-flat-button color="accent" [disabled]="formGeotool.invalid">Guardar</button>
+          (click)="this.closeForm.emit({ closePanel: false, refreshData: false })">{{'buttons.buttonCancel' | transloco}}</button>
+        <button type="submit" mat-flat-button color="accent" [disabled]="formGeotool.invalid">{{'buttons.buttonSave' | transloco}}</button>
       </div>
     </form>
   </div>

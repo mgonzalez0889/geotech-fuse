@@ -21,6 +21,7 @@ import { PipeFilterPipe } from 'app/pages/tracking/commands/commands-dashboard/f
 import { PipeFilterPlatePipe } from 'app/pages/tracking/commands/commands-dashboard/filter-plate.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../../../shared/shared.module';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 @NgModule({
   declarations: [
@@ -48,5 +49,7 @@ import { SharedModule } from '../../../shared/shared.module';
     MatProgressSpinnerModule,
     SharedModule
   ],
+  providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'commands' }],
+
 })
 export class CommandsModule { }

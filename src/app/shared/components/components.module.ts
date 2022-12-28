@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputColorComponent } from './input-color/input-color.component';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { InputColorComponent } from './input-color/input-color.component';
     MatSlideToggleModule,
     MatFormFieldModule,
     MatSelectModule,
+    TranslocoModule
   ],
   exports: [
     HeaderPageComponent,

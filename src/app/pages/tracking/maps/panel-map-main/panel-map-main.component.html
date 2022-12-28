@@ -3,18 +3,17 @@
     class="w-full h-full shadow-xl bg-card rounded-lg pt-3 overflow-y-auto flex flex-col">
 
     <div class="ml-3 mt-1" [hidden]="!drawer.opened">
-      <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle()">
+      <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle(); closePanel()">
         <mat-icon svgIcon="mat_outline:arrow_back"></mat-icon>
       </button>
     </div>
 
     <mat-tab-group *ngIf="drawer.opened">
-      <mat-tab label="Mobiles">
+      <mat-tab [label]="'map.panelMain.optionVehicles' | transloco">
         <div class="flex justify-between gap-3">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-select [(ngModel)]="typeServiceId" placeholder="Tipo Servicio"
-              (selectionChange)="filterForTypeService($event)">
-              <mat-option [value]="0">Todos</mat-option>
+            <mat-select [(ngModel)]="typeServiceId" (selectionChange)="filterForTypeService($event)">
+              <mat-option [value]="0">{{'map.panelMain.selectAll' | transloco}}</mat-option>
               <mat-option [value]="typeService.classMobileId" *ngFor="let typeService of typeServices">
                 {{typeService.classMobileName}}
               </mat-option>
@@ -23,11 +22,11 @@
 
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-icon matPrefix class="icon-size-5 " svgIcon="heroicons_solid:search"></mat-icon>
-            <input matInput placeholder="Buscar" (keyup)="applyFilter($event)">
+            <input matInput [placeholder]="'search' | transloco" (keyup)="applyFilter($event)">
           </mat-form-field>
         </div>
 
-        <div class="h-60 w-full pl-2 overflow-y-auto">
+        <div class="h-60 w-full px-2 overflow-y-auto">
           <table mat-table class="w-full" [dataSource]="dataSource">
 
             <ng-container matColumnDef="checkbox">
@@ -60,7 +59,7 @@
               <th mat-header-cell *matHeaderCellDef> </th>
               <td mat-cell *matCellDef="let element">
                 <span *ngIf="iconService.iconStatus(element) as configIcon">
-                  <mat-icon [matTooltip]="configIcon.text" [svgIcon]="configIcon.icon">
+                  <mat-icon [matTooltip]="configIcon.text | transloco" [svgIcon]="configIcon.icon">
                   </mat-icon>
                 </span>
               </td>
@@ -92,7 +91,7 @@
 
           <ng-container *ngIf="!mobileData.length">
             <div class="w-full h-20 bg-card border-2 flex justify-center items-center">
-              <p class="text-lg font-normal">No tienes placas asignadas.</p>
+              <p class="text-lg font-normal">{{'map.panelMain.notAssingVehicles' | transloco}}</p>
             </div>
           </ng-container>
 
@@ -100,12 +99,12 @@
 
       </mat-tab>
 
-      <mat-tab label="Flotas">
+      <mat-tab [label]="'map.panelMain.optionFleets' | transloco">
 
         <div class="flex flex-wrap">
           <mat-form-field class="fuse-mat-dense w-full">
             <mat-icon matPrefix class="icon-size-5" svgIcon="heroicons_solid:search"></mat-icon>
-            <input matInput placeholder="Buscar" (keyup)="applyFilterFleets($event)">
+            <input matInput [placeholder]="'search' | transloco" (keyup)="applyFilterFleets($event)">
           </mat-form-field>
         </div>
 
@@ -128,7 +127,7 @@
 
           <ng-container *ngIf="!fleets.length">
             <div class="w-full h-20 bg-card border-2 flex justify-center items-center">
-              <p class="text-lg font-normal">No tienes flotas asignadas.</p>
+              <p class="text-lg font-normal">{{'map.panelMain.notAssingFleet' | transloco}}</p>
             </div>
           </ng-container>
 
@@ -136,8 +135,8 @@
       </mat-tab>
 
     </mat-tab-group>
-
-    <!-- <div class="absolute flex w-full justify-end bottom-4 -left-3 z-999" *ngIf="selectPlates.length ">
+    <!-- 
+    <div class="absolute flex w-full justify-end bottom-4 -left-3 z-999" *ngIf="selectPlates.length ">
       <button matTooltip="Generar Reporte" mat-mini-fab (click)="generateReport()">
         <mat-icon svgIcon="mat_outline:history_toggle_off"></mat-icon>
       </button>
@@ -146,9 +145,9 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <button class="bg-white py-1 px-2 shadow-sm rounded" matTooltip="Vehiculos" type="button" *ngIf="!drawer.opened"
-      (click)="drawer.toggle()">
-      <mat-icon class="self-center" svgIcon="mat_outline:arrow_forward"></mat-icon>
+    <button class="flex justify-center items-center bg-white py-1 px-2 shadow-sm rounded"
+      [matTooltip]="'map.vehicles' | transloco" type="button" *ngIf="!drawer.opened" (click)="drawer.toggle()">
+      <mat-icon class="self-center" svgIcon="share_location"></mat-icon>
     </button>
   </mat-drawer-content>
 

@@ -23,9 +23,9 @@ export class GridMenuOptionsComponent implements OnInit, OnDestroy {
   public menuCount: number = 0;
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    addMenuOption: 'configuración:gestiondemenú:create',
-    updateMenuOption: 'configuración:gestiondemenú:update',
-    deleteMenuOption: 'configuración:gestiondemenú:delete',
+    addMenuOption: 'configuración:gestion_de_menú:create',
+    updateMenuOption: 'configuración:gestion_de_menú:update',
+    deleteMenuOption: 'configuración:gestion_de_menú:delete',
   };
 
   constructor(

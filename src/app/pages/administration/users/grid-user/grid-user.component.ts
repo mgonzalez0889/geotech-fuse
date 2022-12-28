@@ -1,12 +1,13 @@
 import { Subject } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UsersService } from '../../../../core/services/api/users.service';
-import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { takeUntil } from 'rxjs/operators';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { delay, filter, takeUntil, mergeMap } from 'rxjs/operators';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { AuthService } from 'app/core/auth/auth.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { IOptionTable } from '@interface/index';
+import { UsersService } from '@services/api/users.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-grid-user',
@@ -15,7 +16,6 @@ import { AuthService } from 'app/core/auth/auth.service';
 })
 export class GridUserComponent implements OnInit, OnDestroy {
   public subTitlePage: string = '';
-  public titlePage: string = 'Usuarios';
   public titleForm: string = '';
   public opened: boolean = false;
   public userData: any[] = [];
@@ -24,28 +24,28 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'user_login',
-      text: 'Usuario',
+      text: 'users.tablePage.username',
       typeField: 'text',
     },
     {
       name: 'full_name',
-      text: 'Nombre',
+      text: 'users.tablePage.fullname',
       typeField: 'text',
     },
     {
       name: 'profile',
-      text: 'Perfil',
+      text: 'users.tablePage.profile',
       typeField: 'text',
     },
     {
       name: 'email',
-      text: 'Correo electrónico',
+      text: 'users.tablePage.email',
       typeField: 'text',
       classTailwind: 'hover:underline text-primary-500',
     },
     {
       name: 'enable_user',
-      text: 'Estado',
+      text: 'users.tablePage.state',
       typeField: 'switch',
     },
   ];
@@ -64,7 +64,8 @@ export class GridUserComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
     private toastAlert: ToastAlertService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -74,6 +75,13 @@ export class GridUserComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((permission) => {
         this.listPermission = permission;
+      });
+
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData.length } });
+        this.subTitlePage = subTitlePage;
       });
   }
 
@@ -89,11 +97,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.addUser]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;
-      this.titleForm = 'Crear usuario';
+      this.titleForm = 'users.formPage.formNameCreate';
       this.userDataUpdate = null;
     }
   }
@@ -104,7 +112,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
   public selectUserTable(dataUser: any): void {
     this.userDataUpdate = { ...dataUser };
     this.opened = true;
-    this.titleForm = 'Editar usuario';
+    this.titleForm = 'users.formPage.formNameUpdate';
   }
 
   /**
@@ -114,7 +122,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.updateUser]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
       return;
     }
@@ -125,11 +133,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
         if (data.code === 400) {
           this.toastAlert.toasAlertWarn({
             message:
-              'No se puedo modificar el estado, intentelo de nuevo.',
+              'users.messageAlert.updateStateWarn',
           });
         } else {
           this.toastAlert.toasAlertSuccess({
-            message: 'Estado de Usuario modificado con exito.',
+            message: 'users.messageAlert.updateStateSuccess',
           });
         }
       });
@@ -151,9 +159,8 @@ export class GridUserComponent implements OnInit, OnDestroy {
       .getUsers()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
-        this.subTitlePage = data
-          ? `${data.length} Usuarios`
-          : 'Sin usuarios';
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: data.length } });
+        this.subTitlePage = subTitlePage;
         this.userData = [...(data || [])];
       });
   }
@@ -165,26 +172,23 @@ export class GridUserComponent implements OnInit, OnDestroy {
     const confirmation = this.confirmationService.open();
     confirmation
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((result) => {
-        if (result === 'confirmed') {
-          this.usersService
-            .deleteUser(userId)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((data) => {
-              this.readDataUser();
-              this.opened = false;
-              if (data.code === 400) {
-                this.toastAlert.toasAlertWarn({
-                  message:
-                    'No se puedo eliminar el usuario, intentelo de nuevo.',
-                });
-              } else {
-                this.toastAlert.toasAlertSuccess({
-                  message: 'Usuario eliminado con exito.',
-                });
-              }
-            });
+      .pipe(
+        filter(result => result === 'confirmed'),
+        mergeMap(() => this.usersService.deleteUser(userId)),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((data) => {
+        this.opened = false;
+        if (data.code === 400) {
+          this.toastAlert.toasAlertWarn({
+            message:
+              'users.messageAlert.deleteWarn',
+          });
+        } else {
+          this.readDataUser();
+          this.toastAlert.toasAlertSuccess({
+            message: 'users.messageAlert.deleteSuccess',
+          });
         }
       });
   }
@@ -203,11 +207,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
             if (data.code === 400) {
               this.toastAlert.toasAlertWarn({
                 message:
-                  'No se puedo crear el usuario, intentelo de nuevo.',
+                  'users.messageAlert.createWarn',
               });
             } else {
               this.toastAlert.toasAlertSuccess({
-                message: `Usuario ${formData.full_name} creado con exito.`,
+                message: 'users.messageAlert.createSuccess',
               });
             }
           });
@@ -215,7 +219,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
           if (!this.listPermission[this.permissionValid.updateUser]) {
             this.toastAlert.toasAlertWarn({
               message:
-                'No tienes permisos suficientes para realizar esta acción.',
+                'messageAlert.messagePermissionWarn',
             });
             return;
           }
@@ -228,11 +232,11 @@ export class GridUserComponent implements OnInit, OnDestroy {
               if (data.code === 400) {
                 this.toastAlert.toasAlertWarn({
                   message:
-                    'No se puedo modificar el usuario, intentelo de nuevo.',
+                    'users.messageAlert.updateWarn',
                 });
               } else {
                 this.toastAlert.toasAlertSuccess({
-                  message: 'Usuario modificado con exito.',
+                  message: 'users.messageAlert.updateSuccess',
                 });
               }
             });
@@ -240,7 +244,7 @@ export class GridUserComponent implements OnInit, OnDestroy {
           if (!this.listPermission[this.permissionValid.deleteUser]) {
             this.toastAlert.toasAlertWarn({
               message:
-                'No tienes permisos suficientes para realizar esta acción.',
+                'messageAlert.messagePermissionWarn',
             });
           } else {
             this.deleteUser(formData.id);

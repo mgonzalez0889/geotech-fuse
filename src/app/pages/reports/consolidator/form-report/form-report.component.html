@@ -2,9 +2,10 @@
 
   <div class="bg-card shadow rounded-2xl min-h-auto">
     <div class="w-full h-20 flex justify-between items-center px-2 pt-4 sm:px-12 border-b-2">
-      <h2 class="text-2xl font-semibold tracking-tight leading-8">Generar Reporte</h2>
-      <button mat-icon-button matTooltip="Cerrar" (click)="this.emitCloseForm.emit();">
-        <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'consolidator.formPage.formNameCreate' | transloco}}
+      </h2>
+      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.emitCloseForm.emit();">
+        <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
       </button>
     </div>
 
@@ -13,10 +14,10 @@
         <form [formGroup]="this.form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 mt-2">
 
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Seleccione el rango de fechas</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Desde" formControlName="date_init" />
-              <input matEndDate placeholder="Hasta" formControlName="date_end" />
+            <mat-label>{{'consolidator.formPage.fieldRangeDate' | transloco}}</mat-label>
+            <mat-date-range-input required [rangePicker]="picker">
+              <input matStartDate [placeholder]="'dateInit' | transloco" formControlName="date_init" />
+              <input matEndDate [placeholder]="'dateEnd' | transloco" formControlName="date_end" />
             </mat-date-range-input>
 
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -32,20 +33,19 @@
           </mat-form-field>
 
           <div>
-            <app-multi-select-filter [form]="this.form" [placeholder]="'Seleccione vehiculos'"
+            <app-multi-select-filter [form]="this.form" [placeholder]="'consolidator.formPage.fieldVehiculos'"
               [options]="{data:this.mobiles, key:'plate', keyView:'plate'}" labelControl="plates">
             </app-multi-select-filter>
           </div>
 
           <div
             class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
-            <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
-              Cancelar
+            <button class="ml-auto" mat-button (click)="this.editMode = false">
+              {{'buttons.buttonCancel' | transloco}}
             </button>
 
-            <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.form.invalid"
-              [matTooltip]="'Guardar'">
-              Generar
+            <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.form.invalid">
+              {{'buttons.buttonGenerate' | transloco}}
             </button>
           </div>
         </form>

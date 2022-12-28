@@ -1,10 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, Inject, OnInit } from '@angular/core';
 import { IconsModule } from '../../../../core/icons/icons.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ControlCenterService } from 'app/core/services/api/control-center.service';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
+import { ControlCenterService } from '@services/api/control-center.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-modal-contacts',
@@ -15,6 +17,8 @@ export class ModalContactsComponent implements OnInit {
   public contactForm: FormGroup;
   public typeContacts: any = [];
   public countries: any = [];
+  public countrieFlag: { code: string; flagImagePos: string } = { code: '+57', flagImagePos: '' };
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     public dialogRef: MatDialogRef<ModalContactsComponent>,
@@ -22,27 +26,24 @@ export class ModalContactsComponent implements OnInit {
     private controlCenterService: ControlCenterService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
-    private iconService: IconsModule
-  ) { }
+    private iconService: IconsModule,
+    private translocoService: TranslocoService
+  ) {
+
+    this.createContactForm();
+  }
 
   ngOnInit(): void {
-    this.createContactForm();
     this.typeContact();
-    this.iconService.getCountries().subscribe((res) => {
-      this.countries = res;
-    });
+    this.readCountries();
+    this.contactForm.controls['indicative'].valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        const countrieInit = this.countries.find(({ code }) => code === data);
+        this.countrieFlag = { ...countrieInit };
+      });
   }
-  /**
-   * @description:Trae la informacion que pertenece el indicativo en el formulario
-   */
-  getCountryByIso(code: string): any {
-    if (code) {
-      return this.countries.find(country => country.code === code);
-    }
-  }
-  /**
-   * @description: Valida si es edita o guarda un contacto nuevo
-   */
+
   public onSave(): void {
     const data = this.contactForm.getRawValue();
     if (!data.id) {
@@ -62,6 +63,7 @@ export class ModalContactsComponent implements OnInit {
         this.typeContacts = res.data;
       });
   }
+
   /**
    * @description: Inicializa el formulario de contactos
    */
@@ -73,11 +75,12 @@ export class ModalContactsComponent implements OnInit {
       full_name: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
       phone: ['', [Validators.required]],
-      identification: ['', [Validators.required]],
-      address: ['', [Validators.required]],
+      identification: [''],
+      address: [''],
       description: [''],
       indicative: ['+57', [Validators.required]],
     });
+
     if (this.infoContact.id) {
       if (this.infoContact.owner_id_simulator === 1) {
         this.controlCenterService
@@ -93,10 +96,26 @@ export class ModalContactsComponent implements OnInit {
           });
       }
     }
+
     this.contactForm.patchValue({
       owner_id: this.infoContact.owner_id,
     });
   }
+
+  /**
+   * @description: Lectura de la informacion de cudiades y codigos y se pinta en el select de telefono
+   */
+  private readCountries(): void {
+    this.iconService.getCountries()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.countries = res;
+        const compareCode = this.contactForm.controls['indicative'].value;
+        const countrieInit = this.countries.find(({ code }) => code === compareCode);
+        this.countrieFlag = { ...countrieInit };
+      });
+  }
+
   /**
    * @description: Editar un contacto
    */
@@ -147,16 +166,9 @@ export class ModalContactsComponent implements OnInit {
         .subscribe((res) => {
           if (res.code === 200) {
             this.confirmationService.open({
-              title: 'Editar contacto',
-              message: 'Contacto editado con exito!',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+              title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContactEdit'),
+              message: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContactEditSuccess'),
+
               icon: {
                 name: 'heroicons_outline:check-circle',
                 color: 'success',
@@ -164,17 +176,10 @@ export class ModalContactsComponent implements OnInit {
             });
           } else {
             this.confirmationService.open({
-              title: 'Editar contacto',
+              title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContactEdit'),
               message:
-                'El contacto no se pudo actualizar, favor intente nuevamente.',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+                this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContactEditError'),
+
               icon: {
                 show: true,
                 name: 'heroicons_outline:exclamation',
@@ -193,16 +198,9 @@ export class ModalContactsComponent implements OnInit {
       this.controlCenterService.postContacts(data).subscribe((res) => {
         if (res.code === 200) {
           this.confirmationService.open({
-            title: 'Crear contacto',
-            message: 'Contacto creado con exito!',
-            actions: {
-              cancel: {
-                label: 'Aceptar',
-              },
-              confirm: {
-                show: false,
-              },
-            },
+            title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContact'),
+            message: this.translocoService.translate('monitoringCenter.alertMessage.messageAlertContactSuccess'),
+
             icon: {
               name: 'heroicons_outline:check-circle',
               color: 'success',
@@ -210,17 +208,10 @@ export class ModalContactsComponent implements OnInit {
           });
         } else {
           this.confirmationService.open({
-            title: 'Crear contacto',
+            title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContact'),
             message:
-              'El contacto no se pudo crear, favor intente nuevamente.',
-            actions: {
-              cancel: {
-                label: 'Aceptar',
-              },
-              confirm: {
-                show: false,
-              },
-            },
+              this.translocoService.translate('monitoringCenter.alertMessage.messageAlertContactError'),
+
             icon: {
               show: true,
               name: 'heroicons_outline:exclamation',
@@ -235,16 +226,9 @@ export class ModalContactsComponent implements OnInit {
         .subscribe((res) => {
           if (res.code === 200) {
             this.confirmationService.open({
-              title: 'Crear contacto',
-              message: 'Contacto creado con exito!',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+              title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContact'),
+              message: this.translocoService.translate('monitoringCenter.alertMessage.messageAlertContactSuccess'),
+
               icon: {
                 name: 'heroicons_outline:check-circle',
                 color: 'success',
@@ -252,17 +236,10 @@ export class ModalContactsComponent implements OnInit {
             });
           } else {
             this.confirmationService.open({
-              title: 'Crear contacto',
+              title: this.translocoService.translate('monitoringCenter.alertMessage.titleMessageAlertContact'),
               message:
-                'El contacto no se pudo crear, favor intente nuevamente.',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+                this.translocoService.translate('monitoringCenter.alertMessage.messageAlertContactSuccess'),
+
               icon: {
                 show: true,
                 name: 'heroicons_outline:exclamation',

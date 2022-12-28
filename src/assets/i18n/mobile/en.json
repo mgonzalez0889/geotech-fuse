@@ -1,0 +1,43 @@
+{
+  "titlePage": "Mobiles",
+  "subTitlePage": {
+    "mobil0": "No mobil",
+    "mobil1": "Mobil",
+    "mobils": "Mobiles"
+  },
+  "tablePage": {
+    "plate": "Plate",
+    "internalCode": "Internal code",
+    "driver": "Driver",
+    "battery": "Battery",
+    "model": "Model",
+    "typeVehicles": "Type vehicles",
+    "notDriver": "without driver"
+  },
+  "formPage": {
+    "formNameInfo": "Vehicle information",
+    "fieldDriver": "Driver",
+    "fieldInternalCode": "Internal code",
+    "fieldColor": "Color",
+    "fieldBrand": "Brand",
+    "fieldModel": "Model",
+    "fieldTypeVehicle": "Type vehicle",
+    "fieldTypeServices": "Type service",
+    "fieldCantPassenger": "Number passenger",
+    "fieldLoadCapacity": "Load capacity",
+    "fieldChassisNumber": "Chassis number",
+    "fieldEngineNumber": "Engine number",
+    "listTypeService": {
+      "commercial": "Commercial",
+      "special": "Special",
+      "international": "International",
+      "private": "Private",
+      "public": "Public"
+    },
+    "errorForm": {}
+  },
+  "toastAlert" : {
+    "toastAlertSuccess" : "Vehicle modified successfully!",
+    "toastAlertWarn" : "Sorry something went wrong, try again!"
+  }
+}

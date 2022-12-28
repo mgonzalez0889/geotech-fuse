@@ -19,6 +19,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TranslocoModule } from '@ngneat/transloco';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from '@angular/material/input';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FuseDrawerModule } from '@fuse/components/drawer';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
@@ -43,6 +53,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
+    TranslocoModule,
     MatSidenavModule,
     MatTableModule,
     MatTooltipModule,
@@ -59,7 +70,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatDatepickerModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    MatAutocompleteModule
+    MatOptionModule,
+    MatSortModule,
+    MatInputModule,
+    MatExpansionModule,
+    DragDropModule,
+    CdkAccordionModule,
+    MatTabsModule,
+    MatButtonToggleModule,
+    MatDialogModule,
+    MatAutocompleteModule,
+    FuseDrawerModule
   ],
 })
 export class SharedModule { }

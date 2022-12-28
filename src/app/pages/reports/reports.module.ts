@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReportsRoutingModule } from './reports-routing.module';
 
 @NgModule({
-    declarations: [],
-    imports: [CommonModule, ReportsRoutingModule],
+  declarations: [],
+  imports: [CommonModule, ReportsRoutingModule],
 })
-export class ReportsModule {}
+export class ReportsModule { }

@@ -8,6 +8,8 @@ import { DriverService } from 'app/core/services/api/driver.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
+
 declare let google: any;
 
 @Component({
@@ -37,6 +39,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     private driverService: DriverService,
     private toastAlert: ToastAlertService,
     private authService: AuthService,
+    private transloco: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -64,7 +67,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     } else {
       if (!this.listPermission[this.permissionValid.addDispatch]) {
         this.toastAlert.toasAlertWarn({
-          message: 'No tienes permisos suficientes para realizar esta acción.',
+          message: this.transloco.translate('messageAlert.messagePermissionWarn'),
         });
       } else {
         this.editDispatch(data);
@@ -101,17 +104,9 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
         });
       } else {
         this.confirmationService.open({
-          title: 'Editar despacho',
+          title: this.transloco.translate('dispatch.commandAlert.commandAlertTitle'),
           message:
-            'El despacho no se pudo actualizar, favor intente nuevamente.',
-          actions: {
-            cancel: {
-              label: 'Aceptar',
-            },
-            confirm: {
-              show: false,
-            },
-          },
+            this.transloco.translate('dispatch.commandAlert.commandAlertMessageError'),
           icon: {
             show: true,
             name: 'heroicons_outline:exclamation',
@@ -138,15 +133,10 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
     this.dispatchForm.controls['date_end_dispatch'].setValue(new Date());
     const data = this.dispatchForm.getRawValue();
     let confirmation = this.confirmationService.open({
-      title: 'Finalizar despacho',
+      title: this.transloco.translate('dispatch.commandAlert.finalizeDispatchTitle'),
       message:
-        '¿Está seguro de que desea finalizar este despacho? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Finalizar',
-          color: 'accent',
-        },
-      },
+        this.transloco.translate('dispatch.commandAlert.finalizeDispatchMessage'),
+
       icon: {
         name: 'heroicons_outline:check-circle',
         color: 'info',
@@ -163,16 +153,9 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
               opened: false,
             });
             confirmation = this.confirmationService.open({
-              title: 'Finalizar despacho',
-              message: 'Despacho finalizado con exito!',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+              title: this.transloco.translate('dispatch.commandAlert.finalizeDispatchTitle'),
+              message: this.transloco.translate('dispatch.commandAlert.finalizeDispatchMessageSuccess'),
+
               icon: {
                 name: 'heroicons_outline:check-circle',
                 color: 'success',
@@ -181,16 +164,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
           } else {
             confirmation = this.confirmationService.open({
               title: 'Finalizar despacho',
-              message:
-                'El despacho no se pudo finalizar, favor intente nuevamente.',
-              actions: {
-                cancel: {
-                  label: 'Aceptar',
-                },
-                confirm: {
-                  show: false,
-                },
-              },
+              message: this.transloco.translate('dispatch.commandAlert.commandAlertMessageErrorUpdate'),
               icon: {
                 show: true,
                 name: 'heroicons_outline:exclamation',
@@ -274,7 +248,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
    */
   private getDriver(): void {
     this.driverService.getDrivers().subscribe((res) => {
-      this.drivers = res.data;
+      this.drivers = res.data || [];
     });
   }
   /**
@@ -287,7 +261,7 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
           this.editMode = isEdit;
           if (newDispatch) {
             this.dispatches = [];
-            this.dispatches['client'] = newDispatch;
+            // this.dispatches['client'] = newDispatch;
             if (this.dispatchForm) {
               this.dispatchForm.reset();
             }
@@ -310,15 +284,11 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
   private editDispatch(data: any): void {
     this.dispatchForm.disable();
     const confirmation = this.confirmationService.open({
-      title: 'Editar despacho',
+      title: this.transloco.translate('dispatch.commandAlert.commandAlertTitle'),
+
       message:
-        '¿Está seguro de que desea editar este despacho? ¡Esta acción no se puede deshacer!',
-      actions: {
-        confirm: {
-          label: 'Editar',
-          color: 'accent',
-        },
-      },
+        this.transloco.translate('dispatch.commandAlert.finalizeDispatchMessageEdit'),
+
       icon: {
         name: 'heroicons_outline:pencil',
         color: 'info',
@@ -334,11 +304,11 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
               opened: false,
             });
             this.toastAlert.toasAlertSuccess({
-              message: 'Despacho modificado con exito.',
+              message: 'dispatch.commandAlert.modifyDispatchMessageSuccess',
             });
           } else {
             this.toastAlert.toasAlertWarn({
-              message: 'El despacho no se pudo modificar, favor intente nuevamente.',
+              message: 'dispatch.commandAlert.modifyDispatchMessageError',
             });
           }
         });
@@ -358,11 +328,11 @@ export class FormDispatchComponent implements OnInit, OnDestroy {
           opened: false,
         });
         this.toastAlert.toasAlertSuccess({
-          message: 'Despacho creado con exito.',
+          message: 'dispatch.commandAlert.successfullyCreatedFirm',
         });
       } else {
         this.toastAlert.toasAlertWarn({
-          message: 'El despacho no se pudo crear, favor intente nuevamente.',
+          message: 'dispatch.commandAlert.errorMessageCreatedFirm',
         });
       }
     });

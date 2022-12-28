@@ -1,59 +1,59 @@
 <div class="flex flex-col flex-auto w-full">
-    <div class="flex flex-wrap w-full mx-auto p-6">
-        <!--Title-->
-        <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <h2 class="text-3xl font-semibold tracking-tight leading-8">Centro de monitoreo</h2>
-                </div>
-                <div class="hidden sm:inline-flex justify-end">
-                    <div
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
-                        <div class="text-lg font-bold">{{notAttended}}</div>
-                        <p class="text-sm">No Atendida</p>
-                    </div>
-                    <div [hidden]="inRecovery<1"
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-orange-200 text-orange-800">
-                        <div class="text-lg font-bold">{{inRecovery}}</div>
-                        <p class="text-sm">En Recuperación</p>
-                    </div>
-                    <div
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50">
-                        <div class="text-lg font-bold">{{onTrack}}</div>
-                        <p class="text-sm">En Seguimiento</p>
-                    </div>
-                    <div
-                        class="mx-2 text-center px-4 py-1 rounded-md bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50">
-                        <div class="text-lg font-bold">{{silenced}}</div>
-                        <p class="text-sm">Silenciado</p>
-                    </div>
-                </div>
-            </div>
+  <div class="flex flex-wrap w-full mx-auto p-6">
+    <!--Title-->
+    <div class="relative flex flex-col flex-auto p-4 bg-card rounded-2xl shadow overflow-hidden">
+      <div class="flex items-center justify-between w-full">
+        <div>
+          <h2 class="text-3xl font-semibold tracking-tight leading-8">{{'monitoringCenter.tittlepage' |
+            transloco}}</h2>
         </div>
+        <div class="hidden sm:inline-flex justify-end">
+          <div class="mx-2 text-center px-4 py-1 rounded-md bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
+            <div class="text-lg font-bold">{{notAttended}}</div>
+            <p class="text-sm">{{'monitoringCenter.notAttended' | transloco}}</p>
+          </div>
+          <div [hidden]="inRecovery<1" class="mx-2 text-center px-4 py-1 rounded-md bg-orange-200 text-orange-800">
+            <div class="text-lg font-bold">{{inRecovery}}</div>
+            <p class="text-sm">{{'monitoringCenter.inRecovery' | transloco}}</p>
+          </div>
+          <div
+            class="mx-2 text-center px-4 py-1 rounded-md bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50">
+            <div class="text-lg font-bold">{{onTrack}}</div>
+            <p class="text-sm">{{'monitoringCenter.onTrack' | transloco}}</p>
+          </div>
+          <div
+            class="mx-2 text-center px-4 py-1 rounded-md bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50">
+            <div class="text-lg font-bold">{{silenced}}</div>
+            <p class="text-sm">{{'monitoringCenter.silenced' | transloco}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <div class="flex flex-wrap w-full py-6">
-            <div class="w-full overflow-hidden">
-                <mat-drawer-container class="flex-auto h-auto">
-                    <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
-                        class="w-full md:w-128 bg-gray-100 border-none">
-                        <ng-container *ngIf="opened">
-                            <app-control-center-actions></app-control-center-actions>
-                        </ng-container>
-                    </mat-drawer>
-                    <mat-drawer-content class="flex flex-col bg-card shadow rounded-2xl">
-                        <div class="flex flex-col flex-auto">
-                            <div class="flex flex-wrap items-center pl-4 pr-6 py-3 md:pl-6 border-b">
-                                <div class="flex flex-col flex-auto my-3">
-                                    <div class="flex items-center">
-                                        <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate">Alarmas
-                                        </div>
-                                        <div class="flex items-center justify-center pl-2">
-                                            <mat-icon>notifications_active</mat-icon>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center my-3">
-                                    <!-- <div class="mx-2 text-center px-4 py-2 cursor-pointer rounded-2xl bg-gray-200"
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto">
+          <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <ng-container *ngIf="opened">
+              <app-control-center-actions></app-control-center-actions>
+            </ng-container>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col bg-card shadow rounded-2xl">
+            <div class="flex flex-col flex-auto">
+              <div class="flex flex-wrap items-center pl-4 pr-6 py-3 md:pl-6 border-b">
+                <div class="flex flex-col flex-auto my-3">
+                  <div class="flex items-center">
+                    <div class="mr-4 text-2xl font-medium tracking-tight leading-6 truncate">
+                      {{'monitoringCenter.alarms' | transloco}}
+                    </div>
+                    <div class="flex items-center justify-center pl-2">
+                      <mat-icon>notifications_active</mat-icon>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center my-3">
+                  <!-- <div class="mx-2 text-center px-4 py-2 cursor-pointer rounded-2xl bg-gray-200"
                                         matRipple [matMenuTriggerFor]="projectsMenu">
                                         <div class="flex items-center">
                                             <div class="overflow-hidden">
@@ -113,28 +113,27 @@
                                             </mat-menu>
                                         </div>
                                     </div> -->
-                                    <div class="flex border-2 rounded-full p-2">
-                                        <input class="ml-2" #input matInput placeholder="Buscar"
-                                            (keyup)="filterTable($event)">
-                                        <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
-                                        </mat-icon>
-                                    </div>
-                                    <div class="mx-2 text-center px-4 py-2" *ngIf="opened">
-                                        <button mat-flat-button [color]="'accent'" [matTooltip]="'Atender'"
-                                            (click)="attendAlarm()">
-                                            Atender
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="pt-6">
-                                <mat-tab-group (selectedIndexChange)="changeTab($event)">
-                                    <mat-tab label="En gestión">
-                                        <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto min-h-140">
-                                            <table mat-table [dataSource]="dataAlarms" matSort #SortManagement='matSort'
-                                                class="w-full">
-                                                <!-- Checkbox Column -->
-                                                <!-- <ng-container matColumnDef="select">
+                  <div class="flex border-2 rounded-full p-2">
+                    <input class="ml-2" #input matInput [placeholder]="'search' | transloco"
+                      (keyup)="filterTable($event)">
+                    <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search">
+                    </mat-icon>
+                  </div>
+                  <div class="mx-2 text-center px-4 py-2" *ngIf="opened">
+                    <button mat-flat-button [color]="'accent'" [matTooltip]="'monitoringCenter.attendAlarm' | transloco"
+                      (click)="attendAlarm()">
+                      {{'monitoringCenter.attendAlarm' | transloco}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-6">
+                <mat-tab-group (selectedIndexChange)="changeTab($event)">
+                  <mat-tab [label]="'monitoringCenter.table.underManagement' | transloco">
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto min-h-140">
+                      <table mat-table [dataSource]="dataAlarms" matSort #SortManagement='matSort' class="w-full">
+                        <!-- Checkbox Column -->
+                        <!-- <ng-container matColumnDef="select">
                                                     <th mat-header-cell *matHeaderCellDef>
                                                         <mat-checkbox (change)="$event ? toggleAllRows() : null"
                                                             [checked]="selection.hasValue() && isAllSelected()"
@@ -151,104 +150,121 @@
                                                         </mat-checkbox>
                                                     </td>
                                                 </ng-container> -->
-                                                <!-- event_name Column -->
-                                                <ng-container matColumnDef="event_name">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Alarmas </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap uppercase">
-                                                            {{row.event_name}}</span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- state Column -->
-                                                <ng-container matColumnDef="state">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span
-                                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status === 2,
+                        <!-- event_name Column -->
+                        <ng-container matColumnDef="event_name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.alarms' | transloco}} </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap uppercase">
+                              {{row.event_name}}</span>
+                          </td>
+                        </ng-container>
+                        <!-- state Column -->
+                        <ng-container matColumnDef="state">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.state' | transloco}}</th>
+                          <td mat-cell *matCellDef="let row">
+                            <span
+                              class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                              [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status === 2,
                                                             'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:gray-blue-50':  row.status === 5,
                                                             'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': row.status === 3,
-                                                                'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': row.status === 4
+                                                            'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': row.status === 4
                                                             }">
-                                                            <span
-                                                                class="leading-relaxed whitespace-nowrap">{{row.state}}</span>
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- plate Column -->
-                                                <ng-container matColumnDef="plate">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="px-6 whitespace-nowrap">
-                                                            {{row.plate}}
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- code Column -->
-                                                <ng-container matColumnDef="code">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        Codigo
-                                                        interno </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.code}}
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- count Column -->
-                                                <ng-component matColumnDef="count">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.count}}
-                                                        </span>
-                                                    </td>
-                                                </ng-component>
-                                                <!-- address Column -->
-                                                <ng-container matColumnDef="address">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <a class="pr-6 whitespace-nowrap"
-                                                            [matTooltip]="'Ver en el  mapa'"
-                                                            href="https://maps.google.com/?q={{row.x}},{{row.y}}"
-                                                            target="_blank" rel="noopener noreferrer">{{row.address}}
-                                                        </a>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- date_entry Column -->
-                                                <ng-container matColumnDef="date_entry">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
-                                                            }} </span>
-                                                    </td>
-                                                </ng-container>
-                                                <tr mat-header-row *matHeaderRowDef="columnsAlarms"></tr>
-                                                <tr mat-row *matRowDef="let row; columns: columnsAlarms;"
-                                                    (click)="selection.toggle(row);actionsControlCenter(row);"></tr>
-                                                <!-- Row shown when there is no matching data. -->
-                                                <tr class="mat-row" *matNoDataRow>
-                                                    <td class="mat-cell" colspan="7">No hay datos que coincidan con el
-                                                        filtro
-                                                        "{{input.value}}"
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <mat-paginator #management
-                                            class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
-                                            [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of users">
-                                        </mat-paginator>
-                                    </mat-tab>
-                                    <mat-tab label="Silenciadas">
-                                        <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto min-h-140">
-                                            <table mat-table [dataSource]="dataAlarms" matSort #SortSilencedd='matSort'
-                                                class="w-full">
-                                                <!-- Checkbox Column -->
-                                                <!-- <ng-container matColumnDef="select">
+
+                              <span *ngIf="row.status === 2"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.notAttended' |
+                                transloco }}</span>
+                              <span *ngIf="row.status === 5"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.Silenced' |
+                                transloco }}</span>
+                              <span *ngIf="row.status === 3"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.inFollowUp' |
+                                transloco}}</span>
+                              <span *ngIf="row.status === 4"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.inRecovery' |
+                                transloco }}</span>
+
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- plate Column -->
+                        <ng-container matColumnDef="plate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.plate' | transloco}} </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="px-6 whitespace-nowrap">
+                              {{row.plate}}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- code Column -->
+                        <ng-container matColumnDef="code">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.internalCode' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.code ?? 'monitoringCenter.table.noCode' | transloco }}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- count Column -->
+                        <ng-component matColumnDef="count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.quantity' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.count}}
+                            </span>
+                          </td>
+                        </ng-component>
+                        <!-- address Column -->
+                        <ng-container matColumnDef="address">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.address' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <a class="pr-6 whitespace-nowrap"
+                              [matTooltip]="'monitoringCenter.table.seeOnTheMap' | transloco"
+                              href="https://maps.google.com/?q={{row.x}},{{row.y}}" target="_blank"
+                              rel="noopener noreferrer">{{row.address}}
+                            </a>
+                          </td>
+                        </ng-container>
+                        <!-- date_entry Column -->
+                        <ng-container matColumnDef="date_entry">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.date' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
+                              }} </span>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsAlarms"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsAlarms;"
+                          (click)="selection.toggle(row);actionsControlCenter(row);"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell" colspan="7">{{'monitoringCenter.table.matNoDataRow' | transloco}}
+                            "{{input.value}}"
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <mat-paginator #management
+                      class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
+                      [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of users">
+                    </mat-paginator>
+                  </mat-tab>
+                  <mat-tab [label]="'monitoringCenter.table.silenced' | transloco">
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto min-h-140">
+                      <table mat-table [dataSource]="dataAlarms" matSort #SortSilencedd='matSort' class="w-full">
+                        <!-- Checkbox Column -->
+                        <!-- <ng-container matColumnDef="select">
                                                     <th mat-header-cell *matHeaderCellDef>
                                                         <mat-checkbox (change)="$event ? toggleAllRows() : null"
                                                             [checked]="selection.hasValue() && isAllSelected()"
@@ -265,104 +281,120 @@
                                                         </mat-checkbox>
                                                     </td>
                                                 </ng-container> -->
-                                                <!-- event_name Column -->
-                                                <ng-container matColumnDef="event_name">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Alarmas </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap uppercase">
-                                                            {{row.event_name}}</span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- state Column -->
-                                                <ng-container matColumnDef="state">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span
-                                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status === 2,
+                        <!-- event_name Column -->
+                        <ng-container matColumnDef="event_name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'monitoringCenter.alarms' |
+                            transloco}} </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap uppercase">
+                              {{row.event_name}}</span>
+                          </td>
+                        </ng-container>
+                        <!-- state Column -->
+                        <ng-container matColumnDef="state">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'monitoringCenter.table.state' |
+                            transloco}} </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span
+                              class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                              [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status === 2,
                                                             'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:gray-blue-50':  row.status === 5,
                                                             'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': row.status === 3 ,
                                                                 'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': row.status   === 4
                                                             }">
-                                                            <span
-                                                                class="leading-relaxed whitespace-nowrap">{{row.state}}</span>
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- plate Column -->
-                                                <ng-container matColumnDef="plate">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="px-6 whitespace-nowrap">
-                                                            {{row.plate}}
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- code Column -->
-                                                <ng-container matColumnDef="code">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        Codigo
-                                                        interno </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.code}}
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- count Column -->
-                                                <ng-component matColumnDef="count">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.count}}
-                                                        </span>
-                                                    </td>
-                                                </ng-component>
-                                                <!-- address Column -->
-                                                <ng-container matColumnDef="address">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <a class="pr-6 whitespace-nowrap"
-                                                            [matTooltip]="'Ver en el  mapa'"
-                                                            href="https://maps.google.com/?q={{row.x}},{{row.y}}"
-                                                            target="_blank" rel="noopener noreferrer">{{row.address}}
-                                                        </a>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- date_entry Column -->
-                                                <ng-container matColumnDef="date_entry">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
-                                                            }} </span>
-                                                    </td>
-                                                </ng-container>
-                                                <tr mat-header-row *matHeaderRowDef="columnsAlarms"></tr>
-                                                <tr mat-row *matRowDef="let row; columns: columnsAlarms;"
-                                                    (click)="selection.toggle(row);actionsControlCenter(row);"></tr>
-                                                <!-- Row shown when there is no matching data. -->
-                                                <tr class="mat-row" *matNoDataRow>
-                                                    <td class="mat-cell" colspan="7">No hay datos que coincidan con el
-                                                        filtro
-                                                        "{{input.value}}"
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <mat-paginator #silencedd
-                                            class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
-                                            [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of users">
-                                        </mat-paginator>
-                                    </mat-tab>
-                                    <mat-tab label="Todos">
-                                        <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto min-h-140">
-                                            <table mat-table [dataSource]="dataAlarms" matSort #SortAll='matSort'
-                                                class="w-full">
-                                                <!-- Checkbox Column -->
-                                                <!-- <ng-container matColumnDef="select">
+                              <span *ngIf="row.status === 2"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.notAttended' |
+                                transloco }}</span>
+                              <span *ngIf="row.status === 5"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.Silenced' |
+                                transloco }}</span>
+                              <span *ngIf="row.status === 3"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.inFollowUp' |
+                                transloco}}</span>
+                              <span *ngIf="row.status === 4"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.inRecovery' |
+                                transloco }}</span>
+
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- plate Column -->
+                        <ng-container matColumnDef="plate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'monitoringCenter.table.plate' |
+                            transloco}} </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="px-6 whitespace-nowrap">
+                              {{row.plate}}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- code Column -->
+                        <ng-container matColumnDef="code">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.internalCode' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.code ?? 'monitoringCenter.table.noCode' | transloco }}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- count Column -->
+                        <ng-component matColumnDef="count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.quantity' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.count}}
+                            </span>
+                          </td>
+                        </ng-component>
+                        <!-- address Column -->
+                        <ng-container matColumnDef="address">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.address' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <a class="pr-6 whitespace-nowrap"
+                              [matTooltip]="'monitoringCenter.table.seeOnTheMap' | transloco"
+                              href="https://maps.google.com/?q={{row.x}},{{row.y}}" target="_blank"
+                              rel="noopener noreferrer">{{row.address}}
+                            </a>
+                          </td>
+                        </ng-container>
+                        <!-- date_entry Column -->
+                        <ng-container matColumnDef="date_entry">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.date' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
+                              }} </span>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsAlarms"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsAlarms;"
+                          (click)="selection.toggle(row);actionsControlCenter(row);"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell" colspan="7">{{'monitoringCenter.table.matNoDataRow' | transloco}}
+                            "{{input.value}}"
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <mat-paginator #silencedd
+                      class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
+                      [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of users">
+                    </mat-paginator>
+                  </mat-tab>
+                  <mat-tab [label]="'monitoringCenter.table.all' | transloco">
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-y-auto min-h-140">
+                      <table mat-table [dataSource]="dataAlarms" matSort #SortAll='matSort' class="w-full">
+                        <!-- Checkbox Column -->
+                        <!-- <ng-container matColumnDef="select">
                                                     <th mat-header-cell *matHeaderCellDef>
                                                         <mat-checkbox (change)="$event ? toggleAllRows() : null"
                                                             [checked]="selection.hasValue() && isAllSelected()"
@@ -379,108 +411,129 @@
                                                         </mat-checkbox>
                                                     </td>
                                                 </ng-container> -->
-                                                <!-- event_name Column -->
-                                                <ng-container matColumnDef="event_name">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Alarmas </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap uppercase">
-                                                            {{row.event_name}}</span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- state Column -->
-                                                <ng-container matColumnDef="state">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span
-                                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status === 2,
+                        <!-- event_name Column -->
+                        <ng-container matColumnDef="event_name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.alarms' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap uppercase">
+                              {{row.event_name}}</span>
+                          </td>
+                        </ng-container>
+                        <!-- state Column -->
+                        <ng-container matColumnDef="state">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.state' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span
+                              class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                              [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status === 2,
                                                             'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': row.status === 3,
                                                             'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:gray-blue-50':  row.status === 5,
                                                                 'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': row.status   === 4
                                                             }">
-                                                            <span
-                                                                class="leading-relaxed whitespace-nowrap">{{row.state}}</span>
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- plate Column -->
-                                                <ng-container matColumnDef="plate">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="px-6 whitespace-nowrap">
-                                                            {{row.plate}}
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- code Column -->
-                                                <ng-container matColumnDef="code">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        Codigo
-                                                        interno </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.code}}
-                                                        </span>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- count Column -->
-                                                <ng-component matColumnDef="count">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.count}}
-                                                        </span>
-                                                    </td>
-                                                </ng-component>
-                                                <!-- address Column -->
-                                                <ng-container matColumnDef="address">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <a class="pr-6 whitespace-nowrap"
-                                                            [matTooltip]="'Ver en el  mapa'"
-                                                            href="https://maps.google.com/?q={{row.x}},{{row.y}}"
-                                                            target="_blank" rel="noopener noreferrer">{{row.address}}
-                                                        </a>
-                                                    </td>
-                                                </ng-container>
-                                                <!-- date_entry Column -->
-                                                <ng-container matColumnDef="date_entry">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                        <span class="pr-6 whitespace-nowrap">
-                                                            {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
-                                                            }} </span>
-                                                    </td>
-                                                </ng-container>
-                                                <tr mat-header-row *matHeaderRowDef="columnsAlarms"></tr>
-                                                <tr mat-row *matRowDef="let row; columns: columnsAlarms;"
-                                                    (click)="selection.toggle(row);actionsControlCenter(row);"></tr>
-                                                <!-- Row shown when there is no matching data. -->
-                                                <tr class="mat-row" *matNoDataRow>
-                                                    <td class="mat-cell" colspan="7">No hay datos que coincidan con el
-                                                        filtro
-                                                        "{{input.value}}"
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <mat-paginator #all
-                                            class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
-                                            [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of users">
-                                        </mat-paginator>
-                                    </mat-tab>
-                                </mat-tab-group>
+                              <span *ngIf="row.status === 2"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.notAttended' |
+                                transloco }}</span>
+                              <span *ngIf="row.status === 5"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.Silenced' |
+                                transloco }}</span>
+                              <span *ngIf="row.status === 3"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.inFollowUp' |
+                                transloco}}</span>
+                              <span *ngIf="row.status === 4"
+                                class="leading-relaxed whitespace-nowrap">{{'monitoringCenter.stateAlarms.inRecovery' |
+                                transloco }}</span>
 
-                            </div>
-                        </div>
-                    </mat-drawer-content>
-                </mat-drawer-container>
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- plate Column -->
+                        <ng-container matColumnDef="plate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.plate' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="px-6 whitespace-nowrap">
+                              {{row.plate}}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- code Column -->
+                        <ng-container matColumnDef="code">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.internalCode' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.code ?? 'monitoringCenter.table.noCode' | transloco }}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- count Column -->
+                        <ng-component matColumnDef="count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.quantity' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.count}}
+                            </span>
+                          </td>
+                        </ng-component>
+                        <!-- address Column -->
+                        <ng-container matColumnDef="address">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.address' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <a class="pr-6 whitespace-nowrap"
+                              [matTooltip]="'monitoringCenter.table.seeOnTheMap' | transloco"
+                              href="https://maps.google.com/?q={{row.x}},{{row.y}}" target="_blank"
+                              rel="noopener noreferrer">{{row.address}}
+                            </a>
+                          </td>
+                        </ng-container>
+                        <!-- date_entry Column -->
+                        <ng-container matColumnDef="date_entry">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'monitoringCenter.table.date' | transloco}}
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="pr-6 whitespace-nowrap">
+                              {{row.date_entry | date: 'dd/MM/yyyy hh:mm:ss'
+                              }} </span>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsAlarms"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsAlarms;"
+                          (click)="selection.toggle(row);actionsControlCenter(row);"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell" colspan="7">
+                            {{'monitoringCenter.table.matNoDataRow' | transloco}}
+                            "{{input.value}}"
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <mat-paginator #all
+                      class="sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-t sm:border-b-0 border-b z-10  bg-gray-200"
+                      [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of users">
+                    </mat-paginator>
+                  </mat-tab>
+                </mat-tab-group>
+
+              </div>
             </div>
-        </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </div>
 
-        <!-- <mat-drawer-container class="w-full">
+    <!-- <mat-drawer-container class="w-full">
             <mat-drawer #drawer mode="side" opened="false" position="end">Mostrar aqui el mapa y los contactos
             </mat-drawer>
             <mat-drawer-content>
@@ -489,5 +542,5 @@
         </mat-drawer-container> -->
 
 
-    </div>
+  </div>
 </div>

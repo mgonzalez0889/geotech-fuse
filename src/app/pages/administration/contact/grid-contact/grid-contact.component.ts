@@ -2,10 +2,12 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslocoService } from '@ngneat/transloco';
 import { ContactService } from 'app/core/services/api/contact.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsService } from 'ngx-permissions';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-grid-contact',
@@ -20,6 +22,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
   public dataTableContact: MatTableDataSource<any>;
   public contactsCount: number = 0;
   public listPermission: any = [];
+  public subTitlePage: string = '';
   public columnsContact: string[] = [
     'name',
     'identification',
@@ -32,35 +35,50 @@ export class GridContactComponent implements OnInit, OnDestroy {
     updateContacto: 'administracion:contactos:update',
     deleteContacto: 'administracion:contactos:delete',
   };
+  private unsubscribe$ = new Subject<void>();
+  private userData: any;
+
   constructor(
     private toastAlert: ToastAlertService,
     private permissionsService: NgxPermissionsService,
-    private contactService: ContactService
+    private contactService: ContactService,
+    private translocoService: TranslocoService
+
   ) { }
 
   ngOnInit(): void {
     this.getContact();
     this.listenObservables();
-    this.subscription = this.permissionsService.permissions$.subscribe(
-      (data) => {
-        this.listPermission = data ?? [];
-      }
-    );
+    this.subscription = this.permissionsService.permissions$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        (data) => {
+          this.listPermission = data ?? [];
+        }
+      );
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData?.length } });
+        this.subTitlePage = subTitlePage;
+      });
   }
   /**
    * @description: Trae todos los contactos del cliente
    */
   public getContact(): void {
-    this.contactService.getContacts().subscribe((res) => {
-      if (res.data) {
-        this.contactsCount = res.data.length;
-      } else {
-        this.contactsCount = 0;
-      }
-      this.dataTableContact = new MatTableDataSource(res.data);
-      this.dataTableContact.paginator = this.paginator;
-      this.dataTableContact.sort = this.sort;
-    });
+    this.contactService.getContacts()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        if (res.data) {
+          this.contactsCount = res.data.length;
+        } else {
+          this.contactsCount = 0;
+        }
+        this.dataTableContact = new MatTableDataSource(res.data);
+        this.dataTableContact.paginator = this.paginator;
+        this.dataTableContact.sort = this.sort;
+      });
   }
   /**
    * @description: Filtrar datos de la tabla
@@ -86,12 +104,12 @@ export class GridContactComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.addContacto]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;
       this.contactService.behaviorSubjectContactForm.next({
-        newContact: 'Nuevo contacto',
+        newContact: 'contacts.formPage.formName',
       });
     }
   }

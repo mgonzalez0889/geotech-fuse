@@ -2,7 +2,7 @@
   <div class="flex flex-wrap w-full mx-auto p-6">
 
     <div class="w-full">
-      <app-header-page [title]="this.titlePage"></app-header-page>
+      <app-header-page [title]="'historical.titlePage' | transloco"></app-header-page>
     </div>
 
     <div class="flex flex-wrap w-full py-6">
@@ -18,20 +18,20 @@
 
             <div class="flex border-b p-6 gap-4">
               <button *ngIf="this.historicData.length" [matMenuTriggerFor]="menu" mat-mini-fab
-                matTooltip="Descargar reporte" color="accent" (click)="this.downloadReport()">
+                [matTooltip]="'historical.buttonsPage.buttonDowloand' | transloco" color="accent" (click)="this.downloadReport()">
                 <mat-icon svgIcon="sim_card_download"></mat-icon>
               </button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="downloadReport('csv')">CSV</button>
                 <button mat-menu-item (click)="downloadReport('excel')">EXCEL</button>
               </mat-menu>
-              <button *ngIf="this.historicData.length" mat-mini-fab matTooltip="Ver linea del tiempo" color="accent"
+              <!-- <button *ngIf="this.historicData.length" mat-mini-fab [matTooltip]="'historical.buttonsPage.buttonTimeLine' | transloco" color="accent"
                 (click)="this.viewReportTimeLine()">
                 <mat-icon svgIcon="feather:map"></mat-icon>
-              </button>
+              </button> -->
               <button class="fuse-mat-button-rounded" mat-flat-button color="accent" (click)="this.opened = true;">
                 <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
-                <span class="ml-2">Generar reporte</span>
+                <span class="ml-2">{{'historical.buttonsPage.buttonGenerate' | transloco}}</span>
               </button>
             </div>
 

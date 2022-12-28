@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { TypeGeotool } from 'app/core/interfaces';
 import { GeotoolMapService } from 'app/core/services/api/geotool-map.service';
 import { MobileService } from 'app/core/services/api/mobile.service';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
-import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-geotool-map',
@@ -58,6 +58,7 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
         this.mapService.clearMap();
         this.mapService.setMarkers(data, true);
       });
+    this.closeForm.emit({ closePanel: false, refreshData: false });
     this.mapService.deleteEventMap();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -69,7 +70,7 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
 
     if (!shapeData.length) {
       this.toasAlert.toasAlertWarn({
-        message: '¡Debes crear un punto, ruta o zona en el mapa!'
+        message: 'map.panelGeotools.messageAlert.messageRequired'
       });
       return;
     }
@@ -94,11 +95,11 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
         if (data.code === 200) {
           this.closeForm.emit({ closePanel: false, refreshData: true });
           this.toasAlert.toasAlertSuccess({
-            message: '¡Geometria creada con exito!'
+            message: 'map.panelGeotools.messageAlert.createSuccess'
           });
         } else {
           this.toasAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'map.panelGeotools.messageAlert.createFailure'
           });
           this.closeForm.emit({ closePanel: false, refreshData: false });
         }
@@ -114,11 +115,11 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
         if (result.code === 200) {
           this.closeForm.emit({ closePanel: false, refreshData: true });
           this.toasAlert.toasAlertSuccess({
-            message: '¡Geometria modificada con exito!'
+            message: 'map.panelGeotools.messageAlert.editSuccess'
           });
         } else {
           this.toasAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'map.panelGeotools.messageAlert.createFailure'
           });
           this.closeForm.emit({ closePanel: false, refreshData: false });
         }

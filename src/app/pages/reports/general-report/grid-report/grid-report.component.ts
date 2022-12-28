@@ -1,9 +1,10 @@
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DowloadTools } from '../../../../core/tools/dowload.tool';
-import { HistoriesService } from 'app/core/services/api/histories.service';
-import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/table.interface';
+import { TranslocoService } from '@ngneat/transloco';
+import { IButtonOptions, IOptionTable } from '@interface/index';
+import { DowloadTools } from '@tools/dowload.tool';
+import { HistoriesService } from '@services/api/histories.service';
 
 @Component({
   selector: 'app-grid-report',
@@ -11,10 +12,8 @@ import { IButtonOptions, IOptionTable } from 'app/core/interfaces/components/tab
   styleUrls: ['./grid-report.component.scss'],
 })
 export class GridReportComponent implements OnInit, OnDestroy {
-  public titlePage: string = 'Historico y eventos';
   public historicData: any[] = [];
-  public subscription$: Subscription;
-  public dataSendTimeLine: any;
+  public dataForm: any;
   public opened: boolean = false;
 
   /**
@@ -22,7 +21,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
    */
   public buttonTableOption: IButtonOptions<any> = {
     icon: 'feather:map',
-    text: 'ver mapa',
+    text: 'historical.tablePage.viewMap',
     action: (data) => {
       window.open(`https://maps.google.com/?q=${data.x},${data.y}`);
     },
@@ -34,42 +33,42 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'plate',
-      text: 'Placa',
+      text: 'historical.tablePage.plate',
       typeField: 'text',
     },
     {
       name: 'date_entry',
-      text: 'Fecha',
+      text: 'historical.tablePage.date',
       typeField: 'date',
     },
     {
       name: 'event_name',
-      text: 'Evento',
+      text: 'historical.tablePage.event',
       typeField: 'text',
     },
     {
       name: 'address',
-      text: 'Dirección',
+      text: 'historical.tablePage.adrress',
       typeField: 'text',
     },
     {
       name: 'x',
-      text: 'Latitud',
+      text: 'historical.tablePage.latitude',
       typeField: 'text',
     },
     {
       name: 'y',
-      text: 'Longitud',
+      text: 'historical.tablePage.longitude',
       typeField: 'text',
     },
     {
       name: 'speed',
-      text: 'Velocidad',
-      typeField: 'text',
+      text: 'historical.tablePage.speed',
+      typeField: 'speed',
     },
     {
       name: 'battery',
-      text: 'Batería',
+      text: 'historical.tablePage.battery',
       typeField: 'percentage',
     },
   ];
@@ -78,17 +77,28 @@ export class GridReportComponent implements OnInit, OnDestroy {
     .map(({ name }) => name)
     .concat('action');
 
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
     private dowloadTools: DowloadTools,
-    private _historicService: HistoriesService
+    private _historicService: HistoriesService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
     this.listenObservablesReport();
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        if (this.dataForm) {
+          this.readHistoryData();
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscription$.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   public downloadReport(typeDowload: 'csv' | 'excel'): void {
@@ -107,7 +117,7 @@ export class GridReportComponent implements OnInit, OnDestroy {
    */
   public viewReportTimeLine(): void {
     let queryParams: string = '?';
-    Object.entries(this.dataSendTimeLine).forEach(([key, value]) => {
+    Object.entries(this.dataForm).forEach(([key, value]) => {
       queryParams += `${key}=${value}&`;
     });
     window.open(`/app/reports/general-report/time-line${queryParams}`);
@@ -117,22 +127,26 @@ export class GridReportComponent implements OnInit, OnDestroy {
    * @description: escuchamos cuando se haga el envio de informacion del formulario
    */
   private listenObservablesReport(): void {
-    this.subscription$ =
-      this._historicService.behaviorSubjectDataForms
-        .pipe(
-          filter(({ payload }) => payload !== '')
-        )
-        .subscribe(
-          ({ payload }) => {
-            this.dataSendTimeLine = payload;
-            this.subscription$ = this._historicService
-              .getHistories(payload)
-              .subscribe((res) => {
-                this.historicData =
-                  res.code === 400 ? [] : res.data;
-              });
-          }
+    this._historicService.behaviorSubjectDataForms
+      .pipe(
+        filter(({ payload }) => payload !== ''),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe(
+        ({ payload }) => {
+          this.dataForm = payload;
+          this.readHistoryData();
+        }
+      );
+  }
 
-        );
+  private readHistoryData(): void {
+    this._historicService
+      .getHistories(this.dataForm)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.historicData =
+          res.code === 400 ? [] : res.data;
+      });
   }
 }

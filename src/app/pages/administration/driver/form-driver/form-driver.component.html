@@ -1,192 +1,194 @@
 <div class="flex flex-col w-full sm:pl-6">
-    <div class="bg-card shadow rounded-2xl min-h-180">
-        <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
-            <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-                <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
-                    <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
-                </button>
-            </div>
-        </div>
-        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
-            <div class="w-full max-w-3xl">
-                <!-- Avatar and actions -->
-                <ng-container *ngIf="!editMode">
-                    <div class="flex flex-auto items-end -mt-16">
-                        <!-- Avatar -->
-                        <div
-                            class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
-                            <div
-                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                {{drivers['name']?.charAt(0)}}
-                            </div>
-                        </div>
-                        <!-- Actions -->
-                        <div class="flex items-center ml-auto mb-1">
-                            <button mat-stroked-button (click)="editMode = true">
-                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                                <span class="ml-2">Editar</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-4xl font-bold truncate">{{drivers['name']}}</div>
-                    <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
-                        <ng-container *ngIf="drivers['email']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Correo electrónico'" [svgIcon]="'heroicons_outline:mail'">
-                                </mat-icon>
-                                <div class="ml-6 leading-6">
-                                    <a class="hover:underline text-primary-500" [href]="'mailto:' + drivers['email']"
-                                        target="_blank">
-                                        {{drivers['email']}}
-                                    </a>
-                                </div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="drivers['phone']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Celular'" svgIcon="heroicons_outline:phone"></mat-icon>
-                                <div class="ml-6 leading-6">{{drivers['phone']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="drivers['identification']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Identificación'" svgIcon="heroicons_outline:identification">
-                                </mat-icon>
-                                <div class="ml-6 leading-6">{{drivers['identification']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="drivers['license']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'No. licencia'">recent_actors
-                                </mat-icon>
-                                <div class="ml-6 leading-6">{{drivers['license']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="drivers['license_end']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Fecha de vencimiento de la licencia'">event
-                                </mat-icon>
-                                <div class="ml-6 leading-6">{{drivers['license_end']}}</div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="drivers['address']">
-                            <div class="flex sm:items-center">
-                                <mat-icon [matTooltip]="'Dirección'" [svgIcon]="'heroicons_outline:location-marker'">
-                                </mat-icon>
-                                <div class="ml-6 leading-6">{{drivers['address']}}</div>
-                            </div>
-                        </ng-container>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="editMode">
-                    <form [formGroup]="driverForm">
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Nombre completo</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'">
-                                </mat-icon>
-                                <input matInput [formControlName]="'name'" [placeholder]="'Nombre completo'" required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Identificación</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:identification'">
-                                </mat-icon>
-                                <input matInput [formControlName]="'identification'" [placeholder]="'Identificación'"
-                                    required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Correo electrónico</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:mail'">
-                                </mat-icon>
-                                <input matInput [formControlName]="'email'" [placeholder]="'Correo electrónico'"
-                                    required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Celular</mat-label>
-                                <input matInput [formControlName]="'phone'" [placeholder]="'Celular'" required
-                                    type="number">
-                                <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
-                                    <mat-select-trigger>
-                                        <span class="flex items-center">
-                                            <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
-                                                [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
-                                                [style.backgroundSize]="'24px 3876px'"
-                                                [style.backgroundPosition]="getCountryByIso(driverForm.get('indicative').value).flagImagePos"></span>
-                                            <span
-                                                class="sm:mx-0.5 font-medium text-default">{{getCountryByIso(driverForm.get('indicative').value).code}}</span>
-                                        </span>
-                                    </mat-select-trigger>
-                                    <ng-container *ngFor="let country of countries">
-                                        <mat-option [value]="country.code">
-                                            <span class="flex items-center">
-                                                <span class="w-6 h-4 overflow-hidden"
-                                                    [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
-                                                    [style.backgroundSize]="'24px 3876px'"
-                                                    [style.backgroundPosition]="country.flagImagePos"></span>
-                                                <span class="ml-2">{{country.name}}</span>
-                                                <span class="ml-2 font-medium">{{country.code}}</span>
-                                            </span>
-                                        </mat-option>
-                                    </ng-container>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Numero de la licencia</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:identification'">
-                                </mat-icon>
-                                <input matInput [formControlName]="'license'" [placeholder]="'Numero de la licencia'"
-                                    required>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Fecha de vencimiento de la licencia</mat-label>
-                                <input matInput [matDatepicker]="picker" [formControlName]="'license_end'" required>
-                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="mt-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Dirección</mat-label>
-                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:location-marker'">
-                                </mat-icon>
-                                <input matInput [formControlName]="'address'" [placeholder]="'Dirección'" required>
-                            </mat-form-field>
-                        </div>
-                        <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-                            <button *ngIf="drivers['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
-                                (click)="deleteContact(drivers['id'])">
-                                Eliminar </button>
-                            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
-                                Cancelar
-                            </button>
-                            <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="driverForm.invalid"
-                                [matTooltip]="'Guardar'" (click)="onSave()">
-                                <span *ngIf="!driverForm.disabled">
-                                    Guardar
-                                </span>
-                                <mat-progress-spinner *ngIf="driverForm.disabled" [diameter]="24"
-                                    [mode]="'indeterminate'">
-                                </mat-progress-spinner>
-                            </button>
-                        </div>
-                    </form>
-                </ng-container>
-            </div>
-        </div>
+  <div class="bg-card shadow rounded-2xl min-h-180">
+    <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
+      <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="closeMenu()">
+          <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+      </div>
     </div>
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+      <div class="w-full max-w-3xl">
+        <!-- Avatar and actions -->
+        <ng-container *ngIf="!editMode">
+          <div class="flex flex-auto items-end -mt-16">
+            <!-- Avatar -->
+            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+              <div
+                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                {{drivers['name']?.charAt(0) || 'N'}}
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center ml-auto mb-1">
+              <button mat-stroked-button (click)="editMode = true">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                <span class="ml-2">{{'buttons.buttonEdit' | transloco}}</span>
+              </button>
+            </div>
+          </div>
+          <div class="mt-3 text-4xl font-bold truncate" *ngIf="drivers['name']">{{drivers['name']}}</div>
+          <div class="mt-3 text-4xl font-bold truncate" *ngIf="!drivers['name']">{{'driver.formPage.titleForm' |
+            transloco}}</div>
+          <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+            <ng-container *ngIf="drivers['email']">
+              <div class="flex sm:items-center">
+                <mat-icon [matTooltip]="'driver.formPage.emailAddress' | transloco"
+                  [svgIcon]="'heroicons_outline:mail'">
+                </mat-icon>
+                <div class="ml-6 leading-6">
+                  <a class="hover:underline text-primary-500" [href]="'mailto:' + drivers['email']" target="_blank">
+                    {{drivers['email']}}
+                  </a>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="drivers['phone']">
+              <div class="flex sm:items-center">
+                <mat-icon [matTooltip]="'driver.formPage.cellPhone' | transloco"
+                  svgIcon="heroicons_outline:phone"></mat-icon>
+                <div class="ml-6 leading-6">{{drivers['phone']}}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="drivers['identification']">
+              <div class="flex sm:items-center">
+                <mat-icon [matTooltip]="'driver.formPage.identification' | transloco"
+                  svgIcon="heroicons_outline:identification">
+                </mat-icon>
+                <div class="ml-6 leading-6">{{drivers['identification']}}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="drivers['license']">
+              <div class="flex sm:items-center">
+                <mat-icon [matTooltip]="'driver.formPage.licenseNumber' | transloco">recent_actors
+                </mat-icon>
+                <div class="ml-6 leading-6">{{drivers['license']}}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="drivers['license_end']">
+              <div class="flex sm:items-center">
+                <mat-icon [matTooltip]="'driver.formPage.licenseExpirationDate' | transloco">event
+                </mat-icon>
+                <div class="ml-6 leading-6">{{drivers['license_end']}}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="drivers['address']">
+              <div class="flex sm:items-center">
+                <mat-icon [matTooltip]="'driver.formPage.address' | transloco"
+                  [svgIcon]="'heroicons_outline:location-marker'">
+                </mat-icon>
+                <div class="ml-6 leading-6">{{drivers['address']}}</div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="editMode">
+          <form [formGroup]="driverForm">
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.fullName' | transloco}}</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:user-circle'">
+                </mat-icon>
+                <input matInput [formControlName]="'name'" [placeholder]="'driver.formPage.fullName' | transloco"
+                  required>
+              </mat-form-field>
+            </div>
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.identification' | transloco}}</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:identification'">
+                </mat-icon>
+                <input matInput [formControlName]="'identification'"
+                  [placeholder]="'driver.formPage.identification' | transloco" required>
+              </mat-form-field>
+            </div>
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.emailAddress' | transloco}}</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:mail'">
+                </mat-icon>
+                <input matInput [formControlName]="'email'" [placeholder]="'driver.formPage.emailAddress' | transloco"
+                  required>
+              </mat-form-field>
+            </div>
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.cellPhone' | transloco}}</mat-label>
+                <input matInput [formControlName]="'phone'" [placeholder]="'driver.formPage.cellPhone' | transloco"
+                  required type="number">
+                <mat-select class="mr-1.5" [formControlName]="'indicative'" matPrefix>
+                  <mat-select-trigger>
+                    <span class="flex items-center">
+                      <span class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
+                        [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
+                        [style.backgroundSize]="'24px 3876px'"
+                        [style.backgroundPosition]="getCountryByIso(driverForm.get('indicative').value).flagImagePos"></span>
+                      <span
+                        class="sm:mx-0.5 font-medium text-default">{{getCountryByIso(driverForm.get('indicative').value).code}}</span>
+                    </span>
+                  </mat-select-trigger>
+                  <ng-container *ngFor="let country of countries">
+                    <mat-option [value]="country.code">
+                      <span class="flex items-center">
+                        <span class="w-6 h-4 overflow-hidden"
+                          [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
+                          [style.backgroundSize]="'24px 3876px'"
+                          [style.backgroundPosition]="country.flagImagePos"></span>
+                        <span class="ml-2">{{country.name}}</span>
+                        <span class="ml-2 font-medium">{{country.code}}</span>
+                      </span>
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.licenseNumber' | transloco}}</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:identification'">
+                </mat-icon>
+                <input matInput [formControlName]="'license'"
+                  [placeholder]="'driver.formPage.licenseNumber' | transloco" required>
+              </mat-form-field>
+            </div>
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.licenseExpirationDate' | transloco}}</mat-label>
+                <input matInput [matDatepicker]="picker" [formControlName]="'license_end'" required>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="mt-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{'driver.formPage.address' | transloco}}</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_outline:location-marker'">
+                </mat-icon>
+                <input matInput [formControlName]="'address'" [placeholder]="'driver.formPage.address' | transloco"
+                  required>
+              </mat-form-field>
+            </div>
+            <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+              <button *ngIf="drivers['id']" mat-button [color]="'warn'"
+                [matTooltip]="'buttons.buttonDelete' | transloco" (click)="deleteContact(drivers['id'])">
+                {{'buttons.buttonDelete' | transloco}}
+              </button>
+              <button class="ml-auto" mat-button [matTooltip]="'buttons.buttonCancel' | transloco"
+                (click)="editMode = false">
+                {{'buttons.buttonCancel' | transloco}}
+              </button>
+              <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="driverForm.invalid"
+                [matTooltip]="'buttons.buttonSave' | transloco" (click)="onSave()">
+                <span *ngIf="!driverForm.disabled">
+                  {{'buttons.buttonSave' | transloco}}
+                </span>
+                <mat-progress-spinner *ngIf="driverForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                </mat-progress-spinner>
+              </button>
+            </div>
+          </form>
+        </ng-container>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,43 @@
+{
+  "titlePage": "Users",
+  "subTitlePage": "{{ value }} users",
+  "searchPage": "Search user",
+  "buttonsPage": {
+    "buttonAdd": "Add user"
+  },
+  "tablePage": {
+    "username": "Username",
+    "fullname": "Name",
+    "profile": "Profile",
+    "email": "E-mail address",
+    "state": "State",
+    "switch": "Change state"
+  },
+  "formPage": {
+    "formNameCreate": "Create User",
+    "formNameUpdate": "Edit User",
+    "fieldFullname": "Full name",
+    "fieldUsername": "User name",
+    "fieldProfile": "Select profile",
+    "fieldEmail": "E-mail address",
+    "fieldPassword": "Password",
+    "fieldChangePassword": "¿Change password?",
+    "fieldPasswordConfirm": "Confirm password",
+    "fieldPhone": "Cell phone number",
+    "fieldAddress": "Address",
+    "errorForm": {
+      "validUsername": "User name already exists.",
+      "passwordValid": "Passwords do not match."
+    }
+  },
+  "messageAlert": {
+    "updateStateWarn": "I cannot change the status, please try again.",
+    "updateStateSuccess": "User status successfully modified.",
+    "deleteWarn": "I cannot delete the user, please try again.",
+    "deleteSuccess": "User successfully deleted.",
+    "createWarn": "I can't create the user, try again.",
+    "createSuccess": "User successfully created.",
+    "updateWarn": "I can't change the user, try again.",
+    "updateSuccess": "User successfully modified."
+  }
+}

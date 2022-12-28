@@ -1,9 +1,10 @@
 export interface IOptionTable {
   name: string;
   text: string;
-  typeField: 'text' | 'percentage' | 'date' | 'switch';
+  typeField: 'text' | 'percentage' | 'date' | 'switch' | 'speed';
   defaultValue?: string;
   classTailwind?: string;
+  color?: (data: any) => string;
 }
 
 export interface IButtonOptions<T> {

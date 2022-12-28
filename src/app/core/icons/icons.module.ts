@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IConfigIcon } from '../interfaces/other/icon.interface';
 import L from 'leaflet';
+import moment from 'moment';
 
 @NgModule()
 export class IconsModule {
@@ -69,10 +70,11 @@ export class IconsModule {
     this._matIconRegistry.addSvgIcon('not-signal-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'));
     this._matIconRegistry.addSvgIcon('fixed-movil', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/fixed-movil.svg'));
     this._matIconRegistry.addSvgIcon('historic', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/historic.svg'));
-    this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown.svg'));
-    this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition.svg'));
+    this._matIconRegistry.addSvgIcon('engine_shutdown', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_shutdown_icon.svg'));
+    this._matIconRegistry.addSvgIcon('engine_ignition', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/engine_ignition_icon.svg'));
     this._matIconRegistry.addSvgIcon('plus-border', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/plus-border.svg'));
     this._matIconRegistry.addSvgIcon('close-geo', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/close.svg'));
+    this._matIconRegistry.addSvgIcon('no_report', this._domSanitizer.bypassSecurityTrustResourceUrl('./assets/icons/iconMap/not-signal-movil.svg'));
   }
 
   public iconStatus(data: any): IConfigIcon {
@@ -85,24 +87,33 @@ export class IconsModule {
       switch (Number(data.status)) {
         case 0:
           configIcon['icon'] = 'status_open_color';
-          configIcon['text'] = 'Abierto';
+          configIcon['text'] = 'map.icons.iconTextOpen';
           break;
         case 1:
           configIcon['icon'] = 'status_close_color';
-          configIcon['text'] = 'Cerrado';
+          configIcon['text'] = 'map.icons.iconTextClose';
           break;
       }
     } else if (typeService === 'vehicular' || typeService === 'telemetria') {
       switch (Number(data.status)) {
         case 0:
           configIcon['icon'] = 'engine_shutdown';
-          configIcon['text'] = 'Apagado';
+          configIcon['text'] = 'map.icons.iconTextOff';
           break;
         case 1:
           configIcon['icon'] = 'engine_ignition';
-          configIcon['text'] = 'Encendido';
+          configIcon['text'] = 'map.icons.iconTextOn';
           break;
       }
+    }
+    const diffDays = moment(new Date()).diff(
+      moment(data.date_entry),
+      'days'
+    );
+
+    if (diffDays >= 1 || isNaN(diffDays)) {
+      configIcon['icon'] = 'no_report';
+      configIcon['text'] = 'map.icons.iconTextReport';
     }
     return configIcon;
   }
@@ -116,15 +127,15 @@ export class IconsModule {
     switch (statusGps) {
       case 'excelente':
         configIcon['icon'] = 'status_gps_green';
-        configIcon['text'] = `${data.status_gps}`;
+        configIcon['text'] = 'map.icons.iconTextGpsExcellent';
         break;
       case 'regular':
         configIcon['icon'] = 'status_gps_orange';
-        configIcon['text'] = `${data.status_gps}`;
+        configIcon['text'] = 'map.icons.iconTextGpsRegular';
         break;
       case 'mala':
         configIcon['icon'] = 'status_gps_red';
-        configIcon['text'] = `${data.status_gps}`;
+        configIcon['text'] = 'map.icons.iconTextGpsBad';
         break;
     }
     return configIcon;

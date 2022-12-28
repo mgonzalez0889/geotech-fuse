@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import {
   Component,
   EventEmitter,
@@ -8,19 +7,18 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatOption } from '@angular/material/core';
 import { MatRadioChange } from '@angular/material/radio';
-import { FleetsService } from 'app/core/services/api/fleets.service';
-import { IListModules, IOptionPermission } from 'app/core/interfaces';
-import { ProfilesService } from 'app/core/services/api/profiles.service';
-import { MenuOptionsService } from 'app/core/services/api/menu-options.service';
 import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { MobileService } from 'app/core/services/api/mobile.service';
+import { IListModules, IOptionPermission } from '@interface/index';
+import { ProfilesService } from '@services/api/profiles.service';
+import { FleetsService } from '@services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MenuOptionsService } from '@services/api/menu-options.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-profile',
@@ -31,12 +29,8 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   @Input() dataUpdate: any = null;
   @Input() titleForm: string = '';
   @Output() emitCloseForm = new EventEmitter<void>();
-  @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
-  @ViewChild('allSelectedFleets') private allSelectedFleets: MatOption;
   public profiles: any = [];
   public editMode: boolean = false;
-  public valueFilterFleets = '';
-  public valueFilterMobiles = '';
   public opened: boolean = true;
   public profileForm: FormGroup = this.fb.group({});
   public plates: any[] = [];
@@ -48,11 +42,11 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   public listTrasport: { name: string; text: string }[] = [
     {
       name: 'mobiles',
-      text: 'Moviles',
+      text: 'profile.formPage.optionVehiculo',
     },
     {
       name: 'fleet',
-      text: 'Flota',
+      text: 'profile.formPage.optionFleets',
     },
   ];
   private unsubscribe$ = new Subject<void>();
@@ -62,7 +56,8 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private fleetsService: FleetsService,
     private menuOptionsService: MenuOptionsService,
-    private mobilesService: MobileService
+    private mobilesService: MobileService,
+    private translocoService: TranslocoService
   ) {
     this.buildForm();
   }
@@ -83,19 +78,30 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       });
 
     this.readAndParseOptionModules();
-  }
 
+    // this.translocoService.langChanges$
+    //   .pipe(delay(100), takeUntil(this.unsubscribe$))
+    //   .subscribe(() => {
+    //     console.log('holis');
+
+    //     this.readAndParseOptionModules();
+    //   });
+  }
 
   /**
    * @description: si viene informacion para modificar, seteamos el formulario o lo limpiamos.
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataUpdate) {
-      this.selectTrasport = this.dataUpdate.fleets.length ? 'fleet' : 'mobiles';
+      const typeVehicle = this.dataUpdate.fleets.length ? 'fleet' : 'mobiles';
+      this.onChangeTrasport({ value: typeVehicle } as MatRadioChange);
+
       this.assignedModules = [...this.dataUpdate.modules];
+
       setTimeout(() => {
         this.parseModuleUpdate();
       }, 1000);
+
       this.editMode = false;
       this.profileForm.patchValue({ ...this.dataUpdate });
     } else {
@@ -152,30 +158,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
-   * @description: seleccionar muchos de moviles
-   */
-  public allSelectionMobiles(): void {
-    if (this.allSelectedMobiles.selected) {
-      this.profileForm.controls['plates']
-        .patchValue([...this.plates.map(item => item.plate_id), 0]);
-    } else {
-      this.profileForm.controls['plates'].patchValue([]);
-    }
-  }
-
-  /**
-   * @description: seleccionar muchos de flotas
-   */
-  public allSelectionFleets(): void {
-    if (this.allSelectedFleets.selected) {
-      this.profileForm.controls['fleets']
-        .patchValue([...this.fleets.map(item => item.id), 0]);
-    } else {
-      this.profileForm.controls['fleets'].patchValue([]);
-    }
-  }
-
-  /**
    * @description
    * se ejecuta con el evento del componente matRadio,
    * y dependiendo del tipo de trasporte selecciondo le agregamos
@@ -198,9 +180,9 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @description: se asignan los permisos de los modulos
-   * @param checked - indica si esta checkedo el check
+   * @param checked - indica si esta chekeado - true o false
    * @param keyOption - el nombre del permiso
-   * @param moduleId - id del modulo al que se le van asiganar permisos
+   * @param moduleId - id del modulo al que se le van asiganar los permisos
    */
   public asingOption(checked: boolean, keyOption: string, moduleId: number): void {
     const index = this.assignedModules.findIndex(module => module.id === moduleId);
@@ -225,6 +207,9 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  /**
+   * @description: cuando se seleccione un perfil para editar, se le cargan los modulos que tienes asignados de los modulos disponibles.
+   */
   private parseModuleUpdate(): void {
     const newAvailableModules = [...this.availableModules];
     this.assignedModules.forEach((moduleAssing) => {
@@ -251,14 +236,16 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
           delete: false,
         };
 
+        const modulesAvailales: IListModules[] = [];
         data.forEach(({ children }) => {
           children.forEach(
             ({ id, title, create_option, edit_option, delete_option }) => {
-              this.availableModules.push(
+              modulesAvailales.push(
                 { id, title, create_option, edit_option, delete_option, option: { ...option } }
               );
             });
         });
+        this.availableModules = [...modulesAvailales];
       });
   }
 

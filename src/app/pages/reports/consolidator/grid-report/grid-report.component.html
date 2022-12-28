@@ -2,7 +2,7 @@
   <div class="flex flex-wrap w-full mx-auto p-6 gap-6">
 
     <div class="w-full">
-      <app-header-page [title]="this.titlePage"></app-header-page>
+      <app-header-page [title]="'consolidator.titlePage' | transloco"></app-header-page>
     </div>
 
     <div *ngIf="this.detailDataReport"
@@ -17,14 +17,13 @@
           <mat-drawer #drawer mode="side" position="end" [(opened)]="opened"
             class="w-full md:w-128 bg-gray-100 border-none">
             <ng-container *ngIf="this.opened">
-
               <app-form-report (emitCloseForm)="this.opened = false"></app-form-report>
             </ng-container>
           </mat-drawer>
           <mat-drawer-content class="bg-card shadow rounded-2xl overflow-hidden">
             <div class="flex border-b p-6 gap-4">
               <button *ngIf="this.tableData.length" [matMenuTriggerFor]="menu" mat-mini-fab
-                matTooltip="Descargar reporte" color="accent" (click)="this.downloadReport()">
+                [matTooltip]="'consolidator.buttonsPage.buttonDowloand' | transloco" color="accent" (click)="this.downloadReport()">
                 <mat-icon svgIcon="sim_card_download"></mat-icon>
               </button>
               <mat-menu #menu="matMenu">
@@ -33,7 +32,7 @@
               </mat-menu>
               <button class="fuse-mat-button-rounded" mat-flat-button [color]="'accent'" (click)="this.opened = true">
                 <mat-icon [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-                <span class="ml-2">Generar reporte</span>
+                <span class="ml-2">{{'consolidator.buttonsPage.buttonGenerate' | transloco}}</span>
               </button>
             </div>
 

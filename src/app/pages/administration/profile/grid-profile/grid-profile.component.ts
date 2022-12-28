@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProfilesService } from 'app/core/services/api/profiles.service';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { NgxPermissionsService } from 'ngx-permissions';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { IOptionTable } from '../../../../core/interfaces/components/table.interface';
-import { ToastAlertService } from '../../../../core/services/toast-alert/toast-alert.service';
+import { IOptionTable } from '@interface/index';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay, map, takeUntil, filter, mergeMap } from 'rxjs/operators';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ProfilesService } from '@services/api/profiles.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-grid-profile',
@@ -13,9 +14,8 @@ import { ToastAlertService } from '../../../../core/services/toast-alert/toast-a
   styleUrls: ['./grid-profile.component.scss'],
 })
 export class GridProfileComponent implements OnInit, OnDestroy {
-  public titlePage: string = 'Gestion de perfiles';
   public titleForm: string = '';
-  public subTitlepage: string = '';
+  public subTitlePage: string = '';
   public opened: boolean = false;
   public dataFilter: string = '';
   public profileDataUpdate: any = null;
@@ -25,12 +25,12 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'name',
-      text: 'Nombre',
+      text: 'profile.tablePage.name',
       typeField: 'text',
     },
     {
       name: 'description',
-      text: 'Descripción',
+      text: 'profile.tablePage.description',
       typeField: 'text',
     },
   ];
@@ -45,7 +45,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     private permissionsService: NgxPermissionsService,
     private confirmationService: ConfirmationService,
     private profileService: ProfilesService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +57,13 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.listPermission = data ?? [];
+      });
+
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: this.profileData.length } });
+        this.subTitlePage = subTitlePage;
       });
   }
 
@@ -78,11 +86,11 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public addProfileForm(): void {
     if (!this.listPermission[this.permissionValid.addProfile]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;
-      this.titleForm = 'Crear Perfil';
+      this.titleForm = 'profile.formPage.formNameCreate';
       this.profileDataUpdate = null;
     }
   }
@@ -93,7 +101,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   public actionSelectTable(data: any): void {
     this.opened = true;
     this.profileDataUpdate = { ...data };
-    this.titleForm = 'Editar perfil';
+    this.titleForm = 'profile.formPage.formNameUpdate';
   }
 
   /**
@@ -113,10 +121,8 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((profileData) => {
-        this.subTitlepage = profileData
-          ? `${profileData.length} perfiles`
-          : 'Sin perfiles';
-
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: profileData.length } });
+        this.subTitlePage = subTitlePage;
         this.profileData = profileData || [];
       });
   }
@@ -127,20 +133,26 @@ export class GridProfileComponent implements OnInit, OnDestroy {
   private deleteProfile(profileId: number): void {
     if (!this.listPermission[this.permissionValid.deleteProfile]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       const confirmation = this.confirmationService.open();
       confirmation.afterClosed()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((result) => {
-          if (result === 'confirmed') {
-            this.profileService.deleteProfile(profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-              this.opened = false;
-              this.getProfiles();
-              this.toastAlert.toasAlertSuccess({
-                message: 'Perfil eliminado con exito.',
-              });
+        .pipe(
+          filter(result => result === 'confirmed'),
+          mergeMap(() => this.profileService.deleteProfile(profileId)),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe(({ code }) => {
+          this.opened = false;
+          if (code === 200) {
+            this.getProfiles();
+            this.toastAlert.toasAlertSuccess({
+              message: 'profile.messageAlert.deleteSuccess',
+            });
+          } else {
+            this.toastAlert.toasAlertWarn({
+              message: 'profile.messageAlert.deleteFailure'
             });
           }
         });
@@ -155,26 +167,42 @@ export class GridProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ formData, typeAction, profileId }) => {
         if (typeAction === 'add') {
-          this.profileService.postProfile(formData).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-            this.opened = false;
-            this.getProfiles();
-            this.toastAlert.toasAlertSuccess({
-              message: `Perfil ${formData.name} creado con exito.`,
+          this.profileService.postProfile(formData)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(({ code }) => {
+              this.opened = false;
+              if (code === 200) {
+                this.getProfiles();
+                this.toastAlert.toasAlertSuccess({
+                  message: 'profile.messageAlert.addSuccess',
+                });
+              } else {
+                this.toastAlert.toasAlertWarn({
+                  message: 'profile.messageAlert.addFailure',
+                });
+              }
             });
-          });
         } else if (typeAction === 'edit') {
           if (!this.listPermission[this.permissionValid.updateProfile]) {
             this.toastAlert.toasAlertWarn({
-              message: 'No tienes permisos suficientes para realizar esta acción.',
+              message: 'messageAlert.messagePermissionWarn',
             });
           } else {
-            this.profileService.putProfile(formData, profileId).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-              this.opened = false;
-              this.getProfiles();
-              this.toastAlert.toasAlertSuccess({
-                message: 'Perfil modificado con exito.',
+            this.profileService.putProfile(formData, profileId)
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe(({ code }) => {
+                this.opened = false;
+                if (code === 200) {
+                  this.getProfiles();
+                  this.toastAlert.toasAlertSuccess({
+                    message: 'profile.messageAlert.editSuccess',
+                  });
+                } else {
+                  this.toastAlert.toasAlertWarn({
+                    message: 'profile.messageAlert.editFailure'
+                  });
+                }
               });
-            });
           }
         } else if (typeAction === 'delete') {
           this.deleteProfile(formData.id);

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -11,6 +10,7 @@ import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-grid-dispatch',
@@ -52,57 +52,57 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   public optionsTable: IOptionTable[] = [
     {
       name: 'id',
-      text: 'No.',
+      text: 'dispatch.tablePage.num',
       typeField: 'text'
     },
     {
       name: 'spreadsheet',
-      text: 'Planilla',
+      text: 'dispatch.tablePage.spreadsheet',
       typeField: 'text',
     },
     {
       name: 'created_at',
-      text: 'Fecha de creacion',
+      text: 'dispatch.tablePage.dateCreate',
       typeField: 'date'
     },
     {
       name: 'date_init_dispatch',
-      text: 'Fecha de inicio de despacho',
+      text: 'dispatch.tablePage.dateInitDispatch',
       typeField: 'date'
     },
     {
       name: 'date_end_dispatch',
-      text: 'Fecha de finalización del despacho',
+      text: 'dispatch.tablePage.dateEndDispatch',
       typeField: 'date',
     },
     {
       name: 'plate',
-      text: 'Vehiculo',
+      text: 'dispatch.tablePage.vehicle',
       typeField: 'text',
     },
     {
       name: 'device',
-      text: 'Dispositivo',
+      text: 'dispatch.tablePage.device',
       typeField: 'text',
     },
     {
       name: 'container_number',
-      text: 'Contenedor',
+      text: 'dispatch.tablePage.container',
       typeField: 'text'
     },
     {
       name: 'security_seal',
-      text: 'Sello de seguridad',
+      text: 'dispatch.tablePage.securitySeal',
       typeField: 'text'
     },
     {
       name: 'init_place',
-      text: 'Origen',
+      text: 'dispatch.tablePage.origin',
       typeField: 'text'
     },
     {
       name: 'end_place',
-      text: 'Destino',
+      text: 'dispatch.tablePage.destination',
       typeField: 'text'
     },
   ];
@@ -118,7 +118,8 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
     private dispatchService: DispatchService,
     private dateAdapter: DateAdapter<any>,
     private authService: AuthService,
-    private toastAlert: ToastAlertService
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) {
     this.dateAdapter.setLocale('es');
   }
@@ -200,7 +201,7 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   public newDispatch(): void {
     if (!this.listPermission[this.permissionValid.addDispatch]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: this.translocoService.translate('messageAlert.messagePermissionWarn'),
 
       });
     } else {

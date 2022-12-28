@@ -6,6 +6,7 @@ import { FormReportComponent } from './form-report/form-report.component';
 import { GridReportComponent } from './grid-report/grid-report.component';
 import { DetailGridReportComponent } from './detail-grid-report/detail-grid-report.component';
 import { SharedModule } from 'app/shared/shared.module';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 @NgModule({
   declarations: [
@@ -18,5 +19,6 @@ import { SharedModule } from 'app/shared/shared.module';
     ConsolidatorRoutingModule,
     SharedModule,
   ],
+  providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'consolidator' }],
 })
 export class ConsolidatorModule { }

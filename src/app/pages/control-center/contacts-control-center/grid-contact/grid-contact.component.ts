@@ -36,9 +36,9 @@ export class GridContactComponent implements OnInit, OnDestroy {
   ];
   private listPermission: NgxPermissionsObject;
   private permissionValid: { [key: string]: string } = {
-    addContactControl: 'centrodemonitoreo:contactocentrodecontrol:create',
-    updateContactControl: 'centrodemonitoreo:contactocentrodecontrol:update',
-    deleteContactControl: 'centrodemonitoreo:contactocentrodecontrol:delete',
+    addContactControl: 'centro_de_monitoreo:contacto_centro_de_control:create',
+    updateContactControl: 'centro_de_monitoreo:contacto_centro_de_control:update',
+    deleteContactControl: 'centro_de_monitoreo:contacto_centro_de_control:delete',
   };
 
   constructor(
@@ -108,7 +108,7 @@ export class GridContactComponent implements OnInit, OnDestroy {
   public newContact(): void {
     if (!this.listPermission[this.permissionValid.addContactControl]) {
       this.toastAlert.toasAlertWarn({
-        message: 'No tienes permisos suficientes para realizar esta acción.',
+        message: 'messageAlert.messagePermissionWarn',
       });
     } else {
       this.opened = true;

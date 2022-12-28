@@ -1,9 +1,11 @@
 <div class="flex flex-col w-full sm:pl-6">
   <div class="bg-card shadow rounded-2xl min-h-auto">
+
     <div class="w-full h-20 flex justify-between items-center px-2 pt-4 sm:px-12 border-b-2">
-      <h2 class="text-2xl font-semibold tracking-tight leading-8">Generar Reporte</h2>
-      <button mat-icon-button matTooltip="Cerrar" (click)="this.emitCloseForm.emit();">
-        <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'historical.formPage.formNameCreate' | transloco}}
+      </h2>
+      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.emitCloseForm.emit();">
+        <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
       </button>
     </div>
 
@@ -12,10 +14,10 @@
         <form [formGroup]="this.formReport" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 mt-2">
 
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Seleccione el rango de fechas</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Desde" formControlName="date_init" />
-              <input matEndDate placeholder="Hasta" formControlName="date_end" />
+            <mat-label>{{'historical.formPage.fieldRangeDate' | transloco}}</mat-label>
+            <mat-date-range-input required [rangePicker]="picker">
+              <input matStartDate [placeholder]="'historical.formPage.fromDatePicker' | transloco" formControlName="date_init" />
+              <input matEndDate [placeholder]="'historical.formPage.toDatePicker' | transloco" formControlName="date_end" />
             </mat-date-range-input>
 
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -27,8 +29,9 @@
                     <input type="time" matInput formControlName="timeEnd">
                   </div>
                   <div class="flex justify-end">
-                    <button mat-button matDateRangePickerCancel>Cancel</button>
-                    <button mat-raised-button color="accent" matDateRangePickerApply>Apply</button>
+                    <button mat-button matDateRangePickerCancel>{{'buttons.buttonCancel' | transloco}}</button>
+                    <button mat-raised-button color="accent" matDateRangePickerApply>{{'buttons.buttonSave' |
+                      transloco}}</button>
                   </div>
                 </div>
               </mat-date-range-picker-actions>
@@ -36,40 +39,39 @@
           </mat-form-field>
 
           <div class="flex gap-2 items-center">
-            <mat-label class="mb-3">Buscar por:</mat-label>
+            <mat-label class="mb-3">{{'historical.formPage.fieldtypeVehiculo' | transloco}}</mat-label>
             <mat-radio-group [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}" class="mb-3">
               <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
-                [value]="trasport.name">{{ trasport.text }}</mat-radio-button>
+              [value]="trasport.name">{{ trasport.text | transloco }}</mat-radio-button>
             </mat-radio-group>
           </div>
 
           <div *ngIf="selectTrasport === 'mobiles'">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione vehiculos'"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.optionVehiculo' "
               [options]="{data:this.plates, key:'plate', keyView:'plate'}" labelControl="plates">
             </app-multi-select-filter>
           </div>
 
           <div *ngIf="selectTrasport === 'fleet'">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione flotas'"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldFleets'"
               [options]="{data:this.fleets, key:'id', keyView:'name'}" labelControl="fleets">
             </app-multi-select-filter>
           </div>
 
           <div class="mt-3">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'Seleccione eventos'"
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.fieldEvents'"
               [options]="{data:this.events, key:'event_id', keyView:'event_name'}" labelControl="events">
             </app-multi-select-filter>
           </div>
 
           <div
             class="flex flex-row items-center justify-end sm:justify-end px-6 py-4 space-x-3 dark:bg-black dark:bg-opacity-10 w-full">
-            <button class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.emitCloseForm.emit();">
-              Cancelar
+            <button class="ml-auto" mat-button  (click)="this.emitCloseForm.emit();">
+              {{'buttons.buttonCancel' | transloco}}
             </button>
 
-            <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formReport.invalid"
-              [matTooltip]="'Guardar'">
-              Generar
+            <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.formReport.invalid">
+              {{'buttons.buttonGenerate' | transloco}}
             </button>
           </div>
         </form>

@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { IMobiles } from '@interface/index';
+import { FleetsService } from '@services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { DateTools } from '@tools/date.tool';
 import { IconsModule } from 'app/core/icons/icons.module';
-import { IMobiles } from 'app/core/interfaces/other/mobiles.interface';
-import { FleetsService } from 'app/core/services/api/fleets.service';
-import { MapToolsService } from 'app/core/services/maps/map-tools.service';
-import { MobileService } from 'app/core/services/api/mobile.service';
-import { DateTools } from 'app/core/tools/date.tool';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { delay, takeUntil } from 'rxjs/operators';
 import { FormReportMapComponent } from '../form-report-map/form-report-map.component';
+import { TranslocoService } from '@ngneat/transloco';
 
 type TypeService = { classMobileId: number; classMobileName: string };
 
@@ -39,19 +39,26 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private fleetService: FleetsService,
     private mobilesService: MobileService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
     setTimeout(() => {
       this.readMobiles();
-    }, 1000);
+    }, 700);
 
     this.fleetService.getFleets()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
         this.fleets = [...data || []];
         this.dataSourceFleets = new MatTableDataSource([...data || []]);
+      });
+
+    this.translocoService.langChanges$
+      .pipe(delay(500), takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.ref.markForCheck();
       });
 
     this.refreshDataSocket();
@@ -97,6 +104,7 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       this.mapService.clearMap();
       this.mapService.setMarkers(this.selectPlates, true);
     }
+
     if (this.mapService.compRef) { this.mapService.compRef.destroy(); };
   }
 
@@ -115,7 +123,10 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       this.mapService.clearMap();
       this.mapService.setMarkers(this.mobileData, true);
     } else {
-      const platesFLeets = this.selectFleet.flatMap(({ plates }) => plates);
+      const exitsPlate = {};
+      const platesFLeets = this.selectFleet
+        .flatMap(({ plates }) => plates)
+        .filter(({ plate }) => exitsPlate[plate] ? false : exitsPlate[plate] = true);
       this.mapService.clearMap();
       this.mapService.setMarkers(platesFLeets, true);
     }
@@ -152,6 +163,16 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     this.dataSourceFleets.filter = filterValue.trim().toLowerCase();
   }
 
+  public closePanel(): void {
+    this.selectFleet = [];
+    this.selectPlates = [];
+    this.mapService.clearMap();
+    this.mapService.setMarkers(this.mobileData, true);
+  }
+
+  /**
+   * @description: refrescamos la data en el panel cuando llegue data por socket
+   */
   private refreshDataSocket(): void {
     this.mapService.mobileSocket$
       .pipe(takeUntil(this.unsubscribe$))
@@ -165,6 +186,9 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description: leemos toda la informacion de los moviles y la mostramos en el panel, y se parsea los tipos de servicios que vengan
+   */
   private readMobiles(): void {
     this.mobilesService.getMobiles()
       .pipe(takeUntil(this.unsubscribe$))

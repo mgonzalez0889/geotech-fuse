@@ -2,7 +2,7 @@
   <div class="bg-card shadow rounded-2xl min-h-auto">
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="closeMenu()">
           <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
       </div>
@@ -24,22 +24,23 @@
               <div class="flex items-center ml-auto mb-1">
                 <button mat-stroked-button (click)="editMode = true;">
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                  <span class="ml-2">Editar</span>
+                  <span class="ml-2">{{ 'buttons.buttonEdit' | transloco}}</span>
                 </button>
               </div>
             </div>
-            <div class="mt-3 text-4xl font-bold truncate">{{fleets['name']}}</div>
+            <div class="mt-3 text-4xl font-bold truncate" *ngIf="fleets['name']">{{fleets['name']}}</div>
+            <div class="mt-3 text-4xl font-bold truncate" *ngIf="!fleets['name']">{{ 'fleets.formPage.formName' | transloco }}</div>
             <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
               <ng-container *ngIf="fleets['description']">
                 <div class="flex sm:items-center">
-                  <mat-icon [matTooltip]="'Descripción'" svgIcon="heroicons_solid:menu-alt-2">
+                  <mat-icon [matTooltip]="'fleets.formPage.description' | transloco" svgIcon="heroicons_solid:menu-alt-2">
                   </mat-icon>
                   <div class="ml-6 leading-6">{{fleets['description']}}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="fleets['plates'] as plates">
                 <div class="sm:items-center">
-                  <mat-icon [matTooltip]="'Vehículos'">local_shipping</mat-icon>
+                  <mat-icon [matTooltip]="'fleets.formPage.vehicles' | transloco">local_shipping</mat-icon>
                   <mat-list *ngFor="let x of plates">
                     <mat-list-item role="listitem">{{x.plate}}</mat-list-item>
                   </mat-list>
@@ -52,44 +53,45 @@
           <ng-container>
             <form [formGroup]="fleetForm" class="flex flex-col gap-2 pt-6">
               <mat-form-field class="w-full fuse-mat-dense">
-                <mat-label>Nombre de la flota</mat-label>
+                <mat-label>{{'fleets.formPage.FleetName' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">label</mat-icon>
-                <input matInput [formControlName]="'name'" [placeholder]="'Nombre de la flota'" required>
+                <input matInput [formControlName]="'name'" [placeholder]="'fleets.formPage.FleetName' | transloco" required>
               </mat-form-field>
 
+              
               <div class="flex flex-col gap-1">
-                <mat-label>Seleccione Vehiculos</mat-label>
-                <app-multi-select-filter [form]="this.fleetForm" [placeholder]="'Seleccione vehiculos'"
+                <app-multi-select-filter  [form]="this.fleetForm" [placeholder]="'fleets.formPage.SelectVehicles' | transloco"
                   [options]="{data:this.mobiles, key:'plate_id', keyView:'plate'}" labelControl="plates">
                 </app-multi-select-filter>
               </div>
+            
 
               <mat-form-field class="w-full fuse-mat-dense">
-                <mat-label>Descripción</mat-label>
+                <mat-label>{{'fleets.formPage.description' | transloco }}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:menu-alt-2">
                 </mat-icon>
-                <textarea [formControlName]="'description'" placeholder="Descripción" matInput
+                <textarea [formControlName]="'description'" [placeholder]="'fleets.formPage.description' | transloco" matInput
                   matTextareaAutosize></textarea>
               </mat-form-field>
 
               <div class="flex pt-3">
                 <!-- Eliminar -->
-                <button *ngIf="fleets['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                <button *ngIf="fleets['id']" mat-button [color]="'warn'" [matTooltip]="'buttons.buttonDelete' | transloco"
                   (click)="deleteContact(fleets['id'])">
                   <span>
-                    Eliminar
+                    {{'buttons.buttonDelete' | transloco}}
                   </span>
 
                 </button>
                 <!-- Cancelar -->
-                <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
-                  Cancelar
+                <button class="ml-auto" mat-button [matTooltip]="'buttons.buttonCancel' | transloco" (click)="editMode = false">
+                  {{'buttons.buttonCancel' | transloco}}
                 </button>
                 <!-- Guardar -->
                 <button class="ml-2" mat-flat-button [color]="'accent'"
-                  [disabled]="fleetForm.invalid || fleetForm.disabled" [matTooltip]="'Guardar'" (click)="onSave()">
+                  [disabled]="fleetForm.invalid || fleetForm.disabled" [matTooltip]="'buttons.buttonSave' | transloco" (click)="onSave()">
                   <span *ngIf="!fleetForm.disabled">
-                    Guardar
+                    {{'buttons.buttonSave' | transloco}}
                   </span>
                   <mat-progress-spinner *ngIf="fleetForm.disabled" [diameter]="24" mode="indeterminate">
                   </mat-progress-spinner>

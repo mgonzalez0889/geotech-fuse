@@ -1,0 +1,39 @@
+{
+  "titlePage": "Profile Management",
+  "subTitlePage": "{{ value }} profiles",
+  "searchPage": "Search profile",
+  "buttonsPage": {
+    "buttonAdd": "Add profile"
+  },
+  "tablePage": {
+    "name": "Name",
+    "description": "Description"
+  },
+  "formPage": {
+    "formNameCreate": "Create Profile",
+    "formNameUpdate": "Edit Profile",
+    "fieldName": "Name",
+    "fieldDescription": "Description",
+    "fieldtypeVehiculo": "Search by:",
+    "optionVehiculo": "Vehicles",
+    "optionFleets": "Fleets",
+    "fieldEvents": "Select events",
+    "fieldFleets": "Seleccione fleets",
+    "availableModules": "Available Modules",
+    "assignedModules": "Assigned Modules",
+    "optionsPermission": {
+      "create": "create",
+      "update": "update",
+      "delete": "delete"
+    },
+    "errorForm": {}
+  },
+  "messageAlert": {
+    "deleteSuccess": "Profile successfully deleted.",
+    "deleteFailure": "I cannot delete the profile, please try again.",
+    "addSuccess": "Profile successfully created.",
+    "addFailure": "I can't create the profile, try again.",
+    "editSuccess": "Profile successfully modified.",
+    "editFailure": "I can't change the profile, try again."
+  }
+}

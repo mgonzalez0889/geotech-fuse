@@ -1,3 +1,4 @@
+import { user } from './../../../mock-api/common/user/data';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +26,11 @@ export class UsersService {
   public changeEnableUser(userId: number, enable_user: boolean): Observable<any> {
     const params = { method: 'update_enable_user' };
     return this._http.put(`${this._appSettings.user.url.base}/${userId}`, { enable_user }, { params });
+  }
+
+  public setLocate(userId: number, language: string): Observable<any> {
+    const params = { method: 'set_locale' };
+    return this._http.put(`${this._appSettings.user.url.base}/${userId}`, { language }, { params });
   }
 
   /**

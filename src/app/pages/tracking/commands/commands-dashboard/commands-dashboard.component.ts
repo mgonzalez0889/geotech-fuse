@@ -6,9 +6,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FleetsService } from 'app/core/services/api/fleets.service';
 import { MobileService } from 'app/core/services/api/mobile.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { takeUntil, delay } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-commands-dashboard',
@@ -39,6 +42,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
   public mobiles: any = [];
   public fleets: any = [];
   public subscription: Subscription;
+
   public intervallTimer = interval(20000);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -51,13 +55,14 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
     'state',
     'resend',
   ];
-
+  private unsubscribe$ = new Subject<void>();
   constructor(
     private commandsService: CommandsService,
     private mobilesService: MobileService,
     private fleetService: FleetsService,
-    private snackBar: MatSnackBar,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private translocoService: TranslocoService,
+    private toastAlertService: ToastAlertService
   ) { }
 
   ngOnInit(): void {
@@ -65,18 +70,28 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
     this.getSentCommands();
     this.getFleets();
     this.getMobiles();
-    this.subscription = this.intervallTimer.subscribe(() =>
-      this.getSentCommands()
-    );
+    this.intervallTimer
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() =>
+        this.getSentCommands()
+      );
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        this.getSentCommands();
+        this.getTypeCommand();
+      });
   }
 
   /**
    * @description: Muestra los tipos de comandos del cliente
    */
   private getTypeCommand(): void {
-    this.commandsService.getTypeCommands().subscribe((data) => {
-      this.typeCommands = data.data;
-    });
+    this.commandsService.getTypeCommands()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.typeCommands = data.data;
+      });
   }
   /**
    * @description: Obtiene los comandos enviados
@@ -86,42 +101,48 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
       dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
     };
-    this.commandsService.postSearchCommandsSend(date).subscribe((res) => {
-      if (res.data_count) {
-        this.send = res.data_count[1]?.count_state;
-        this.expired = res.data_count[2]?.count_state;
-        this.pending = res.data_count[0]?.count_state;
-      } else {
-        this.send = 0;
-        this.expired = 0;
-        this.pending = 0;
-      }
-      this.dataCommandsSent = new MatTableDataSource(res.data);
-      this.dataCommandsSent.paginator = this.paginator;
-      this.dataCommandsSent.sort = this.sort;
-    });
+    this.commandsService.postSearchCommandsSend(date)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        if (res.data_count) {
+          this.send = res.data_count[1]?.count_state;
+          this.expired = res.data_count[2]?.count_state;
+          this.pending = res.data_count[0]?.count_state;
+        } else {
+          this.send = 0;
+          this.expired = 0;
+          this.pending = 0;
+        }
+        this.dataCommandsSent = new MatTableDataSource(res.data);
+        this.dataCommandsSent.paginator = this.paginator;
+        this.dataCommandsSent.sort = this.sort;
+      });
   }
   /**
    * @description: Obtiene los vehiculos del cliente
    */
   private getMobiles(): void {
-    this.mobilesService.getMobiles().subscribe((data) => {
-      this.mobiles = data.data.map((x) => {
-        x['selected'] = false;
-        return x;
+    this.mobilesService.getMobiles()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.mobiles = data.data.map((x) => {
+          x['selected'] = false;
+          return x;
+        });
       });
-    });
   }
   /**
    * @description: Obtiene las flotas del cliente
    */
   private getFleets(): void {
-    this.fleetService.getFleets().subscribe((data) => {
-      this.fleets = data.data.map((x) => {
-        x['selected'] = false;
-        return x;
+    this.fleetService.getFleets()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.fleets = data.data.map((x) => {
+          x['selected'] = false;
+          return x;
+        });
       });
-    });
   }
   /**
    * @description: Funcion del filtro en la tabla
@@ -167,20 +188,16 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
     };
     this.sendCommandsToDevice(commands);
   }
+
   /**
    * @description: Funcion de enviar comandos
    */
   private sendCommandsToDevice(commands: any): void {
     if (commands.fleets.length || commands.plates.length) {
       let confirmation = this.confirmationService.open({
-        title: 'Enviar comando',
+        title: this.translocoService.translate('commands.commandAlert.titleAlert'),
         message:
-          '¿Está seguro de que desea enviar este comando? ¡Esta acción no se puede deshacer!',
-        actions: {
-          confirm: {
-            label: 'Enviar',
-          },
-        },
+          this.translocoService.translate('commands.commandAlert.messageAlert'),
       });
       confirmation.afterClosed().subscribe((result) => {
         if (result === 'confirmed') {
@@ -191,38 +208,14 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
               if (data.code === 200) {
                 this.show = false;
                 confirmation = this.confirmationService.open({
-                  title: 'Enviar comando',
-                  message: 'Comando enviado con exito!',
-                  actions: {
-                    cancel: {
-                      label: 'Aceptar',
-                    },
-                    confirm: {
-                      show: false,
-                    },
-                  },
-                  icon: {
-                    name: 'heroicons_outline:check-circle',
-                    color: 'success',
-                  },
+                  title: this.translocoService.translate('commands.commandAlert.titleAlert'),
+                  message: this.translocoService.translate('commands.commandAlert.successCommand'),
                 });
               } else {
                 confirmation = this.confirmationService.open({
-                  title: 'Enviar comando',
+                  title: this.translocoService.translate('commands.commandAlert.titleAlert'),
                   message:
-                    'El comando no se pudo enviar, favor intente nuevamente!',
-                  actions: {
-                    cancel: {
-                      label: 'Aceptar',
-                    },
-                    confirm: {
-                      show: false,
-                    },
-                  },
-                  icon: {
-                    name: 'heroicons_outline:exclamation',
-                    color: 'warn',
-                  },
+                    this.translocoService.translate('commands.commandAlert.alertMessageError'),
                 });
               }
               this.getSentCommands();
@@ -230,11 +223,9 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.snackBar.open(
-        'Favor seleccione un Vehículo o una flota.',
-        'CERRAR',
-        { duration: 4000 }
-      );
+      this.toastAlertService.toasAlertWarn({
+        message: 'commands.commandAlert.alertMessageSelectionError'
+      });
     }
   }
   /**
@@ -260,7 +251,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       if (this.fleets == null) {
         return;
       }
-      this.fleets.forEach((t) => (t.selected = completed));
+      this.fleets.forEach(t => (t.selected = completed));
     }
   }
   /**
@@ -272,7 +263,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
         return false;
       }
       return (
-        this.mobiles.filter((t) => t.selected).length > 0 &&
+        this.mobiles.filter(t => t.selected).length > 0 &&
         !this.allSelectedMobiles
       );
     } else if ('fleets') {
@@ -280,7 +271,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
         return false;
       }
       return (
-        this.fleets.filter((t) => t.selected).length > 0 &&
+        this.fleets.filter(t => t.selected).length > 0 &&
         !this.allSelectedFleets
       );
     }
@@ -289,6 +280,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
    * @description: Destruye el observable
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

@@ -2,61 +2,72 @@
   <div class="relative overflow-auto bg-card shadow rounded-2xl min-h-auto">
 
     <div class="absolute z-999 right-2 top-2">
-      <button mat-icon-button matTooltip="Cerrar" class="bg-white shadow-xl" (click)="closeMenu()">
+      <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" class="bg-white shadow-xl"
+        (click)="closeMenu()">
         <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
       </button>
     </div>
 
     <div #map id="map" class="h-64 rounded-2xl"></div>
 
-    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
-      <div [hidden]="editMode">
-        <div class="w-full max-w-3xl">
-          <div class="flex items-center my-3">
-            <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
-              Información del vehículo
-            </div>
-            <div class="flex items-center ml-auto">
-              <button mat-stroked-button (click)="editMode = true">
-                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil-alt"></mat-icon>
-                <span class="ml-2">Editar</span>
-              </button>
-            </div>
+    <div class="flex flex-col flex-auto items-center">
+      <div [hidden]="editMode" class="py-8">
+        <div class="flex items-center gap-8">
+          <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
+            {{'mobile.formPage.formNameInfo' | transloco}}
           </div>
+          <div class="flex items-center ml-auto">
+            <button mat-stroked-button (click)="editMode = true">
+              <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil-alt"></mat-icon>
+              <span class="ml-2">{{'buttons.buttonEdit' | transloco}}</span>
+            </button>
+          </div>
+        </div>
 
-          <div class="flex flex-col border-t space-y-6">
-            <div class="flex sm:items-center" *ngIf="detailMobile['plate'] as plate">
-              <mat-icon matTooltip="Placa">local_shipping</mat-icon>
-              <p class="ml-6 leading-6">{{plate}}</p>
-            </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['brand'] as brand">
-              <mat-icon matTooltip="Marca">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{brand}}</p>
-            </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['color'] as color">
-              <mat-icon matTooltip="Color" [ngStyle]="{'color': color}">lens</mat-icon>
-              <p class="ml-6 leading-6">Color</p>
-            </div>
-            <div class="flex sm:items-center" *ngIf="detailMobile['capacity'] as capacity">
-              <mat-icon matTooltip="Numero de pasajeros">branding_watermark</mat-icon>
-              <p class="ml-6 leading-6">{{capacity}}</p>
-            </div>
+        <div class="flex flex-col gap-6 mt-3">
+          <div class="flex gap-2 sm:items-center" *ngIf="detailMobile['plate'] as plate">
+            <mat-icon [matTooltip]="'mobile.tablePage.plate' | transloco">local_shipping</mat-icon>
+            <p class="ml-6 leading-6">{{plate}}</p>
           </div>
-          <!-- 
-          <div class="flex items-center my-4 border-b">
-            <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
-              Información del conductor
-            </div>
-          </div> -->
+          <div class="flex gap-2 sm:items-center" *ngIf="detailMobile['brand'] as brand">
+            <mat-icon [matTooltip]="'mobile.formPage.fieldBrand' | transloco">branding_watermark</mat-icon>
+            <p class="ml-6 leading-6">{{brand}}</p>
+          </div>
+          <div class="flex gap-2 sm:items-center" *ngIf="detailMobile['color'] as color">
+            <mat-icon matTooltip="Color" [ngStyle]="{'color': color}">lens</mat-icon>
+            <p class="ml-6 leading-6">Color</p>
+          </div>
+          <div class="flex gap-2 sm:items-center" *ngIf="detailMobile['capacity'] as capacity">
+            <mat-icon [matTooltip]="'mobile.formPage.fieldCantPassenger' | transloco">branding_watermark</mat-icon>
+            <p class="ml-6 leading-6">{{capacity}}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center my-4 border-b" *ngIf="dataMobile['name_driver']">
+          <div class="text-2xl font-semibold tracking-tight leading-6 truncate my-3">
+            Información del conductor
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-6 mt-3" *ngIf="dataMobile['name_driver'] as driver">
+          <div class="flex gap-2 sm:items-center">
+            <mat-icon [matTooltip]="'mobile.tablePage.plate' | transloco" svgIcon="mat_outline:drive_eta"></mat-icon>
+            <p class="ml-6 leading-6">{{driver}}</p>
+          </div>
+          <div class="flex gap-2 sm:items-center">
+            <mat-icon [matTooltip]="'mobile.formPage.fieldBrand' | transloco"
+              svgIcon="mat_outline:phone_android"></mat-icon>
+            <p class="ml-6 leading-6">{{dataMobile.phone}}</p>
+          </div>
         </div>
       </div>
     </div>
 
     <div [hidden]="!editMode">
-      <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-4" (submit)="this.sendData()">
-        <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Conductor</mat-label>
-          <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
+      <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-8" (submit)="this.sendData()">
+        <mat-form-field class="fuse-mat-dense w-full" *ngIf="drivers.length">
+          <mat-label>{{'mobile.formPage.fieldDriver' | transloco}}</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
           <mat-select [formControlName]="'owner_driver_id'">
             <mat-option *ngFor="let driver of drivers" [value]="driver.id">
               {{driver.name}}
@@ -64,40 +75,44 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Código interno</mat-label>
-          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
-          </mat-icon>
-          <input matInput formControlName="internal_code" placeholder="Código interno">
-        </mat-form-field>
+        <div class="flex justify-between gap-2">
+
+          <mat-form-field class="fuse-mat-dense w-full">
+            <mat-label>{{'mobile.formPage.fieldInternalCode' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="mat_outline:directions_car">
+            </mat-icon>
+            <input matInput formControlName="internal_code"
+              [placeholder]="'mobile.formPage.fieldInternalCode' | transloco">
+          </mat-form-field>
+
+          <app-input-color [form]="this.mobilForm" labelControl="color" required></app-input-color>
+        </div>
+
 
         <div class="flex justify-between gap-2">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Marca</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            <mat-label>{{'mobile.formPage.fieldBrand' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="mat_outline:branding_watermark">
             </mat-icon>
-            <input matInput formControlName="brand" placeholder="Marca">
+            <input required matInput formControlName="brand" [placeholder]="'mobile.formPage.fieldBrand' | transloco">
           </mat-form-field>
 
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Modelo</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-            <mat-select formControlName="mobile_model">
+            <mat-label>{{'mobile.formPage.fieldModel' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="mat_outline:calendar_today"></mat-icon>
+            <mat-select required formControlName="mobile_model">
               <mat-option *ngFor="let model of models" [value]="model">
                 {{model}}
               </mat-option>
             </mat-select>
           </mat-form-field>
-
-          <app-input-color [form]="this.mobilForm" labelControl="color"></app-input-color>
-
         </div>
 
         <div class="flex justify-between gap-2">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Tipo de vehículo</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5">person</mat-icon>
-            <mat-select formControlName="type_mobile_id">
+            <mat-label>{{'mobile.formPage.fieldTypeVehicle' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="mat_outline:directions_car"></mat-icon>
+            <mat-select required formControlName="type_mobile_id">
               <mat-option *ngFor="let type of typeMobile" [value]="type.id">
                 {{type.name}}
               </mat-option>
@@ -105,12 +120,12 @@
           </mat-form-field>
 
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Tipo de servicio</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            <mat-label>{{'mobile.formPage.fieldTypeServices' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="mat_outline:car_repair">
             </mat-icon>
-            <mat-select formControlName="type_of_service_id">
+            <mat-select formControlName="type_of_service_id" required>
               <mat-option *ngFor="let type of typeServices" [value]="type.id">
-                {{type.name}}
+                {{type.name | transloco}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -118,18 +133,19 @@
 
         <div class="flex justify-between gap-2">
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Numero de pasajeros</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            <mat-label>{{'mobile.formPage.fieldCantPassenger' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="feather:users">
             </mat-icon>
-            <input matInput formControlName="number_passengers" placeholder="Numero de pasajeros">
+            <input matInput formControlName="number_passengers"
+              [placeholder]="'mobile.formPage.fieldCantPassenger' | transloco">
           </mat-form-field>
 
           <mat-form-field class="fuse-mat-dense w-full">
-            <mat-label>Capacidad de carga </mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+            <mat-label>{{'mobile.formPage.fieldLoadCapacity' | transloco}}</mat-label>
+            <mat-icon matPrefix svgIcon="mat_outline:line_weight">
             </mat-icon>
-            <input matInput formControlName="weight_capacity" placeholder="Capacidad de carga" type="text"
-              pattern="^[0-9]+">
+            <input matInput formControlName="weight_capacity"
+              [placeholder]="'mobile.formPage.fieldLoadCapacity' | transloco" type="text" pattern="^[0-9]+">
             <mat-select class="mr-1.5" formControlName="weight_unit" matSuffix>
               <mat-option [value]="0">Kg</mat-option>
               <mat-option [value]="1">Ton</mat-option>
@@ -138,27 +154,28 @@
         </div>
 
         <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Numero de chasis </mat-label>
-          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+          <mat-label>{{'mobile.formPage.fieldChassisNumber' | transloco}}</mat-label>
+          <mat-icon matPrefix svgIcon="mat_outline:directions_car">
           </mat-icon>
-          <input matInput formControlName="number_chassis" placeholder="Numero de chasis">
+          <input matInput formControlName="number_chassis"
+            [placeholder]="'mobile.formPage.fieldChassisNumber' | transloco" required>
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense w-full">
-          <mat-label>Numero de motor</mat-label>
-          <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user-circle">
+          <mat-label>{{'mobile.formPage.fieldEngineNumber' | transloco}}</mat-label>
+          <mat-icon matPrefix svgIcon="mat_outline:engineering">
           </mat-icon>
-          <input matInput formControlName="number_engine" placeholder="Numero de motor">
+          <input matInput formControlName="number_engine"
+            [placeholder]="'mobile.formPage.fieldEngineNumber' | transloco" required>
         </mat-form-field>
 
-        <div class="flex items-center mt-4 -mx-6 sm:-mx-12 pr-4 pl-1 sm:pr-12 sm:pl-7">
-          <button type="button" class="ml-auto" mat-button matTooltip="Cancelar" (click)="this.editMode = false">
-            Cancelar
+        <div class="flex items-center">
+          <button type="button" class="ml-auto" mat-button (click)="this.editMode = false">
+            {{'buttons.buttonCancel' | transloco}}
           </button>
 
-          <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.mobilForm.invalid"
-            matTooltip="Guardar">
-            Guardar
+          <button class="ml-2" type="submit" mat-flat-button color="accent" [disabled]="this.mobilForm.invalid">
+            {{'buttons.buttonSave' | transloco}}
           </button>
         </div>
 

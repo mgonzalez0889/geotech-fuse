@@ -1,0 +1,43 @@
+{
+  "tittlepage": "Contactos para atención de alarmas",
+  "subtitlepage": {
+    "contact0": "Sin contactos",
+    "contact1": "Contacto",
+    "contacts": "Contactos"
+  },
+  "table": {
+    "emptyContactList": "Lo sentimos no se encontraron datos",
+    "matNoDataRow": "No hay datos que coincidan con la busqueda : ",
+    "ownerSelect": "Seleccione un cliente",
+    "name": "Nombre",
+    "identification": "identificación",
+    "typeOfContact": "Tipo de contacto",
+    "address": "Dirección",
+    "email": "Correo electrónico",
+    "cellPhone": "Celular"
+  },
+  "formPage": {
+    "formName": "Nuevo contacto",
+    "typeOfContact": "Tipo de contacto",
+    "email": "Correo electrónico",
+    "cellPhone": "Celular",
+    "identification": "Identificación",
+    "address": "Dirección",
+    "description": "Descripción",
+    "fullName": "Nombre completo"
+  },
+  "alertMessage" : {
+    "titleMessageDelete" : "Eliminar contacto",
+    "messageDeleteConfirm" : "¿Está seguro de que desea eliminar este contacto? ¡Esta acción no se puede deshacer!",
+    "messageDeleteConfirmSuccess" : "Contacto eliminado con exito",
+    "messageDeleteConfirmError" : "El contacto no se pudo eliminar, favor intente nuevamente",
+    "titleMessageEdit" : "Editar contacto",
+    "messageEditConfirm" : "¿Está seguro de que desea editar este contacto? ¡Esta acción no se puede deshacer!",
+    "messageEditConfirmSuccess" : "Contacto editado con exito!",
+    "messageEditConfirmError" : "El contacto no se pudo actualizar, favor intente nuevamente",
+    "titleMessageCreated" : "Crear contacto",
+    "messageCreatedSuccess" : "Contacto creado con exito!",
+    "messageCreatedError" : "El contacto no se pudo crear, favor intente nuevamente"
+
+  }
+}

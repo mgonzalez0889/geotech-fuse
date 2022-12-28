@@ -19,19 +19,19 @@
     class="sticky top-0 flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
     <div class="flex items-center pr-2 space-x-2">
       <!-- Navigation toggle button -->
-      <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
-        <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+      <button mat-icon-button [matTooltip]="(menuTooltip ? 'layoutVertical.iconMenuHidden' : 'layoutVertical.iconMenuShow') | transloco" (click)="toggleNavigation('mainNavigation')">
+        <mat-icon  [svgIcon]="'heroicons_outline:menu'"></mat-icon>
       </button>
       <!-- Navigation appearance toggle button -->
-      <button class="hidden md:inline-flex" mat-icon-button (click)="toggleNavigationAppearance()">
-        <mat-icon [svgIcon]="'heroicons_outline:switch-horizontal'"></mat-icon>
+      <button *ngIf="menuTooltip" class="hidden md:inline-flex" [matTooltip]="'layoutVertical.iconFix' | transloco" mat-icon-button (click)="toggleNavigationAppearance()">
+        <mat-icon style="font-size: 3rem !important;" [svgIcon]="'push_pin'"></mat-icon>
       </button>
     </div>
     <!-- Components -->
     <div class=" flex items-center pl-2 ml-auto space-x-1 sm:space-x-2">
       <languages></languages>
       <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
-      <search [appearance]="'bar'"></search>
+      <!-- <search [appearance]="'bar'"></search> -->
       <!-- <shortcuts></shortcuts>
             <messages></messages> -->
       <!-- <notifications></notifications> -->

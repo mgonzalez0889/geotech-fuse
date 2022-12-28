@@ -10,6 +10,7 @@ export class DataTablePipe implements PipeTransform {
     text: (value: any) => value,
     percentage: (value: any) => `${value}%`,
     date: (value: any) => this.toolDate.convertHourDate(value),
+    speed: (value: any) => `${value || '0'} km/h`
   };
 
   constructor(private toolDate: DateTools) { }

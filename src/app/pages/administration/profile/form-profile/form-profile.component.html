@@ -4,7 +4,7 @@
     <!-- Cabecera del formulario -->
     <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
       <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeForm()">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="closeForm()">
           <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
       </div>
@@ -26,20 +26,20 @@
             <div class="flex items-center ml-auto mb-1">
               <button mat-stroked-button (click)="editMode = true">
                 <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil-alt"></mat-icon>
-                <span class="ml-2">{{this.dataUpdate ? 'Editar': 'Crear'}}</span>
+                <span class="ml-2">{{'buttons.buttonEdit' | transloco}}</span>
               </button>
             </div>
           </div>
 
-          <div class="mt-3 text-4xl font-bold truncate">{{this.titleForm}}</div>
+          <div class="mt-3 text-4xl font-bold truncate">{{this.titleForm | transloco}}</div>
 
           <div class="flex flex-col mt-4 pt-6 border-t space-y-8" *ngIf="this.dataUpdate">
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Nombre de perfil">title</mat-icon>
+              <mat-icon [matTooltip]="'profile.formPage.fieldName' | transloco">title</mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['name']}}</div>
             </div>
             <div class="flex sm:items-center">
-              <mat-icon matTooltip="Descripción">subtitles</mat-icon>
+              <mat-icon [matTooltip]="'profile.formPage.fieldDescription' | transloco">subtitles</mat-icon>
               <div class="ml-6 leading-6">{{dataUpdate['description']}}</div>
             </div>
           </div>
@@ -50,36 +50,37 @@
           <form [formGroup]="profileForm" (submit)="this.onSubmit()">
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Nombre</mat-label>
+                <mat-label>{{'profile.formPage.fieldName' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
-                <input matInput [formControlName]="'name'" [placeholder]="'Nombre'">
+                <input matInput formControlName="name" [placeholder]="'profile.formPage.fieldName' | transloco" required>
               </mat-form-field>
             </div>
             <div class="mt-4">
               <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Descripción</mat-label>
+                <mat-label>{{'profile.formPage.fieldDescription' | transloco}}</mat-label>
                 <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles
                 </mat-icon>
-                <input matInput [formControlName]="'description'" [placeholder]="'Descripción'">
+                <input matInput formControlName="description"
+                  [placeholder]="'profile.formPage.fieldDescription' | transloco" required>
               </mat-form-field>
             </div>
 
-            <div class="flex gap-2 items-center mt-4 mb-2">
-              <mat-label>Buscar por:</mat-label>
+            <div class="flex gap-2 items-center mt-4 mb-4">
+              <mat-label>{{'profile.formPage.fieldtypeVehiculo' | transloco}}</mat-label>
               <mat-radio-group class="flex gap-2" [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}">
                 <mat-radio-button *ngFor="let trasport of listTrasport" (change)="onChangeTrasport($event)"
-                  [value]="trasport.name">{{ trasport.text }}</mat-radio-button>
+                  [value]="trasport.name">{{ trasport.text | transloco }}</mat-radio-button>
               </mat-radio-group>
             </div>
 
             <div *ngIf="selectTrasport === 'mobiles'">
-              <app-multi-select-filter [form]="this.profileForm" [placeholder]="'Seleccione vehiculos'"
+              <app-multi-select-filter [form]="this.profileForm" [placeholder]="'profile.formPage.fieldEvents'"
                 [options]="{data:this.plates, key:'plate_id', keyView:'plate'}" labelControl="plates">
               </app-multi-select-filter>
             </div>
 
             <div *ngIf="selectTrasport === 'fleet'">
-              <app-multi-select-filter [form]="this.profileForm" [placeholder]="'Seleccione flotas'"
+              <app-multi-select-filter [form]="this.profileForm" [placeholder]="'profile.formPage.fieldFleets'"
                 [options]="{data:this.fleets, key:'id', keyView:'name'}" labelControl="fleets">
               </app-multi-select-filter>
             </div>
@@ -87,8 +88,9 @@
             <div class="flex justify-between gap-3 mt-2 h-80">
 
               <div class="w-full h-auto overflow-auto">
-                <mat-label class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">Modulos
-                  Disponibles</mat-label>
+                <mat-label
+                  class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">{{'profile.formPage.availableModules'
+                  | transloco}}</mat-label>
                 <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList
                   #availableList="cdkDropList" [cdkDropListData]="availableModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[assignedList]" (cdkDropListDropped)="drop($event)">
@@ -97,10 +99,11 @@
               </div>
 
               <div class="w-full h-auto overflow-auto">
-                <mat-label class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">Modulos
-                  asignados</mat-label>
-                <div class="h-full overflow-hidden bg-white rounded shadow mt-4" cdkDropList #assignedList="cdkDropList"
-                  [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
+                <mat-label
+                  class="sticky top-0 z-99 py-2 bg-white w-full text-lg font-semibold">{{'profile.formPage.assignedModules'
+                  | transloco}}</mat-label>
+                <div class="min-h-12 overflow-hidden bg-white rounded shadow mt-4" cdkDropList
+                  #assignedList="cdkDropList" [cdkDropListData]="assignedModules" cdkDropListOrientation="horizontal"
                   [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)">
 
                   <div class="example-box" *ngFor="let item of assignedModules" cdkDrag>
@@ -113,35 +116,34 @@
                         </mat-expansion-panel-header>
                         <div class="flex flex-wrap justify-center gap-3">
                           <mat-checkbox [checked]="item.option.create"
-                            (change)="asingOption($event.checked, 'create', item.id)" *ngIf="item.create_option">Crear
+                            (change)="asingOption($event.checked, 'create', item.id)"
+                            *ngIf="item.create_option">{{'profile.formPage.optionsPermission.create' | transloco}}
                           </mat-checkbox>
                           <mat-checkbox [checked]="item.option.update"
                             (change)="asingOption($event.checked, 'update', item.id)" *ngIf="item.edit_option">
-                            Actualizar </mat-checkbox>
+                            {{'profile.formPage.optionsPermission.update' | transloco}} </mat-checkbox>
                           <mat-checkbox [checked]="item.option.delete"
-                            (change)="asingOption($event.checked, 'delete', item.id)" *ngIf="item.delete_option">Borrar
+                            (change)="asingOption($event.checked, 'delete', item.id)"
+                            *ngIf="item.delete_option">{{'profile.formPage.optionsPermission.delete' | transloco}}
                           </mat-checkbox>
                         </div>
                       </mat-expansion-panel>
                     </mat-accordion>
-
                   </div>
                 </div>
               </div>
             </div>
 
             <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
-              <button type="button" *ngIf="dataUpdate" mat-button color="warn" matTooltip="Eliminar"
-                (click)="deleteProfile()">
-                Eliminar </button>
+              <button type="button" *ngIf="dataUpdate" mat-button color="warn" (click)="deleteProfile()">
+                {{'buttons.buttonDelete' | transloco}} </button>
 
-              <button type="button" class="ml-auto" mat-button matTooltip="Cancelar" (click)="editMode = false">
-                Cancelar
+              <button type="button" class="ml-auto" mat-button (click)="editMode = false">
+                {{'buttons.buttonCancel' | transloco}}
               </button>
 
-              <button type="submit" class="ml-2" mat-flat-button color="accent" [disabled]="profileForm.invalid"
-                matTooltip="Guardar">
-                Guardar
+              <button type="submit" class="ml-2" mat-flat-button color="accent" [disabled]="profileForm.invalid">
+                {{'buttons.buttonSave' | transloco}}
               </button>
             </div>
           </form>

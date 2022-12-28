@@ -76,7 +76,7 @@ export class AuthService {
    *
    * @param credentials
    */
-  signIn(credentials: { user: string; password: string, client_id: string, client_secret: string, grant_type: string }): Observable<any> {
+  signIn(credentials: { user: string; password: string; client_id: string; client_secret: string; grant_type: string }): Observable<any> {
     // Throw error, if the user is already logged in
     if (this._authenticated) {
       return throwError('User is already logged in.');
