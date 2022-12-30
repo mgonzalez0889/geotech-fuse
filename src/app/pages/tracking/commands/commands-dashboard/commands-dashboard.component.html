@@ -12,7 +12,7 @@
           <mat-drawer #drawer mode="side" [(opened)]="openedDrawer" position="end"
             class="w-full md:w-128 bg-gray-100 border-none">
             <ng-container *ngIf="openedDrawer">
-              <app-form-commands (emitCloseForm)="openedDrawer = false"></app-form-commands>
+              <app-form-commands (sendDataForm)="this.sendCommand($event)" (emitCloseForm)="openedDrawer = false"></app-form-commands>
             </ng-container>
           </mat-drawer>
 

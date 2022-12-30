@@ -1,13 +1,11 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { takeUntil, filter, mergeMap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { CommandsService } from '@services/api/commands.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MobileService } from '@services/api/mobile.service';
 import { FleetsService } from '@services/api/fleets.service';
-import { ConfirmationService } from '@services/confirmation/confirmation.service';
-import { TranslocoService } from '@ngneat/transloco';
-import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-form-commands',
@@ -16,6 +14,7 @@ import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 })
 export class FormCommandsComponent implements OnInit {
   @Output() emitCloseForm = new EventEmitter<void>();
+  @Output() sendDataForm = new EventEmitter<{ commandData: any }>();
   public mobilesData: any[] = [];
   public fleetsData: any[] = [];
   public typeCommands: any[] = [];
@@ -27,9 +26,6 @@ export class FormCommandsComponent implements OnInit {
     private mobileService: MobileService,
     private fleetService: FleetsService,
     private formBuilder: FormBuilder,
-    private translocoService: TranslocoService,
-    private confirmationService: ConfirmationService,
-    private toastAlert: ToastAlertService
   ) {
     this.buildForm();
   }
@@ -52,19 +48,38 @@ export class FormCommandsComponent implements OnInit {
       .subscribe(({ data }) => {
         this.typeCommands = data || [];
       });
+
   }
 
-  sendCommand(): void {
+  public sendCommand(): void {
     const formValue = this.formCommands.value;
+    this.sendDataForm.emit({ commandData: formValue });
+    this.emitCloseForm.emit();
+  }
+
+  public selectTab({ index }: MatTabChangeEvent): void {
+    if (index === 0) {
+      this.formCommands.controls['fleets'].patchValue([]);
+      this.formCommands.controls['fleets'].clearValidators();
+      this.formCommands.controls['plates'].setValidators([Validators.required]);
+    } else if (index === 1) {
+      this.formCommands.controls['plates'].patchValue([]);
+      this.formCommands.controls['plates'].clearValidators();
+      this.formCommands.controls['fleets'].setValidators([Validators.required]);
+    }
+    this.formCommands.controls['validationFleet'].patchValue(index);
+    this.formCommands.controls['plates'].updateValueAndValidity();
+    this.formCommands.controls['fleets'].updateValueAndValidity();
   }
 
   private buildForm(): void {
     this.formCommands = this.formBuilder.group({
-      fleets: [[]],
-      plates: [[]],
+      fleets: [[], Validators.required],
+      plates: [[], Validators.required],
       validationFleet: [0],
       typeCommandId: ['', Validators.required]
     });
+    this.selectTab({ index: 0 } as MatTabChangeEvent);
   }
 
 }
