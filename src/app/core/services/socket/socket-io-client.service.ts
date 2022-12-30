@@ -9,7 +9,7 @@ export class SocketIoClientService {
   socket: any;
   //readonly url: string = 'http://ec2-3-219-47-62.compute-1.amazonaws.com:3030';
   // readonly url: string = '192.168.0.28:3030';
-  readonly url: string = 'https://ikki.geotechsa.co:3030';
+  readonly url: string = 'https://ikki.geotechsa.co';
 
   constructor() {
     this.socket = io.connect(this.url, {

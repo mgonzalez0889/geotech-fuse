@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MobileService } from 'app/core/services/api/mobile.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
 import { Subject } from 'rxjs';
 import { filter, mergeMap, takeUntil } from 'rxjs/operators';
-import { MapToolsService } from '../../../../core/services/maps/map-tools.service';
 
 @Component({
   selector: 'app-panel-map-details',
@@ -26,7 +26,6 @@ export class PanelMapDetailsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe((mobile) => {
-        console.log('mobile', mobile);
       });
   }
 

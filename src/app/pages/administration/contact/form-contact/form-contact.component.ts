@@ -160,7 +160,9 @@ export class FormContactComponent implements OnInit, OnDestroy {
           }
           if (id) {
             this.contactService.getContact(id).subscribe((data) => {
+              console.log('data', data);
               this.contacts = data.data;
+
               this.contactForm.patchValue(this.contacts);
             });
           }

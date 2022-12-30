@@ -149,7 +149,6 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
     this.socketIoService.listenin('new_position')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
-        console.log('socket', data);
         this.mapToolsService.moveMakerSelect(data);
       });
   }

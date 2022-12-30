@@ -77,7 +77,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.create]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
       return;
     }
@@ -101,11 +101,11 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
         if (data.code === 200) {
           this.refreshData();
           this.toastAlert.toasAlertSuccess({
-            message: '¡Geojson importado con exito!'
+            message: 'map.panelGeotools.messageAlert.importGeo'
           });
         } else {
           this.toastAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'map.panelGeotools.messageAlert.alertWarn'
           });
         }
       });
@@ -143,7 +143,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.create]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
       return;
     }
@@ -160,7 +160,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.update]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
       return;
     }
@@ -172,7 +172,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
     if (!this.listPermission[this.permissionValid.delete]) {
       this.toastAlert.toasAlertWarn({
         message:
-          'No tienes permisos suficientes para realizar esta acción.',
+          'messageAlert.messagePermissionWarn',
       });
       return;
     }
@@ -187,7 +187,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         if (data.code === 200) {
           this.toastAlert.toasAlertSuccess({
-            message: `${this.titlePanel} eliminado correctamente.`
+            message: 'map.panelGeotools.messageAlert.deleteGeo'
           });
           this.mapService.removeLayer({ id: geoId }, this.typePanel);
           const indexGeo = this.dataGeo.findIndex(({ id }) => id === geoId);
@@ -197,7 +197,7 @@ export class PanelMapGeotoolsComponent implements OnInit, OnDestroy {
           }
         } else {
           this.toastAlert.toasAlertWarn({
-            message: '¡Lo sentimos algo ha salido mal, vuelva a intentarlo!'
+            message: 'map.panelGeotools.messageAlert.alertWarn'
           });
         }
       });

@@ -25,7 +25,10 @@
       "messageRequired": "You must create a point, route or zone on the map!",
       "createSuccess": "Geometry successfully created!",
       "createFailure": "Sorry, something went wrong, please try again!",
-      "editSuccess": "Successfully modified geometry!"
+      "editSuccess": "Successfully modified geometry!",
+      "alertWarn": "Sorry, something went wrong, please try again!",
+      "deleteGeo": "Geometry eliminated correctly.",
+      "importGeo": "Geojson successfully imported!"
     }
   },
   "icons": {
@@ -37,15 +40,6 @@
     "iconTextGpsExcellent": "Excellent",
     "iconTextGpsRegular": "Regular",
     "iconTextGpsBad": "Bad"
-  },
-  "popup": {
-    "lastTransmission": "Last transmission",
-    "speed": "Speed",
-    "lastPosition": "Last position",
-    "driver": "Driver",
-    "notDriver": "without driver",
-    "spreadsheet": "Spreadsheet",
-    "notSpreadsheet": "without payroll"
   },
   "modalImport": {
     "title": "Import GeoJson",

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AfterViewInit, OnInit } from '@angular/core';
 import { MobileService } from '@services/api/mobile.service';
 import { MapToolsService } from '@services/maps/map-tools.service';
@@ -20,6 +20,10 @@ type OptionsMap = {
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectPanel: 'history' | 'details' | 'commands' | 'none';
   public selectOption: string = '';
+
+  /**
+   * @description: array de opciones de geotools
+   */
   public optionsMap: OptionsMap[] = [
     {
       icon: 'route-map',
@@ -91,6 +95,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  /**
+   * @description: se inicializa el mapa y se leen los vehiculos
+   */
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.mapService.initMap({
@@ -126,13 +133,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mapService.setMarkers(this.mobiles, true);
   }
 
+  /**
+   * @description: escuchamos los canales de socket, la data para mover los vehiculos y envios de comandos
+   */
   private listenChanelsSocket(): void {
     this.socketIoService.sendMessage('authorization');
     this.socketIoService
       .listenin('new_position')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
-        console.log('socket', data);
+        console.log('new_position',data);
         this.mapService.mobileSocket$.next(data);
         this.mapService.moveMarker(data);
       });
@@ -141,7 +151,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       .listenin('new_command')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
-        console.log('command ', data);
       });
   }
 }

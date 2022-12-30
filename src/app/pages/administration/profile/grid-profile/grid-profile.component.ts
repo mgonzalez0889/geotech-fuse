@@ -121,7 +121,7 @@ export class GridProfileComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((profileData) => {
-        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: profileData.length } });
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: profileData?.length } });
         this.subTitlePage = subTitlePage;
         this.profileData = profileData || [];
       });

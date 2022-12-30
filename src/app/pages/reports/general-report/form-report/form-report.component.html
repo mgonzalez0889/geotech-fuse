@@ -47,7 +47,7 @@
           </div>
 
           <div *ngIf="selectTrasport === 'mobiles'">
-            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.optionVehiculo' "
+            <app-multi-select-filter [form]="this.formReport" [placeholder]="'historical.formPage.optionVehiculo'"
               [options]="{data:this.plates, key:'plate', keyView:'plate'}" labelControl="plates">
             </app-multi-select-filter>
           </div>

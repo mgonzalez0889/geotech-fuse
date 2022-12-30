@@ -65,7 +65,7 @@
 
     <div [hidden]="!editMode">
       <form [formGroup]="mobilForm" class="flex flex-col gap-3 px-8 py-8" (submit)="this.sendData()">
-        <mat-form-field class="fuse-mat-dense w-full" *ngIf="drivers.length">
+        <mat-form-field class="fuse-mat-dense w-full" *ngIf="drivers?.length">
           <mat-label>{{'mobile.formPage.fieldDriver' | transloco}}</mat-label>
           <mat-icon matPrefix>person</mat-icon>
           <mat-select [formControlName]="'owner_driver_id'">
