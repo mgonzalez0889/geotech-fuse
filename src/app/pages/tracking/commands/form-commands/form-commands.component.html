@@ -11,8 +11,8 @@
     <div class="relative flex flex-col flex-auto items-center px-2 py-1 sm:px-12 sm:py-3">
       <div class="w-full max-w-3xl">
         <form [formGroup]="this.formCommands" (ngSubmit)="this.sendCommand()" class="flex flex-col gap-3 mt-2">
-          <mat-tab-group animationDuration="500ms">
-            <mat-tab [label]="'commands.tabPage.vehicle' | transloco">
+          <mat-tab-group  (selectedTabChange)="selectTab($event)" animationDuration="500ms">
+            <mat-tab  [label]="'commands.tabPage.vehicle' | transloco">
               <app-multi-select-filter [form]="this.formCommands" [placeholder]="'commands.formPage.fieldVehiculos'"
                 [options]="{data:this.mobilesData, key:'plate', keyView:'plate'}" labelControl="plates">
               </app-multi-select-filter>
@@ -40,7 +40,7 @@
 
           <div class="flex justify-end">
             <button class="fuse-mat-button-rounded" mat-flat-button color="accent"
-              [disabled]="this.formCommands.invalid">
+              [disabled]="!this.formCommands.valid">
               <mat-icon class="icon-size-5">send</mat-icon>
               <span class="ml-2">
                 {{'commands.formPage.sendCommandButton' | transloco}}

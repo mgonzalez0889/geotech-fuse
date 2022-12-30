@@ -165,6 +165,7 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
           this.toastAlert.toasAlertSuccess({
             message: 'commands.commandAlert.successCommand'
           });
+          this.getSentCommands();
         } else {
           this.toastAlert.toasAlertWarn({
             message: 'commands.commandAlert.alertMessageError'

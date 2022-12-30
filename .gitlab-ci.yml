@@ -1,0 +1,20 @@
+stages:
+  - build
+
+build-project:
+  tags:
+    - cronos-production-geotech
+  stage: build
+  image: node:16.16.0
+  before_script:
+    - 'npm install --legacy-peer-deps'
+    - 'npm install -g @angular/cli'
+  script:
+    - 'ng build --prod'
+    - 'ls -la dist/'
+    - 'rm -rf /compilations/geosmart/*'
+    - 'cp -r dist/geosmart/. /compilations/geosmart/'
+  only:
+    refs:
+      - master
+ 
