@@ -208,4 +208,14 @@ export class AppSettingsService {
       base: EndPoints.uri('alert')
     }
   };
+  public con_client = {
+    url: {
+      base: EndPoints.uri('con_client')
+    }
+  };
+  public client_firm = {
+    url: {
+      base: EndPoints.uri('client_firm')
+    }
+  };
 }

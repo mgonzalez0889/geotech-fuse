@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { IOptionTable } from '@interface/index';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { ModalLinkageComponent } from '../modal-linkage/modal-linkage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { LinkageService } from '../../../../core/services/api/linkage.service';
+import { UsersService } from '../../../../core/services/api/users.service';
 
 @Component({
   selector: 'app-grid-linkage',
@@ -24,17 +24,17 @@ export class GridLinkageComponent implements OnInit {
   public name: string;
   public optionsTable: IOptionTable[] = [
     {
-      name: 'user_login',
+      name: 'nit',
       text: 'Documento',
       typeField: 'text',
     },
     {
-      name: 'full_name',
+      name: 'name',
       text: 'Nombre',
       typeField: 'text',
     },
     {
-      name: 'profile',
+      name: 'phone',
       text: 'Telefono',
       typeField: 'text',
     },
@@ -45,7 +45,7 @@ export class GridLinkageComponent implements OnInit {
       classTailwind: 'hover:underline text-primary-500',
     },
     {
-      name: 'enable_user',
+      name: 'state',
       text: 'Estado',
       typeField: 'text',
     },
@@ -58,11 +58,12 @@ export class GridLinkageComponent implements OnInit {
 
   constructor(
     private matDialog: MatDialog,
+    private usersService: UsersService,
     private linkageService: LinkageService
   ) { }
 
   ngOnInit(): void {
-    this.readDataUser();
+    this.readDataClient();
   }
 
   public filterTable(event: Event): void {
@@ -72,26 +73,20 @@ export class GridLinkageComponent implements OnInit {
 
   public addUserForm(): void {
     this.opened = true;
-    this.titleForm = 'Crear cliente';
+    this.titleForm = 'Buscar cliente';
     this.userDataUpdate = null;
   }
 
   public selectUserTable(dataUser: any): void {
     this.userDataUpdate = { ...dataUser };
     this.opened = true;
-    this.titleForm = 'Editar cliente';
+    this.titleForm = dataUser.name;
 
   }
-  public newClient(): void {
-    const dialogRef = this.matDialog.open(ModalLinkageComponent, {
-      width: '500px',
-      height: '430px',
-    });
-  }
 
-  private readDataUser(): void {
-    this.linkageService
-      .getUsers()
+
+  private readDataClient(): void {
+    this.linkageService.getClients()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
         this.subTitlePage = data
