@@ -1,99 +1,227 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {FleetsService} from "../../../../core/services/fleets.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'app/core/auth/auth.service';
+import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
+import { FleetsService } from 'app/core/services/api/fleets.service';
+import { MobileService } from 'app/core/services/api/mobile.service';
+import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
+import { NgxPermissionsObject } from 'ngx-permissions';
+import { Subject } from 'rxjs';
+import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
-    selector: 'app-form-fleet',
-    templateUrl: './form-fleet.component.html',
-    styleUrls: ['./form-fleet.component.scss']
+  selector: 'app-form-fleet',
+  templateUrl: './form-fleet.component.html',
+  styleUrls: ['./form-fleet.component.scss'],
 })
 export class FormFleetComponent implements OnInit, OnDestroy {
-    @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
-    public formFleets: FormGroup;
-    public subscription$: Subscription;
-    public titleForm: string;
-    public id: string;
+  public fleetsPlate: any = [];
+  public fleets: any = [];
+  public editMode: boolean = false;
+  public opened: boolean = true;
+  public mobiles: any[] = [];
+  public fleetForm: FormGroup;
+  private unsubscribe$ = new Subject<void>();
+  private listPermission: NgxPermissionsObject;
+  private permissionValid: { [key: string]: string } = {
+    addFleets: 'gestion_de_mobiles:flotas:create',
+    updateFleets: 'gestion_de_mobiles:flotas:update',
+    deleteFleets: 'gestion_de_mobiles:flotas:delete',
+  };
 
-    constructor(
-        private fb: FormBuilder,
-        private _fleetService: FleetsService,
-        private _snackBar: MatSnackBar
-    ) {
-    }
+  constructor(
+    private fleetService: FleetsService,
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastAlert: ToastAlertService,
+    private authService: AuthService,
+    private mobilesService: MobileService,
+    private translocoService: TranslocoService
+  ) { }
 
-    ngOnInit(): void {
-        this.createFleetsForm();
-        this.listenObservables();
-    }
+  ngOnInit(): void {
+    this.createContactForm();
+    this.listenObservables();
+    this.mobilesService.getMobiles()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+        this.mobiles = [...data || []];
+      });
+    this.authService.permissionList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((permission) => {
+        this.listPermission = permission;
+      });
+  }
 
-    /**
-     * @description: Crear o editar una nueva flota
-     */
-    public onSave(): void {
-        const data = this.formFleets.getRawValue();
-        if (!data.id) {
-            this.newFleet(data);
-        } else {
-            this.editFleet(data);
-        }
+  /**
+   * @description: Valida si es edita o guarda una nueva flota
+   */
+  public onSave(): void {
+    const data = this.fleetForm.getRawValue();
+    if (!data.id) {
+      this.newFleet(data);
+    } else {
+      if (!this.listPermission[this.permissionValid.updateFleets]) {
+        this.toastAlert.toasAlertWarn({
+          message: 'messageAlert.messagePermissionWarn',
+        });
+      } else {
+        this.editFleet(data);
+      }
     }
-    /**
-     * @description: Cierra formulario
-     */
-    public onClose(): void {
-        this.onShow.emit('FLEET');
-    }
+  }
 
-    /***
-     * @description: Creacion de los datos del formulario de flota
-     */
-    private createFleetsForm(): void {
-        this.formFleets = this.fb.group({
-            id: undefined,
-            name: ['', [Validators.required]],
-            description: ['', [Validators.required]]
+  /**
+   * @description: Cierra el menu lateral de la derecha
+   */
+  public closeMenu(): void {
+    this.fleetService.behaviorSubjectFleetGrid.next({
+      opened: false,
+      reload: false,
+    });
+  }
+
+  /**
+   * @description: Elimina una flota
+   */
+  public deleteContact(id: number): void {
+    if (!this.listPermission[this.permissionValid.deleteFleets]) {
+      this.toastAlert.toasAlertWarn({
+        message: 'messageAlert.messagePermissionWarn',
+      });
+    } else {
+      const confirmation = this.confirmationService.open({
+        title: this.translocoService.translate('fleets.alertMessage.titleAlertDelete'),
+        message:
+        this.translocoService.translate('fleets.alertMessage.messageAlertDelete'),
+      });
+      confirmation.afterClosed()
+        .pipe(
+          filter(result => result === 'confirmed'),
+          mergeMap(() => this.fleetService.deleteFleets(id).pipe(tap(() => this.fleetForm.disable()))),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe((result) => {
+          this.fleetForm.enable();
+          if (result.code === 200) {
+            this.fleetService.behaviorSubjectFleetGrid.next({
+              reload: true,
+              opened: false,
+            });
+            this.toastAlert.toasAlertSuccess({
+              message: 'fleets.alertMessage.toastAlertDeleteSuccess'
+            });
+          } else {
+            this.toastAlert.toasAlertWarn({
+              message:
+                'fleets.alertMessage.toastAlertDeleteError',
+            });
+          }
         });
     }
-    /***
-     * @description: Crear una nueva flota
-     */
-    private newFleet(data: any): void {
-        this.subscription$ = this._fleetService.postFleets(data).subscribe(() => {
-            this._snackBar.open('La flota ha sido creada con exito', 'CERRAR', {duration: 4000});
-            this.onShow.emit('FLEET');
-        });
-    }
-    /***
-     * @description: Editar una flota
-     */
-    private editFleet(data: any): void{
-        this.subscription$ = this._fleetService.putFleets(data).subscribe(()=>{
-            this._snackBar.open('La flota ha sido actualizada', 'CERRAR', {duration: 4000});
-            this.onShow.emit('FLEET');
-        });
-    }
-    /**
-     * @description: Escucha el observable behavior
-     */
-    private listenObservables(): void {
-        this.subscription$ = this._fleetService.behaviorSubjectFleet$.subscribe(({ type, isEdit, payload }) => {
-            if (isEdit && type == 'EDIT') {
-                this.formFleets.patchValue(payload);
-                this.titleForm = `Editar flota ${payload.name}`;
-            } else if (!isEdit && type == 'NEW') {
-                this.formFleets.reset({
-                });
-                this.titleForm = 'Nueva flota';
+  }
+
+  /**
+   * @description: Destruye el observable
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * @description: Inicializa el formulario de flotas
+   */
+  private createContactForm(): void {
+    this.fleetForm = this.fb.group({
+      id: [''],
+      name: ['', Validators.required],
+      description: [''],
+      plates: [[], Validators.required],
+    });
+  }
+
+  /**
+   * @description: Escucha el observable behavior y busca la flota
+   */
+  private listenObservables(): void {
+    this.fleetService.behaviorSubjectFleetForm
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        ({ newFleet, payload, isEdit }) => {
+          this.editMode = isEdit;
+          if (newFleet) {
+            this.fleetsPlate = null;
+            this.fleets = [];
+            // this.fleets['name'] = newFleet;
+            if (this.fleetForm) {
+              this.fleetForm.reset();
             }
-        });
-    }
-    /**
-     * @description: Destruye las subscripciones
-     */
-    ngOnDestroy(): void {
-        this.subscription$.unsubscribe();
-    }
+          }
 
+          if (payload?.id) {
+            this.fleets = payload;
+            this.fleetForm.patchValue(this.fleets);
+            this.fleetForm.patchValue({ plates: payload.plates.map(({ owner_plate_id }) => owner_plate_id) });
+          }
+        }
+      );
+  }
+
+  /**
+   * @description: Editar una flota
+   */
+  private editFleet(data: any): void {
+    const confirmation = this.confirmationService.open();
+    confirmation.afterClosed()
+      .pipe(
+        filter(result => result === 'confirmed'),
+        mergeMap(() => this.fleetService.putFleets(data).pipe(tap(() => this.fleetForm.disable()))),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((result) => {
+        this.fleetForm.enable();
+        if (result.code === 200) {
+          this.fleetService.behaviorSubjectFleetGrid.next({
+            reload: true,
+            opened: false,
+          });
+          this.toastAlert.toasAlertSuccess({
+            message: 'fleets.alertMessage.toastAlertSuccessEdit',
+          });
+        } else {
+          this.toastAlert.toasAlertWarn({
+            message:
+              'fleets.alertMessage.toasAlertErrorEdit'
+          });
+        }
+      });
+  }
+
+  /**
+   * @description: Guarda una nuevo flota
+   */
+  private newFleet(data: any): void {
+    this.fleetForm.disable();
+    this.fleetService.postFleets(data)
+      .subscribe((res) => {
+        this.fleetForm.enable();
+        if (res.code === 200) {
+          this.fleetService.behaviorSubjectFleetGrid.next({
+            reload: true,
+            opened: false,
+          });
+          this.toastAlert.toasAlertSuccess({
+            message: 'fleets.alertMessage.toastAlertSuccessCreated'
+          });
+        } else {
+          this.toastAlert.toasAlertWarn({
+            message: 'fleets.alertMessage.toastAlertErrorCreated'
+          });
+        }
+      });
+  }
 }

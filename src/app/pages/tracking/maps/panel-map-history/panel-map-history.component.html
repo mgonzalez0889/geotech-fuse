@@ -1,0 +1,270 @@
+<div class="h-128 w-80 bg-card shadow-xl rounded-lg py-2 px-3 flex flex-col gap-3">
+
+  <div class="flex items-center justify-between border-b-2">
+    <h2 class="text-xl font-semibold tracking-tight leading-6">
+      Historial
+    </h2>
+    <button mat-icon-button matTooltip="Cerrar" (click)="mapService.selectPanelMap$.next({panel:'none',data:null})">
+      <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+    </button>
+  </div>
+
+  <div>
+    <div class="flex gap-1 w-full h-8 rounded bg-blue-200 items-center px-2 py-1">
+      <mat-icon color="primary" svgIcon="mat_outline:date_range"></mat-icon>
+      <span class="text-sm text-blue-600">
+        {{dataHistory.date_end.split(' ')[0]}} -
+        {{dataHistory.date_init.split(' ')[0]}}</span>
+    </div>
+  </div>
+
+  <div>
+    <mat-tab-group>
+      <mat-tab label="Historial"> Content 1 </mat-tab>
+      <mat-tab label="Eventos"> Content 2 </mat-tab>
+    </mat-tab-group>
+  </div>
+
+
+</div>
+<!-- 
+
+
+<div class="historic-plate">
+  <div class="title-historic">
+    <div class="title">
+      Historico y eventos
+    </div>
+    <div class="close" (click)="mapFunctionalitieService.showHistoricPlate = false">
+      <img style="height: 20px; width: 20px;" src="./assets/icons/iconMap/close-blue.svg">
+    </div>
+  </div>
+
+  <div class="data-historic">
+    <mat-tab-group>
+      <mat-tab label="Historico">
+        <div *ngFor="let data of mapFunctionalitieService.historicTrip">
+          <div style="cursor: pointer;">
+            <div class="cabecera-trip">
+              <div class="plate">
+                {{data.plate}}
+              </div>
+            </div>
+            <div class="trip">
+              <div class="not-found" *ngIf="!data.tiene_data">
+                No se encontraron resultados.
+              </div>
+              <div class="body-trip" *ngIf="data.tiene_data">
+                <div class="body-left">
+                  <div class="date-hour">
+                    <strong>{{mapFunctionalitieService.convertHour(data.fecha_inicial)}}</strong>
+                    {{mapFunctionalitieService.convertDate(data.fecha_inicial)}}
+                  </div>
+                  <div class="checkbox">
+             
+                    <span>space</span>
+                  </div>
+                  <div class="date-hour">
+                    <strong>{{mapFunctionalitieService.convertHour(data.fecha_final)}}</strong>
+                    {{mapFunctionalitieService.convertDate(data.fecha_inicial)}}
+                  </div>
+                </div>
+
+                <div class="body-center">
+                  <div class="circle">
+
+                  </div>
+
+                  <div class="line">
+
+                  </div>
+
+                  <div class="circle">
+
+                  </div>
+                </div>
+
+                <div class="body-right">
+                  <div class="address-init">
+                    {{data.direccion_inicial}}
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  </div>
+
+                  <div class="events">
+                    <div class="odometer">
+                      {{data.odometer}} km
+                    </div>
+                    <div class="horometer">
+                      {{data.tiempo}}
+                    </div>
+                  </div>
+
+                  <div class="address-end">
+                    {{data.direccion_final}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-trip" *ngFor="let data_trip of data.trips; first as isFirts; last as isLast">
+              <div class="stop" *ngIf="data_trip.tipo === 'stop'">
+                <div class="icon-stop">
+                  <div class="line-stop" [style.background-color]="isFirts ? 'transparent' : '#006AA3'">
+                  </div>
+                  <span style="background: #006AA3;">
+                    <label>P</label>
+                  </span>
+                  <div class="line-stop" style="background: #006AA3;"
+                    [style.background-color]="isLast ? 'transparent' : '#006AA3'">
+                  </div>
+                </div>
+                <div class="body-stop">
+                  <div class="address-stop">
+                    {{data_trip.direccion_inicial}}
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit 12.
+                  </div>
+
+                  <div class="time-stop">
+                    {{data_trip.tiempo}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="trip" *ngIf="data_trip.tipo === 'trip'">
+                <div class="icon-trip">
+                  <div class="line-trip" [style.background-color]="isFirts ? 'transparent' : data_trip.color">
+                  </div>
+                  <span style="background: {{data_trip.color}};">
+                    <img src="assets/icons/iconMap/route_trip.svg" alt="">
+                  </span>
+                  <div class="line-trip" [style.background-color]="isLast ? 'transparent' : data_trip.color">
+                  </div>
+                </div>
+
+                <div class="body-trip">
+                  <div class="body-left">
+                    <div class="date-hour">
+                      <strong>{{mapFunctionalitieService.convertHour(data_trip.fecha_inicial)}}</strong>
+                      {{mapFunctionalitieService.convertDate(data_trip.fecha_inicial)}}
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" (change)="generateHistoric($event, data_trip)"
+                        [(ngModel)]="data_trip.selected">
+                    </div>
+                    <div class="date-hour">
+                      <strong>{{mapFunctionalitieService.convertHour(data_trip.fecha_final)}}</strong>
+                      {{mapFunctionalitieService.convertDate(data_trip.fecha_inicial)}}
+                    </div>
+                  </div>
+
+                  <div class="body-center">
+                    <div class="circle">
+
+                    </div>
+
+                    <div class="line">
+
+                    </div>
+
+                    <div class="circle">
+
+                    </div>
+                  </div>
+
+                  <div class="body-right">
+                    <div class="address-init">
+                      {{data_trip.direccion_inicial}}
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </div>
+
+                    <div class="events">
+                      <div class="odometer">
+                        {{data_trip.odometer}} km
+                      </div>
+                      <div class="horometer">
+                        {{data_trip.tiempo}}
+                      </div>
+                    </div>
+
+                    <div class="address-end">
+                      {{data_trip.direccion_final}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Eventos">
+        <div class="filters">
+        </div>
+
+        <div class="result-plate">
+          <div class="head-result" *ngFor="let data of this.mapFunctionalitieService.historic">
+            <div style="cursor: pointer;">
+              <div class="title-result">
+                <div class="title" *ngIf="data.data.length <= 0">
+                  {{data.plate}}
+                </div>
+
+                <div class="title" *ngIf="data.data.length > 0">
+                  <mat-checkbox (change)="selectAll($event, data.plate, data.color)" [(ngModel)]="data.selected">
+                    <label style="color: {{data.color}};">{{data.plate}}</label>
+                  </mat-checkbox>
+                </div>
+                <div class="close">
+                  <img style="height: 12px; width: 15px; cursor: pointer;" src="./assets/icons/iconMap/arrow-bottom.svg"
+                    [ngClass]="seletedHistoric === data.plate ? 'rotate' : ''"
+                    (click)="data.data.length > 0 ? viewHistoric(data.plate) : ''">
+                </div>
+              </div>
+
+              <div class="subtitle-result" *ngIf="data.data.length > 0">
+                Se encontraron resultados.
+              </div>
+
+              <div class="subtitle-result" *ngIf="data.data.length <= 0">
+                No se encontraron resultados.
+              </div>
+            </div>
+
+            <div class="body-result" *ngIf="seletedHistoric === data.plate">
+              <div class="cards">
+                <div class="card" *ngFor="let event of data.data">
+                  <div class="card-icon">
+                    <mat-checkbox (change)="onChange($event, event)" [(ngModel)]="event.selected">
+                    </mat-checkbox>
+                  </div>
+
+                  <div class="card-description">
+                    <div class="name-event">
+                      <b>Evento:</b> {{event.event_name}}
+                    </div>
+
+                    <div class="date-event">
+                      <b>Fecha de transmisión:</b> {{convertDateHour(event.date_entry)}}
+                    </div>
+
+                    <div class="address-event">
+                      <a class="pr-6 whitespace-nowrap" [matTooltip]="'Ver en el  mapa'"
+                        href="https://maps.google.com/?q={{event['x']}},{{event['y']}}" target="_blank">
+                        <b>Dirección:</b> {{event.address}} <mat-icon class="icon-size-4">
+                          open_in_new
+                        </mat-icon>
+                      </a>
+                    </div>
+
+                    <div class="speed-event">
+                      <b>Velocidad:</b> {{event.speed}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div> -->

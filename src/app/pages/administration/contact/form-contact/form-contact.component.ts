@@ -1,107 +1,229 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ContactService } from "../../../../core/services/contact.service";
-import { fuseAnimations } from "../../../../../@fuse/animations";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Subscription } from "rxjs";
+import { Subscription } from 'rxjs';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { IconsModule } from '../../../../core/icons/icons.module';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ContactService } from '@services/api/contact.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
-    selector: 'app-form-contact',
-    templateUrl: './form-contact.component.html',
-    styleUrls: ['./form-contact.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+  selector: 'app-form-contact',
+  templateUrl: './form-contact.component.html',
+  styleUrls: ['./form-contact.component.scss'],
 })
 export class FormContactComponent implements OnInit, OnDestroy {
+  public contacts: any = [];
+  public editMode: boolean = false;
+  public opened: boolean = true;
+  public countries: any = [];
+  public contactForm: FormGroup;
+  public subscription: Subscription;
+  public listPermission: any = [];
+  private permissionValid: { [key: string]: string } = {
+    addContacto: 'administracion:contactos:create',
+    updateContacto: 'administracion:contactos:update',
+    deleteContacto: 'administracion:contactos:delete',
+  };
+  constructor(
+    private contactService: ContactService,
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private iconService: IconsModule,
+    private permissionsService: NgxPermissionsService,
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
+  ) { }
 
-    @Output() onShow: EventEmitter<boolean> = new EventEmitter<boolean>();
-    public formContacts: FormGroup;
-    public subscription$: Subscription;
-    public titleForm: string;
-    public id: string;
+  ngOnInit(): void {
+    this.iconService.getCountries().subscribe((res) => {
+      this.countries = res;
+    });
+    this.listenObservables();
+    this.createContactForm();
+    this.subscription = this.permissionsService.permissions$.subscribe(
+      (data) => {
+        this.listPermission = data ?? [];
+      }
+    );
+  }
 
-    constructor(
-        private fb: FormBuilder,
-        private _contactService: ContactService,
-        private _snackBar: MatSnackBar,
-    ) {
+  getCountryByIso(code: string): any {
+    if (code) {
+      return this.countries.find((country: any) => country.code === code);
     }
+  }
 
-    ngOnInit(): void {
-        this.createContactForm();
-        this.listenObservables();
-    }
-
-    /**
-     * @description: Crear o editar un nuevo contacto
-     */
-    public onSave(): void {
-        const data = this.formContacts.getRawValue();
-        if (!data.id) {
-            this.newContact(data);
-        } else {
-            this.editContact(data);
-        }
-    }
-    /**
-     * @description: Cierra formulario
-     */
-    public onClose(): void {
-        this.onShow.emit(false);
-    }
-    /**
-     * @description: Creacion de los datos del formulario de contactos
-     */
-    private createContactForm(): void {
-        this.formContacts = this.fb.group({
-            id: undefined,
-            full_name: ['', [Validators.required]],
-            identification: ['', [Validators.required]],
-            email: ['', [Validators.email]],
-            phone: ['', [Validators.required]],
-            address: ['', [Validators.required]]
-        }
-        );
-    }
-    /**
-     * @description: Crear un nuevo contacto
-     */
-    private newContact(data: any): void {
-        this.subscription$ = this._contactService.postContacts(data).subscribe(() => {
-            this._snackBar.open('Se ha creado el nuevo contacto', 'CERRAR', { duration: 4000 });
-            this.onShow.emit(false);
+  /**
+   * @description: Valida si es edita o guarda un contacto nuevo
+   */
+  public onSave(): void {
+    const data = this.contactForm.getRawValue();
+    if (!data.id) {
+      this.newContact(data);
+    } else {
+      if (!this.listPermission[this.permissionValid.updateContacto]) {
+        this.toastAlert.toasAlertWarn({
+          message:
+            'messageAlert.messagePermissionWarn',
         });
+      } else {
+        this.editContact(data);
+      }
     }
-    /**
-     * @description: Editar contacto
-     */
-    private editContact(data: any): void {
-        this.subscription$ = this._contactService.putContacts(data).subscribe(() => {
-            this._snackBar.open('Contacto actualizado con exito', 'CERRAR', { duration: 4000 });
-            this.onShow.emit(false);
-        }
-        );
+  }
+  /**
+   * @description: Cierra el menu lateral de la derecha
+   */
+  public closeMenu(): void {
+    this.contactService.behaviorSubjectContactGrid.next({
+      opened: false,
+      reload: false,
+    });
+  }
+
+  /**
+   * @description: Elimina el contacto
+   */
+  public deleteContact(id: number): void {
+    if (!this.listPermission[this.permissionValid.deleteContacto]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'messageAlert.messagePermissionWarn',
+      });
+
+      return;
     }
-    /**
-     * @description: Escucha el observable behavior
-     */
-    private listenObservables(): void {
-        this.subscription$ = this._contactService.behaviorSubjectContact$.subscribe(({ type, isEdit, payload }) => {
-            if (isEdit && type == 'EDIT') {
-                this.formContacts.patchValue(payload);
-                this.titleForm = `Editar contacto ${payload.full_name}`;
-            } else if (!isEdit && type == 'NEW') {
-                this.formContacts.reset({
-                });
-                this.titleForm = 'Nuevo contacto';
+    const confirmation = this.confirmationService.open({
+      title: this.translocoService.translate('contacts.messageAlert.deleteContact'),
+      message:
+        this.translocoService.translate('contacts.messageAlert.deleteContactMessage'),
+    });
+    confirmation.afterClosed().subscribe((result) => {
+      if (result === 'confirmed') {
+        this.contactService.deleteContacts(id).subscribe((res) => {
+          if (res.code === 200) {
+            this.contactService.behaviorSubjectContactGrid.next({
+              reload: true,
+              opened: false,
+            });
+            this.toastAlert.toasAlertSuccess({
+              message: 'contacts.messageAlert.deleteSuccess'
+            });
+          } else {
+            this.toastAlert.toasAlertWarn({
+              message: 'contacts.messageAlert.deleteFailure'
+            });
+          }
+        });
+      }
+    });
+  }
+  /**
+   * @description: Destruye el observable
+   */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  /**
+   * @description: Inicializa el formulario de contactos
+   */
+  private createContactForm(): void {
+    this.contactForm = this.fb.group({
+      id: [''],
+      full_name: ['', [Validators.required]],
+      email: ['', [Validators.email, Validators.required]],
+      phone: ['', [Validators.required]],
+      identification: [''],
+      address: [''],
+      indicative: ['+57', [Validators.required]],
+    });
+  }
+  /**
+   * @description: Escucha el observable behavior y busca al contacto
+   */
+  private listenObservables(): void {
+    this.subscription =
+      this.contactService.behaviorSubjectContactForm.subscribe(
+        ({ newContact, id, isEdit }) => {
+          this.editMode = isEdit;
+          if (newContact) {
+            this.contacts = [];
+            if (this.contactForm) {
+              this.contactForm.reset();
+              this.contactForm.controls['indicative'].setValue(
+                '+57'
+              );
             }
-        });
-    }
-    /**
-     * @description: Destruye las subscripciones
-     */
-    ngOnDestroy(): void {
-        this.subscription$.unsubscribe();
-    }
+          }
+          if (id) {
+            this.contactService.getContact(id).subscribe((data) => {
+              console.log('data', data);
+              this.contacts = data.data;
 
+              this.contactForm.patchValue(this.contacts);
+            });
+          }
+        }
+      );
+  }
+  /**
+   * @description: Editar un contacto
+   */
+  private editContact(data: any): void {
+    this.contactForm.disable();
+    const confirmation = this.confirmationService.open({
+      title: this.translocoService.translate('contacts.messageAlert.editContact'),
+      message:
+        this.translocoService.translate('contacts.messageAlert.editContactMessage'),
+      icon: {
+        name: 'heroicons_outline:pencil',
+        color: 'info',
+      },
+    });
+    confirmation.afterClosed().subscribe((result) => {
+      if (result === 'confirmed') {
+        this.contactService.putContacts(data).subscribe((res) => {
+          this.contactForm.enable();
+          if (res.code === 200) {
+            this.contactService.behaviorSubjectContactGrid.next({
+              reload: true,
+              opened: false,
+            });
+            this.toastAlert.toasAlertSuccess({
+              message: 'contacts.messageAlert.editSuccess'
+            });
+          } else {
+            this.toastAlert.toasAlertWarn({
+              message: 'contacts.messageAlert.editFailure'
+            });
+          }
+        });
+      }
+    });
+  }
+  /**
+   * @description: Guarda un nuevo contacto
+   */
+  private newContact(data: any): void {
+    this.contactForm.disable();
+    this.contactService.postContacts(data).subscribe((res) => {
+      this.contactForm.enable();
+      if (res.code === 200) {
+        this.contactService.behaviorSubjectContactGrid.next({
+          reload: true,
+          opened: false,
+        });
+        this.toastAlert.toasAlertSuccess({
+          message: 'contacts.messageAlert.addSuccess'
+        });
+      } else {
+        this.toastAlert.toasAlertWarn({
+          message: 'contacts.messageAlert.addFailure'
+        });
+      }
+    });
+  }
 }

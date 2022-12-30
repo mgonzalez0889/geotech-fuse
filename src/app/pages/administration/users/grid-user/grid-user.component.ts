@@ -1,99 +1,255 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormControl} from "@angular/forms";
-import {Observable, Subject, Subscription} from "rxjs";
-import {UsersService} from "../../../../core/services/users.service";
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {debounceTime, switchMap, takeUntil} from "rxjs/operators";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {ConfirmDeleteComponent} from "../../../../shared/dialogs/confirm-delete/confirm-delete.component";
-import {MatTableDataSource} from "@angular/material/table";
-import {FormUserComponent} from "../form-user/form-user.component";
-import {FuseLoadingService} from "../../../../../@fuse/services/loading";
+import { Subject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { delay, filter, takeUntil, mergeMap } from 'rxjs/operators';
+import { NgxPermissionsObject } from 'ngx-permissions';
+import { AuthService } from 'app/core/auth/auth.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { IOptionTable } from '@interface/index';
+import { UsersService } from '@services/api/users.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-grid-user',
   templateUrl: './grid-user.component.html',
   styleUrls: ['./grid-user.component.scss'],
-  encapsulation  : ViewEncapsulation.None,
-  animations     : fuseAnimations
 })
 export class GridUserComponent implements OnInit, OnDestroy {
-  searchInputControl: FormControl = new FormControl();
-  public users$: Observable<any>;
-  public show: boolean = false;
-  public subscription$: Subscription;
-  public dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
-  public displayedColumns: string[] = ['user_login', 'full_name', 'profile', 'email', 'actions'];
-    // 'full_name', 'profile', 'email'
+  public subTitlePage: string = '';
+  public titleForm: string = '';
+  public opened: boolean = false;
+  public userData: any[] = [];
+  public dataFilter: string = '';
+  public userDataUpdate: any = null;
+  public optionsTable: IOptionTable[] = [
+    {
+      name: 'user_login',
+      text: 'users.tablePage.username',
+      typeField: 'text',
+    },
+    {
+      name: 'full_name',
+      text: 'users.tablePage.fullname',
+      typeField: 'text',
+    },
+    {
+      name: 'profile',
+      text: 'users.tablePage.profile',
+      typeField: 'text',
+    },
+    {
+      name: 'email',
+      text: 'users.tablePage.email',
+      typeField: 'text',
+      classTailwind: 'hover:underline text-primary-500',
+    },
+    {
+      name: 'enable_user',
+      text: 'users.tablePage.state',
+      typeField: 'switch',
+    },
+  ];
+  public displayedColumns: string[] = [
+    ...this.optionsTable.map(({ name }) => name),
+  ];
+  private listPermission: NgxPermissionsObject;
+  private permissionValid: { [key: string]: string } = {
+    addUser: 'administracion:usuarios:create',
+    updateUser: 'administracion:usuarios:update',
+    deleteUser: 'administracion:usuarios:delete',
+  };
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
-      private usersService: UsersService,
-      public dialog: MatDialog,
-      private _fuseLoadingService: FuseLoadingService
+    private usersService: UsersService,
+    private confirmationService: ConfirmationService,
+    private toastAlert: ToastAlertService,
+    private authService: AuthService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
-      this.fetchUsers();
-      this.searchInputControl.valueChanges.subscribe(res => {
-          console.log(res);
+    this.readDataUser();
+    this.listenFormUser();
+    this.authService.permissionList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((permission) => {
+        this.listPermission = permission;
       });
-  }
-  /**
-   * @description: Abre el formulario
-   */
-  public openForm(): void {
-      const dialogRef = this.dialog.open(FormUserComponent, {
-          data: {
-              type: 'NEW',
-              isEdit: false
-          },
-          minWidth: '30%',
-          maxWidth: '10vw'
-      });
-      dialogRef.afterClosed().toPromise();
-      //this.show = true;
-      this.usersService.behaviorSubjectUser$.next({type: 'NEW', isEdit: false});
-  }
-  public closeForm(value): void {
-      this.show = value;
-  }
-  /**
-   * @description: Edita un usuario
-   */
-  public onEdit(id: number): void {
-      this.show = true;
-      this.getUser(id);
-  }
-  public onDelete(id: number): void {
-      const dialog = new MatDialogConfig();
-      dialog.data = id;
-      dialog.width = '30%';
-      dialog.maxWidth = '30%';
 
-      const dialogRef = this.dialog.open(ConfirmDeleteComponent, dialog);
-
-      dialogRef.afterClosed().toPromise().then(() => this.fetchUsers());
-  }
-  /**
-   * @description:  Listado de todos los usuarios
-   */
-  private fetchUsers(): void {
-      this.users$ = this.usersService.getUsers();
-  }
-  /**
-   * @description: Trae un usuario desde el services
-   */
-  private getUser(id: number): void {
-      this.usersService.getUser(id).subscribe(({data}) => {
-          this.usersService.behaviorSubjectUser$.next({type: 'EDIT', id, isEdit: true, payload: data});
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: this.userData.length } });
+        this.subTitlePage = subTitlePage;
       });
   }
-  /**
-   * @description: Destruye los observables
-   */
+
   ngOnDestroy(): void {
-    // this.subscription$.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
+  /**
+   * @description: funcion para abrir formulario de usuario.
+   */
+  public addUserForm(): void {
+    if (!this.listPermission[this.permissionValid.addUser]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'messageAlert.messagePermissionWarn',
+      });
+    } else {
+      this.opened = true;
+      this.titleForm = 'users.formPage.formNameCreate';
+      this.userDataUpdate = null;
+    }
+  }
 
+  /**
+   * @description: Cuando se seleccione cualquier usuario de la tabla se ejecuta esta funcion y se habilita el formulario para modificarlo.
+   */
+  public selectUserTable(dataUser: any): void {
+    this.userDataUpdate = { ...dataUser };
+    this.opened = true;
+    this.titleForm = 'users.formPage.formNameUpdate';
+  }
 
+  /**
+   * @description: resibe evento de la tabla cuando cambie el valor de el switch de estado de usuario.
+   */
+  public changeEnableUser(dataEvent: { state: boolean; data: any }): void {
+    if (!this.listPermission[this.permissionValid.updateUser]) {
+      this.toastAlert.toasAlertWarn({
+        message:
+          'messageAlert.messagePermissionWarn',
+      });
+      return;
+    }
+
+    this.usersService
+      .changeEnableUser(dataEvent.data.id, dataEvent.state)
+      .subscribe((data) => {
+        if (data.code === 400) {
+          this.toastAlert.toasAlertWarn({
+            message:
+              'users.messageAlert.updateStateWarn',
+          });
+        } else {
+          this.toastAlert.toasAlertSuccess({
+            message: 'users.messageAlert.updateStateSuccess',
+          });
+        }
+      });
+  }
+
+  /**
+   * @description: Filtrar datos de la tabla
+   */
+  public filterTable(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataFilter = filterValue.trim().toLowerCase();
+  }
+
+  /**
+   * @description: leemos todos los registros de usuario.
+   */
+  private readDataUser(): void {
+    this.usersService
+      .getUsers()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+        const { subTitlePage } = this.translocoService.translateObject('users', { subTitlePage: { value: data.length } });
+        this.subTitlePage = subTitlePage;
+        this.userData = [...(data || [])];
+      });
+  }
+
+  /**
+   * @description: Eliminamos un usuario.
+   */
+  private deleteUser(userId: number): void {
+    const confirmation = this.confirmationService.open();
+    confirmation
+      .afterClosed()
+      .pipe(
+        filter(result => result === 'confirmed'),
+        mergeMap(() => this.usersService.deleteUser(userId)),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((data) => {
+        this.opened = false;
+        if (data.code === 400) {
+          this.toastAlert.toasAlertWarn({
+            message:
+              'users.messageAlert.deleteWarn',
+          });
+        } else {
+          this.readDataUser();
+          this.toastAlert.toasAlertSuccess({
+            message: 'users.messageAlert.deleteSuccess',
+          });
+        }
+      });
+  }
+
+  /**
+   * @description: escuchamos los eventos del formulario de usuarios.
+   */
+  private listenFormUser(): void {
+    this.usersService.userForm$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ formData, typeAction }) => {
+        if (typeAction === 'add') {
+          this.usersService.postUser(formData).subscribe((data) => {
+            this.opened = false;
+            this.readDataUser();
+            if (data.code === 400) {
+              this.toastAlert.toasAlertWarn({
+                message:
+                  'users.messageAlert.createWarn',
+              });
+            } else {
+              this.toastAlert.toasAlertSuccess({
+                message: 'users.messageAlert.createSuccess',
+              });
+            }
+          });
+        } else if (typeAction === 'edit') {
+          if (!this.listPermission[this.permissionValid.updateUser]) {
+            this.toastAlert.toasAlertWarn({
+              message:
+                'messageAlert.messagePermissionWarn',
+            });
+            return;
+          }
+          this.usersService
+            .putUser(formData)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data) => {
+              this.opened = false;
+              this.readDataUser();
+              if (data.code === 400) {
+                this.toastAlert.toasAlertWarn({
+                  message:
+                    'users.messageAlert.updateWarn',
+                });
+              } else {
+                this.toastAlert.toasAlertSuccess({
+                  message: 'users.messageAlert.updateSuccess',
+                });
+              }
+            });
+        } else if (typeAction === 'delete') {
+          if (!this.listPermission[this.permissionValid.deleteUser]) {
+            this.toastAlert.toasAlertWarn({
+              message:
+                'messageAlert.messagePermissionWarn',
+            });
+          } else {
+            this.deleteUser(formData.id);
+          }
+        }
+      });
+  }
 }

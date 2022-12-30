@@ -1,59 +1,159 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
-    <!-- Main -->
-    <div class="flex-auto p-4 sm:p-4">
-        <div
-            class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
-            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                <div class="text-3xl font-extrabold tracking-tight">Editar eventos</div>
-            </div>
+<div class="flex flex-col w-full pl-0 md:pl-6">
+  <div class="bg-card shadow rounded-2xl min-h-180">
+    <form [formGroup]="eventForm">
+      <div class="px-6 py-3">
+        <div>
+          <span class="text-base font-semibold">{{'events.formPage.formName' | transloco}}</span>
+          <span class="text-lg font-bold"> | {{events['event_name']}}</span>
         </div>
-        <div class="flex-auto mt-4 sm:mt-6">
-            <div class="w-full max-w-screen-xl mx-auto">
-                <!-- form  -->
-                <form [formGroup]="form">
-                    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
-                        <div class="-mx-3 md:flex mb-6">
-                            <mat-form-field class="w-3/4 px-3 fuse-mat-dense">
-                                <mat-label>Nombre</mat-label>
-                                <input matInput type="text" placeholder="Nombre" formControlName="name">
-                            </mat-form-field>
-
-                            <mat-form-field class="w-1/4 px-3 fuse-mat-dense">
-                                <mat-label>Color</mat-label>
-                                <input matInput type="color" formControlName="color">
-                            </mat-form-field>
-                        </div>
-                        <div class="-mx-3 fuse-mat-dense">
-                            <mat-form-field class="w-full px-3 fuse-mat-dense">
-                                <mat-label>Descripción</mat-label>
-                                <textarea matInput placeholder="Descripción" formControlName="description"></textarea>
-                            </mat-form-field>
-                        </div>
-                        <div class="-mx-3 md:flex mb-6">
-                            <mat-slide-toggle formControlName="checkNotificationEmail" class="w-1/2 px-3 fuse-mat-dense"
-                                              id="check">Notificacion por correo
-                            </mat-slide-toggle>
-                        </div>
-
-                        <ng-container class="-mx-3 fuse-mat-dense"
-                                      *ngIf="form.controls.checkNotificationEmail.value">
-                            <ng-multiselect-dropdown class="w-full px-3 fuse-mat-dense"
-                                                     [placeholder]="'Seleccione los contactos'"
-                                                     [settings]="dropdownSettings"
-                                                     [data]="dropdownList"
-                            >
-                            </ng-multiselect-dropdown>
-                        </ng-container>
-
-                        <!-- Buttons -->
-                        <div class="flex items-center justify-between w-full border-t px-8 py-4">
-                            <button class="-ml-4" mat-raised-button [color]="'warn'" (click)="onClose()">Cerrar</button>
-                            <button type="submit" mat-flat-button [color]="'primary'" (click)="editEvent()">Guardar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class=" border-b">
+          <div class="flex flex-col py-3">
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+              <mat-label>Color</mat-label>
+              <input matInput type="color" [formControlName]="'color'" required placeholder="Color">
+            </mat-form-field>
+          </div>
+          <div class="flex flex-col pb-3">
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+              <mat-label>{{'events.formPage.fieldName' | transloco}}</mat-label>
+              <input [formControlName]="'event_name'" required matInput>
+            </mat-form-field>
+          </div>
+          <div class="flex flex-col pb-3">
+            <mat-checkbox [formControlName]="'email'">{{'events.tablePage.mailNoti' | transloco}}</mat-checkbox>
+          </div>
+          <div class="flex flex-col pb-3">
+            <mat-checkbox [formControlName]="'page'">{{'events.tablePage.pageNoti' | transloco}}</mat-checkbox>
+          </div>
+          <div class="flex flex-col pb-3">
+            <mat-checkbox [formControlName]="'sms'">{{'events.tablePage.smsNoti' | transloco}}</mat-checkbox>
+          </div>
+          <div class="flex flex-col pb-3">
+            <mat-checkbox [formControlName]="'sound'">{{'events.tablePage.soundNoti' | transloco}}</mat-checkbox>
+          </div>
+          <div class="flex flex-col  pb-5">
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+              <mat-label>{{'events.formPage.fieldDescription' | transloco}}</mat-label>
+              <textarea [formControlName]="'description'"
+                [placeholder]="'events.formPage.fieldDescription' | transloco" required matInput
+                matTextareaAutosize></textarea>
+            </mat-form-field>
+          </div>
         </div>
-    </div>
+        <div class="px-3 pt-5 flex justify-between">
+          <div class="flex flex-col">
+            <h2 class="text-2xl font-semibold tracking-tight leading-6">{{'events.formPage.contact.title' | transloco}}
+            </h2>
+            <div class="text-base font-semibold text-secondary">
+              <ng-container *ngIf="contactsCount > 0">
+                {{contactsCount}}
+              </ng-container>
+              {{contactsCount | i18nPlural: {
+              '=0' : 'events.formPage.contact.subtitlepage.contact0',
+              '=1' : 'events.formPage.contact.subtitlepage.contact1',
+              'other': 'events.formPage.contact.subtitlepage.contacts'
+              } | transloco }}
+            </div>
+          </div>
+          <div class="flex border-2 rounded-full p-2 ">
+            <input #input matInput [placeholder]="'search' | transloco" (keyup)="filterTable($event)">
+            <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+          </div>
+        </div>
+        <div [hidden]="contactsCount > 0" class="pt-3 w-full h-full items-center justify-center">
+          <div class="flex items-center justify-center">
+            <div class="text-base font-semibold text-secondary">{{'table.warningDescription' | transloco}}
+            </div>
+          </div>
+        </div>
+        <div [hidden]="contactsCount <= 0">
+          <div class="flex flex-col flex-auto sm:mb-3 overflow-y-auto">
+            <!-- Tabla-->
+            <table mat-table [dataSource]="dataTableContact" matSort class="w-full">
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox class="pr-6 whitespace-nowrap" (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+              <!-- full_name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'events.formPage.contact.fullName' | transloco}} </th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="pr-6 whitespace-nowrap">
+                    {{row.full_name}} </span>
+                </td>
+              </ng-container>
+              <!-- identification Column -->
+              <ng-container matColumnDef="identification">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'events.formPage.contact.identification' | transloco}} </th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="pr-6 whitespace-nowrap">
+                    {{row.identification}} </span>
+                </td>
+              </ng-container>
+              <!-- address Column -->
+              <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'events.formPage.contact.address' | transloco}} </th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="pr-6 whitespace-nowrap">
+                    {{row.address}} </span>
+                </td>
+              </ng-container>
+              <!-- email Column -->
+              <ng-component matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'events.formPage.contact.emailAddress' | transloco}} </th>
+                <td mat-cell *matCellDef="let row">
+                  <a class="hover:underline text-primary-500 pr-6 whitespace-nowrap" [href]="'mailto:' + row.email"
+                    target="_blank">
+                    {{row.email}}
+                  </a>
+                </td>
+              </ng-component>
+              <!-- phone Column -->
+              <ng-container matColumnDef="cellPhone">
+                <th mat-header-cell *matHeaderCellDef>{{'events.formPage.contact.cellPhone' | transloco}}</th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="pr-6 whitespace-nowrap">
+                    {{row.phone}} </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="columnsContact"></tr>
+              <tr mat-row (click)="selection.toggle(row)" *matRowDef="let row; columns: columnsContact;">
+              </tr>
+              <!-- Fila que se muestra cuando no hay datos coincidentes.. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="6">{{'table.notFountData' | transloco}}
+                  "{{input?.value}}"
+                </td>
+              </tr>
+            </table>
+            <mat-paginator class="bg-gray-200" [pageSizeOptions]="[5,10]" aria-label="Select page of users">
+            </mat-paginator>
+          </div>
+        </div>
+        <div class="flex py-3">
+          <button class="ml-auto" mat-button  (click)="onCancel()">
+            {{'buttons.buttonCancel' | transloco}}
+          </button>
+          <button class="ml-2" mat-flat-button [color]="'accent'" [disabled]="eventForm.invalid"
+            [disabled]="eventForm.disabled" (click)="saveEvent()">
+            <span *ngIf="!eventForm.disabled">
+                {{'buttons.buttonSave' | transloco}}
+            </span>
+            <mat-progress-spinner *ngIf="eventForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+            </mat-progress-spinner>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

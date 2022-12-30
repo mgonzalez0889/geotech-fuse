@@ -1,0 +1,97 @@
+{    
+ "tittlepage" : "Monitoring Center",
+ "notAttended" : "Not Attended",
+ "inRecovery" : "In Recovery",
+ "onTrack" : "On Track",
+ "silenced" : "Silenced",
+ "alarms" : "Alarms",
+ "attendAlarm" : "Attend alarm",
+ "table" : {
+  "state" : "Status",
+  "plate" : "Plate",
+  "internalCode" : "Internal code",
+  "noCode" : "No code",
+  "quantity" : "Quantity",
+  "address" : "Address" ,
+  "seeOnTheMap" : "See on the map",
+  "date" : "Date",
+  "matNoDataRow" : "There is no data matching the filter : ",
+  "underManagement" : "In management",
+  "silenced" : "Silenced",
+  "all" : "All"
+  },
+  "formPage" : {
+    "followUp" : "Follow up",
+    "customer" : "Customer",
+    "address" : "Address",
+    "alarm" : "Alarm",
+    "initialDate" : "Initial date",
+    "finalDate" : "Final date",
+    "dateOfGeneration" : "Date of generation",
+    "attentionReport" : "Attention report",
+    "table" : {
+      "dateOfEntry" : "date of entry",
+      "startDateOfAttention" : "Start date of attention",
+      "reactionTime" : "Reaction time",
+      "dateOfAttention" : "Attention date",
+      "timeOfAttention" : "Attention time",
+      "user" : "User",
+      "attention" : "Attention"
+    }
+  },
+  "tableIsAttended" : {
+    "alarmAttention" : "Alarm attention",
+    "attentionStatus" : "Attention status",
+    "addDetails" : "Add details",
+    "generateAlarmAgain" : "Generate alarm again",
+    "buttonOk" : "Ok",
+    "causeOfAlarm" : "Cause of alarm",
+    "events" : "Events",
+    "buttonAttend" : "Attend"
+  },
+  "subtitlepage" : {
+    "contact0" : "No contact",
+    "contact1" : "Contact",
+    "contacts" : "Contacts"
+  },
+  "formPageContacts" : {
+    "contacts" : "Contacts",
+    "newContact" : "New contact",
+    "name" : "Name",
+    "identification" : "Identification",
+    "cellPhone" : "Cell phone",
+    "typeOfContact" : "Type of contact",
+    "email" : "Email",
+    "observations" : "Observations"
+  },
+  "modalPageContacts" : {
+    "fullName" : "Full name",
+    "typeOfContact" : "Contact type",
+    "email" : "Email",
+    "cellPhone" : "Cell phone",
+    "identification" : "Identification",
+    "address" : "Address",
+    "description" : "Description"
+  },
+  "stateAlarms" : {
+    "notAttended" : "Not attended",
+    "Silenced" : "Silenced",
+    "inFollowUp" : "On track",
+    "inRecovery" : "In recovery"
+  },
+  "alertMessage" : {
+    "titleMessageAlert" : "Alarm attention",
+    "messageAlert" : "Alarm successfully attended!",
+    "messageAlertError" : "Alarm could not be attended, please try again",
+    "titleMessageAlertDelete" : "Delete contact", 
+    "messageAlertDelete" : "Are you sure you want to delete this contact, this action cannot be undone!",
+    "messageAlertDeleteSuccess" : "Contact deleted successfully!",
+    "messageAlertDeleteError" : "Contact could not be deleted, please try again",
+    "titleMessageAlertContact" : "Create contact",
+    "messageAlertContactSuccess" : "Contact created successfully!",
+    "messageAlertContactError" : "The contact could not be created, please try again",
+    "titleMessageAlertContactEdit" : "Edit contact",
+    "titleMessageAlertContactEditSuccess" : "Contact successfully edited!",
+    "titleMessageAlertContactEditError" : "The contact could not be updated, please try again"
+  }
+}

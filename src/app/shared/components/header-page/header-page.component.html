@@ -1,0 +1,16 @@
+<div class="relative flex flex-wrap gap-4 justify-between p-4 bg-card rounded-2xl shadow overflow-hidden">
+  <div class="flex flex-col">
+    <h2 class="text-3xl font-semibold tracking-tight leading-8">{{this.title}}</h2>
+    <div class="ml-0.5 font-medium text-secondary">
+      {{this.subTitle}}
+    </div>
+  </div>
+
+  <div class="flex gap-2 flex-wrap">
+    <div class="text-center px-4 py-1 rounded-md" [ngClass]="stateHeader.styleTailwind"
+      *ngFor="let stateHeader of this.statesHeader">
+      <div class="text-lg font-bold">{{stateHeader.numberState}}</div>
+      <p class="text-sm">{{stateHeader.text | transloco}}</p>
+    </div>
+  </div>
+</div>

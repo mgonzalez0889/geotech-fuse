@@ -15,7 +15,6 @@ export class FuseConfigService
      */
     constructor(@Inject(FUSE_APP_CONFIG) config: any)
     {
-        console.log(config);
         // Private
         this._config = new BehaviorSubject(config);
     }

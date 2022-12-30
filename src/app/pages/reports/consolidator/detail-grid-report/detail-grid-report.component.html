@@ -1,0 +1,98 @@
+<div class="detailConsolidator">
+    <div class="title">
+        <div class="plate">
+            <strong>{{ detailData.plate }}</strong>
+        </div>
+        <button class="close" (click)="this.onClose()">
+            <img style="height: 20px; width: 20px" src="./assets/icons/iconMap/close-blue.svg" />
+        </button>
+    </div>
+
+    <div class="items">
+        <div class="item">
+            <strong>{{'consolidator.tablePage.dateInit' | transloco}}: </strong>
+            <span>{{ detailData.fecha_inicial | date: "short" }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.tablePage.addressInitial' | transloco}}: </strong>
+            <span>{{ detailData.direccion_inicial }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.tablePage.dateEnd' | transloco}}: </strong>
+            <span>{{ detailData.fecha_final | date: "short" }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.tablePage.addressEnd' | transloco}}: </strong>
+            <span>{{ detailData.direccion_final }}</span>
+        </div>
+    </div>
+
+    <div class="items">
+        <div class="item">
+            <strong>{{'consolidator.tablePage.cantTravel' | transloco}}: </strong>
+            <span>{{ detailData.viajes }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.tablePage.timeTravel' | transloco}}: </strong>
+            <span>{{ detailData.tiempo }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.tablePage.cantStop' | transloco}}: </strong>
+            <span>{{ detailData.paradas }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.tablePage.timeStop' | transloco}}: </strong>
+            <span>{{ detailData.paradas_tiempo }}</span>
+        </div>
+    </div>
+
+    <div class="items">
+        <div class="item">
+            <strong>{{'consolidator.datail.odometer' | transloco}}: </strong>
+            <span>{{ detailData.odometer | number }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.datail.horometro' | transloco}}: </strong>
+            <span>{{ detailData.horometer }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.datail.ralenti' | transloco}}: </strong>
+            <span>{{ detailData.ralenti }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.datail.fuel' | transloco}}: </strong>
+            <span>{{ detailData.fuel_consumed }}</span>
+        </div>
+    </div>
+
+    <div class="items">
+        <div class="item">
+            <strong>{{'consolidator.datail.averageOdometer' | transloco}}: </strong>
+            <span>{{ detailData.avg_odometer | number }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.datail.averageHorometro' | transloco}}: </strong>
+            <span>{{ detailData.avg_horometer | number }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.datail.averageRalenti' | transloco}}: </strong>
+            <span>{{ detailData.avg_ralenti }}</span>
+        </div>
+
+        <div class="item">
+            <strong>{{'consolidator.datail.averageFuel' | transloco}}: </strong>
+            <span>{{ detailData.avg_fuel_consumed }}</span>
+        </div>
+    </div>
+</div>

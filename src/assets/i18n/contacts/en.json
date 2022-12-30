@@ -1,0 +1,38 @@
+{
+  "tittlepage": "Contacts",
+  "subtitlepage": {
+    "contact0": "No contacts",
+    "contact1": "Contact",
+    "contacts": "Contacts"
+  },
+  "tablePage": {
+    "name": "name",
+    "identification": "Identification",
+    "address": "Address",
+    "emailAddress": "Email",
+    "cellPhone": "Cell phone",
+    "emptyContactList": "Sorry no data found"
+  },
+  "matNoDataRow": "No data matching the search : ",
+  "formPage": {
+    "edit": "Edit",
+    "formName": "New contact",
+    "fullName": "Full name",
+    "identification": "Identification",
+    "emailAddress": "Email",
+    "cellPhone": "Cell phone",
+    "address": "Address"
+  },
+  "messageAlert": {
+    "addSuccess": "Contact successfully created!",
+    "addFailure": "The contact could not be created, please try again.",
+    "editSuccess": "Contact successfully edited!",
+    "editFailure": "The contact could not be updated, please try again.",
+    "editContact": "Edit contact",
+    "editContactMessage": "Are you sure you want to edit this contact? This action cannot be undone!",
+    "deleteSuccess": "Contact successfully eliminated!",
+    "deleteFailure": "The contact could not be deleted, please try again.",
+    "deleteContact": "Remove contact",
+    "deleteContactMessage": "Are you sure you want to delete this contact? This action cannot be undone!"
+  }
+}

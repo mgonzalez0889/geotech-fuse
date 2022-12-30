@@ -1,0 +1,39 @@
+{
+  "titlePage": "Gestion de perfiles",
+  "subTitlePage": "{{ value }} perfiles",
+  "searchPage": "Buscar perfil",
+  "buttonsPage": {
+    "buttonAdd": "Agregar perfil"
+  },
+  "tablePage": {
+    "name": "Nombre",
+    "description": "Descripcion"
+  },
+  "formPage": {
+    "formNameCreate": "Crear Perfil",
+    "formNameUpdate": "Editar Perfil",
+    "fieldName": "Nombre",
+    "fieldDescription": "Descripcion",
+    "fieldtypeVehiculo": "Buscar por:",
+    "optionVehiculo": "Vehiculos",
+    "optionFleets": "Flotas",
+    "fieldEvents": "Seleccione eventos",
+    "fieldFleets": "Seleccione flotas",
+    "availableModules": "Modulos Disponibles",
+    "assignedModules": "Modulos asignados",
+    "optionsPermission": {
+      "create": "Crear",
+      "update": "Modificar",
+      "delete": "Eliminar"
+    },
+    "errorForm": {}
+  },
+  "messageAlert": {
+    "deleteSuccess": "Perfil eliminado con exito.",
+    "deleteFailure": "No se puedo eliminar el perfil, intentelo de nuevo.",
+    "addSuccess": "Perfil creado con exito.",
+    "addFailure": "No se puedo crear el perfil, intentelo de nuevo.",
+    "editSuccess": "Perfil modificado con exito.",
+    "editFailure": "No se puedo modificar el perfil, intentelo de nuevo."
+  }
+}

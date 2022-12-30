@@ -1,0 +1,44 @@
+{
+  "titlePage": "Commands",
+  "subtitlePage": "Commands sent",
+  "pendingStatus": "Pending",
+  "stateSent": "Sent",
+  "statusExpired": "Expired",
+  "commandsSent": "Sent commands",
+  "tablePage": {
+    "plate": "Plate",
+    "dateOfShipment": "Date of shipment",
+    "commandType": "Command type",
+    "user": "User",
+    "state": "State",
+    "matNoDataRow": "There is no data matching the filter : ",
+    "resendCommand": "Resend command"
+  },
+  "formPage": {
+    "titlePage": "Mobile selection",
+    "checkboxSelectAll": "Select all",
+    "commandSelection": "Command selection",
+    "sendCommandButton": "Send command",
+    "fieldVehiculos": "Select vehicles",
+    "fieldFleets": "Select Fleets"
+  },
+  "tabPage": {
+    "fleet": "Fleet",
+    "vehicle": "Vehicle"
+  },
+  "commandStatus": {
+    "commandExpired": "Expired",
+    "commandcConfirmed": "Confirmed",
+    "commandPending": "Pending"
+  },
+  "commandAlert": {
+    "titleAlert": "Send command",
+    "messageAlert": "Are you sure you want to send this command, this action cannot be undone!",
+    "buttonConfirm": "Send",
+    "successCommand": "Command sent successfully!",
+    "buttonAccept": "Accept",
+    "alertMessageError": "Command could not be sent, please try again!",
+    "alertMessageSelectionError": "Please select a vehicle or a fleet",
+    "buttonClosed": "Close"
+  }
+}

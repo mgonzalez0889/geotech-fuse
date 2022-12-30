@@ -1,207 +1,156 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
-import { MarkerClusterGroup } from 'leaflet';
-import * as L from 'leaflet';
-import { MobileService } from 'app/core/services/mobile.service';
-import { FleetsService } from 'app/core/services/fleets.service';
-import 'leaflet.markercluster';
-import 'leaflet-rotatedmarker';
-import moment from 'moment';
+import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, OnInit } from '@angular/core';
+import { MobileService } from '@services/api/mobile.service';
+import { MapToolsService } from '@services/maps/map-tools.service';
+import { SocketIoClientService } from '@services/socket/socket-io-client.service';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+
+type OptionsMap = {
+  icon: string;
+  text: string;
+  actionClick: (data: any) => void;
+};
 
 @Component({
-    selector: 'app-map',
-    templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss'],
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit, AfterViewInit {
-    public markerClusterGroup: L.MarkerClusterGroup;
-    public map: L.Map;
-    public subscription: Subscription;
-    public markers: any = {};
-    constructor(
-        private mobilesService: MobileService,
-        private fleetService: FleetsService
-    ) {}
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
+  public selectPanel: 'history' | 'details' | 'commands' | 'none';
+  public selectOption: string = '';
 
-    ngOnInit(): void {
-        const time = timer(2000);
-        time.subscribe((t) => {
-            this.getMobiles();
+  /**
+   * @description: array de opciones de geotools
+   */
+  public optionsMap: OptionsMap[] = [
+    {
+      icon: 'route-map',
+      text: 'map.panelGeotools.routeTitle',
+      actionClick: (): void => {
+        this.selectOption = 'route-map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.routeTitle',
+          typePanel: 'routes',
         });
-    }
-
-    /**
-     * @description: Obtengo las flotas y vehiculosdel cliente
-     */
-    private getMobiles(): void {
-        this.subscription = this.mobilesService
-            .getMobiles()
-            .subscribe((data) => {
-                this.setmarker(data.data);
-            });
-        this.subscription = this.fleetService.getFleets().subscribe((data) => {
-            console.log(data, ' estos son las flotas');
+      },
+    },
+    {
+      icon: 'zone-map',
+      text: 'map.panelGeotools.zoneTitle',
+      actionClick: (): void => {
+        this.selectOption = 'zone-map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.zoneTitle',
+          typePanel: 'zones',
         });
-    }
-    /**
-     * @description: Genera los marcadores de los moviles en el mapa
-     */
-    private setmarker(mobiles: any): void {
-        const markerCluster = new MarkerClusterGroup();
-        const infoWindows = `<table>
-        <tr>
-            <th rowspan="2">
-                <img src="./assets/icons/iconMap/geobolt_close.svg">
-            </th>
-            <th>GB001</th>
-            <td rowspan="2">
-                <img src="./assets/icons/iconMap/geobolt_close.svg">
-
-            </td>
-            <td rowspan="2">
-                <img src="./assets/icons/iconMap/geobolt_close.svg">
-
-            </td>
-            <td rowspan="2">
-                <img src="./assets/icons/iconMap/geobolt_close.svg">
-
-            </td>
-            <td rowspan="2">
-                <img src="./assets/icons/iconMap/geobolt_close.svg">
-            </td>
-        </tr>
-        <tr>
-            <td>4444</td>
-        </tr>
-        <tr>
-            <th colspan="3"> ultimo reporte</th>
-            <th colspan="3">Velocidad</td>
-        </tr>
-        <tr>
-            <td colspan="3"> hace 40 min</td>
-            <td colspan="3">45 Km/H</td>
-        </tr>
-        <tr>
-            <th colspan="6">Ultima posicion</th>
-        </tr>
-        <tr>
-            <td colspan="6">Cra 55 # 100 - 51 Barranquilla, Atlantico</td>
-        </tr>
-        <tr>
-            <th colspan="6">Frencuencia actual</th>
-        </tr>
-        <tr>
-            <td colspan="6"><md-button class="md-raised btn-w-md md-primary" type="submit">{{ 'GENERAL.SAVE' | translate}}
-            </md-button></td>
-        </tr>
-
-    </table>`;
-    const popup = L.popup();
-        mobiles.forEach((value: any, index: string | number) => {
-            const data = mobiles[index];
-            this.markers[data.id] = new L.Marker([data.x, data.y], {
-                icon: this.setIcon(data),
-                rotationAngle: this.rotationIcon(data),
-            })
-                .bindTooltip(data.plate, {
-                    permanent: true,
-                    direction: 'bottom',
-                    offset: L.point({ x: 2, y: 10 }),
-                })
-                .addTo(markerCluster);
-            this.markers[data.id].bindPopup(infoWindows).openPopup();
+      },
+    },
+    {
+      text: 'map.panelGeotools.pointControlTitle',
+      icon: 'point-map',
+      actionClick: (): void => {
+        this.selectOption = 'point-map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.pointControlTitle',
+          typePanel: 'punts',
         });
-        markerCluster.addTo(this.map);
-    }
-    /**
-     * @description: Asigna los iconos para el marcador deacuerdo al estado
-     */
-    private setIcon(data: any): any {
-        const diffDays = moment(new Date()).diff(
-            moment(data.date_entry),
-            'days'
-        );
-        let myIcon: L.Icon<L.IconOptions>;
-        if (diffDays >= 1 || isNaN(diffDays)) {
-            return (myIcon = L.icon({
-                iconUrl: '../assets/icons/iconMap/no_report.svg',
-                iconSize: [25, 25],
-                iconAnchor: [12.5, 12.5],
-            }));
-        } else {
-            if (data.engine === 0) {
-                return (myIcon = L.icon({
-                    iconUrl: '../assets/icons/iconMap/engine_shutdown.svg',
-                    iconSize: [25, 25],
-                    iconAnchor: [12.5, 12.5],
-                }));
-            } else {
-                if (data.speed === 0) {
-                    return (myIcon = L.icon({
-                        iconUrl: '../assets/icons/iconMap/engine_ignition.svg',
-                        iconSize: [25, 25],
-                        iconAnchor: [12.5, 12.5],
-                    }));
-                } else {
-                    return (myIcon = L.icon({
-                        iconUrl: '../assets/icons/iconMap/arrow.svg',
-                        iconSize: [36, 36],
-                        iconAnchor: [18, 18],
-                    }));
-                }
-            }
-        }
-    }
-    /**
-     * @description: Asigna la rotacion de los iconos
-     */
-    private rotationIcon(data: any): any {
-        const diffDays = moment(new Date()).diff(
-            moment(data.date_entry),
-            'days'
-        );
-        let rotaIcon: any;
-        if (diffDays >= 1 || isNaN(diffDays)) {
-            return (rotaIcon = null);
-        } else {
-            return (rotaIcon = data.orientation);
-        }
-    }
-    /**
-     * @description: Muestra la capa de los mapas
-     */
-
-    // eslint-disable-next-line @typescript-eslint/member-ordering
-    ngAfterViewInit(): void {
-        const time = timer(1000);
-        time.subscribe((t) => {
-            const googleMaps = L.tileLayer(
-                'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
-                {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                }
-            );
-            const googleHybrid = L.tileLayer(
-                'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-                {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                }
-            );
-            this.map = L.map('map', {
-                center: [4.658383846282959, -74.09394073486328],
-                zoom: 10,
-                layers: [googleMaps],
-            });
-
-            const baseLayers = {
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                'Google Maps': googleMaps,
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                'Google Hibrido': googleHybrid,
-            };
-            L.control.layers(baseLayers).addTo(this.map);
+      },
+    },
+    {
+      text: 'map.panelGeotools.mapaTitle',
+      icon: 'map',
+      actionClick: (): void => {
+        this.selectOption = 'map';
+        this.mapService.selectPanelGeoTools$.next({
+          titlePanel: 'map.panelGeotools.mapaTitle',
+          typePanel: 'owner_maps',
         });
-    }
+      },
+    },
+  ];
+
+  private mobiles: any[] = [];
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(
+    public mapService: MapToolsService,
+    private socketIoService: SocketIoClientService,
+    private mobilesService: MobileService
+  ) { }
+
+  ngOnInit(): void {
+    this.listenChanelsSocket();
+    this.mapService.selectPanelMap$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ panel }) => {
+        this.selectPanel = panel;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.mobilesService.readyMobiles$.next([]);
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * @description: se inicializa el mapa y se leen los vehiculos
+   */
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.mapService.initMap({
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+          position: 'topright',
+        },
+        center: [11.004313, -74.808137],
+        zoom: 8,
+        attributionControl: false,
+        zoomControl: true,
+      });
+    }, 100);
+
+    this.mobilesService.mobiles$
+      .pipe(
+        filter(data => !!data.length),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((data) => {
+        this.mobiles = [...(data || [])];
+        this.mapService.clearMap();
+        this.mapService.setMarkers(data, true);
+      });
+  }
+
+  /**
+   * @description: Filtra por tipo de servicio o dispositivo
+   */
+  public changeViewCluster(checked: boolean): void {
+    this.mapService.verCluster = checked;
+    this.mapService.clearMap();
+    this.mapService.setMarkers(this.mobiles, true);
+  }
+
+  /**
+   * @description: escuchamos los canales de socket, la data para mover los vehiculos y envios de comandos
+   */
+  private listenChanelsSocket(): void {
+    this.socketIoService.sendMessage('authorization');
+    this.socketIoService
+      .listenin('new_position')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: any) => {
+        console.log('new_position',data);
+        this.mapService.mobileSocket$.next(data);
+        this.mapService.moveMarker(data);
+      });
+
+    this.socketIoService
+      .listenin('new_command')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: any) => {
+      });
+  }
 }

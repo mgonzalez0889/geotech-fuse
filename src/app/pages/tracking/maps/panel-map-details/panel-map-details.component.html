@@ -1,0 +1,106 @@
+<div class="h-128 w-80 bg-card shadow-xl rounded-lg py-2 px-3 flex flex-col gap-3">
+
+  <div class="flex items-center justify-between border-b-2">
+    <h2 class="text-xl font-semibold tracking-tight leading-6">
+      Detalles
+    </h2>
+    <button mat-icon-button matTooltip="Cerrar" (click)="mapService.selectPanelMap$.next({panel:'none',data:null})">
+      <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
+    </button>
+  </div>
+
+
+
+
+
+</div>
+<!-- 
+<div class="menu-detail">
+  <div class="detail-tabs">
+    <div class="title">
+      Detalles
+    </div>
+    <div class="close" (click)="mapFuncionalitieService.showDetailMobile = false">
+      <img style="height: 20px; width: 20px;" src="./assets/icons/iconMap/close-blue.svg">
+    </div>
+  </div>
+
+  <div class="info-movile">
+    <div class="item">
+      <span class="plate">{{this.mobileRequestService.detailMobile.plate}}</span>
+    </div>
+
+    <div class="item">
+      <label>Imei: <span>{{this.mobileRequestService.detailMobile.imei}}</span></label>
+      <label>Modelo: <span>{{this.mobileRequestService.detailMobile.mobile_model}}</span></label>
+    </div>
+
+    <div class="item-times">
+      <div
+        *ngIf="this.mobileRequestService.detailMobile.class_mobile_id === 1 || this.mobileRequestService.detailMobile.class_mobile_id === 2 || this.mobileRequestService.detailMobile.class_mobile_id === 3">
+        <div class="time">
+          <span><img style="height: 23px; width: 28px;"
+              src="./assets/icons/iconMap/status_close_contrast.svg">Cerrado</span>
+          <label>00:00:00</label>
+        </div>
+
+        <div class="time">
+          <span><img style="height: 23px; width: 28px;"
+              src="./assets/icons/iconMap/status_open_contrast.svg">Abierto</span>
+          <label>00:00:00</label>
+        </div>
+      </div>
+
+      <div *ngIf="this.mobileRequestService.detailMobile.class_mobile_id === 4">
+        <div class="time" *ngIf="this.mobileRequestService.status_device === 'OF'">
+          <span><img style="height: 23px; width: 28px;"
+              src="./assets/icons/iconMap/status_close_contrast.svg">Cerrado</span>
+          <label>{{this.mobileRequestService.time}}</label>
+        </div>
+
+        <div class="time" *ngIf="this.mobileRequestService.status_device === 'ON'">
+          <span><img style="height: 23px; width: 28px;"
+              src="./assets/icons/iconMap/status_open_contrast.svg">Abierto</span>
+          <label>{{this.mobileRequestService.time}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedState === 0">
+    <div class="detail">
+      <div class="title">
+        Ultimos eventos
+      </div>
+
+      <div class="cards">
+        <div class="card" *ngFor="let event of this.mobileRequestService.lastEvents">
+          <div class="card-icon">
+            <mat-checkbox (change)="onChange($event, event)" [(ngModel)]="event.selected"></mat-checkbox>
+          </div>
+
+          <div class="card-description">
+            <div class="name-event">
+              <b>Evento:</b> {{event.event_name}}
+            </div>
+
+            <div class="date-event">
+              <b>Fecha de transmisión:</b> {{convertDateHour(event.date_entry)}}
+            </div>
+
+            <div class="address-event">
+              <a class="pr-6 whitespace-nowrap" [matTooltip]="'Ver en el  mapa'"
+                href="https://maps.google.com/?q={{event['x']}},{{event['y']}}" target="_blank">
+                <b>Dirección:</b> {{event.address}} <mat-icon class="icon-size-4">open_in_new</mat-icon>
+              </a>
+            </div>
+
+            <div class="speed-event">
+              <b>Velocidad:</b> {{event.speed}} km/h
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

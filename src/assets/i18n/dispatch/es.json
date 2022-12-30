@@ -1,0 +1,59 @@
+{
+  "titlePage": "Despachos",
+  "dispatch0": "Sin despachos",
+  "dispatch1": "Despacho",
+  "dispatchOther": "Despachos",
+  "preDispatch": "Pre despacho",
+  "finishedDispatch": "Finalizado",
+  "buttonsPage": {
+    "buttonAdd": "Nuevo despacho"
+  },
+  "tablePage": {
+    "num": "No.",
+    "spreadsheet": "Planilla",
+    "stateDispath": "Estado del despacho",
+    "dateCreate": "Fecha de creacion",
+    "dateInitDispatch": "Fecha de inicio de despacho",
+    "dateEndDispatch": "Fecha de finalizacion del despacho",
+    "vehicle": "Vehiculo",
+    "device": "Dispositivo",
+    "container": "Contenedor",
+    "securitySeal": "Sello de seguridad",
+    "origin": "Origen",
+    "destination": "Destino",
+    "notFountData": "No hay datos que coincidan con la busqueda:"
+  },
+  "formPage": {
+    "formNameCreate": "Nuevo despacho",
+    "fieldSpreadsheet": "Planilla",
+    "fieldDeclaration": "Numero de declaracion",
+    "fieldClient": "Nombre de cliente",
+    "fieldState": "Estado",
+    "fieldOrigin": "Origen",
+    "fieldDestination": "Destino",
+    "fieldPlate": "Placa",
+    "fieldDriver": "Conductor",
+    "fliedDevice": "Dispositivo",
+    "fieldSecuritySeal": "Sello de seguridad",
+    "fieldContainerNumber": "Numero de contenedor",
+    "startDispatch": "Iniciar despacho",
+    "finishDespatch": "Finalizar despacho",
+    "initDispatch": "Iniciar / finalizar de forma automatica",
+    "fieldRemarks": "Observaciones",
+    "errorForm": {}
+  },
+  "commandAlert" : {
+    "commandAlertTitle" : "Editar despacho",
+    "commandAlertMessageError" : "El despacho no se pudo actualizar, favor intente nuevamente.",
+    "commandAlertMessageErrorUpdate" : "El despacho no se pudo finalizar, favor intente nuevamente",
+    "finalizeDispatchTitle" : "Finalizar despacho",
+    "finalizeDispatchMessage" : "¿Está seguro de que desea finalizar este despacho? ¡Esta acción no se puede deshacer!",
+    "finalizeDispatchMessageSuccess" : "Despacho finalizado con exito!",
+    "finalizeDispatchMessageEdit" : "¿Está seguro de que desea editar este despacho? ¡Esta acción no se puede deshacer!",
+    "modifyDispatchMessageSuccess" : "Despacho modificado con exito",
+    "modifyDispatchMessageError" : "El despacho no se pudo modificar, favor intente nuevamente",
+    "successfullyCreatedFirm" : "Despacho creado con exito.",
+    "errorMessageCreatedFirm" : "El despacho no se pudo crear, favor intente nuevamente"
+    
+  }
+}

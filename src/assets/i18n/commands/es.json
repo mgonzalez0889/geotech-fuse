@@ -1,0 +1,44 @@
+{
+  "titlePage": "Comandos",
+  "subtitlePage": "Comandos enviados",
+  "pendingStatus": "Pendientes",
+  "stateSent": "Enviados",
+  "statusExpired": "Expirados",
+  "commandsSent": "Comandos enviados",
+  "tablePage": {
+    "plate": "Placa",
+    "dateOfShipment": "Fecha del envio",
+    "commandType": "Tipo de comando",
+    "user": "Usuario",
+    "state": "Estado",
+    "matNoDataRow": "No hay datos que coincidan con el filtro : ",
+    "resendCommand": "Reenviar comando"
+  },
+  "formPage": {
+    "titlePage": "Selección de moviles",
+    "checkboxSelectAll": "Seleccionar todo",
+    "commandSelection": "Selección de comandos",
+    "sendCommandButton": "Enviar comando",
+    "fieldVehiculos": "Seleccione vehiculos",
+    "fieldFleets": "Seleccione flotas"
+  },
+  "tabPage": {
+    "fleet": "Flota",
+    "vehicle": "Vehiculo"
+  },
+  "commandStatus": {
+    "commandExpired": "Expirado",
+    "commandcConfirmed": "Confirmado",
+    "commandPending": "Pendiente"
+  },
+  "commandAlert": {
+    "titleAlert": "Enviar comando",
+    "messageAlert": "¿Está seguro de que desea enviar este comando? ¡Esta acción no se puede deshacer!",
+    "buttonConfirm": "Enviar",
+    "successCommand": "Comando enviado con exito!",
+    "buttonAccept": "Aceptar",
+    "alertMessageError": "El comando no se pudo enviar, favor intente nuevamente!",
+    "alertMessageSelectionError": "Favor seleccione un Vehículo o una flota.",
+    "buttonClosed": "Cerrar"
+  }
+}

@@ -1,0 +1,45 @@
+<div class="flex flex-col flex-auto w-full">
+  <div class="flex flex-wrap w-full mx-auto p-6">
+    <!-- Cabecera de la vista -->
+    <div class="w-full">
+      <app-header-page [title]="'mobile.titlePage' | transloco" [subTitle]="numberMovil +' ' + ( numberMovil | i18nPlural: {
+        '=0' : 'mobile.subTitlePage.mobil0',
+        '=1' : 'mobile.subTitlePage.mobil1',
+        'other': 'mobile.subTitlePage.mobils'
+        } | transloco )">
+
+      </app-header-page>
+
+    </div>
+
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer [(opened)]="opened" mode="side" position="end"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <ng-container *ngIf="opened">
+              <app-form-mobiles [dataMobile]="this.mobileSelect"
+                (closeForm)="this.closeForm($event)"></app-form-mobiles>
+            </ng-container>
+          </mat-drawer>
+          <mat-drawer-content class="flex flex-col overflow-y-auto bg-card shadow rounded-2xl">
+
+            <div class="flex flex-col md:flex-row border-b p-6">
+              <div class="flex border-2 rounded-full p-2 ">
+                <input #input matInput [placeholder]="'search'| transloco" (keyup)="filterTable($event)">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+              </div>
+            </div>
+
+            <div>
+              <app-table [dataColumn]="this.columnsMobiles" [dataRow]="this.mobilesData"
+                [dataOptionTable]="this.optionsTable" [dataFilter]="this.dataFilter"
+                (emitSelectRow)="this.selectMobile($event)">
+              </app-table>
+            </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
+</div>

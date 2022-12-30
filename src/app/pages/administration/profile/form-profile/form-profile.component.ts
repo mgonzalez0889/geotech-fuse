@@ -1,135 +1,265 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {ProfilesService} from "../../../../core/services/profiles.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatTabChangeEvent} from "@angular/material/tabs";
-import {HelperService} from "../../../../core/services/helper.service";
-import {DialogAlertEnum} from "../../../../core/interfaces/fuse-confirmation-config";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { MatRadioChange } from '@angular/material/radio';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { IListModules, IOptionPermission } from '@interface/index';
+import { ProfilesService } from '@services/api/profiles.service';
+import { FleetsService } from '@services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
+import { MenuOptionsService } from '@services/api/menu-options.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-profile',
   templateUrl: './form-profile.component.html',
-  styleUrls: ['./form-profile.component.scss']
+  styleUrls: ['./form-profile.component.scss'],
 })
-export class FormProfileComponent implements OnInit, OnDestroy {
-  public form: FormGroup;
-  public subscription$: Subscription;
-  @Output() onShow: EventEmitter<string> = new EventEmitter<string>();
-  public tabOptionOne;
-  public tabOptionTwo = false;
-  public tabSelected: number;
-  public titleForm: string;
+export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() dataUpdate: any = null;
+  @Input() titleForm: string = '';
+  @Output() emitCloseForm = new EventEmitter<void>();
+  public profiles: any = [];
+  public editMode: boolean = false;
+  public opened: boolean = true;
+  public profileForm: FormGroup = this.fb.group({});
+  public plates: any[] = [];
+  public fleets: any[] = [];
+  public availableModules: IListModules[] = [];
+  public assignedModules: IListModules[] = [];
+  public panelOpenState = false;
+  public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
+  public listTrasport: { name: string; text: string }[] = [
+    {
+      name: 'mobiles',
+      text: 'profile.formPage.optionVehiculo',
+    },
+    {
+      name: 'fleet',
+      text: 'profile.formPage.optionFleets',
+    },
+  ];
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
-      private fb: FormBuilder,
-      private profileService: ProfilesService,
-      private _snackBar: MatSnackBar,
-      private _helperService: HelperService
-  ) { }
+    private profileService: ProfilesService,
+    private fb: FormBuilder,
+    private fleetsService: FleetsService,
+    private menuOptionsService: MenuOptionsService,
+    private mobilesService: MobileService,
+    private translocoService: TranslocoService
+  ) {
+    this.buildForm();
+  }
 
-    ngOnDestroy(): void {
-        // this.subscription$.unsubscribe();
-    }
-
+  /**
+   * @description: se llaman todos los servicios y se crea el formulario reactivo.
+   */
   ngOnInit(): void {
-      this.createForm();
-      this.listenObservables();
-  }
-  /**
-   * @description: Metodo para guardar o editar informacion
-   */
-  public onSave(): void {
-      const data = this.form.getRawValue();
+    this.mobilesService.getMobiles()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.plates = res.data;
+      });
+    this.fleetsService.getFleets()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res) => {
+        this.fleets = res.data;
+      });
 
-      if (!data.id) {
-          this._helperService.showDialogAlertOption({
-              title: 'Guardar datos',
-              text: '¿Desea crear un nuevo perfil?',
-              type: DialogAlertEnum.question,
-              showCancelButton: true,
-              textCancelButton: 'No',
-              textConfirButton: 'Si'
-          }).then(
-              (result) => {
-                  if (result.value) {
-                      this.createProfile(data);
-                  }
-              }
-          );
-      }else {
-          this._helperService.showDialogAlertOption({
-              title: 'Guardar datos',
-              text: '¿Desea editar el perfil?',
-              type: DialogAlertEnum.question,
-              showCancelButton: true,
-              textCancelButton: 'No',
-              textConfirButton: 'Si'
-          }).then(
-              (result) => {
-                  this.editProfile(data);
-              }
-          );
+    this.readAndParseOptionModules();
+
+    // this.translocoService.langChanges$
+    //   .pipe(delay(100), takeUntil(this.unsubscribe$))
+    //   .subscribe(() => {
+    //     console.log('holis');
+
+    //     this.readAndParseOptionModules();
+    //   });
+  }
+
+  /**
+   * @description: si viene informacion para modificar, seteamos el formulario o lo limpiamos.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.dataUpdate) {
+      const typeVehicle = this.dataUpdate.fleets.length ? 'fleet' : 'mobiles';
+      this.onChangeTrasport({ value: typeVehicle } as MatRadioChange);
+
+      this.assignedModules = [...this.dataUpdate.modules];
+
+      setTimeout(() => {
+        this.parseModuleUpdate();
+      }, 1000);
+
+      this.editMode = false;
+      this.profileForm.patchValue({ ...this.dataUpdate });
+    } else {
+      this.editMode = false;
+      this.assignedModules = [];
+      this.profileForm.reset();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * @description: cuando se envie el formulario, parseamos y preguntamos si va a modificar o agregar.
+   */
+  public onSubmit(): void {
+    const modules: FormArray = this.profileForm.get('module') as FormArray;
+    this.assignedModules.forEach(({ id, option }) => {
+      modules.push(new FormControl({ id, option: { ...option, read: true } }));
+    });
+    const valueForm = this.profileForm.value;
+
+    if (!this.dataUpdate) {
+      this.profileService.profileForm$.next({ typeAction: 'add', formData: valueForm });
+    } else {
+      this.profileService.profileForm$.next({
+        typeAction: 'edit',
+        formData: { ...valueForm },
+        profileId: this.dataUpdate.id
+      });
+    }
+    this.profileForm.reset();
+    this.editMode = false;
+  }
+
+  /**
+   * @description: funcion para cerrar el formulario.
+   */
+  public closeForm(): void {
+    this.emitCloseForm.emit();
+    this.editMode = false;
+    this.dataUpdate = null;
+    this.profileForm.reset();
+  }
+
+  /**
+   * @description: se emite hacia el componente grid-profile para que elimine el perfil.
+   */
+  public deleteProfile(): void {
+    this.profileService.profileForm$.next({ typeAction: 'delete', formData: this.dataUpdate });
+    this.editMode = false;
+  }
+
+  /**
+   * @description
+   * se ejecuta con el evento del componente matRadio,
+   * y dependiendo del tipo de trasporte selecciondo le agregamos
+   * y quitamos validacion de requerido en el formulario
+   */
+  public onChangeTrasport({ value }: MatRadioChange): void {
+    if (value === 'mobiles') {
+      this.profileForm.controls['fleets'].patchValue([]);
+      this.profileForm.controls['fleets'].clearValidators();
+      this.profileForm.controls['plates'].setValidators([Validators.required]);
+    } else if (value === 'fleet') {
+      this.profileForm.controls['plates'].patchValue([]);
+      this.profileForm.controls['plates'].clearValidators();
+      this.profileForm.controls['fleets'].setValidators([Validators.required]);
+    }
+    this.profileForm.controls['plates'].updateValueAndValidity();
+    this.profileForm.controls['fleets'].updateValueAndValidity();
+    this.selectTrasport = value;
+  }
+
+  /**
+   * @description: se asignan los permisos de los modulos
+   * @param checked - indica si esta chekeado - true o false
+   * @param keyOption - el nombre del permiso
+   * @param moduleId - id del modulo al que se le van asiganar los permisos
+   */
+  public asingOption(checked: boolean, keyOption: string, moduleId: number): void {
+    const index = this.assignedModules.findIndex(module => module.id === moduleId);
+    if (checked) {
+      this.assignedModules[index].option[keyOption] = true;
+    } else {
+      this.assignedModules[index].option[keyOption] = false;
+    }
+  }
+
+  /**
+   * @description: funcion del drag drop, para la asignacion del modulos.
+   */
+  public drop(event: CdkDragDrop<IListModules[]>): void {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  /**
+   * @description: cuando se seleccione un perfil para editar, se le cargan los modulos que tienes asignados de los modulos disponibles.
+   */
+  private parseModuleUpdate(): void {
+    const newAvailableModules = [...this.availableModules];
+    this.assignedModules.forEach((moduleAssing) => {
+      const indexModule: number = newAvailableModules.findIndex(({ id }) => id === moduleAssing.id);
+      if (indexModule >= 0) {
+        newAvailableModules.splice(indexModule, 1);
       }
+    });
+    this.availableModules = [...newAvailableModules];
   }
+
   /**
-   * @description: Cierra el formulario
+   * @description: Se leen y se parsean los modulos.
    */
-  public onClose(): void {
-      this.onShow.emit('PROFILES');
-  }
-  /**
-   * @description: Metodo para cambio de tab
-   */
-  public onChangeTabs(event: MatTabChangeEvent): void {
-      this.tabSelected = event.index;
-  }
-  /**
-   * @description: Creacion de formulario
-   */
-  private createForm(): void {
-      this.form = this.fb.group({
-          id: undefined,
-          name: [''],
-          description: [''],
-          status: [true]
+  private readAndParseOptionModules(): void {
+    this.menuOptionsService.getMenuOptionsNew()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ data }) => {
+
+        const option: IOptionPermission = {
+          read: false,
+          create: false,
+          update: false,
+          delete: false,
+        };
+
+        const modulesAvailales: IListModules[] = [];
+        data.forEach(({ children }) => {
+          children.forEach(
+            ({ id, title, create_option, edit_option, delete_option }) => {
+              modulesAvailales.push(
+                { id, title, create_option, edit_option, delete_option, option: { ...option } }
+              );
+            });
+        });
+        this.availableModules = [...modulesAvailales];
       });
   }
+
   /**
-   * @description: Crea un nuevo perfil
+   * @description: Se crea el formulario reactivo.
    */
-  private createProfile(data: any): void {
-      this.subscription$ = this.profileService.postProfile(data).subscribe(() => {
-          this._snackBar.open('Perfil creado con exito', '', {duration: 4000});
-          this.tabOptionOne = true;
-          this.tabSelected = 1;
-          this.onShow.emit('PROFILES');
-      });
-  }
-  /**
-   * @description: Edicion del perfil
-   */
-  private editProfile(data: any): void {
-      this.subscription$ = this.profileService.putProfile(data).subscribe(() => {
-          this._snackBar.open('Perfil actualizado con exito', '', {duration: 4000});
-          this.onShow.emit('PROFILES');
-      });
-  }
-  /**
-   * @description: Escucha el observable behavior
-   */
-  private listenObservables(): void {
-      this.subscription$ = this.profileService.behaviorSubjectProfile$.subscribe(({type, isEdit, payload}) => {
-          if (isEdit && type == 'EDIT') {
-              this.form.patchValue(payload);
-              this.tabOptionOne = isEdit;
-              this.titleForm = `Editar perfil ${payload.name}` ;
-          }else if (!isEdit && type == 'NEW') {
-              this.form.reset({
-                  status: [true]
-              });
-              this.titleForm = 'Nuevo perfil';
-          }
-      });
+  private buildForm(): void {
+    this.profileForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      plates: [[], Validators.required],
+      fleets: [[]],
+      module: this.fb.array([]),
+    });
   }
 
 }

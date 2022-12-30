@@ -1,106 +1,372 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
-     cdkScrollable
->
-    <!-- Main -->
-    <div class="flex-auto p-4 sm:p-4 ">
-        <!-- CONTENT GOES HERE -->
-        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 md:px-8 border-b">
-            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                <div class="text-3xl font-extrabold tracking-tight">{{titleForm}}</div>
+<div class="flex flex-col w-full sm:pl-6">
+    <div class="overflow-auto bg-card shadow rounded-2xl h-180">
+        <div class="rounded-t-2xl relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-gray-200">
+            <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+                <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeMenu()">
+                    <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
             </div>
         </div>
-
-        <form [formGroup]="form" class="flex flex-col mt-2 bg-card shadow rounded overflow-hidden ">
-            <div class="flex flex-col p-8 ">
-                <mat-form-field class="fuse-mat-dense flex-auto">
-                    <mat-label>Nombre</mat-label>
-                    <input matInput
-                           formControlName="title"
-                    >
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-textarea flex-auto">
-                    <mat-label>Descripción</mat-label>
-                    <textarea
-                        matInput
-                        formControlName="option_description"
-                        [rows]="3"></textarea>
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-dense flex-auto">
-                    <mat-label>Ruta</mat-label>
-                    <input matInput
-                           formControlName="link"
-                    >
-                    <span matPrefix>/administration/users</span>
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-dense flex-auto">
-                    <mat-label>Icono</mat-label>
-                    <input matInput
-                           formControlName="icon"
-                    >
-                </mat-form-field>
-                <ng-container *ngIf="menuOptions$ | async as options">
-                    <mat-form-field class="fuse-mat-dense flex-auto">
-                        <mat-label>Opciones de menu</mat-label>
-                        <mat-select formControlName="id_father"
-                        >
-                            <mat-option [value]="0">Padre</mat-option>
-                            <mat-option
-                                [value]="option.id"
-                                *ngFor="let option of options.data"
-                            >
-                                {{option.title}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+                <!-- Avatar and actions -->
+                <ng-container *ngIf="!editMode">
+                    <div class="flex flex-auto items-end -mt-16">
+                        <!-- Avatar -->
+                        <div
+                            class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                            <div
+                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                {{options['title']?.charAt(0)}}
+                            </div>
+                        </div>
+                        <!-- Actions -->
+                        <div class="flex items-center ml-auto mb-1">
+                            <button mat-stroked-button (click)="editMode = true">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                <span class="ml-2">Editar</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-4xl font-bold truncate">{{options['title']}}</div>
+                    <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                        <ng-container *ngIf="options['subtitle']">
+                            <div class="flex sm:items-center">
+                                <mat-icon [matTooltip]="'Subtitulo'">subtitles</mat-icon>
+                                <div class="ml-6 leading-6">{{options['subtitle']}}</div>
+                            </div>
+                        </ng-container>
+                    </div>
                 </ng-container>
-                <span class="font-semibold mb-2 gt-xs:text-right gt-xs:min-w-32 gt-xs:mr-4 gt-xs:mb-0">Opciones</span>
-                <div class="flex flex-row">
-                    <mat-checkbox
-                        class="mb-2 mr-2"
-                        [color]="'primary'"
-                        formControlName="option_read"
-                    >
-                        Ver
-                    </mat-checkbox>
-                    <mat-checkbox
-                        class="mb-2 mr-2"
-                        [color]="'primary'"
-                        formControlName="option_create"
-                    >
-                        Crear
-                    </mat-checkbox>
-                    <mat-checkbox
-                        class="mb-2 mr-2"
-                        [color]="'primary'"
-                        formControlName="option_update"
-                    >
-                        Editar
-                    </mat-checkbox>
-                    <mat-checkbox
-                        class="mb-2 mr-2"
-                        [color]="'primary'"
-                        formControlName="option_delete"
-                    >
-                        Eliminar
-                    </mat-checkbox>
-                </div>
+                <ng-container *ngIf="editMode">
+                    <form [formGroup]="menuForm">
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Titulo</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
+                                <input matInput [formControlName]="'title'" [placeholder]="'Nombre'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Subtitulo</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles</mat-icon>
+                                <input matInput [formControlName]="'subtitle'" [placeholder]="'Subtitulo'">
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-4">
+                            <div class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                                (click)="addOption()">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                <span class="ml-2 font-medium text-secondary group-hover:underline">Agregar nueva
+                                    opción</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <ng-container
+                                *ngFor="let option of menuForm.get('children')['controls']; let i = index; let first = first; let last = last; trackBy: trackByFn">
+
+                                <div class=" ">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-4">
+                                        <mat-label>Tipo de opcion</mat-label>
+                                        <mat-icon matPrefix class="hidden sm:flex icon-size-5">format_list_bulleted
+                                        </mat-icon>
+                                        <mat-select required [formControl]="option.get('type')">
+                                            <mat-option *ngFor="let type of typeOptions" [value]="type.type">
+                                                {{type.option}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="option.controls.type.value === 'basic'">
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Icono</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex">insert_emoticon
+                                            </mat-icon>
+                                            <input matInput [formControl]="option.get('icon')" [placeholder]="'Icono'">
+                                        </mat-form-field>
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Titulo</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
+                                            <input matInput [formControl]="option.get('title')" [placeholder]="'Titulo'"
+                                                [required]="option.controls.type.value === 'basic'">
+                                        </mat-form-field>
+
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Subtitulo</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles</mat-icon>
+                                            <input matInput [formControl]="option.get('subtitle')"
+                                                [placeholder]="'Subtitulo'">
+                                        </mat-form-field>
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Ruta</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">route</mat-icon>
+                                            <input [required]="option.controls.type.value === 'basic'" matInput
+                                                [formControl]="option.get('link')" [placeholder]="'Ruta'">
+                                        </mat-form-field>
+                                        <section>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('badgeSelect')">
+                                                Etiqueta
+                                            </mat-checkbox>
+                                        </section>
+                                        <div [hidden]="!option.controls.badgeSelect.value">
+                                            <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                <mat-label *ngIf="first">Titulo para la etiqueta</mat-label>
+                                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
+                                                <input [required]="option.controls.badgeSelect.value" matInput
+                                                    [formControl]="option.get('badgeTitle')"
+                                                    [placeholder]="'Titulo para la etiqueta'">
+                                            </mat-form-field>
+                                            <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                <mat-label *ngIf="first">Clase para la etiqueta</mat-label>
+                                                <mat-icon matPrefix class="hidden sm:flex">css</mat-icon>
+                                                <input matInput [formControl]="option.get('badgeClasses')"
+                                                    [placeholder]="'Clase para la etiqueta'">
+                                            </mat-form-field>
+                                        </div>
+                                        <section>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('disabled')">
+                                                Deshabilitado
+                                            </mat-checkbox>
+                                        </section>
+                                        <section class="flex border-t-2 mt-4">
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('viewOption')">
+                                                Ver
+                                            </mat-checkbox>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('createOption')">
+                                                Crear
+                                            </mat-checkbox>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('editOption')">
+                                                Editar
+                                            </mat-checkbox>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('deleteOption')">
+                                                Eliminar
+                                            </mat-checkbox>
+                                        </section>
+                                    </div>
+                                    <div *ngIf="option.controls.type.value === 'divider'">
+                                        <mat-form-field class="fuse-mat-no-subscript w-full mt-4">
+                                            <mat-label *ngIf="first">División</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">do_not_disturb_on
+                                            </mat-icon>
+                                            <input matInput disabled [placeholder]="'División'" value="División">
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="option.controls.type.value === 'collapsable'">
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Icono</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex">insert_emoticon
+                                            </mat-icon>
+                                            <input matInput [formControl]="option.get('icon')" [placeholder]="'Icono'">
+                                        </mat-form-field>
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Titulo</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
+                                            <input [required]="option.controls.type.value === 'collapsable'" matInput
+                                                [formControl]="option.get('title')" [placeholder]="'Titulo'">
+                                        </mat-form-field>
+
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                            <mat-label *ngIf="first">Subtitulo</mat-label>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles</mat-icon>
+                                            <input matInput [formControl]="option.get('subtitle')"
+                                                [placeholder]="'Subtitulo'">
+                                        </mat-form-field>
+                                        <section>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('badgeSelect')">
+                                                Etiqueta
+                                            </mat-checkbox>
+                                        </section>
+                                        <div [hidden]="!option.controls.badgeSelect.value">
+                                            <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                <mat-label *ngIf="first">Titulo para la etiqueta</mat-label>
+                                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">title</mat-icon>
+                                                <input [required]="option.controls.badgeSelect.value" matInput
+                                                    [formControl]="option.get('badgeTitle')"
+                                                    [placeholder]="'Titulo para la etiqueta'">
+                                            </mat-form-field>
+                                            <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                <mat-label *ngIf="first">Clase para la etiqueta</mat-label>
+                                                <mat-icon matPrefix class="hidden sm:flex">css</mat-icon>
+                                                <input matInput [formControl]="option.get('badgeClasses')"
+                                                    [placeholder]="'Clase para la etiqueta'">
+                                            </mat-form-field>
+                                        </div>
+                                        <section>
+                                            <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                [formControl]="option.get('disabled')">
+                                                Deshabilitado
+                                            </mat-checkbox>
+                                        </section>
+                                        <div class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                                            (click)="addOptionChildren(i)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'">
+                                            </mat-icon>
+                                            <span class="ml-2 font-medium text-secondary group-hover:underline">Agregar
+                                                nueva opción desplegable</span>
+                                        </div>
+                                        <ng-container
+                                            *ngFor="let optionChildren of option.get('children')['controls']; let iChildren = index; let firstChildren = first; let lastChildren = last; trackBy: trackByFn">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full mt-4">
+                                                <mat-label>Tipo de opcion desplegable</mat-label>
+                                                <mat-icon matPrefix class="hidden sm:flex icon-size-5">
+                                                    format_list_bulleted
+                                                </mat-icon>
+                                                <mat-select [formControl]="optionChildren.get('type')">
+                                                    <mat-option *ngFor="let type of typeOptions" [value]="type.type"
+                                                        [disabled]="type.id === 1 ? true : false">
+                                                        {{type.option}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <div *ngIf="optionChildren.controls.type.value === 'basic'">
+                                                <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                    <mat-label *ngIf="firstChildren">Icono</mat-label>
+                                                    <mat-icon matPrefix class="hidden sm:flex">
+                                                        insert_emoticon</mat-icon>
+                                                    <input matInput [formControl]="optionChildren.get('icon')"
+                                                        [placeholder]="'Icono'">
+                                                </mat-form-field>
+                                                <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                    <mat-label *ngIf="firstChildren">Titulo</mat-label>
+                                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5">title
+                                                    </mat-icon>
+                                                    <input [required]="optionChildren.controls.type.value === 'basic'"
+                                                        matInput [formControl]="optionChildren.get('title')"
+                                                        [placeholder]="'Titulo'">
+                                                </mat-form-field>
+                                                <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                    <mat-label *ngIf="firstChildren">Subtitulo</mat-label>
+                                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5">subtitles
+                                                    </mat-icon>
+                                                    <input matInput [formControl]="optionChildren.get('subtitle')"
+                                                        [placeholder]="'Subtitulo'">
+                                                </mat-form-field>
+                                                <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                    <mat-label *ngIf="firstChildren">Ruta</mat-label>
+                                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5">route
+                                                    </mat-icon>
+                                                    <input [required]="optionChildren.controls.type.value === 'basic'"
+                                                        matInput [formControl]="optionChildren.get('link')"
+                                                        [placeholder]="'Ruta'">
+                                                </mat-form-field>
+                                                <section>
+                                                    <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                        [formControl]="optionChildren.get('badgeSelect')">
+                                                        Etiqueta
+                                                    </mat-checkbox>
+                                                </section>
+                                                <div [hidden]="!optionChildren.controls.badgeSelect.value">
+                                                    <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                        <mat-label *ngIf="firstChildren">Titulo para la etiqueta
+                                                        </mat-label>
+                                                        <mat-icon matPrefix class="hidden sm:flex icon-size-5">title
+                                                        </mat-icon>
+                                                        <input [required]="optionChildren.controls.badgeSelect.value"
+                                                            matInput [formControl]="optionChildren.get('badgeTitle')"
+                                                            [placeholder]="'Titulo para la etiqueta'">
+                                                    </mat-form-field>
+                                                    <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                        <mat-label *ngIf="firstChildren">Clase para la etiqueta
+                                                        </mat-label>
+                                                        <mat-icon matPrefix class="hidden sm:flex">css
+                                                        </mat-icon>
+                                                        <input matInput
+                                                            [formControl]="optionChildren.get('badgeClasses')"
+                                                            [placeholder]="'Clase para la etiqueta'">
+                                                    </mat-form-field>
+                                                </div>
+                                                <section>
+                                                    <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                        [formControl]="optionChildren.get('disabled')">
+                                                        Deshabilitado
+                                                    </mat-checkbox>
+                                                </section>
+                                                <section class="flex border-t-2 mt-4">
+                                                    <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                        [formControl]="optionChildren.get('viewOption')">
+                                                        Ver
+                                                    </mat-checkbox>
+                                                    <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                        [formControl]="optionChildren.get('createOption')">
+                                                        Crear
+                                                    </mat-checkbox>
+                                                    <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                        [formControl]="optionChildren.get('editOption')">
+                                                        Editar
+                                                    </mat-checkbox>
+                                                    <mat-checkbox class="fuse-mat-no-subscript flex-auto w-full mt-2"
+                                                        [formControl]="optionChildren.get('deleteOption')">
+                                                        Eliminar
+                                                    </mat-checkbox>
+                                                </section>
+                                            </div>
+                                            <div *ngIf="optionChildren.controls.type.value === 'divider'">
+                                                <mat-form-field class="fuse-mat-no-subscript flex-auto w-full mt-4">
+                                                    <mat-label *ngIf="firstChildren">División</mat-label>
+                                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5">
+                                                        do_not_disturb_on</mat-icon>
+                                                    <input matInput disabled [placeholder]="'División'"
+                                                        value="División">
+                                                </mat-form-field>
+                                            </div>
+                                            <ng-container *ngIf="!(firstChildren && lastChildren)">
+                                                <div class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                                                    (click)="removeOptionChildren(i,iChildren,optionChildren.controls.id.value)">
+                                                    <mat-icon color="warn" class="icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:trash'">
+                                                    </mat-icon>
+                                                    <span class="ml-2 font-medium text-secondary group-hover:underline">
+                                                        Eliminar opción desplegable
+                                                    </span>
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                    <!-- Remove options -->
+                                    <ng-container *ngIf="!(first && last)">
+                                        <div class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                                            (click)="removeOption(i,option.controls.id.value);">
+                                            <mat-icon color="warn" class="icon-size-5"
+                                                [svgIcon]="'heroicons_solid:trash'">
+                                            </mat-icon>
+                                            <span class="ml-2 font-medium text-secondary group-hover:underline">
+                                                Eliminar opción
+                                            </span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="flex items-center mt-4 -mx-6 sm:-mx-12  pr-4 pl-1 sm:pr-12 sm:pl-7">
+                            <!-- Eliminar -->
+                            <button *ngIf="options['id']" mat-button [color]="'warn'" [matTooltip]="'Eliminar'"
+                                (click)="deleteMenu(options['id'])">
+                                Eliminar </button>
+                            <!-- Cancelar -->
+                            <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" (click)="editMode = false">
+                                Cancelar
+                            </button>
+                            <!-- Guardar -->
+                            <button class="ml-2" mat-flat-button [color]="'accent'" [matTooltip]="'Guardar'"
+                                (click)="onSave()">
+                                <span *ngIf="!menuForm.disabled">
+                                    Guardar
+                                </span>
+                                <mat-progress-spinner *ngIf="menuForm.disabled" [diameter]="24"
+                                    [mode]="'indeterminate'">
+                                </mat-progress-spinner>
+                            </button>
+                        </div>
+                    </form>
+                </ng-container>
             </div>
-            <div class="flex items-center justify-between border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
-                <button mat-flat-button
-                        [color]="'warn'"
-                        (click)="onCLose()"
-                >
-                Cancelar
-                </button>
-                <button
-                    class="px-6 ml-3"
-                    mat-flat-button
-                    [color]="'primary'"
-                    (click)="onSave()"
-                >
-                    Guardar
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>

@@ -1,105 +1,213 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {Observable} from "rxjs";
-import {ProfilesService} from "../../../../core/services/profiles.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MenuOptionsService} from "../../../../core/services/menu-options.service";
-import {UserProfilePlateService} from "../../../../core/services/user-profile-plate.service";
-import {OwnerPlateService} from "../../../../core/services/owner-plate.service";
-import {HelperService} from "../../../../core/services/helper.service";
-import {DialogAlertEnum} from "../../../../core/interfaces/fuse-confirmation-config";
+import { Subject } from 'rxjs';
+import { IOptionTable } from '@interface/index';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay, map, takeUntil, filter, mergeMap } from 'rxjs/operators';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ProfilesService } from '@services/api/profiles.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-grid-profile',
   templateUrl: './grid-profile.component.html',
-  styleUrls: ['./grid-profile.component.scss']
+  styleUrls: ['./grid-profile.component.scss'],
 })
-export class GridProfileComponent implements OnInit {
-  searchInputControl: FormControl = new FormControl();
-  public profile$: Observable<any>;
-  public show: string = 'PROFILES';
+export class GridProfileComponent implements OnInit, OnDestroy {
+  public titleForm: string = '';
+  public subTitlePage: string = '';
+  public opened: boolean = false;
+  public dataFilter: string = '';
+  public profileDataUpdate: any = null;
+  public profileData: any[] = [];
+  public listPermission: any = [];
+  public columnsProfile: string[] = ['name', 'description'];
+  public optionsTable: IOptionTable[] = [
+    {
+      name: 'name',
+      text: 'profile.tablePage.name',
+      typeField: 'text',
+    },
+    {
+      name: 'description',
+      text: 'profile.tablePage.description',
+      typeField: 'text',
+    },
+  ];
+  private permissionValid: { [key: string]: string } = {
+    addProfile: 'administracion:perfiles:create',
+    updateProfile: 'administracion:perfiles:update',
+    deleteProfile: 'administracion:perfiles:delete',
+  };
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
-      private profileService: ProfilesService,
-      private _snackBar: MatSnackBar,
-      private menuOptionService: MenuOptionsService,
-      private userProfilePlate: UserProfilePlateService,
-      private ownerPlateService: OwnerPlateService,
-      private helperService: HelperService
+    private permissionsService: NgxPermissionsService,
+    private confirmationService: ConfirmationService,
+    private profileService: ProfilesService,
+    private toastAlert: ToastAlertService,
+    private translocoService: TranslocoService
   ) { }
 
   ngOnInit(): void {
-      this.fetchProfile();
+    this.getProfiles();
+    this.listenObservables();
+
+    this.permissionsService.permissions$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.listPermission = data ?? [];
+      });
+
+    this.translocoService.langChanges$
+      .pipe(takeUntil(this.unsubscribe$), delay(500))
+      .subscribe(() => {
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: this.profileData.length } });
+        this.subTitlePage = subTitlePage;
+      });
   }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   /**
-   * @description: Abre el formulario perfil
+   * @description: Filtrar datos de la tabla
    */
-  public openForm(): void {
-      this.show = 'FORM';
-      this.profileService.behaviorSubjectProfile$.next({type: 'NEW', isEdit: false});
+  public filterTable(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataFilter = filterValue.trim().toLowerCase();
   }
+
   /**
-   * @description: Cierra el formulario
+   * @description: Se abre el formulario para crear un nuevo perfil
    */
-  public closeForm(value): void {
-      this.show = value;
+  public addProfileForm(): void {
+    if (!this.listPermission[this.permissionValid.addProfile]) {
+      this.toastAlert.toasAlertWarn({
+        message: 'messageAlert.messagePermissionWarn',
+      });
+    } else {
+      this.opened = true;
+      this.titleForm = 'profile.formPage.formNameCreate';
+      this.profileDataUpdate = null;
+    }
   }
+
   /**
-   * @description: Edita un perfil
+   * @description: Cuando se seleccione cualquier registro de la tabla se ejecuta esta funcion y se habilita el formulario para modificar el perfil.
    */
-  public onEdit(id: number): void {
-      this.show = 'FORM';
-      this.getProfile(id);
+  public actionSelectTable(data: any): void {
+    this.opened = true;
+    this.profileDataUpdate = { ...data };
+    this.titleForm = 'profile.formPage.formNameUpdate';
   }
+
   /**
-   * @description:
+   * @description: Leemos todos los perfiles que el usuario logueado tenga asignados
    */
-  public onOptionProfile(profile: any): void {
-      this.show = 'OPTIONS';
-      this.menuOptionService.behaviorSelectedMenuOption$.next({id: profile.id, payload: profile});
+  private getProfiles(): void {
+    this.profileService.getProfiles()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map(({ data }) =>
+          data?.map(values => ({
+            ...values.profile,
+            plates: values.plate,
+            fleets: values.fleets,
+            modules: values.modules
+          }))
+        )
+      )
+      .subscribe((profileData) => {
+        const { subTitlePage } = this.translocoService.translateObject('profile', { subTitlePage: { value: profileData?.length } });
+        this.subTitlePage = subTitlePage;
+        this.profileData = profileData || [];
+      });
   }
+
   /**
-   * @description: Abre el formulario de plate
+   * @description: Elimina cualquier perfil.
    */
-  public onFormPlate(profile: any): void {
-      this.show = 'FORM-PLATE';
-      this.ownerPlateService.behaviorSubjectUserOwnerPlate$.next({id: profile.id, payload: profile});
-  }
-  public onDelete(id: number): void {
-      this.helperService.showDialogAlertOption({
-          title: 'Eliminar registro',
-          text: '¿Desea eliminar el perfil?',
-          type: DialogAlertEnum.question,
-          showCancelButton: true,
-          textCancelButton: 'No',
-          textConfirButton: 'Si'
-      }).then(
-          (result) => {
-              if (result.value) {
-                  this.deleteProfile(id);
-              }
+  private deleteProfile(profileId: number): void {
+    if (!this.listPermission[this.permissionValid.deleteProfile]) {
+      this.toastAlert.toasAlertWarn({
+        message: 'messageAlert.messagePermissionWarn',
+      });
+    } else {
+      const confirmation = this.confirmationService.open();
+      confirmation.afterClosed()
+        .pipe(
+          filter(result => result === 'confirmed'),
+          mergeMap(() => this.profileService.deleteProfile(profileId)),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe(({ code }) => {
+          this.opened = false;
+          if (code === 200) {
+            this.getProfiles();
+            this.toastAlert.toasAlertSuccess({
+              message: 'profile.messageAlert.deleteSuccess',
+            });
+          } else {
+            this.toastAlert.toasAlertWarn({
+              message: 'profile.messageAlert.deleteFailure'
+            });
           }
-      );
+        });
+    }
   }
+
   /**
-   * @description: Listado de perfiles
+   * @description: Escucha cuando se active alguna acion del formulario.
    */
-  private fetchProfile(): void {
-      this.profile$ = this.profileService.getProfiles();
-  }
-  /**
-   * @description: Trae un usuario desde el services profile
-   */
-  private getProfile(id: number): void {
-      this.profileService.getProfile(id).subscribe(({data}) => {
-          this.profileService.behaviorSubjectProfile$.next({type: 'EDIT', id, isEdit: true, payload: data});
+  private listenObservables(): void {
+    this.profileService.profileForm$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ formData, typeAction, profileId }) => {
+        if (typeAction === 'add') {
+          this.profileService.postProfile(formData)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(({ code }) => {
+              this.opened = false;
+              if (code === 200) {
+                this.getProfiles();
+                this.toastAlert.toasAlertSuccess({
+                  message: 'profile.messageAlert.addSuccess',
+                });
+              } else {
+                this.toastAlert.toasAlertWarn({
+                  message: 'profile.messageAlert.addFailure',
+                });
+              }
+            });
+        } else if (typeAction === 'edit') {
+          if (!this.listPermission[this.permissionValid.updateProfile]) {
+            this.toastAlert.toasAlertWarn({
+              message: 'messageAlert.messagePermissionWarn',
+            });
+          } else {
+            this.profileService.putProfile(formData, profileId)
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe(({ code }) => {
+                this.opened = false;
+                if (code === 200) {
+                  this.getProfiles();
+                  this.toastAlert.toasAlertSuccess({
+                    message: 'profile.messageAlert.editSuccess',
+                  });
+                } else {
+                  this.toastAlert.toasAlertWarn({
+                    message: 'profile.messageAlert.editFailure'
+                  });
+                }
+              });
+          }
+        } else if (typeAction === 'delete') {
+          this.deleteProfile(formData.id);
+        }
       });
   }
-  /**
-   * @description: Deshabilita un perfil
-   */
-  private deleteProfile(id: number): void {
-      this.profileService.deleteProfile(id).subscribe(({data}) => {
-          this._snackBar.open('Perfil eliminado con exito', '', {duration: 4000});
-      });
-  }
+
 }

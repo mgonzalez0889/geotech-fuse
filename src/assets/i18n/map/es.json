@@ -1,0 +1,49 @@
+{
+  "vehicles": "Vehiculos",
+  "viewCluster": "Ver cluster",
+  "viewLabel": "Ver label",
+  "panelMain": {
+    "optionVehicles": "Vehiculos",
+    "optionFleets": "Flotas",
+    "selectAll": "Todos",
+    "notAssingVehicles": "No tienes vehiculos asignados.",
+    "notAssingFleet": "No tienes flotas asignadas."
+  },
+  "panelGeotools": {
+    "routeTitle": "Rutas",
+    "zoneTitle": "Zonas",
+    "pointControlTitle": "Puntos de control",
+    "mapaTitle": "Mapas",
+    "form": {
+      "new": "Nuevo",
+      "code": "Codigo",
+      "name": "Nombre",
+      "color": "Color",
+      "description": "Descripcion"
+    },
+    "messageAlert": {
+      "messageRequired": "¡Debes crear un punto, ruta o zona en el mapa!",
+      "createSuccess": "¡Geometria creada con exito!",
+      "createFailure": "¡Lo sentimos algo ha salido mal, vuelva a intentarlo!",
+      "editSuccess": "¡Geometria modificada con exito!",
+      "alertWarn": "¡Lo sentimos algo ha salido mal, vuelva a intentarlo!",
+      "deleteGeo": "Geometria eliminada correctamente.",
+      "importGeo": "¡Geojson importado con exito!"
+    }
+  },
+  "icons": {
+    "iconTextOpen": "Abierto",
+    "iconTextClose": "Cerrado",
+    "iconTextOff": "Apagado",
+    "iconTextOn": "Encendido",
+    "iconTextReport": "Sin reportar",
+    "iconTextGpsExcellent": "Excelente",
+    "iconTextGpsRegular": "Regular",
+    "iconTextGpsBad": "Mala"
+  },
+  "modalImport": {
+    "title": "Importar GeoJson",
+    "message": "Por medio de esta opción podrás importar en formato Geojson.",
+    "selectFile": "Seleccione un archivo"
+  }
+}

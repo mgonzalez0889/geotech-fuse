@@ -1,0 +1,32 @@
+{
+  "titlePage": "Historico y eventos",
+  "buttonsPage": {
+    "buttonGenerate": "Generar reporte",
+    "buttonDowloand": "Descargar reporte",
+    "buttonTimeLine": "Ver linea del tiempo"
+  },
+  "tablePage": {
+    "plate": "Placa",
+    "date": "Fecha",
+    "event": "Evento",
+    "adrress": "Direccion",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "speed": "Velocidad",
+    "battery": "Bateria",
+    "viewMap": "Ver mapa"
+  },
+  "formPage": {
+    "fromDatePicker" : "Desde",
+    "toDatePicker" : "Hasta",
+    "formNameCreate": "Generar Reporte",
+    "fieldRangeDate": "Seleccione un rango de fecha",
+    "fieldtypeVehiculo": "Buscar por:",
+    "fieldVehiculos": "Seleccione vehiculos",
+    "fieldEvents": "Seleccione eventos",
+    "fieldFleets": "Seleccione flotas",
+    "optionVehiculo": "Vehiculos",
+    "optionFleets": "Flotas",
+    "errorForm": {}
+  }
+}

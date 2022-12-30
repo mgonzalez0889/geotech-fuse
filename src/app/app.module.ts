@@ -7,56 +7,50 @@ import { FuseModule } from '@fuse';
 import { FuseConfigModule } from '@fuse/services/config';
 import { FuseMockApiModule } from '@fuse/lib/mock-api';
 import { CoreModule } from 'app/core/core.module';
-import { appConfig } from 'app/core/config/app.config';
+import { appConfig } from 'app/core/app-configs/app.config';
 import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
-import {AppSettingsService} from './core/app-configs/app-settings.service';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatMomentDateModule} from '@angular/material-moment-adapter';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDialogModule} from '@angular/material/dialog';
-
+import { AppSettingsService } from './core/app-configs/app-settings.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgxPermissionsModule } from 'ngx-permissions';
 const routerConfig: ExtraOptions = {
-    preloadingStrategy       : PreloadAllModules,
-    scrollPositionRestoration: 'enabled'
+  preloadingStrategy: PreloadAllModules,
+  scrollPositionRestoration: 'enabled',
 };
 
 @NgModule({
-    declarations: [
-        AppComponent
-    ],
-    imports     : [
-        BrowserModule,
-        BrowserAnimationsModule,
-        RouterModule.forRoot(appRoutes, routerConfig),
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    RouterModule.forRoot(appRoutes, routerConfig),
 
-        // Fuse, FuseConfig & FuseMockAPI
-        FuseModule,
-        FuseConfigModule.forRoot(appConfig),
-        FuseMockApiModule.forRoot(mockApiServices),
+    // Fuse, FuseConfig & FuseMockAPI
+    FuseModule,
+    FuseConfigModule.forRoot(appConfig),
+    FuseMockApiModule.forRoot(mockApiServices),
 
-        // Core module of your application
-        CoreModule,
+    // Core module of your application
+    CoreModule,
 
-        // Layout module of your application
-        LayoutModule,
+    // Layout module of your application
+    LayoutModule,
 
-        // 3rd party modules that require global configuration via forRoot
-        MarkdownModule.forRoot({}),
-        MatDatepickerModule,
-        MatMomentDateModule,
-        MatNativeDateModule,
-        MatDialogModule
-    ],
-    providers: [
-      AppSettingsService
-    ],
-    bootstrap   : [
-        AppComponent
-    ]
+    // 3rd party modules that require global configuration via forRoot
+    MarkdownModule.forRoot({}),
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatNativeDateModule,
+    MatDialogModule,
+
+    NgxPermissionsModule.forRoot()
+  ],
+  providers: [AppSettingsService],
+  bootstrap: [AppComponent],
 })
-export class AppModule
-{
-}
+export class AppModule { }

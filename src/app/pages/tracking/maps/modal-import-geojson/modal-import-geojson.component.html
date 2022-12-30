@@ -1,0 +1,24 @@
+<div class="w-full h-full flex flex-col gap-5">
+  <div class="w-full h-8 flex items-center justify-center border-b-2">
+    <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'map.modalImport.title' | transloco}}</h2>
+  </div>
+  <div class="flex flex-col gap-3 justify-center">
+    <p class="text-sm font-bold text-center">
+      {{'map.modalImport.message' | transloco}}
+    </p>
+    <div class="flex justify-center">
+      <button mat-stroked-button color="primary" (click)="fileInput.click()">
+        {{'map.modalImport.selectFile' | transloco}}
+      </button>
+      <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept="application/json">
+    </div>
+    <p class="text-sm font-semibold">{{selectedFile?.name}}</p>
+  </div>
+
+  <div class="flex gap-2 self-end">
+    <button mat-flat-button mat-dialog-close>{{'buttons.buttonCancel' | transloco}}</button>
+    <button mat-flat-button color="accent" [mat-dialog-close]="this.geoJson"
+      [disabled]="this.disabledButton">{{'buttons.buttonSave' | transloco}}</button>
+  </div>
+
+</div>

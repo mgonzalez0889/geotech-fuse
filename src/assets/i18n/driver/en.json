@@ -1,0 +1,38 @@
+{
+  "tittlepage": "Drivers",
+  "addDriver": "Add driver",
+  "table": {
+    "emptyDriverList": "Sorry no data found",
+    "name": "Name",
+    "identification": "Identification",
+    "address": "Address",
+    "email": "Email",
+    "cellPhone": "Cell phone",
+    "matNoDataRow": "There is no data matching the search : "
+  },
+  "subtitlepage": {
+    "driver0": "No driver",
+    "driver1": "Driver",
+    "drivers": "Drivers"
+  },
+  "formPage": {
+    "titleForm": "New driver",
+    "fullName": "Full name",
+    "identification": "Identification",
+    "emailAddress": "Email address",
+    "cellPhone": "Cell phone",
+    "licenseNumber": "License number",
+    "licenseExpirationDate": "License expiration date",
+    "address": "Address"
+  },
+  "messageAlert": {
+    "deleteDriver": "Remove driver",
+    "deleteDriverMessage": "Are you sure you want to delete this driver? This action cannot be undone!",
+    "deleteSuccess": "Driver successfully eliminated.",
+    "deleteFailure": "The driver could not be deleted, please try again.",
+    "editDriver": "Edit driver",
+    "editDriverMessage": "Are you sure you want to edit this driver? This action cannot be undone!",
+    "addsuccess": "Successfully created driver.",
+    "addFailure": "The driver could not be created, please try again."
+  }
+}
