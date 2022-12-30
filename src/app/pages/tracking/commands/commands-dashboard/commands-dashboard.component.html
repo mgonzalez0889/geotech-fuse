@@ -5,51 +5,59 @@
       <app-header-page [title]="'commands.titlePage' | transloco" [statesHeader]="this.statesHeader"></app-header-page>
     </div>
 
-    <div class="flex w-full py-6 gap-6">
-      <div class="w-full flex-auto rounded-2xl">
+    <div class="flex flex-wrap w-full py-6">
+      <div class="w-full overflow-hidden">
 
-        <div class="flex border-b p-6 gap-4 bg-card shadow">
-          <div class="flex border-2 rounded-full p-2">
-            <input #input matInput [placeholder]="'search' | transloco" (keyup)="filterTable($event)">
-            <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
-          </div>
+        <mat-drawer-container class="flex-auto h-auto md:min-h-180">
+          <mat-drawer #drawer mode="side" [(opened)]="openedDrawer" position="end"
+            class="w-full md:w-128 bg-gray-100 border-none">
+            <ng-container *ngIf="openedDrawer">
+              <app-form-commands (emitCloseForm)="openedDrawer = false"></app-form-commands>
+            </ng-container>
+          </mat-drawer>
 
-          <button class="fuse-mat-button-rounded" mat-flat-button color="accent" (click)="this.openedDrawer = true;">
-            <mat-icon>keyboard_command_key</mat-icon>
-            <span class="ml-2">{{'Enviar comando' | transloco}}</span>
-          </button>
+          <mat-drawer-content class="bg-card shadow rounded-2xl overflow-hidden">
 
-          <div class="flex border-2 rounded-full p-2 cursor-pointer w-52" (click)="picker.open()">
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate [(ngModel)]="initialDate" [placeholder]="'dateInit' | transloco">
-              <input matEndDate [(ngModel)]="finalDate" [placeholder]="'dateEnd' | transloco">
-            </mat-date-range-input>
-            <mat-date-range-picker #picker>
-              <mat-datepicker-actions>
-                <button mat-button matDatepickerCancel>{{'buttons.buttonCancel' | transloco}}</button>
-                <button mat-raised-button [color]="'accent'" matDatepickerApply (click)="getSentCommands()">{{'search'
-                  | transloco}}</button>
-              </mat-datepicker-actions>
-            </mat-date-range-picker>
-            <mat-icon class="icon-size-5" matSuffix svgIcon="feather:calendar">
-            </mat-icon>
-          </div>
-        </div>
+            <div class="flex border-b p-6 gap-4">
+              <div class="flex border-2 rounded-full p-2">
+                <input #input matInput [placeholder]="'search' | transloco" (keyup)="filterTable($event)">
+                <mat-icon class="icon-size-5" matSuffix svgIcon="heroicons_outline:search"></mat-icon>
+              </div>
 
-        <div class="bg-card shadow">
-          <app-table [dataColumn]="this.columnsCommands" [dataOptionTable]="this.optionsTable"
-            [dataRow]="this.commandsData" [dataFilter]="this.dataFilter" [buttonTable]="this.buttonTableOption">
-          </app-table>
-        </div>
+              <div class="flex border-2 rounded-full p-2 cursor-pointer w-52" (click)="picker.open()">
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate [(ngModel)]="initialDate" [placeholder]="'dateInit' | transloco">
+                  <input matEndDate [(ngModel)]="finalDate" [placeholder]="'dateEnd' | transloco">
+                </mat-date-range-input>
+                <mat-date-range-picker #picker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>{{'buttons.buttonCancel' | transloco}}</button>
+                    <button mat-raised-button [color]="'accent'" matDatepickerApply
+                      (click)="getSentCommands()">{{'search'
+                      | transloco}}</button>
+                  </mat-datepicker-actions>
+                </mat-date-range-picker>
+                <mat-icon class="icon-size-5" matSuffix svgIcon="feather:calendar">
+                </mat-icon>
+              </div>
+
+              <button class="fuse-mat-button-rounded" mat-flat-button color="accent"
+                (click)="this.openedDrawer = true;">
+                <mat-icon>keyboard_command_key</mat-icon>
+                <span class="ml-2">{{'Enviar comando' | transloco}}</span>
+              </button>
+            </div>
+
+            <div>
+              <app-table [dataColumn]="this.columnsCommands" [dataOptionTable]="this.optionsTable"
+                [dataRow]="this.commandsData" [dataFilter]="this.dataFilter" [buttonTable]="this.buttonTableOption">
+              </app-table>
+            </div>
+
+          </mat-drawer-content>
+        </mat-drawer-container>
 
       </div>
-
-      <!-- <div class="relative h-auto flex overflow-hidden rounded-lg shadow-lg">
-        <fuse-drawer name="leftDrawer" [opened]="openedDrawer" position="right" mode="side">
-          <app-form-commands></app-form-commands>
-        </fuse-drawer>
-      </div> -->
-
     </div>
   </div>
 </div>
