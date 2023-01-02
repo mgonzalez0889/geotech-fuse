@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../../app-configs/app-settings.service';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FleetInterface } from '@interface/index';
+import { Store } from '@tools/store.tool';
+import { tap } from 'rxjs/operators';
+import { values } from 'lodash';
+
+interface FleetState { fleets: FleetInterface[] }
+
+const initialState: FleetState = {
+  fleets: []
+};
 
 @Injectable({
   providedIn: 'root',
 })
-export class FleetsService {
+export class FleetsService extends Store<FleetState> {
   public behaviorSubjectFleetForm: BehaviorSubject<{
     payload?: any;
     id?: number;
@@ -21,14 +31,21 @@ export class FleetsService {
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService
-  ) { }
+  ) {
+    super(initialState);
+  }
 
   /**
    * @description: Ver todos las flotas
    */
   public getFleets(): Observable<any> {
     const params = { method: 'index_all_fleet' };
-    return this._http.get(this._appSettings.fleets.url.base, { params });
+    return this._http.get(this._appSettings.fleets.url.base, { params })
+      .pipe(tap((data) => {
+        this.setState(state => ({
+          fleets: [...data.data]
+        }));
+      }));
   }
 
   /**
@@ -48,7 +65,17 @@ export class FleetsService {
     const params = { method: 'delete_fleet' };
     return this._http.delete(this._appSettings.fleets.url.base + '/' + id, {
       params,
-    });
+    }).pipe(
+      tap((data) => {
+        this.setState((state) => {
+          const copyFleets = [...state.fleets];
+          const index = copyFleets.findIndex(({ id: i }) => i === id);
+          if (index >= 0) {
+            copyFleets.splice(index, 1);
+          }
+          return { fleets: [...copyFleets] };
+        });
+      }));
   }
 
   /**

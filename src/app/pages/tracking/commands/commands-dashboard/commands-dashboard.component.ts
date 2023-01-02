@@ -6,6 +6,7 @@ import { takeUntil, delay, mergeMap, filter } from 'rxjs/operators';
 import { IButtonOptions, IOptionTable, IStateHeaders } from '@interface/index';
 import { CommandsService } from '@services/api/commands.service';
 import { ConfirmationService } from '@services/confirmation/confirmation.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-commands-dashboard',
@@ -15,8 +16,8 @@ import { ConfirmationService } from '@services/confirmation/confirmation.service
 export class CommandsDashboardComponent implements OnInit, OnDestroy {
   public openedDrawer = false;
   public commandsData: any[] = [];
-  public initialDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-  public finalDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  public initialDate: Date = new Date();
+  public finalDate: Date = new Date();
   public selectedFleets = [];
   public dataFilter: string = '';
   public optionsTable: IOptionTable[] = [
@@ -134,8 +135,8 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
    */
   public getSentCommands(): void {
     const date = {
-      dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
-      dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
+      dateInit: moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
+      dateEnd: moment(this.finalDate).format('DD/MM/YYYY') + ' 00:00:00',
     };
     this.commandService.postSearchCommandsSend(date)
       .pipe(takeUntil(this.unsubscribe$))
