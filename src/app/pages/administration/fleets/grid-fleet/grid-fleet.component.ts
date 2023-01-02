@@ -6,7 +6,8 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { FleetsService } from 'app/core/services/api/fleets.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-grid-fleet',
@@ -27,6 +28,8 @@ export class GridFleetComponent implements OnInit, OnDestroy {
     updateFleets: 'gestion_de_mobiles:flotas:update',
     deleteFleets: 'gestion_de_mobiles:flotas:delete',
   };
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
     private fleetService: FleetsService,
     private toastAlert: ToastAlertService,
@@ -35,13 +38,29 @@ export class GridFleetComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getFleets();
+    this.fleetService.selectState(state => state.fleets)
+      .pipe(takeUntil(this.unsubscribe$),)
+      .subscribe((fleets) => {
+        if (fleets) {
+          this.fleetsCount = fleets.length;
+        } else {
+          this.fleetsCount = 0;
+        }
+        this.dataTableFleet = new MatTableDataSource(fleets);
+        this.dataTableFleet.paginator = this.paginator;
+        this.dataTableFleet.sort = this.sort;
+        console.log('state', fleets);
+      });
     this.listenObservables();
     this.authService.permissionList.subscribe((permission) => {
       this.listPermission = permission;
     });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
   /**
    * @description: Filtrar datos de la tabla
    */
@@ -76,27 +95,8 @@ export class GridFleetComponent implements OnInit, OnDestroy {
     }
 
   }
-  /**
-   * @description: Mostrar todas las flotas del cliente
-   */
-  public getFleets(): void {
-    this.fleetService.getFleets().subscribe((res) => {
-      if (res.data) {
-        this.fleetsCount = res.data.length;
-      } else {
-        this.fleetsCount = 0;
-      }
-      this.dataTableFleet = new MatTableDataSource(res.data);
-      this.dataTableFleet.paginator = this.paginator;
-      this.dataTableFleet.sort = this.sort;
-    });
-  }
-  /**
-   * @description: Destruye el observable
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+
+
   /**
    * @description: Escucha el observable behavior
    */
@@ -106,7 +106,6 @@ export class GridFleetComponent implements OnInit, OnDestroy {
         ({ reload, opened }) => {
           this.opened = opened;
           if (reload) {
-            this.getFleets();
           }
         }
       );

@@ -78,10 +78,18 @@ export class MapToolsService {
       }
     );
 
+    const GoogleSatelital = L.tileLayer('https://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}&s=Ga',
+      {
+        maxZoom: 20,
+        minZoom: 3,
+      }
+    );
+
     const baseLayers: L.Control.LayersObject = {
-      GoogleMaps,
-      GoogleHybrid,
-      OpenStreetMap
+      'Google Maps': GoogleMaps,
+      'Google Hybrid': GoogleHybrid,
+      'Google Satelital': GoogleSatelital,
+      'Open Street Map': OpenStreetMap,
     };
 
     this.map = L.map('map', {
