@@ -48,11 +48,11 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       this.readMobiles();
     }, 700);
 
-    this.fleetService.getFleets()
+    this.fleetService.selectState(state => state.fleets)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-        this.fleets = [...data || []];
-        this.dataSourceFleets = new MatTableDataSource([...data || []]);
+      .subscribe((fleets) => {
+        this.fleets = [...fleets || []];
+        this.dataSourceFleets = new MatTableDataSource([...fleets || []]);
       });
 
     this.translocoService.langChanges$
@@ -105,7 +105,10 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
       this.mapService.setMarkers(this.selectPlates, true);
     }
 
-    if (this.mapService.compRef) { this.mapService.compRef.destroy(); };
+    if (this.mapService.compRef) {
+      this.mapService.compRef.destroy();
+      this.mapService.popup.close();
+    };
   }
 
   /**

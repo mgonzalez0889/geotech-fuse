@@ -23,6 +23,11 @@ export class MapToolsService {
   public selectPanelMap$: BehaviorSubject<IOptionPanelMap> = new BehaviorSubject({ panel: 'none', data: null });
   public selectPanelGeoTools$: Subject<IOptionPanelGeotools> = new Subject();
   public shapeData$: Subject<string[]> = new Subject();
+  public popup = L.popup({
+    closeButton: false,
+    keepInView: true,
+    maxWidth: 300,
+  });
   private zoom: number = 11;
   private countPointId = 0;
   private shapeGeo: string[] = [];
@@ -35,11 +40,6 @@ export class MapToolsService {
   private markersRoutes: any = {};
   private markersZones: any = {};
   private pointLatLens: any[] = [];
-  private popup = L.popup({
-    closeButton: false,
-    keepInView: true,
-    maxWidth: 300,
-  });
 
   constructor(
     private injector: Injector,
@@ -78,10 +78,18 @@ export class MapToolsService {
       }
     );
 
+    const GoogleSatelital = L.tileLayer('https://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}&s=Ga',
+      {
+        maxZoom: 20,
+        minZoom: 3,
+      }
+    );
+
     const baseLayers: L.Control.LayersObject = {
-      GoogleMaps,
-      GoogleHybrid,
-      OpenStreetMap
+      'Google Maps': GoogleMaps,
+      'Google Hybrid': GoogleHybrid,
+      'Google Satelital': GoogleSatelital,
+      'Open Street Map': OpenStreetMap,
     };
 
     this.map = L.map('map', {

@@ -2,7 +2,7 @@
   <mat-form-field class="fuse-mat-dense w-full" appearance="fill">
     <mat-label>{{placeholder | transloco}}</mat-label>
     <mat-select multiple (closed)="this.allSelected.deselect()" (opened)="openedSelection()"
-      [formControlName]="labelControl" required>
+      [formControlName]="labelControl" [required]="required">
       <div class="option-all">
         <div class="flex items-center gap-2 px-4 py-2">
           <mat-icon class="icon-size-5 " svgIcon="heroicons_solid:search">

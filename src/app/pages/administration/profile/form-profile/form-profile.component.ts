@@ -71,10 +71,11 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((res) => {
         this.plates = res.data;
       });
-    this.fleetsService.getFleets()
+
+    this.fleetsService.selectState(state => state.fleets)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((res) => {
-        this.fleets = res.data;
+        this.fleets = res;
       });
 
     this.readAndParseOptionModules();

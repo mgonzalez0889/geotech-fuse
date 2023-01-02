@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { TranslocoService } from '@ngneat/transloco';
+import moment from 'moment';
 
 @Component({
   selector: 'app-grid-dispatch',
@@ -25,12 +26,8 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   public finished_cout: number = 0;
   public dispatch: any = [];
   public infoDispatch: any = [];
-  public today = new Date();
-  public month = this.today.getMonth();
-  public year = this.today.getFullYear();
-  public day = this.today.getDate();
-  public initialDate: Date = new Date(this.year, this.month, this.day);
-  public finalDate: Date = new Date(this.year, this.month, this.day);
+  public initialDate: Date = new Date();
+  public finalDate: Date = new Date();
   public subscription: Subscription;
   public opened: boolean = false;
   public dataTableDispatch: MatTableDataSource<any>;
@@ -137,8 +134,8 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
    */
   public getDispatch(): void {
     const data = {
-      dateInit: this.initialDate.toLocaleDateString() + ' 00:00:00',
-      dateEnd: this.finalDate.toLocaleDateString() + ' 23:59:59',
+      dateInit: moment(this.initialDate).format('DD/MM/YYYY') + ' 00:00:00',
+      dateEnd: moment(this.finalDate).format('DD/MM/YYYY') + ' 00:00:00',
       status: [0, 1, 2],
     };
     this.dispatchService.getDispatches(data).subscribe((res) => {

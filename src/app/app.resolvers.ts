@@ -6,6 +6,7 @@ import { NavigationService } from 'app/core/services/navigation/navigation.servi
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 import { UserService } from 'app/core/user/user.service';
+import { FleetsService } from './core/services/api/fleets.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class InitialDataResolver implements Resolve<any>
     private _navigationService: NavigationService,
     private _notificationsService: NotificationsService,
     private _shortcutsService: ShortcutsService,
-    private _userService: UserService
+    private _userService: UserService,
   ) {
   }
 

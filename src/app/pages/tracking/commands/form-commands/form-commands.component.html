@@ -18,7 +18,7 @@
               </app-multi-select-filter>
             </mat-tab>
             <mat-tab [label]="'commands.tabPage.fleet' | transloco">
-              <app-multi-select-filter [form]="this.formCommands" [placeholder]="'commands.formPage.fieldFleets'"
+              <app-multi-select-filter [required]="false" [form]="this.formCommands" [placeholder]="'commands.formPage.fieldFleets'"
                 [options]="{data:this.fleetsData, key:'id', keyView:'name'}" labelControl="fleets">
               </app-multi-select-filter>
             </mat-tab>

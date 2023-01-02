@@ -96,7 +96,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
       const confirmation = this.confirmationService.open({
         title: this.translocoService.translate('fleets.alertMessage.titleAlertDelete'),
         message:
-        this.translocoService.translate('fleets.alertMessage.messageAlertDelete'),
+          this.translocoService.translate('fleets.alertMessage.messageAlertDelete'),
       });
       confirmation.afterClosed()
         .pipe(
@@ -108,7 +108,7 @@ export class FormFleetComponent implements OnInit, OnDestroy {
           this.fleetForm.enable();
           if (result.code === 200) {
             this.fleetService.behaviorSubjectFleetGrid.next({
-              reload: true,
+              reload: false,
               opened: false,
             });
             this.toastAlert.toasAlertSuccess({
