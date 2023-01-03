@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { FleetInterface } from '@interface/index';
 import { Store } from '@tools/store.tool';
 import { tap } from 'rxjs/operators';
-import { CommonTools } from '../../tools/common.tool';
+import { CommonTools } from '@tools/common.tool';
 
 interface FleetState { fleets: FleetInterface[] }
 
@@ -43,7 +43,7 @@ export class FleetsService extends Store<FleetState> {
     const params = { method: 'index_all_fleet' };
     return this._http.get(this._appSettings.fleets.url.base, { params })
       .pipe(tap(({ data }) => {
-        this.setState(state => ({
+        this.setState(() => ({
           fleets: [...data || []]
         }));
       }));
@@ -67,7 +67,7 @@ export class FleetsService extends Store<FleetState> {
     return this._http.delete(this._appSettings.fleets.url.base + '/' + id, {
       params,
     }).pipe(
-      tap((data) => {
+      tap(() => {
         this.setState(({ fleets }) => {
           const fleetsState = this.commonTool.deleteItemArray<FleetInterface>(fleets, id);
           return { fleets: fleetsState };

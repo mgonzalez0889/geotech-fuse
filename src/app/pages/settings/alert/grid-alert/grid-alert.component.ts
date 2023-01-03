@@ -15,6 +15,16 @@ export class GridAlertComponent implements OnInit, OnDestroy {
   public alertData: IAlert[] = [];
   public optionsTabla: IOptionTable[] = [
     {
+      name: 'colorText',
+      text: 'Color',
+      typeField: 'text',
+      classTailwind: 'w-6 h-6 rounded-full',
+      color: (data): string => {
+        data['colorText'] = '';
+        return data.color;
+      }
+    },
+    {
       name: 'event_name',
       text: 'Nombre',
       typeField: 'text'
@@ -25,9 +35,9 @@ export class GridAlertComponent implements OnInit, OnDestroy {
       typeField: 'text'
     },
     {
-      name: 'color',
-      text: 'Color',
-      typeField: 'text'
+      name: 'state',
+      text: 'Estado',
+      typeField: 'switch'
     }
   ];
   public columnsTable = this.optionsTabla.map(({ name }) => name);
@@ -36,11 +46,12 @@ export class GridAlertComponent implements OnInit, OnDestroy {
   constructor(private alertService: AlertService) { }
 
   ngOnInit(): void {
-    this.alertService.getAlerts()
+    this.alertService.getAlerts().toPromise();
+    this.alertService.selectState(state => state.alerts)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-        this.subTitlepage = data.length ? `${data.length} alertas` : 'No hay alertas';
-        this.alertData = [...data];
+      .subscribe((alerts) => {
+        this.subTitlepage = alerts.length ? `${alerts.length} alertas` : 'No hay alertas';
+        this.alertData = [...alerts];
       });
   }
 

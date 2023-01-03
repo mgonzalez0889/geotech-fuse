@@ -8,11 +8,11 @@
             <span *ngIf="!!!dataOption['color']" class="whitespace-nowrap" [ngClass]="dataOption.classTailwind">
               {{ row[dataOption.name] || (dataOption.defaultValue | transloco) | dataTable:dataOption.typeField }}
             </span>
-            <span *ngIf="!!dataOption['color']" [ngClass]="dataOption.classTailwind + ' ' + dataOption.color(row)"
-              class="whitespace-nowrap">
+            <p *ngIf="!!dataOption['color']" [ngClass]="dataOption.classTailwind + ' ' + dataOption.color(row)"
+              [ngStyle]="{backgroundColor: dataOption.color(row)}" class="whitespace-nowrap" >
               {{ (row[dataOption.name] | transloco) || (dataOption.defaultValue | transloco) |
               dataTable:dataOption.typeField }}
-            </span>
+            </p>
           </td>
         </ng-container>
         <ng-container *ngIf="dataOption.typeField === 'switch'">
@@ -51,7 +51,6 @@
       </tr>
     </table>
   </div>
-  <mat-paginator class="border-t border-b bg-gray-200"
-    [pageSizeOptions]="[10,20,50]">
+  <mat-paginator class="border-t border-b bg-gray-200" [pageSizeOptions]="[10,20,50]">
   </mat-paginator>
 </div>
