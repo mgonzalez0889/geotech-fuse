@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable,    } from '@angular/core';
 import { AppSettingsService } from 'app/core/app-configs/app-settings.service';
-import { BehaviorSubject, Observable,   } from 'rxjs';
+import { BehaviorSubject, Observable, Subject,   } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LinkageService {
+
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService,

@@ -24,6 +24,8 @@ export class FormLinkageComponent implements OnInit {
   public dataSearchClient: [] = [];
   public valueSearch: string = '';
   public clientSelected: [] = [];
+  public showError: boolean = false;
+  public showInputsCompany: boolean=false;
 
 
   constructor(
@@ -35,7 +37,7 @@ export class FormLinkageComponent implements OnInit {
     this.buildFormSearchClient();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   public closeForm(): void {
     this.emitCloseForm.emit();
@@ -46,18 +48,20 @@ export class FormLinkageComponent implements OnInit {
   }
 
   public search(): void {
-    this.dataSearchClient = [];
-    this.valueSearch = this.formSearchClient.controls['search'].value;
-
+    this.valueSearch = this.formSearchClient.controls['search'].value.toUpperCase();
     if (this.formSearchClient.valid) {
       this.linkageService.getSearchClient(this.valueSearch).subscribe(({ data }) => {
-        this.dataSearchClient = data;
+        this.dataSearchClient = data ? data : [];
+        this.showError = data ? false : true;
       });
+    } else {
+      this.dataSearchClient = [];
     }
   }
 
   public onSave(): void {
     const data = this.formUserClient.getRawValue();
+    console.log(data);
     this.formUserClient.disable();
     this.linkageService.postClient(data).subscribe((res) => {
       this.formUserClient.enable();
@@ -66,10 +70,12 @@ export class FormLinkageComponent implements OnInit {
         this.toastAlert.toasAlertSuccess({
           message: 'Cliente creado con exito'
         });
+
       } else {
         this.toastAlert.toasAlertWarn({
           message: 'Error cliente ya existe'
         });
+        ;
       }
     });
   }
@@ -78,18 +84,14 @@ export class FormLinkageComponent implements OnInit {
     if (!event.option.value) {
       return;
     }
-    const clientSelect = event.option.value;
     this.editMode = true;
-    this.clientSelected = this.dataSearchClient.find(client => client['name'] === clientSelect);
+    this.clientSelected = event.option.value;
     this.formUserClient.reset();
-    // this.formUserClient.patchValue({...this.clientSelected});
-    this.formUserClient.controls['nit'].setValue(this.clientSelected['nit']);
-    this.formUserClient.controls['name'].setValue(this.clientSelected['name']);
-    this.formUserClient.controls['phone'].setValue(this.clientSelected['phone']);
-    this.formUserClient.controls['email'].setValue(this.clientSelected['email']);
+    this.formUserClient.patchValue({...this.clientSelected});
     this.formSearchClient.controls['search'].setValue('');
     this.dataSearchClient = [];
     this.valueSearch = '';
+
   }
 
   /**
@@ -101,8 +103,10 @@ export class FormLinkageComponent implements OnInit {
       name: ['',],
       phone: ['',],
       email: ['',],
-      date_issued: ['', [Validators.required,]]
-
+      legal_representative: ['',],
+      document_number: ['',],
+      date_issued: ['', [Validators.required]],
+      company:['',]
     });
   }
 
@@ -111,6 +115,10 @@ export class FormLinkageComponent implements OnInit {
       search: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
+
+
+
+
 
 }
 

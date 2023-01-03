@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\pages",
+    "\\src\\app\\pages\\linkage",
+    "\\src\\app\\pages\\linkage\\customer-engagement",
+    "\\src\\app\\pages\\linkage\\customer-engagement\\grid-linkage"
+  ],
+  "SelectedNode": "\\src\\app\\pages\\linkage\\customer-engagement\\grid-linkage\\grid-linkage.component.ts",
+  "PreviewInSolutionExplorer": false
+}

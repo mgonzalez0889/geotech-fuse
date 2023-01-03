@@ -48,6 +48,15 @@ export class GridLinkageComponent implements OnInit {
       name: 'state',
       text: 'Estado',
       typeField: 'text',
+      classTailwind: 'inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase leading-relaxed whitespace-nowrap',
+      color: (data): string => {
+        let colorState = '';
+        if (data.state === 'En proceso') {
+          data['state'] = 'En proceso';
+          colorState = 'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50';
+        }
+        return colorState;
+      }
     },
   ];
 
@@ -58,7 +67,6 @@ export class GridLinkageComponent implements OnInit {
 
   constructor(
     private matDialog: MatDialog,
-    private usersService: UsersService,
     private linkageService: LinkageService
   ) { }
 
