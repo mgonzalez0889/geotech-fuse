@@ -25,7 +25,7 @@
           </div>
           <!-- Actions -->
           <div *ngIf="this.dataUpdate" class="flex items-center ml-auto mb-1">
-            <button mat-stroked-button (click)="editMode = true">
+            <button mat-stroked-button (click)="openEdit()">
               <mat-icon *ngIf="this.dataUpdate" class="icon-size-5"
                 [svgIcon]="'heroicons_outline:pencil-alt'"></mat-icon>
               <span class="ml-2">Iniciar proceso</span>
@@ -72,7 +72,7 @@
             </mat-icon>
             <div class="ml-6 leading-6 flex flex-row">{{dataUpdate['name']}}</div>
           </div>
-          <div class="flex sm:items-center">
+          <div class="flex sm:items-center"  >
             <mat-icon matTooltip="Correo electrónico" svgIcon="heroicons_outline:mail">
             </mat-icon>
             <div class="ml-6 leading-6">
@@ -81,7 +81,7 @@
               </a>
             </div>
           </div>
-          <div class="flex sm:items-center">
+          <div class="flex sm:items-center" >
             <mat-icon matTooltip="Celular" svgIcon="heroicons_outline:phone"></mat-icon>
             <div class="ml-6 leading-6">{{dataUpdate['phone']}}</div>
           </div>
@@ -115,47 +115,25 @@
           <mat-form-field class="w-full fuse-mat-dense">
             <mat-label>Correo</mat-label>
             <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:mail"></mat-icon>
-            <input readonly type="mail" matInput placeholder="" formControlName="email">
+            <input type="mail" matInput placeholder="" formControlName="email">
           </mat-form-field>
-
-          <!-- <mat-form-field class="w-full fuse-mat-dense">
-            <mat-label>Estado</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-              svgIcon="heroicons_outline:chart-square-bar"></mat-icon>
-            <input readonly type="text" matInput placeholder="Estado" formControlName="condition">
-          </mat-form-field> -->
-
-          <!-- <mat-form-field class="w-full fuse-mat-dense">
-            <mat-label>Score</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-              svgIcon="heroicons_outline:information-circle"></mat-icon>
-            <input readonly type="number" matInput placeholder="Score" formControlName="Score">
-          </mat-form-field>
-
-          <mat-form-field class="w-full fuse-mat-dense">
-            <mat-label>Puntaje Telecomunicaciones</mat-label>
-            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
-              svgIcon="heroicons_outline:information-circle"></mat-icon>
-            <input readonly type="number" matInput placeholder="Puntaje Telecomunicaciones"
-              formControlName="Score_telecommunications">
-          </mat-form-field> -->
 
             <mat-form-field class="w-full fuse-mat-dense" *ngIf="this.clientSelected['company'] ==='NIT'">
               <mat-label>Representante Legal</mat-label>
-              <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:mail"></mat-icon>
+              <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:user"></mat-icon>
               <input  type="text" matInput placeholder="" formControlName="legal_representative" >
             </mat-form-field>
   
             <mat-form-field class="w-full fuse-mat-dense" *ngIf="this.clientSelected['company'] ==='NIT'">
               <mat-label>Numero de documento</mat-label>
-              <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:mail"></mat-icon>
+              <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_outline:identification"></mat-icon>
               <input  type="number" matInput placeholder="" formControlName="document_number" >
             </mat-form-field>
   
 
           <mat-form-field class="w-full fuse-mat-dense">
             <mat-label>Fecha expedición documento</mat-label>
-            <mat-datepicker-toggle class="-ml-2.5" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker-toggle class="-ml-2.5" matIconSuffix  [for]="picker"></mat-datepicker-toggle>
             <input formControlName="date_issued" class="ml-2" matInput [matDatepicker]="picker" required>
 
             <mat-datepicker #picker></mat-datepicker>
@@ -179,10 +157,16 @@
               Cancelar
             </button>
 
-            <button class="ml-2" type="button" mat-flat-button color="accent" [disabled]="this.formUserClient.invalid"
+            <button *ngIf="this.sendEmail===false" class="ml-2" type="button" mat-flat-button color="accent" [disabled]="this.formUserClient.invalid"
               matTooltip="Guardar" (click)="onSave()">
               Guardar
             </button>
+
+            <button *ngIf="this.sendEmail===true" class="ml-2" type="button" mat-flat-button color="accent" [disabled]="this.formUserClient.invalid"
+              matTooltip="Enviar" (click)="sendEmailServices()">
+              Enviar solicitud
+            </button>
+
           </div>
         </form>
 

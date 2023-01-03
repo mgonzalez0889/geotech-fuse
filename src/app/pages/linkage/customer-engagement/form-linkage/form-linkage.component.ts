@@ -25,7 +25,7 @@ export class FormLinkageComponent implements OnInit {
   public valueSearch: string = '';
   public clientSelected: [] = [];
   public showError: boolean = false;
-  public showInputsCompany: boolean=false;
+  public sendEmail: boolean=false;
 
 
   constructor(
@@ -45,6 +45,20 @@ export class FormLinkageComponent implements OnInit {
     this.userDataUpdate = null;
     this.formUserClient.reset();
     this.formSearchClient.reset();
+    this.sendEmail=false;
+  }
+
+  public openEdit(): void{
+    this.editMode=true;
+    console.log(this.userDataUpdate);
+    this.formUserClient.patchValue({...this.dataUpdate});
+    this.sendEmail=true;
+    this.formUserClient.controls['email'].setValidators(Validators.required);
+    this.formUserClient.controls['email'].updateValueAndValidity();
+  }
+
+  public sendEmailServices(): void{
+
   }
 
   public search(): void {
@@ -87,6 +101,20 @@ export class FormLinkageComponent implements OnInit {
     this.editMode = true;
     this.clientSelected = event.option.value;
     this.formUserClient.reset();
+    this.formUserClient.controls['legal_representative'].clearValidators();
+    this.formUserClient.controls['document_number'].clearValidators();
+
+    if (this.clientSelected['company']==='NIT'){
+      this.formUserClient.controls['legal_representative'].setValidators(Validators.required);
+      this.formUserClient.controls['document_number'].setValidators(Validators.required);
+    }else{
+      this.formUserClient.controls['legal_representative'].clearValidators();
+      this.formUserClient.controls['document_number'].clearValidators();
+    }
+
+    this.formUserClient.controls['legal_representative'].updateValueAndValidity();
+    this.formUserClient.controls['document_number'].updateValueAndValidity();
+
     this.formUserClient.patchValue({...this.clientSelected});
     this.formSearchClient.controls['search'].setValue('');
     this.dataSearchClient = [];
@@ -102,7 +130,7 @@ export class FormLinkageComponent implements OnInit {
       nit: ['',],
       name: ['',],
       phone: ['',],
-      email: ['',],
+      email: ['',[Validators.email]],
       legal_representative: ['',],
       document_number: ['',],
       date_issued: ['', [Validators.required]],
