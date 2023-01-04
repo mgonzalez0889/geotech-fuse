@@ -4,15 +4,15 @@
   "viewLabel": "View label",
   "panelMain": {
     "optionVehicles": "Vehicles",
-    "optionFleets": "Fleets",
+    "optionFleets": "Groups",
     "selectAll": "All",
-    "notAssingVehicles": "You have no assigned vehicles.",
-    "notAssingFleet": "You have no assigned fleets."
+    "notAssingVehicles": "You don't have assigned vehicles.",
+    "notAssingFleet": "You don't have assigned groups."
   },
   "panelGeotools": {
     "routeTitle": "Routes",
     "zoneTitle": "Zones",
-    "pointControlTitle": "Points Control",
+    "pointControlTitle": "Checkpoints",
     "mapaTitle": "Maps",
     "form": {
       "new": "New",
@@ -22,21 +22,21 @@
       "description": "Description"
     },
     "messageAlert": {
-      "messageRequired": "You must create a point, route or zone on the map!",
+      "messageRequired": "You must create a checkpoint, route or zone on the map!",
       "createSuccess": "Geometry successfully created!",
       "createFailure": "Sorry, something went wrong, please try again!",
-      "editSuccess": "Successfully modified geometry!",
+      "editSuccess": "Geometry successfully modified!",
       "alertWarn": "Sorry, something went wrong, please try again!",
-      "deleteGeo": "Geometry eliminated correctly.",
+      "deleteGeo": "Geometry removed successfully.",
       "importGeo": "Geojson successfully imported!"
     }
   },
   "icons": {
     "iconTextOpen": "Open",
-    "iconTextClose": "Close",
+    "iconTextClose": "Closed",
     "iconTextOff": "Off",
     "iconTextOn": "On",
-    "iconTextReport": "Unreported",
+    "iconTextReport": "Not transmitting",
     "iconTextGpsExcellent": "Excellent",
     "iconTextGpsRegular": "Regular",
     "iconTextGpsBad": "Bad"

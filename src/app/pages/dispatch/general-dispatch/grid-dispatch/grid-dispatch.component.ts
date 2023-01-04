@@ -34,17 +34,17 @@ export class GridDispatchComponent implements OnInit, OnDestroy {
   public dispatchCount: number = 0;
   public columnsDispatch: string[] = [
     'id',
-    'spreadsheet',
+    'device',
     'status',
+    'init_place',
+    'end_place',
+    'spreadsheet',
+    'container_number',
+    'security_seal',
+    'plate',
     'created_at',
     'date_init_dispatch',
     'date_end_dispatch',
-    'plate',
-    'device',
-    'container_number',
-    'security_seal',
-    'init_place',
-    'end_place',
   ];
   public optionsTable: IOptionTable[] = [
     {

@@ -1,8 +1,8 @@
 {
-  "titlePage": "Consolidado de viajes",
+  "titlePage": "Viajes",
   "buttonsPage": {
-    "buttonGenerate": "Generar consolidado",
-    "buttonDowloand": "Descargar consolidado"
+    "buttonGenerate": "Mostrar viajes",
+    "buttonDowloand": "Descargar viajes"
   },
   "tablePage": {
     "plate": "Placa",
@@ -17,7 +17,7 @@
     "viewMap": "Ver detalle"
   },
   "formPage": {
-    "formNameCreate": "Generar Consolidado",
+    "formNameCreate": "Mostrar viajes",
     "fieldRangeDate": "Seleccione un rango de fecha",
     "fieldVehiculos": "Seleccione vehiculos",
     "errorForm": {}

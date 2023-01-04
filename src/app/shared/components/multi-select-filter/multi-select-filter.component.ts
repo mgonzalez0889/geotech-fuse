@@ -10,6 +10,7 @@ import { MatOption } from '@angular/material/core';
 export class MultiSelectFilterComponent implements OnChanges {
   @Input() form: FormGroup;
   @Input() labelControl: string;
+  @Input() required: boolean = true;
   @Input() placeholder: string;
   @Input() options: { data: any[]; key: string; keyView: string } = {
     data: [],
@@ -65,11 +66,11 @@ export class MultiSelectFilterComponent implements OnChanges {
   }
 
   public verifyAll(): void {
-    if (this.valueControl.length !== this.optionDataCopy.length) {
+    if (this.valueControl?.length !== this.optionDataCopy.length) {
       this.allSelected.deselect();
     }
 
-    if ((this.valueControl.length + 1) === this.optionDataCopy.length) {
+    if ((this.valueControl?.length + 1) === this.optionDataCopy.length) {
       this.allSelected.select();
     }
   }

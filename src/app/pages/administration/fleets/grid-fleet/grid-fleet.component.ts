@@ -34,7 +34,6 @@ export class GridFleetComponent implements OnInit, OnDestroy {
     private fleetService: FleetsService,
     private toastAlert: ToastAlertService,
     private authService: AuthService,
-
   ) { }
 
   ngOnInit(): void {
@@ -49,7 +48,6 @@ export class GridFleetComponent implements OnInit, OnDestroy {
         this.dataTableFleet = new MatTableDataSource(fleets);
         this.dataTableFleet.paginator = this.paginator;
         this.dataTableFleet.sort = this.sort;
-        console.log('state', fleets);
       });
     this.listenObservables();
     this.authService.permissionList.subscribe((permission) => {
@@ -106,6 +104,7 @@ export class GridFleetComponent implements OnInit, OnDestroy {
         ({ reload, opened }) => {
           this.opened = opened;
           if (reload) {
+            this.fleetService.getFleets().toPromise();
           }
         }
       );

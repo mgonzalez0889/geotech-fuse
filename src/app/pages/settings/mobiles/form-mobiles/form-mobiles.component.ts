@@ -7,7 +7,6 @@ import { OwnerPlateService } from '@services/api/owner-plate.service';
 import { MapToolsService } from '@services/maps/map-tools.service';
 import { SocketIoClientService } from '@services/socket/socket-io-client.service';
 import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
-import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-mobiles',
@@ -54,7 +53,6 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
     private mapToolsService: MapToolsService,
     private driverService: DriverService,
     private toastAlert: ToastAlertService,
-    private translocoService: TranslocoService
   ) {
     this.buildForm();
   }
@@ -118,8 +116,6 @@ export class FormMobilesComponent implements OnInit, OnDestroy, AfterViewInit {
       .getInfoOwnerPlate(this.dataMobile.plate_id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ data }) => {
-        // console.log('data', data);
-
         this.detailMobile = { ...data };
         this.mobilForm.patchValue({ ...data });
       });

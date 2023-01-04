@@ -99,17 +99,20 @@
                       {{row.id}} </span>
                   </td>
                 </ng-container>
-                <!-- spreadsheet Column -->
-                <ng-container matColumnDef="spreadsheet">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.spreadsheet' | transloco}}</th>
+                <!-- device Column -->
+                <ng-container matColumnDef="device">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.device' | transloco}}
+                  </th>
                   <td mat-cell *matCellDef="let row">
                     <span class="pr-6 whitespace-nowrap">
-                      {{row.spreadsheet}} </span>
+                      {{row.device_description}} </span>
                   </td>
                 </ng-container>
+
                 <!-- status Column -->
                 <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.stateDispath' | transloco}}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.stateDispath' |
+                    transloco}}</th>
                   <td mat-cell *matCellDef="let row">
                     <span
                       class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
@@ -130,64 +133,6 @@
                     </span>
                   </td>
                 </ng-container>
-                <!-- created_at Column -->
-                <ng-container matColumnDef="created_at">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.dateCreate' | transloco}} </th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="px-6 whitespace-nowrap">
-                      {{row.created_at | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
-                  </td>
-                </ng-container>
-                <!-- date_init_dispatch Column -->
-                <ng-container matColumnDef="date_init_dispatch">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.dateInitDispatch' | transloco}}
-                  </th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="pr-6 whitespace-nowrap">
-                      {{row.date_init_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
-                  </td>
-                </ng-container>
-                <!-- date_end_dispatch Column -->
-                <ng-container matColumnDef="date_end_dispatch">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.dateEndDispatch' | transloco}}
-                  </th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="pr-6 whitespace-nowrap">
-                      {{row.date_end_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
-                  </td>
-                </ng-container>
-                <!-- plate Column -->
-                <ng-container matColumnDef="plate">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.vehicle' | transloco}}</th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="pr-6 whitespace-nowrap">
-                      {{row.plate}} </span>
-                  </td>
-                </ng-container>
-                <!-- device Column -->
-                <ng-container matColumnDef="device">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.device' | transloco}}</th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="pr-6 whitespace-nowrap">
-                      {{row.device_description}} </span>
-                  </td>
-                </ng-container>
-                <!-- container_number Column -->
-                <ng-container matColumnDef="container_number">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.container' | transloco}}</th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="pr-6 whitespace-nowrap">
-                      {{row.container_number}} </span>
-                  </td>
-                </ng-container>
-                <!-- security_seal Column -->
-                <ng-container matColumnDef="security_seal">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.securitySeal' | transloco}}</th>
-                  <td mat-cell *matCellDef="let row">
-                    <span class="pr-6 whitespace-nowrap">
-                      {{row.security_seal}} </span>
-                  </td>
-                </ng-container>
                 <!-- init_place Column -->
                 <ng-container matColumnDef="init_place">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'dispatch.tablePage.origin' | transloco}}</th>
@@ -198,12 +143,82 @@
                 </ng-container>
                 <!-- end_place Column -->
                 <ng-container matColumnDef="end_place">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.destination' | transloco}}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.destination' |
+                    transloco}}</th>
                   <td mat-cell *matCellDef="let row">
                     <span class="pr-6 whitespace-nowrap">
                       {{row.end_place}} </span>
                   </td>
                 </ng-container>
+                <!-- spreadsheet Column -->
+                <ng-container matColumnDef="spreadsheet">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.spreadsheet' |
+                    transloco}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.spreadsheet}} </span>
+                  </td>
+                </ng-container>
+                <!-- container_number Column -->
+                <ng-container matColumnDef="container_number">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.container' | transloco}}
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.container_number}} </span>
+                  </td>
+                </ng-container>
+                <!-- security_seal Column -->
+                <ng-container matColumnDef="security_seal">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.securitySeal' |
+                    transloco}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.security_seal}} </span>
+                  </td>
+                </ng-container>
+                <!-- plate Column -->
+                <ng-container matColumnDef="plate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.vehicle' | transloco}}
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.plate}} </span>
+                  </td>
+                </ng-container>
+                <!-- created_at Column -->
+                <ng-container matColumnDef="created_at">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.dateCreate' | transloco}}
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="px-6 whitespace-nowrap">
+                      {{row.created_at | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
+                  </td>
+                </ng-container>
+                <!-- date_init_dispatch Column -->
+                <ng-container matColumnDef="date_init_dispatch">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.dateInitDispatch' |
+                    transloco}}
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.date_init_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
+                  </td>
+                </ng-container>
+                <!-- date_end_dispatch Column -->
+                <ng-container matColumnDef="date_end_dispatch">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'dispatch.tablePage.dateEndDispatch' |
+                    transloco}}
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="pr-6 whitespace-nowrap">
+                      {{row.date_end_dispatch | date: 'dd/MM/yyyy hh:mm:ss'}} </span>
+                  </td>
+                </ng-container>
+
+
+
+
                 <tr mat-header-row *matHeaderRowDef="columnsDispatch"></tr>
                 <tr mat-row (click)="actionsDispatch(row.id)" *matRowDef="let row; columns: columnsDispatch;">
                 </tr>

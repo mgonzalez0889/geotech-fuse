@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { FleetInterface } from '@interface/index';
 import { Store } from '@tools/store.tool';
 import { tap } from 'rxjs/operators';
-import { values } from 'lodash';
+import { CommonTools } from '@tools/common.tool';
 
 interface FleetState { fleets: FleetInterface[] }
 
@@ -30,7 +30,8 @@ export class FleetsService extends Store<FleetState> {
 
   constructor(
     private _http: HttpClient,
-    private _appSettings: AppSettingsService
+    private _appSettings: AppSettingsService,
+    private commonTool: CommonTools
   ) {
     super(initialState);
   }
@@ -41,9 +42,9 @@ export class FleetsService extends Store<FleetState> {
   public getFleets(): Observable<any> {
     const params = { method: 'index_all_fleet' };
     return this._http.get(this._appSettings.fleets.url.base, { params })
-      .pipe(tap((data) => {
-        this.setState(state => ({
-          fleets: [...data.data]
+      .pipe(tap(({ data }) => {
+        this.setState(() => ({
+          fleets: [...data || []]
         }));
       }));
   }
@@ -66,14 +67,10 @@ export class FleetsService extends Store<FleetState> {
     return this._http.delete(this._appSettings.fleets.url.base + '/' + id, {
       params,
     }).pipe(
-      tap((data) => {
-        this.setState((state) => {
-          const copyFleets = [...state.fleets];
-          const index = copyFleets.findIndex(({ id: i }) => i === id);
-          if (index >= 0) {
-            copyFleets.splice(index, 1);
-          }
-          return { fleets: [...copyFleets] };
+      tap(() => {
+        this.setState(({ fleets }) => {
+          const fleetsState = this.commonTool.deleteItemArray<FleetInterface>(fleets, id);
+          return { fleets: fleetsState };
         });
       }));
   }

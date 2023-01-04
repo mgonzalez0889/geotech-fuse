@@ -37,10 +37,10 @@ export class FormCommandsComponent implements OnInit {
         this.mobilesData = data || [];
       });
 
-    this.fleetService.getFleets()
+    this.fleetService.selectState(state => state.fleets)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-        this.fleetsData = data || [];
+      .subscribe((fleets) => {
+        this.fleetsData = fleets || [];
       });
 
     this.commandService.getTypeCommands()
@@ -48,7 +48,6 @@ export class FormCommandsComponent implements OnInit {
       .subscribe(({ data }) => {
         this.typeCommands = data || [];
       });
-
   }
 
   public sendCommand(): void {
@@ -74,12 +73,11 @@ export class FormCommandsComponent implements OnInit {
 
   private buildForm(): void {
     this.formCommands = this.formBuilder.group({
-      fleets: [[], Validators.required],
+      fleets: [[]],
       plates: [[], Validators.required],
       validationFleet: [0],
       typeCommandId: ['', Validators.required]
     });
-    this.selectTab({ index: 0 } as MatTabChangeEvent);
   }
 
 }

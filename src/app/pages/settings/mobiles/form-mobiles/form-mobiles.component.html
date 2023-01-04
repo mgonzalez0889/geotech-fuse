@@ -16,7 +16,7 @@
           <div class="text-2xl font-semibold tracking-tight leading-6 truncate">
             {{'mobile.formPage.formNameInfo' | transloco}}
           </div>
-          <div class="flex items-center ml-auto">
+          <div *ngIf="dataMobile.class_mobile_name !== 'Geobolt'" class="flex items-center ml-auto">
             <button mat-stroked-button (click)="editMode = true">
               <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil-alt"></mat-icon>
               <span class="ml-2">{{'buttons.buttonEdit' | transloco}}</span>

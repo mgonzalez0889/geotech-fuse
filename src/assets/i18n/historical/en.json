@@ -1,5 +1,5 @@
 {
-  "titlePage": "Historical and events",
+  "titlePage": "Event log",
   "buttonsPage": {
     "buttonGenerate": "Generate report",
     "buttonDowloand": "Dowloand report",
@@ -17,8 +17,8 @@
     "viewMap": "View map"
   },
   "formPage": {
-    "fromDatePicker" : "From",
-    "toDatePicker" : "To",
+    "fromDatePicker": "From",
+    "toDatePicker": "To",
     "formNameCreate": "Generate Report",
     "fieldRangeDate": "Select a date range",
     "fieldtypeVehiculo": "Search by:",
