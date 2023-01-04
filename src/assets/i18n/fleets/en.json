@@ -1,9 +1,9 @@
 {
-  "tittlepage": "Fleets",
+  "tittlepage": "Groups",
   "subtitlepage": {
-    "fleet0": "No fleet",
-    "fleet1": "Fleet",
-    "fleets": "Fleets"
+    "fleet0": "No groups",
+    "fleet1": "Group",
+    "fleets": "Groups"
   },
   "table": {
     "name": "Name",
@@ -11,20 +11,20 @@
   },
   "emptyFleetsList": "There is no data matching the search : ",
   "formPage": {
-    "formName": "New Fleet",
+    "formName": "New Group",
     "description": "Description",
-    "vehicles": "Vehicles",
-    "FleetName": "Fleet Name",
-    "SelectVehicles": "Select vehicles"
+    "vehicles": "Devices",
+    "FleetName": "Group Name",
+    "SelectVehicles": "Select devices"
   },
   "alertMessage": {
-    "titleAlertDelete": "Delete fleet",
-    "messageAlertDelete": "Are you sure you want to delete this fleet, this action cannot be undone!",
-    "toastAlertDeleteSuccess": "Fleet successfully deleted",
-    "toastAlertDeleteError": "Fleet could not be deleted",
-    "toastAlertSuccessEdit": "Fleet successfully edited!",
-    "toastAlertErrorEdit": "Fleet could not be updated",
-    "toastAlertSuccessCreated": "Fleet created with success!",
+    "titleAlertDelete": "Delete group",
+    "messageAlertDelete": "Are you sure you want to delete this group, this action cannot be undone!",
+    "toastAlertDeleteSuccess": "Group successfully deleted",
+    "toastAlertDeleteError": "Group could not be deleted",
+    "toastAlertSuccessEdit": "Group successfully edited!",
+    "toastAlertErrorEdit": "Group could not be updated",
+    "toastAlertSuccessCreated": "Group created with success!",
     "toastAlertErrorCreated": "Sorry something went wrong, please try again!"
   }
 }

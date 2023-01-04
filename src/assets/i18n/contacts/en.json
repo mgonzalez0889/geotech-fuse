@@ -6,11 +6,11 @@
     "contacts": "Contacts"
   },
   "tablePage": {
-    "name": "name",
-    "identification": "Identification",
+    "name": "Name",
+    "identification": "ID",
     "address": "Address",
     "emailAddress": "Email",
-    "cellPhone": "Cell phone",
+    "cellPhone": "Mobile",
     "emptyContactList": "Sorry no data found"
   },
   "matNoDataRow": "No data matching the search : ",
@@ -18,9 +18,9 @@
     "edit": "Edit",
     "formName": "New contact",
     "fullName": "Full name",
-    "identification": "Identification",
+    "identification": "ID",
     "emailAddress": "Email",
-    "cellPhone": "Cell phone",
+    "cellPhone": "Mobile",
     "address": "Address"
   },
   "messageAlert": {

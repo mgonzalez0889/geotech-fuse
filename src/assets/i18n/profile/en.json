@@ -15,25 +15,25 @@
     "fieldName": "Name",
     "fieldDescription": "Description",
     "fieldtypeVehiculo": "Search by:",
-    "optionVehiculo": "Vehicles",
-    "optionFleets": "Fleets",
+    "optionVehiculo": "Devices",
+    "optionFleets": "Groups",
     "fieldEvents": "Select events",
-    "fieldFleets": "Seleccione fleets",
-    "availableModules": "Available Modules",
-    "assignedModules": "Assigned Modules",
+    "fieldFleets": "Select devices",
+    "availableModules": "Available Features",
+    "assignedModules": "Assigned Features",
     "optionsPermission": {
-      "create": "create",
-      "update": "update",
-      "delete": "delete"
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete"
     },
     "errorForm": {}
   },
   "messageAlert": {
     "deleteSuccess": "Profile successfully deleted.",
-    "deleteFailure": "I cannot delete the profile, please try again.",
+    "deleteFailure": "Can't delete profile, please try again.",
     "addSuccess": "Profile successfully created.",
-    "addFailure": "I can't create the profile, try again.",
+    "addFailure": "Can't create profile, try again.",
     "editSuccess": "Profile successfully modified.",
-    "editFailure": "I can't change the profile, try again."
+    "editFailure": "Can't change profile, try again."
   }
 }

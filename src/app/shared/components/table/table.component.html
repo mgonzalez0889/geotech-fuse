@@ -18,7 +18,7 @@
         <ng-container *ngIf="dataOption.typeField === 'switch'">
           <td mat-cell *matCellDef="let row">
             <span class="w-full h-full" *ngIf="dataOption.typeField === 'switch'">
-              <mat-slide-toggle [matTooltip]="'users.tablePage.switch' | transloco" (change)="actionSwitch($event, row)"
+              <mat-slide-toggle  (change)="actionSwitch($event, row)"
                 color="primary" [checked]="row[dataOption.name]" [value]="row[dataOption.name]">
               </mat-slide-toggle>
             </span>

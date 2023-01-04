@@ -4,11 +4,11 @@
   "table": {
     "emptyDriverList": "Sorry no data found",
     "name": "Name",
-    "identification": "Identification",
+    "identification": "ID",
     "address": "Address",
     "email": "Email",
-    "cellPhone": "Cell phone",
-    "matNoDataRow": "There is no data matching the search : "
+    "cellPhone": "Mobile",
+    "matNoDataRow": "There is no data matching the search: "
   },
   "subtitlepage": {
     "driver0": "No driver",
@@ -18,9 +18,9 @@
   "formPage": {
     "titleForm": "New driver",
     "fullName": "Full name",
-    "identification": "Identification",
-    "emailAddress": "Email address",
-    "cellPhone": "Cell phone",
+    "identification": "ID",
+    "emailAddress": "Email",
+    "cellPhone": "Mobile",
     "licenseNumber": "License number",
     "licenseExpirationDate": "License expiration date",
     "address": "Address"

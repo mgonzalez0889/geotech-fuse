@@ -1,27 +1,27 @@
 {
-  "titlePage": "Mobiles",
+  "titlePage": "Devices",
   "subTitlePage": {
-    "mobil0": "No mobil",
-    "mobil1": "Mobil",
-    "mobils": "Mobiles"
+    "mobil0": "No devices",
+    "mobil1": "Device",
+    "mobils": "Devices"
   },
   "tablePage": {
-    "plate": "Plate",
+    "plate": "Device ID",
     "internalCode": "Internal code",
     "driver": "Driver",
     "battery": "Battery",
     "model": "Model",
-    "typeVehicles": "Type vehicles",
-    "notDriver": "without driver"
+    "typeVehicles": "Device type",
+    "notDriver": "No driver"
   },
   "formPage": {
-    "formNameInfo": "Vehicle information",
+    "formNameInfo": "Device information",
     "fieldDriver": "Driver",
     "fieldInternalCode": "Internal code",
     "fieldColor": "Color",
     "fieldBrand": "Brand",
     "fieldModel": "Model",
-    "fieldTypeVehicle": "Type vehicle",
+    "fieldTypeVehicle": "Device type",
     "fieldTypeServices": "Type service",
     "fieldCantPassenger": "Number passenger",
     "fieldLoadCapacity": "Load capacity",
@@ -36,8 +36,8 @@
     },
     "errorForm": {}
   },
-  "toastAlert" : {
-    "toastAlertSuccess" : "Vehicle modified successfully!",
-    "toastAlertWarn" : "Sorry something went wrong, try again!"
+  "toastAlert": {
+    "toastAlertSuccess": "Device modified successfully!",
+    "toastAlertWarn": "Sorry, something went wrong, try again!"
   }
 }

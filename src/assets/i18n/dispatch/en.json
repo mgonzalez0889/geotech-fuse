@@ -1,8 +1,8 @@
 {
-  "titlePage": "Dispatch",
+  "titlePage": "Dispatches",
   "dispatch0": "No dispatch",
   "dispatch1": "Dispatch",
-  "dispatchOther": "Dispatchs",
+  "dispatchOther": "Dispatches",
   "preDispatch": "Pre dispatch",
   "finishedDispatch": "Finished",
   "buttonsPage": {
@@ -10,11 +10,11 @@
   },
   "tablePage": {
     "num": "No.",
-    "spreadsheet": "Spreadsheet",
-    "stateDispath": "Status dispatch",
-    "dateCreate": "Creation date",
-    "dateInitDispatch": "Dispatch start date",
-    "dateEndDispatch": "Date of completion of dispatch",
+    "spreadsheet": "Sheet",
+    "stateDispath": "Status",
+    "dateCreate": "Date created",
+    "dateInitDispatch": "Date started",
+    "dateEndDispatch": "Date of completion",
     "vehicle": "Vehicle",
     "device": "Device",
     "container": "Container",
@@ -25,7 +25,7 @@
   },
   "formPage": {
     "formNameCreate": "New dispatch",
-    "fieldSpreadsheet": "Spreadsheet",
+    "fieldSpreadsheet": "Sheet",
     "fieldDeclaration": "Declaration number",
     "fieldClient": "Name client",
     "fieldState": "State",
@@ -42,18 +42,17 @@
     "fieldRemarks": "Remarks",
     "errorForm": {}
   },
-  "commandAlert" : {
-    "commandAlertTitle" : "Edit dispatch",
-    "commandAlertMessageError" : "Dispatch could not be updated, please try again",
-    "commandAlertMessageErrorUpdate" : "The dispatch could not be finalized, please try again",
-    "finalizeDispatchTitle" : "Finalize dispatch",
-    "finalizeDispatchMessage" : "Are you sure you want to finalize this dispatch, this action cannot be undone!", 
-    "finalizeDispatchMessageSuccess" : "Dispatch successfully completed!", 
-    "finalizeDispatchMessageEdit" : "Are you sure you want to edit this dispatch? This action cannot be undone!", 
-    "modifyDispatchMessageSuccess" : "Dispatch successfully modified!", 
-    "modifyDispatchMessageError" : "Dispatch could not be modified, please try again",
-    "successfullyCreatedFirm" : "Dispatch successfully created", 
-    "errorMessageCreatedFirm" : "The dispatch could not be created, please try again"
-    
+  "commandAlert": {
+    "commandAlertTitle": "Edit dispatch",
+    "commandAlertMessageError": "Dispatch could not be updated, please try again",
+    "commandAlertMessageErrorUpdate": "The dispatch could not be finalized, please try again",
+    "finalizeDispatchTitle": "Finalize dispatch",
+    "finalizeDispatchMessage": "Are you sure you want to finalize this dispatch, this action cannot be undone!",
+    "finalizeDispatchMessageSuccess": "Dispatch successfully completed!",
+    "finalizeDispatchMessageEdit": "Are you sure you want to edit this dispatch? This action cannot be undone!",
+    "modifyDispatchMessageSuccess": "Dispatch successfully modified!",
+    "modifyDispatchMessageError": "Dispatch could not be modified, please try again",
+    "successfullyCreatedFirm": "Dispatch successfully created",
+    "errorMessageCreatedFirm": "The dispatch could not be created, please try again"
   }
 }

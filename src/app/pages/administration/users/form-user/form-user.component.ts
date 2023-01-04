@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import {
   Component,
   EventEmitter,
@@ -96,7 +95,8 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
       delete userDataForm.confirm_password;
       this.userService.userForm$.next({ typeAction: 'add', formData: userDataForm });
     } else {
-      this.userService.userForm$.next({ typeAction: 'edit', formData: { ...userDataForm, id: this.dataUpdate.id } });
+      const userProfileId = userDataForm.user_profile_id ? userDataForm.user_profile_id : this.dataUpdate.user_profile_id;
+      this.userService.userForm$.next({ typeAction: 'edit', formData: { ...userDataForm, user_profile_id: userProfileId, id: this.dataUpdate.id } });
     }
 
     this.formUser.reset();
@@ -177,7 +177,7 @@ export class FormUserComponent implements OnInit, OnDestroy, OnChanges {
       user_login: ['', [Validators.required]],
       password_digest: ['', [Validators.required]],
       confirm_password: ['', [Validators.required]],
-      user_profile_id: ['',],
+      user_profile_id: [''],
       email: ['', [Validators.required, Validators.email]],
       indicative: ['+57', [Validators.required]],
       full_name: ['', [Validators.required]],

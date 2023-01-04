@@ -25,12 +25,12 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
       text: 'mobile.tablePage.internalCode',
       typeField: 'text',
     },
-    {
-      name: 'name_driver',
-      text: 'mobile.tablePage.driver',
-      typeField: 'text',
-      defaultValue: 'mobile.tablePage.notDriver',
-    },
+    // {
+    //   name: 'name_driver',
+    //   text: 'mobile.tablePage.driver',
+    //   typeField: 'text',
+    //   defaultValue: 'mobile.tablePage.notDriver',
+    // },
     {
       name: 'battery',
       text: 'mobile.tablePage.battery',
@@ -49,7 +49,7 @@ export class GridMobilesComponent implements OnInit, OnDestroy {
   ];
   public columnsMobiles: string[] = this.optionsTable.map(({ name }) => name);
   public userData: any[] = [];
-  public numberMovil: number;
+  public numberMovil: number = 0;
   private unsubscribe$ = new Subject<void>();
 
   constructor(

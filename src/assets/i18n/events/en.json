@@ -1,5 +1,5 @@
 {
-  "titlePage": "System events",
+  "titlePage": "Plaform events",
   "subtitlePage": {
     "event0": "No Events",
     "event1": "Event",
@@ -9,7 +9,7 @@
     "color": "Color",
     "name": "Name",
     "description": "Description",
-    "mailNoti": "Notification by mail",
+    "mailNoti": "Notification by email",
     "pageNoti": "Notification on platform",
     "smsNoti": "SMS notification",
     "soundNoti": "Audible notification"
@@ -27,15 +27,15 @@
         "contacts": "Contacts"
       },
       "fullName": "Name",
-      "identification": "Identification",
+      "identification": "ID",
       "emailAddress": "Email",
       "cellPhone": "Cell phone",
       "address": "Address"
     }
   },
-  "alertMessage" : {
-    "editMessageTitle" : "Edit event",
-    "editMessageTitleSuccess" : "¿Are you sure you want to edit this event?",
-    "editMessageTitleError" : "Event could not be serviced, please try again"   
+  "alertMessage": {
+    "editMessageTitle": "Edit event",
+    "editMessageTitleSuccess": "¿Are you sure you want to edit this event?",
+    "editMessageTitleError": "Event could not be managed, please try again"
   }
 }

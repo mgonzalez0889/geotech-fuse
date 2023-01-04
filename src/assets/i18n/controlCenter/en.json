@@ -1,5 +1,5 @@
 {
-  "tittlepage": "Contacts for alarm attention",
+  "tittlepage": "Contacts for alarms management",
   "subtitlepage": {
     "contact0": "No contacts",
     "contact1": "Contact",
@@ -10,32 +10,32 @@
     "matNoDataRow": "There is no data matching the search : ",
     "ownerSelect": "Select a customer",
     "name": "Name",
-    "identification": "Identification",
+    "identification": "ID",
     "typeOfContact": "Type of contact",
     "address": "Address",
     "email": "Email",
-    "cellPhone": "Cell phone"
+    "cellPhone": "Mobile"
   },
   "formPage": {
     "formName": "New contact",
     "email": "Email",
-    "cellPhone": "Cell phone",
-    "identification": "Identification",
+    "cellPhone": "Mobile",
+    "identification": "ID",
     "address": "Address",
     "description": "Description",
     "fullName": "Full name"
   },
-  "alertMessage" : {
-    "titleMessageDelete" : "Delete contact",
-    "messageDeleteConfirm" : "Are you sure you want to delete this contact? This action cannot be undone!",
-    "messageDeleteConfirmSuccess" : "Contact successfully deleted",
-    "messageDeleteConfirmError" : "Contact could not be deleted, please try again",
-    "titleMessageEdit" : "Edit contact",
-    "messageEditConfirm" : "Are you sure you want to edit this contact, this action cannot be undone!",
-    "messageEditConfirmSuccess" : "Contact edited successfully!", 
-    "messageEditConfirmError" : "Contact could not be updated, please try again",
-    "titleMessageCreated" : "Create contact",
-    "messageCreatedSuccess" : "Contact created successfully!",
-    "messageCreatedError" : "The contact could not be created, please try again"
-    }
+  "alertMessage": {
+    "titleMessageDelete": "Delete contact",
+    "messageDeleteConfirm": "Are you sure you want to delete this contact? This action cannot be undone!",
+    "messageDeleteConfirmSuccess": "Contact successfully deleted",
+    "messageDeleteConfirmError": "Contact could not be deleted, please try again",
+    "titleMessageEdit": "Edit contact",
+    "messageEditConfirm": "Are you sure you want to edit this contact, this action cannot be undone!",
+    "messageEditConfirmSuccess": "Contact edited successfully!",
+    "messageEditConfirmError": "Contact could not be updated, please try again",
+    "titleMessageCreated": "Create contact",
+    "messageCreatedSuccess": "Contact created successfully!",
+    "messageCreatedError": "The contact could not be created, please try again"
   }
+}

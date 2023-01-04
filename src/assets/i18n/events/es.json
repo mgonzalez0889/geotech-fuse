@@ -1,5 +1,5 @@
 {
-  "titlePage": "Eventos del sistema",
+  "titlePage": "Eventos de la plataforma",
   "subtitlePage": {
     "event0": "Sin Eventos",
     "event1": "Evento",
@@ -33,10 +33,10 @@
       "address": "Direccion"
     }
   },
-  "alertMessage" : {
-    "editMessageTitle" : "Editar evento",
-    "editMessageTitleSuccess" : "¿Está seguro de que desea editar este evento?",
-    "editMessageTitleError" : "El evento no se pudo atender, favor intente nuevamente.",
-    "toastMEssageSuccess" : "Evento editado con exito!"   
+  "alertMessage": {
+    "editMessageTitle": "Editar evento",
+    "editMessageTitleSuccess": "¿Está seguro de que desea editar este evento?",
+    "editMessageTitleError": "El evento no se pudo atender, favor intente nuevamente.",
+    "toastMEssageSuccess": "Evento editado con exito!"
   }
 }
