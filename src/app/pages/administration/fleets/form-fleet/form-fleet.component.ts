@@ -2,14 +2,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
-import { ConfirmationService } from 'app/core/services/confirmation/confirmation.service';
-import { FleetsService } from 'app/core/services/api/fleets.service';
-import { MobileService } from 'app/core/services/api/mobile.service';
-import { ToastAlertService } from 'app/core/services/toast-alert/toast-alert.service';
 import { NgxPermissionsObject } from 'ngx-permissions';
 import { Subject } from 'rxjs';
 import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { TranslocoService } from '@ngneat/transloco';
+import { FleetsService } from '@services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
+import { ConfirmationService } from '@services/confirmation/confirmation.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 
 @Component({
   selector: 'app-form-fleet',
@@ -44,9 +44,9 @@ export class FormFleetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createContactForm();
     this.listenObservables();
-    this.mobilesService.getMobiles()
+    this.mobilesService.selectState(state => state.mobiles)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
+      .subscribe(( data ) => {
         this.mobiles = [...data || []];
       });
     this.authService.permissionList

@@ -6,6 +6,7 @@
   "logout": "Cerrar seción",
   "buttons": {
     "buttonEdit": "Editar",
+    "buttonCreate": "Crear",
     "buttonDelete": "Eliminar",
     "buttonSave": "Guardar",
     "buttonCancel": "Cancelar",

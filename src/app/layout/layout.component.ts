@@ -9,7 +9,7 @@ import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
 import { FUSE_VERSION } from '@fuse/version';
 import { Layout } from 'app/layout/layout.types';
 import { AppConfig, Scheme, Theme } from 'app/core/app-configs/app.config';
-import { AuthService } from "../core/auth/auth.service";
+import { AuthService } from '../core/auth/auth.service';
 
 @Component({
   selector: 'layout',

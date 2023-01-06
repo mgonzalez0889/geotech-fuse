@@ -1,1 +1,114 @@
-<p>form-alert works!</p>
+<div class="flex flex-col w-full sm:pl-6">
+  <div class="bg-card shadow rounded-2xl min-h-auto">
+
+    <div class="rounded-t-2xl bg-gray-200 relative w-full h-40 sm:h-48 px-8 sm:px-12">
+      <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.closeForm()">
+          <mat-icon class="text-gray-600" svgIcon="heroicons_outline:x"></mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+      <div class="w-full max-w-3xl">
+        <ng-container *ngIf="!editMode">
+          <div class="flex flex-auto items-end -mt-16">
+            <!-- Avatar -->
+            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+              <div
+                class="flex items-center justify-center w-full h-full rounded overflow-hidden text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                <mat-icon svgIcon="mat_outline:add_alert" class="icon-size-14"></mat-icon>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center ml-auto mb-1">
+              <button mat-stroked-button (click)="editMode = true">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                <span class="ml-2">{{ dataUpdate ? 'buttons.buttonEdit' : 'buttons.buttonCreate' | transloco}}</span>
+              </button>
+            </div>
+          </div>
+          <div class="mt-3 text-4xl font-bold truncate">{{ titleForm | transloco}}</div>
+        </ng-container>
+        <ng-container *ngIf="editMode">
+          <mat-stepper orientation="vertical" class="mt-4" [linear]="true" #stepper>
+            <mat-step [stepControl]="alertFormFirst">
+              <form [formGroup]="alertFormFirst">
+                <ng-template matStepLabel>Alerta</ng-template>
+
+                <div class="flex justify-between gap-2">
+                  <mat-form-field class="w-full fuse-mat-dense">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput placeholder="Nombre de la alerta" formControlName="name" required>
+                  </mat-form-field>
+
+                  <app-input-color [form]="this.alertFormFirst" labelControl="color"></app-input-color>
+                </div>
+
+                <mat-form-field class="w-full fuse-mat-dense">
+                  <mat-label>Descripcion</mat-label>
+                  <textarea formControlName="description" placeholder="Descripcion de la alerta" matInput
+                    matTextareaAutosize></textarea>
+                </mat-form-field>
+
+                <div class="flex flex-col gap-2 bg-gray-100 rounded p-2">
+                  <mat-label class="font-medium">Estado de la alerta</mat-label>
+                  <mat-slide-toggle color="primary" formControlName="statusAlert">{{getStatusAlert ? 'Activo' :
+                    'Inactivo'}}</mat-slide-toggle>
+                </div>
+
+                <div class="flex flex-col gap-2 mt-4 bg-gray-100 rounded p-2">
+                  <mat-label class="font-medium">Tipo de notificación</mat-label>
+                  <div class="flex gap-3">
+                    <mat-checkbox formControlName="noticeEmail">
+                      {{'Email' | transloco}}
+                    </mat-checkbox>
+                    <mat-checkbox formControlName="noticeSms">
+                      {{'SMS' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="flex justify-end mt-4">
+                  <button color="accent" mat-flat-button matStepperNext>Siguiente</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [stepControl]="alertFormSecond">
+              <form [formGroup]="alertFormSecond">
+                <ng-template matStepLabel>Asociación</ng-template>
+                <div class="mt-3">
+                  <app-multi-select-filter [form]="this.alertFormSecond"
+                    [placeholder]="'Seleccione los eventos para la alerta'"
+                    [options]="{data:this.events, key:'event_id', keyView:'event_name'}" labelControl="events">
+                  </app-multi-select-filter>
+                </div>
+
+                <div class="flex gap-2 items-center">
+                  <mat-label class="mb-3">{{'Vehiculos para la alerta' | transloco}}</mat-label>
+                  <mat-radio-group [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}" class="mb-3">
+                    <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport"
+                      (change)="onChangeTrasport($event)" [value]="trasport.name">{{ trasport.text | transloco
+                      }}</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div class="flex justify-end mt-2">
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button color="accent" mat-flat-button matStepperNext>Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel>Done</ng-template>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+              </div>
+            </mat-step>
+          </mat-stepper>
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -7,6 +7,7 @@ import { NotificationsService } from 'app/layout/common/notifications/notificati
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 import { UserService } from 'app/core/user/user.service';
 import { FleetsService } from './core/services/api/fleets.service';
+import { MobileService } from '@services/api/mobile.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,8 @@ export class InitialDataResolver implements Resolve<any>
     private _notificationsService: NotificationsService,
     private _shortcutsService: ShortcutsService,
     private _userService: UserService,
+    private fleetService: FleetsService,
+    private mobilesService: MobileService
   ) {
   }
 
@@ -43,6 +46,8 @@ export class InitialDataResolver implements Resolve<any>
       this._messagesService.getAll(),
       this._notificationsService.getAll(),
       this._shortcutsService.getAll(),
+      this.fleetService.getFleets(),
+      this.mobilesService.getMobiles()
     ]);
   }
 }

@@ -3,12 +3,12 @@
     class="w-full h-full shadow-xl bg-card rounded-lg pt-3 overflow-y-auto flex flex-col">
 
     <div class="ml-3 mt-1" [hidden]="!drawer.opened">
-      <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle(); closePanel()">
+      <button class="bg-white py-0 px-2 shadow-sm" type="button" (click)="drawer.toggle();">
         <mat-icon svgIcon="mat_outline:arrow_back"></mat-icon>
       </button>
     </div>
 
-    <mat-tab-group *ngIf="drawer.opened">
+    <mat-tab-group [hidden]="drawer.opened">
       <mat-tab [label]="'map.panelMain.optionVehicles' | transloco">
         <div class="flex justify-between gap-3">
           <mat-form-field class="fuse-mat-dense w-full">

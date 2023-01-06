@@ -18,7 +18,6 @@ import { ProfilesService } from '@services/api/profiles.service';
 import { FleetsService } from '@services/api/fleets.service';
 import { MobileService } from '@services/api/mobile.service';
 import { MenuOptionsService } from '@services/api/menu-options.service';
-import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-profile',
@@ -57,7 +56,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
     private fleetsService: FleetsService,
     private menuOptionsService: MenuOptionsService,
     private mobilesService: MobileService,
-    private translocoService: TranslocoService
   ) {
     this.buildForm();
   }
@@ -66,10 +64,10 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    * @description: se llaman todos los servicios y se crea el formulario reactivo.
    */
   ngOnInit(): void {
-    this.mobilesService.getMobiles()
+    this.mobilesService.selectState(state => state.mobiles)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((res) => {
-        this.plates = res.data;
+      .subscribe((data) => {
+        this.plates = data;
       });
 
     this.fleetsService.selectState(state => state.fleets)
@@ -79,14 +77,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       });
 
     this.readAndParseOptionModules();
-
-    // this.translocoService.langChanges$
-    //   .pipe(delay(100), takeUntil(this.unsubscribe$))
-    //   .subscribe(() => {
-    //     console.log('holis');
-
-    //     this.readAndParseOptionModules();
-    //   });
   }
 
   /**

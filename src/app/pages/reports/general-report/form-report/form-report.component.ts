@@ -47,14 +47,19 @@ export class FormReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._eventsService.getEvents().pipe(takeUntil(this.unsubscribe$)).subscribe(
-      ({ data }) => this.events = [...data]
-    );
-    this._mobileService.getMobiles().pipe(takeUntil(this.unsubscribe$)).subscribe(
-      ({ data }) => this.plates = [...data || []]
-    );
+    this._eventsService.getEvents()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        ({ data }) => this.events = [...data]
+      );
+    this._mobileService.selectState(state => state.mobiles)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        data => this.plates = [...data || []]
+      );
     this._fleetsServices.selectState(state => state.fleets)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe(
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
         fleets => this.fleets = [...fleets || []]
       );
   }

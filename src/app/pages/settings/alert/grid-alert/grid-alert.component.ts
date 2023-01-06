@@ -10,9 +10,11 @@ import { AlertService } from '@services/api/alert.service';
   styleUrls: ['./grid-alert.component.scss']
 })
 export class GridAlertComponent implements OnInit, OnDestroy {
+  public openedDrawer = false;
   public titlePage: string = 'Mis alertas';
   public subTitlepage: string = '';
   public alertData: IAlert[] = [];
+  public dataFilter: string = '';
   public optionsTabla: IOptionTable[] = [
     {
       name: 'colorText',
@@ -58,6 +60,14 @@ export class GridAlertComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  /**
+   * @description: Funcion del filtro en la tabla
+   */
+  public filterTable(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataFilter = filterValue.trim().toLowerCase();
   }
 
 }

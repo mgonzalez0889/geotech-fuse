@@ -90,7 +90,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.mobilesService.readyMobiles$.next([]);
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -112,15 +111,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }, 100);
 
-    this.mobilesService.mobiles$
+    this.mobilesService.selectState(state => state.mobiles)
       .pipe(
-        filter(data => !!data.length),
         takeUntil(this.unsubscribe$)
       )
       .subscribe((data) => {
-        this.mobiles = [...(data || [])];
-        this.mapService.clearMap();
-        this.mapService.setMarkers(data, true);
+        this.mobiles = data;
+        setTimeout(() => {
+          this.mapService.clearMap();
+          this.mapService.setMarkers(data, true);
+        }, 200);
       });
   }
 
@@ -142,7 +142,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       .listenin('new_position')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: any) => {
-        console.log('new_position',data);
+        console.log('new_position', data);
         this.mapService.mobileSocket$.next(data);
         this.mapService.moveMarker(data);
       });

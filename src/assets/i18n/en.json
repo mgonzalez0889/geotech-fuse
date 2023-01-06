@@ -8,6 +8,7 @@
   "hidden": "Hidden",
   "buttons": {
     "buttonEdit": "Edit",
+    "buttonCreate": "Create",
     "buttonDelete": "Delete",
     "buttonSave": "Save",
     "buttonClose": "Close",
