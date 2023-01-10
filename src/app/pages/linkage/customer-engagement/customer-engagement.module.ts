@@ -17,14 +17,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from 'app/shared/shared.module';
 import { ComponentsModule } from 'app/shared/components/components.module';
-import { ModalLinkageComponent } from './modal-linkage/modal-linkage.component';
 
 
 @NgModule({
   declarations: [
     FormLinkageComponent,
     GridLinkageComponent,
-    ModalLinkageComponent,
   ],
   imports: [
     CommonModule,
