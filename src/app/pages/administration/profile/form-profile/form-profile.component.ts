@@ -18,6 +18,7 @@ import { ProfilesService } from '@services/api/profiles.service';
 import { FleetsService } from '@services/api/fleets.service';
 import { MobileService } from '@services/api/mobile.service';
 import { MenuOptionsService } from '@services/api/menu-options.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-profile',
@@ -77,6 +78,14 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       });
 
     this.readAndParseOptionModules();
+
+    // this.translocoService.langChanges$
+    //   .pipe(delay(100), takeUntil(this.unsubscribe$))
+    //   .subscribe(() => {
+    //     console.log('holis');
+
+    //     this.readAndParseOptionModules();
+    //   });
   }
 
   /**

@@ -59,6 +59,12 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
         this.ref.markForCheck();
       });
 
+    this.translocoService.langChanges$
+      .pipe(delay(500), takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.ref.markForCheck();
+      });
+
     this.refreshDataSocket();
   }
 

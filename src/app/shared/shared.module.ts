@@ -47,6 +47,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatSidenavModule,
     MatTableModule,
     MatTooltipModule,
+    MatAutocompleteModule
   ],
   exports: [
     CommonModule,

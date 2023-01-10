@@ -54,6 +54,13 @@ const routes: Routes = [
             m => m.DispatchModule
           ),
       },
+      {
+        path: 'linkage',
+        loadChildren: (): Promise<any> =>
+          import('./linkage/linkage.module').then(
+            m => m.LinkageModule
+          ),
+      },
     ],
   },
 ];
