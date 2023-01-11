@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from 'app/core/app-configs/app-settings.service';
+import { TypeGeotool } from '@interface/index';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class GeotoolMapService {
   /**
    * @description: Obtiene todos las geometrias, dependiendo de parametro type(routes, zones, punts)
    */
-  public getGeometry(type: string): Observable<any> {
+  public getGeometry(type: TypeGeotool): Observable<any> {
     const params = { method: 'index_all_zones', type };
     return this._http.get(this._appSettings.owner_zone.url.base, {
       params,

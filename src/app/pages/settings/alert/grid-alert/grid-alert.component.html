@@ -10,7 +10,7 @@
 
         <mat-drawer-container class="flex-auto h-auto md:min-h-180">
           <mat-drawer #drawer mode="side" [(opened)]="openedDrawer" position="end"
-            class="w-full md:w-128 bg-gray-100 border-none">
+            class="w-full md:w-130 bg-gray-100 border-none">
             <ng-container *ngIf="openedDrawer">
               <app-form-alert (emitCloseForm)="openedDrawer = false"></app-form-alert>
             </ng-container>

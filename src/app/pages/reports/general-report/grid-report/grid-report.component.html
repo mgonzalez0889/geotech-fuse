@@ -18,7 +18,8 @@
 
             <div class="flex border-b p-6 gap-4">
               <button *ngIf="this.historicData.length" [matMenuTriggerFor]="menu" mat-mini-fab
-                [matTooltip]="'historical.buttonsPage.buttonDowloand' | transloco" color="accent" (click)="this.downloadReport()">
+                [matTooltip]="'historical.buttonsPage.buttonDowloand' | transloco" color="accent"
+                (click)="this.downloadReport()">
                 <mat-icon svgIcon="sim_card_download"></mat-icon>
               </button>
               <mat-menu #menu="matMenu">

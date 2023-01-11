@@ -31,14 +31,15 @@
           <div class="mt-3 text-4xl font-bold truncate">{{ titleForm | transloco}}</div>
         </ng-container>
         <ng-container *ngIf="editMode">
-          <mat-stepper orientation="vertical" class="mt-4" [linear]="true" #stepper>
+          <mat-stepper orientation="vertical" class="mt-4" #stepper>
             <mat-step [stepControl]="alertFormFirst">
               <form [formGroup]="alertFormFirst">
                 <ng-template matStepLabel>Alerta</ng-template>
 
-                <div class="flex justify-between gap-2">
+                <div class="flex justify-between gap-2 mt-2">
                   <mat-form-field class="w-full fuse-mat-dense">
                     <mat-label>Nombre</mat-label>
+                    <mat-icon svgIcon="mat_outline:drive_file_rename_outline"></mat-icon>
                     <input matInput placeholder="Nombre de la alerta" formControlName="name" required>
                   </mat-form-field>
 
@@ -47,17 +48,26 @@
 
                 <mat-form-field class="w-full fuse-mat-dense">
                   <mat-label>Descripcion</mat-label>
+                  <mat-icon svgIcon="mat_outline:description"></mat-icon>
                   <textarea formControlName="description" placeholder="Descripcion de la alerta" matInput
                     matTextareaAutosize></textarea>
                 </mat-form-field>
 
-                <div class="flex flex-col gap-2 bg-gray-100 rounded p-2">
-                  <mat-label class="font-medium">Estado de la alerta</mat-label>
-                  <mat-slide-toggle color="primary" formControlName="statusAlert">{{getStatusAlert ? 'Activo' :
-                    'Inactivo'}}</mat-slide-toggle>
+                <div class="w-full flex justify-evenly">
+                  <div class="flex flex-col gap-2 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">Estado de la alerta</mat-label>
+                    <mat-slide-toggle color="primary" formControlName="statusAlert">{{getStatusAlert ? 'Activo' :
+                      'Inactivo'}}</mat-slide-toggle>
+                  </div>
+                  <div class="flex flex-col gap-3 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">¿ Requiere Atención ?</mat-label>
+                    <mat-checkbox formControlName="page">
+                      {{'Pagina' | transloco}}
+                    </mat-checkbox>
+                  </div>
                 </div>
 
-                <div class="flex flex-col gap-2 mt-4 bg-gray-100 rounded p-2">
+                <div class="flex flex-col gap-2 mt-4 bg-gray-100 rounded p-2 justify-center items-center">
                   <mat-label class="font-medium">Tipo de notificación</mat-label>
                   <div class="flex gap-3">
                     <mat-checkbox formControlName="noticeEmail">
@@ -75,40 +85,151 @@
               </form>
             </mat-step>
             <mat-step [stepControl]="alertFormSecond">
-              <form [formGroup]="alertFormSecond">
+              <form [formGroup]="alertFormSecond" class="flex flex-col gap-2">
                 <ng-template matStepLabel>Asociación</ng-template>
-                <div class="mt-3">
-                  <app-multi-select-filter [form]="this.alertFormSecond"
-                    [placeholder]="'Seleccione los eventos para la alerta'"
-                    [options]="{data:this.events, key:'event_id', keyView:'event_name'}" labelControl="events">
-                  </app-multi-select-filter>
+                <div class="w-full flex justify-between items-end gap-2 mt-2">
+                  <div class="w-full">
+                    <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione los eventos'"
+                      [options]="{data: events, key:'event_id', keyView:'event_name'}" labelControl="events">
+                    </app-multi-select-filter>
+                  </div>
+                  <!-- <div class="w-20">
+
+                    <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1000" step="1000" min="0" max="20"
+                      aria-label="units"></mat-slider>
+                  </div> -->
+
+                  <mat-form-field matTooltip="Incidencias de eventos" matTooltipPosition="above"
+                    class="w-20 fuse-mat-dense">
+                    <input type="number" formControlName="incidentsCount" matInput>
+                  </mat-form-field>
                 </div>
 
-                <div class="flex gap-2 items-center">
-                  <mat-label class="mb-3">{{'Vehiculos para la alerta' | transloco}}</mat-label>
-                  <mat-radio-group [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}" class="mb-3">
+                <div class="flex flex-col gap-2 mb-2 bg-gray-100 rounded p-2">
+                  <mat-label class="font-medium">{{'Vehiculos para la alerta' | transloco}}</mat-label>
+                  <mat-radio-group class="flex" [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}">
                     <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport"
                       (change)="onChangeTrasport($event)" [value]="trasport.name">{{ trasport.text | transloco
                       }}</mat-radio-button>
                   </mat-radio-group>
                 </div>
-                <div class="flex justify-end mt-2">
+
+                <ng-container *ngIf="selectTrasport === 'mobiles'">
+                  <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione vehiculos'"
+                    [options]="{data: plates, key:'plate', keyView:'plate'}" labelControl="plates">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <ng-container *ngIf="selectTrasport === 'fleet'">
+                  <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione grupos'"
+                    [options]="{data: fleets , key:'id', keyView:'name'}" labelControl="fleets">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="getControlsFormFirst['noticeEmail'].value || getControlsFormFirst['noticeSms'].value">
+                  <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione Contacto'"
+                    [options]="{data: contacts , key:'id', keyView:'full_name'}" labelControl="contact">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <div class="flex justify-end">
                   <button mat-button matStepperPrevious>Back</button>
                   <button color="accent" mat-flat-button matStepperNext>Next</button>
                 </div>
               </form>
             </mat-step>
-            <mat-step>
-              <ng-template matStepLabel>Done</ng-template>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
-              </div>
+            <mat-step [stepControl]="alertFormThree">
+              <form [formGroup]="alertFormThree" class="flex flex-col gap-2 mt-2">
+                <ng-template matStepLabel>Parametrizacion</ng-template>
+
+                <div class="w-full">
+                  <div class="bg-gray-200 p-2 rounded mb-2">
+                    <mat-checkbox color="primary" [checked]="paramsMeasure" (change)="disabledParamsMeasure($event)"
+                      class="font-medium text-lg">
+                      {{'Habilitar parámetros de medición' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                  <div class="px-6" formGroupName="paramsMeasure" [ngClass]="{'cursor-not-allowed':!paramsMeasure}">
+                    <mat-form-field class="w-full fuse-mat-dense">
+                      <mat-label>Ejecutar alarma en base de: </mat-label>
+                      <mat-select formControlName="alarmEvent">
+                        <mat-option [value]="item.name" *ngFor="let item of listAlarmEvent">{{item.text}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <div class="w-full flex justify-between gap-2">
+                      <mat-form-field class="w-full fuse-mat-dense">
+                        <mat-label>Cuando su valor sea: </mat-label>
+                        <mat-select formControlName="condition">
+                          <mat-option value=">">Mas de</mat-option>
+                          <mat-option value="<">Menos de</mat-option>
+                          <mat-option value="range">En el rango</mat-option>
+                          <mat-option value="=">Igual a</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field class="w-20 fuse-mat-dense">
+                        <mat-label>Valor: </mat-label>
+                        <input type="number" formControlName="valor" [ngClass]="{'cursor-not-allowed':!paramsMeasure}"
+                          matInput>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-full">
+                  <div class="bg-gray-200 p-2 rounded mb-2">
+                    <mat-checkbox color="primary" [checked]="paramsGeometry" (change)="disabledParamsGeometry($event)"
+                      class="font-medium text-lg">
+                      {{'Habilitar parámetros de geometria' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                  <div class="px-6" formGroupName="paramsGeometry" [ngClass]="{'cursor-not-allowed':!paramsGeometry}">
+                    <mat-form-field class="w-full fuse-mat-dense">
+                      <mat-label>Tipo de geometria: </mat-label>
+                      <mat-select (selectionChange)="selectGeomtry($event)" formControlName="typeGeometry">
+                        <mat-option value="zones">Zonas</mat-option>
+                        <mat-option value="punts">Puntos de control</mat-option>
+                        <mat-option value="routes">Rutas</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <div class="w-full flex justify-between gap-2">
+                      <mat-form-field class="w-full fuse-mat-dense">
+                        <mat-label>Ejecutar alerta cuando este: </mat-label>
+                        <mat-select formControlName="alertEvent">
+                          <mat-option value="inside">Dentro</mat-option>
+                          <mat-option value="out">Fuera</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <ng-container *ngIf="typeGeomtry === 'punts' || typeGeomtry === 'routes'">
+                        <mat-form-field class="w-24 fuse-mat-dense">
+                          <mat-label>Tolerancia: </mat-label>
+                          <input type="number" formControlName="tolerance"
+                            [ngClass]="{'cursor-not-allowed':!paramsGeometry}" matInput>
+                        </mat-form-field>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="paramsGeometry && getControlsThreeParamGeomtry['typeGeometry'].value">
+                  <app-multi-select-filter [form]="this.alertFormThree" [placeholder]="'Seleccione Geometria'"
+                    [options]="{data: geometries , key:'id', keyView:'name'}" labelControl="geometryId">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <div class="flex justify-end">
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button color="accent" mat-flat-button (click)="this.sendDataForms()">Guardar</button>
+                </div>
+
+              </form>
             </mat-step>
           </mat-stepper>
         </ng-container>
       </div>
     </div>
-
   </div>
 </div>

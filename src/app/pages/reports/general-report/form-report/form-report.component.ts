@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import moment from 'moment';
 import { Subject } from 'rxjs';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';

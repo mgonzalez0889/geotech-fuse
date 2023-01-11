@@ -31,6 +31,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FuseDrawerModule } from '@fuse/components/drawer';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   imports: [
@@ -82,7 +83,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatDialogModule,
     MatAutocompleteModule,
     FuseDrawerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatSliderModule
   ],
 })
 export class SharedModule { }

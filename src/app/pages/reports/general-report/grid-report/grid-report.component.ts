@@ -15,7 +15,6 @@ export class GridReportComponent implements OnInit, OnDestroy {
   public historicData: any[] = [];
   public dataForm: any;
   public opened: boolean = false;
-
   /**
    * @description: Json para renderizar un boton en la tabla
    */
