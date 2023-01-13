@@ -4,7 +4,7 @@
   "pendingStatus": "Pendientes",
   "stateSent": "Enviados",
   "statusExpired": "Expirados",
-  "commandsSent": "Comandos enviados",
+  "commandsSent": "Enviar comando",
   "tablePage": {
     "plate": "Placa",
     "dateOfShipment": "Fecha del envio",
@@ -15,7 +15,7 @@
     "resendCommand": "Reenviar comando"
   },
   "formPage": {
-    "titlePage": "Selección de moviles",
+    "titlePage": "Envio de comandos",
     "checkboxSelectAll": "Seleccionar todo",
     "commandSelection": "Selección de comandos",
     "sendCommandButton": "Enviar comando",

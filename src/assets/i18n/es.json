@@ -15,11 +15,14 @@
     "buttonImport": "Importar",
     "buttonDowloand": "Descargar",
     "buttonGenerate": "Generar",
-    "buttonConfirm": "Confirmar"
+    "buttonConfirm": "Confirmar",
+    "buttonNext": "Seguiente",
+    "buttonBack": "Volver"
   },
   "table": {
     "warningTitle": "Aviso",
     "warningDescription": "Lo sentimos, no se encontraron datos",
+    "filterTable": "No se encontraron datos con el termino : ",
     "pagination": {
       "itemsPerPageLabel": "Items por página:",
       "firstPageLabel": "Página anterior",

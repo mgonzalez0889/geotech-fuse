@@ -28,7 +28,6 @@ export class TableComponent implements OnChanges {
   @Input() buttonTable: IButtonOptions<any>;
   @Output() emitSelectRow = new EventEmitter<any>();
   @Output() emitChangeSwitch = new EventEmitter<{ state: boolean; data: any }>();
-
   public dataSource: MatTableDataSource<any>;
 
   constructor() { }
@@ -44,7 +43,11 @@ export class TableComponent implements OnChanges {
     this.emitSelectRow.emit(row);
   }
 
-  public actionSwitch({ checked }: MatSlideToggleChange, data: any): void {
-    this.emitChangeSwitch.emit({ state: checked, data });
+  public actionSwitch(slideData: MatSlideToggleChange, data: any): void {
+    this.emitChangeSwitch.emit({ state: slideData.checked, data });
+    slideData.source.setDisabledState(true);
+    setTimeout(() => {
+      slideData.source.setDisabledState(false);
+    }, 2000);
   }
 }

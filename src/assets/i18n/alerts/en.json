@@ -1,0 +1,31 @@
+{
+  "titlePage": "My alerts",
+  "subTitlePage": "alerts",
+  "buttonsPage": {
+    "buttonAdd": "Create alert"
+  },
+  "tablePage": {
+    "color": "Color",
+    "name": "Name",
+    "description": "Description",
+    "state": "State"
+  },
+  "formPage": {
+    "formNameCreate": "Create alert",
+    "formNameUpdate": "Edit alert",
+    "stepAlert": {},
+    "stepAssociation": {},
+    "stepParams": "",
+    "errorForm": {}
+  },
+  "messageAlert": {
+    "updateStateWarn": "Can't change status, please try again.",
+    "updateStateSuccess": "User status successfully modified.",
+    "deleteWarn": "Can't delete the user, please try again.",
+    "deleteSuccess": "User successfully deleted.",
+    "createWarn": "Can't create the user, try again.",
+    "createSuccess": "User successfully created.",
+    "updateWarn": "Can't change the user, try again.",
+    "updateSuccess": "User successfully modified."
+  }
+}

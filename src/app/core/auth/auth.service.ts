@@ -84,16 +84,9 @@ export class AuthService {
 
     return this._httpClient.post(this._appSettings.auth.url.base, credentials).pipe(
       switchMap((response: any) => {
-        // Store the access token in the local storage
         this.accessToken = response.access_token;
-
-        // Set the authenticated flag to true
         this._authenticated = true;
-
-        // Store the user on the user service
         this._userService.user = response.user;
-
-        // Return a new observable with the response
         return of(response);
       })
     );

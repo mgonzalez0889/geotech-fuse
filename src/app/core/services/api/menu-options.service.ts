@@ -2,11 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../../app-configs/app-settings.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Store } from '@tools/store.tool';
+import { tap } from 'rxjs/operators';
+
+interface ModulesState { modules: any[] }
+
+const initialState: ModulesState = {
+  modules: []
+};
 
 @Injectable({
   providedIn: 'root',
 })
-export class MenuOptionsService {
+export class MenuOptionsService extends Store<ModulesState> {
   public behaviorSubjectMenuForm: BehaviorSubject<{
     payload?: any;
     id?: number;
@@ -21,7 +29,9 @@ export class MenuOptionsService {
   constructor(
     private _http: HttpClient,
     private _appSettings: AppSettingsService
-  ) { }
+  ) {
+    super(initialState);
+  }
 
   /**
    * @description: Todas las opciones de menu (mejora)
@@ -40,7 +50,13 @@ export class MenuOptionsService {
     const params = { method: 'index_all_new_options' };
     return this._http.get(this._appSettings.menuOptions.url.base, {
       params,
-    });
+    }).pipe(
+      tap(({ data }) => {
+        this.setState(() => ({
+          modules: [...data || []]
+        }));
+      })
+    );
   }
 
   /**

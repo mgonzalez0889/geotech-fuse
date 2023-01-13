@@ -2,7 +2,8 @@
   <div class="flex flex-wrap w-full mx-auto p-6">
 
     <div class="w-full">
-      <app-header-page [title]="this.titlePage" [subTitle]="this.subTitlepage"></app-header-page>
+      <app-header-page [title]="'alerts.titlePage' | transloco"
+        [subTitle]="'alerts.subTitlePage' | transloco"></app-header-page>
     </div>
 
     <div class="flex flex-wrap w-full py-6">
@@ -12,7 +13,8 @@
           <mat-drawer #drawer mode="side" [(opened)]="openedDrawer" position="end"
             class="w-full md:w-130 bg-gray-100 border-none">
             <ng-container *ngIf="openedDrawer">
-              <app-form-alert (emitCloseForm)="openedDrawer = false"></app-form-alert>
+              <app-form-alert [titleForm]="'alerts.formPage.formNameCreate'" (emitCloseForm)="openedDrawer = false"
+                (actionsForm)="actiosAlert($event)"></app-form-alert>
             </ng-container>
           </mat-drawer>
 
@@ -26,13 +28,14 @@
               <button class="fuse-mat-button-rounded" mat-flat-button color="accent"
                 (click)="this.openedDrawer = true;">
                 <mat-icon svgIcon="mat_outline:add_alert"></mat-icon>
-                <span class="ml-2">{{'Crear alerta' | transloco}}</span>
+                <span class="ml-2">{{'alerts.buttonsPage.buttonAdd' | transloco}}</span>
               </button>
             </div>
 
             <div>
               <app-table [dataColumn]="this.columnsTable" [dataOptionTable]="this.optionsTabla"
-                [dataRow]="this.alertData" [dataFilter]="this.dataFilter"></app-table>
+                [dataRow]="this.alertData" [dataFilter]="this.dataFilter"
+                (emitChangeSwitch)="changeStatusAlert($event)"></app-table>
             </div>
           </mat-drawer-content>
         </mat-drawer-container>

@@ -18,7 +18,6 @@ import { ProfilesService } from '@services/api/profiles.service';
 import { FleetsService } from '@services/api/fleets.service';
 import { MobileService } from '@services/api/mobile.service';
 import { MenuOptionsService } from '@services/api/menu-options.service';
-import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-form-profile',
@@ -78,14 +77,6 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       });
 
     this.readAndParseOptionModules();
-
-    // this.translocoService.langChanges$
-    //   .pipe(delay(100), takeUntil(this.unsubscribe$))
-    //   .subscribe(() => {
-    //     console.log('holis');
-
-    //     this.readAndParseOptionModules();
-    //   });
   }
 
   /**
@@ -97,18 +88,16 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
       this.onChangeTrasport({ value: typeVehicle } as MatRadioChange);
 
       this.assignedModules = [...this.dataUpdate.modules];
+      this.profileForm.patchValue({ ...this.dataUpdate });
 
       setTimeout(() => {
         this.parseModuleUpdate();
       }, 1000);
-
-      this.editMode = false;
-      this.profileForm.patchValue({ ...this.dataUpdate });
     } else {
-      this.editMode = false;
       this.assignedModules = [];
       this.profileForm.reset();
     }
+    this.editMode = false;
   }
 
   ngOnDestroy(): void {
@@ -225,19 +214,17 @@ export class FormProfileComponent implements OnInit, OnDestroy, OnChanges {
    * @description: Se leen y se parsean los modulos.
    */
   private readAndParseOptionModules(): void {
-    this.menuOptionsService.getMenuOptionsNew()
+    this.menuOptionsService.selectState(({ modules }) => modules)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-
+      .subscribe((modules) => {
         const option: IOptionPermission = {
           read: false,
           create: false,
           update: false,
           delete: false,
         };
-
         const modulesAvailales: IListModules[] = [];
-        data.forEach(({ children }) => {
+        modules.forEach(({ children }) => {
           children.forEach(
             ({ id, title, create_option, edit_option, delete_option }) => {
               modulesAvailales.push(

@@ -1,5 +1,3 @@
-import { user } from './../../../mock-api/common/user/data';
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppSettingsService } from '../../app-configs/app-settings.service';

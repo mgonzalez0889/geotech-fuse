@@ -23,8 +23,8 @@ export class InitialDataResolver implements Resolve<any>
     private _notificationsService: NotificationsService,
     private _shortcutsService: ShortcutsService,
     private _userService: UserService,
-    private fleetService: FleetsService,
-    private mobilesService: MobileService
+    private _fleetService: FleetsService,
+    private _mobilesService: MobileService
   ) {
   }
 
@@ -46,8 +46,8 @@ export class InitialDataResolver implements Resolve<any>
       this._messagesService.getAll(),
       this._notificationsService.getAll(),
       this._shortcutsService.getAll(),
-      this.fleetService.getFleets(),
-      this.mobilesService.getMobiles()
+      this._fleetService.getFleets(),
+      this._mobilesService.getMobiles()
     ]);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { TypeGeotool } from '@interface/index';
 import { ContactService } from '@services/api/contact.service';
@@ -8,22 +9,26 @@ import { EventsService } from '@services/api/events.service';
 import { FleetsService } from '@services/api/fleets.service';
 import { GeotoolMapService } from '@services/api/geotool-map.service';
 import { MobileService } from '@services/api/mobile.service';
+import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CalendarDaysComponent } from '../calendar-days/calendar-days.component';
 
 interface ISelectOptions {
   name: string;
   text: string;
 }
+
 @Component({
   selector: 'app-form-alert',
   templateUrl: './form-alert.component.html',
   styleUrls: ['./form-alert.component.scss']
 })
 export class FormAlertComponent implements OnInit {
-  @Input() titleForm: string = 'Crear alerta';
+  @Input() titleForm: string = '';
   @Input() dataUpdate: any = null;
   @Output() emitCloseForm = new EventEmitter<void>();
+  @Output() actionsForm = new EventEmitter<{ action: string; data: any }>();
   public editMode: boolean = false;
   public alertFormFirst: FormGroup;
   public alertFormSecond: FormGroup;
@@ -33,9 +38,26 @@ export class FormAlertComponent implements OnInit {
   public fleets: any[] = [];
   public geometries: any[] = [];
   public contacts: any[] = [];
+  public viewRange: boolean = false;
   public typeGeomtry: TypeGeotool = 'none';
   public paramsMeasure: boolean = false;
   public paramsGeometry: boolean = false;
+  public arrayBlockDays: any[] = [];
+  public selectExecuteDate: string = 'always';
+  public optionsExecuteDate: ISelectOptions[] = [
+    {
+      name: 'always',
+      text: 'Por siempre'
+    },
+    {
+      name: 'dateSpecify',
+      text: 'Fecha especifica'
+    },
+    {
+      name: 'days',
+      text: 'En los dias'
+    }
+  ];
   public selectTrasport: 'mobiles' | 'fleet' = 'mobiles';
   public listTrasport: ISelectOptions[] = [
     {
@@ -81,13 +103,27 @@ export class FormAlertComponent implements OnInit {
     private _mobileService: MobileService,
     private _fleetsServices: FleetsService,
     private _contactService: ContactService,
-    private _geometryServices: GeotoolMapService
+    private _geometryServices: GeotoolMapService,
+    private _toastAlert: ToastAlertService,
+    private _dialog: MatDialog,
   ) {
     this.buildForms();
   }
 
   get getStatusAlert(): boolean {
     return this.alertFormFirst.get('statusAlert').value;
+  }
+
+  get getSendCommand(): boolean {
+    return this.alertFormThree.get('sendCommand').value;
+  }
+
+  get getExecuteAlertOff(): boolean {
+    return this.alertFormThree.get('executeAlertOff').value;
+  }
+
+  get getExecuteAlertOn(): boolean {
+    return this.alertFormThree.get('executeAlertOn').value;
   }
 
   get getControlsFormFirst(): {
@@ -99,35 +135,64 @@ export class FormAlertComponent implements OnInit {
   get getControlsThreeParamGeomtry(): {
     [key: string]: AbstractControl;
   } {
-
     return this.alertFormThree['controls'].paramsGeometry['controls'];
   }
 
-  ngOnInit(): void {
-    console.log('aa', this.alertFormThree['controls'].paramsGeometry['controls']);
+  get getControlsThreeParamMeasure(): FormGroup {
+    return this.alertFormThree['controls'].paramsGeometry as FormGroup;
+  }
 
+  ngOnInit(): void {
     this._eventsService.getEvents()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        ({ data }) => this.events = [...data]
-      );
+      .subscribe({
+        next: ({ data }) => {
+          this.events = [...data || data];
+        },
+        error: ({ error }) => {
+          this._toastAlert.toasAlertWarn({
+            message: `${error.error}`
+          });
+        }
+      });
 
     this._mobileService.selectState(({ mobiles }) => mobiles)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        data => this.plates = [...data || []]
-      );
+      .subscribe({
+        next: (plates) => {
+          this.plates = plates;
+        },
+        error: ({ error }) => {
+          this._toastAlert.toasAlertWarn({
+            message: `${error.error}`
+          });
+        }
+      });
 
     this._fleetsServices.selectState(({ fleets }) => fleets)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        fleets => this.fleets = [...fleets || []]
-      );
+      .subscribe({
+        next: (fleets) => {
+          this.fleets = fleets;
+        },
+        error: ({ error }) => {
+          this._toastAlert.toasAlertWarn({
+            message: `${error.error}`
+          });
+        }
+      });
 
     this._contactService.getContacts()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-        this.contacts = [...data || data];
+      .subscribe({
+        next: ({ data }) => {
+          this.contacts = [...data || data];
+        },
+        error: ({ error }) => {
+          this._toastAlert.toasAlertWarn({
+            message: `${error.error}`
+          });
+        }
       });
   }
 
@@ -156,12 +221,47 @@ export class FormAlertComponent implements OnInit {
     }
   }
 
+  public changeExecuteDate({ value }: MatRadioChange): void {
+    if (value === 'days') {
+      const dialogRef = this._dialog.open(CalendarDaysComponent, {
+        maxWidth: '360px',
+        minWidth: '340px',
+        minHeight: '260px',
+        maxHeight: '280px',
+      });
+    }
+  }
+
   public selectGeomtry({ value }: { value: TypeGeotool }): void {
     this.typeGeomtry = value;
     this._geometryServices.getGeometry(value)
-      .subscribe(({ data }) => {
-        this.geometries = [...data || []];
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: ({ data }) => {
+          this.geometries = [...data || []];
+        },
+        error: ({ error }) => {
+          this._toastAlert.toasAlertWarn({
+            message: `${error.error}`
+          });
+        }
       });
+  }
+
+  public selectCondition({ value }: { value: string }): void {
+    this.viewRange = value === 'range';
+    if (value === 'range') {
+      this.getControlsThreeParamMeasure['rangeFrom'].setValidators([Validators.required]);
+      this.getControlsThreeParamMeasure['rangeTo'].setValidators([Validators.required]);
+      this.getControlsThreeParamMeasure['value'].clearValidators();
+    } else {
+      this.getControlsThreeParamMeasure['value'].setValidators([Validators.required]);
+      this.getControlsThreeParamMeasure['rangeFrom'].clearValidators();
+      this.getControlsThreeParamMeasure['rangeTo'].clearValidators();
+    }
+    this.getControlsThreeParamMeasure['value'].updateValueAndValidity();
+    this.getControlsThreeParamMeasure['rangeTo'].updateValueAndValidity();
+    this.getControlsThreeParamMeasure['rangeFrom'].updateValueAndValidity();
   }
 
   /**
@@ -185,14 +285,17 @@ export class FormAlertComponent implements OnInit {
     this.selectTrasport = value;
   }
 
-
   public sendDataForms(): void {
 
     const formFirstValue = this.alertFormFirst.value;
     const formSecondValue = this.alertFormSecond.value;
     const formThreeValue = this.alertFormThree.value;
 
-    console.log('values form', { ...formFirstValue, ...formSecondValue, ...formThreeValue });
+    if (this.dataUpdate) {
+    } else {
+      this.actionsForm.emit({ action: 'add', data: formFirstValue });
+    }
+
   }
 
   private buildForms(): void {
@@ -203,7 +306,9 @@ export class FormAlertComponent implements OnInit {
       noticeEmail: [false],
       noticeSms: [false],
       description: [''],
-      page: [false]
+      page: [false],
+      attend: [true],
+      dateExecute: ['', Validators.required],
     });
 
     this.alertFormSecond = this._formBuilder.group({
@@ -211,14 +316,16 @@ export class FormAlertComponent implements OnInit {
       plates: [[], [Validators.required]],
       fleets: [[]],
       contact: [''],
-      incidentsCount: ['', Validators.required]
+      incidentsCount: [1, Validators.required]
     });
 
     this.alertFormThree = this._formBuilder.group({
       paramsMeasure: this._formBuilder.group({
         alarmEvent: ['', Validators.required],
         condition: ['', Validators.required],
-        valor: ['', Validators.required]
+        value: ['', Validators.required],
+        rangeFrom: [''],
+        rangeTo: ['']
       }),
       paramsGeometry: this._formBuilder.group({
         alertEvent: ['', Validators.required],
@@ -227,8 +334,7 @@ export class FormAlertComponent implements OnInit {
       }),
       buzzer: [false],
       executeVehicle: [false],
-      sendCommandOff: [false],
-      sendCommandOn: [false],
+      sendCommand: [false],
       executeAlertOff: [false],
       executeAlertOn: [false],
       geometryId: ['']

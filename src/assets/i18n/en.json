@@ -17,11 +17,14 @@
     "buttonImport": "Import",
     "buttonDowloand": "Dowloand",
     "buttonGenerate": "Generate",
-    "buttonConfirm": "Confirm"
+    "buttonConfirm": "Confirm",
+    "buttonNext": "Next",
+    "buttonBack": "Back"
   },
   "table": {
     "warningTitle": "Notice",
     "warningDescription": "Sorry, no data found.",
+    "filterTable": "No data were found with the term : ",
     "pagination": {
       "itemsPerPageLabel": "Items per page:",
       "firstPageLabel": "Previous page",
