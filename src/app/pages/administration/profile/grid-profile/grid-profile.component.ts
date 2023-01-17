@@ -7,6 +7,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProfilesService } from '@services/api/profiles.service';
 import { ToastAlertService } from '@services/toast-alert/toast-alert.service';
 import { ConfirmationService } from '@services/confirmation/confirmation.service';
+import { MenuOptionsService } from '@services/api/menu-options.service';
 
 @Component({
   selector: 'app-grid-profile',
@@ -46,12 +47,23 @@ export class GridProfileComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private profileService: ProfilesService,
     private toastAlert: ToastAlertService,
-    private translocoService: TranslocoService
+    private translocoService: TranslocoService,
+    private menuOptionsService: MenuOptionsService,
   ) { }
 
   ngOnInit(): void {
     this.getProfiles();
     this.listenObservables();
+
+    this.menuOptionsService.getMenuOptionsNew()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        error: (err) => {
+          this.toastAlert.toasAlertWarn({
+            message: `${err.error || err}`
+          });
+        }
+      });
 
     this.permissionsService.permissions$
       .pipe(takeUntil(this.unsubscribe$))

@@ -1,7 +1,7 @@
 <div class="flex flex-col w-full sm:pl-6">
   <div class="bg-card shadow rounded-2xl min-h-auto">
     <div class="w-full h-20 flex justify-between items-center px-2 pt-4 sm:px-12 border-b-2">
-      <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'Envio de comandos' | transloco}}
+      <h2 class="text-2xl font-semibold tracking-tight leading-8">{{'commands.formPage.titlePage' | transloco}}
       </h2>
       <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.emitCloseForm.emit();">
         <mat-icon class="text-gray-400" svgIcon="heroicons_outline:x"></mat-icon>
@@ -11,14 +11,15 @@
     <div class="relative flex flex-col flex-auto items-center px-2 py-1 sm:px-12 sm:py-3">
       <div class="w-full max-w-3xl">
         <form [formGroup]="this.formCommands" (ngSubmit)="this.sendCommand()" class="flex flex-col gap-3 mt-2">
-          <mat-tab-group  (selectedTabChange)="selectTab($event)" animationDuration="500ms">
-            <mat-tab  [label]="'commands.tabPage.vehicle' | transloco">
+          <mat-tab-group (selectedTabChange)="selectTab($event)" animationDuration="500ms">
+            <mat-tab [label]="'commands.tabPage.vehicle' | transloco">
               <app-multi-select-filter [form]="this.formCommands" [placeholder]="'commands.formPage.fieldVehiculos'"
                 [options]="{data:this.mobilesData, key:'plate', keyView:'plate'}" labelControl="plates">
               </app-multi-select-filter>
             </mat-tab>
             <mat-tab [label]="'commands.tabPage.fleet' | transloco">
-              <app-multi-select-filter [required]="false" [form]="this.formCommands" [placeholder]="'commands.formPage.fieldFleets'"
+              <app-multi-select-filter [required]="false" [form]="this.formCommands"
+                [placeholder]="'commands.formPage.fieldFleets'"
                 [options]="{data:this.fleetsData, key:'id', keyView:'name'}" labelControl="fleets">
               </app-multi-select-filter>
             </mat-tab>

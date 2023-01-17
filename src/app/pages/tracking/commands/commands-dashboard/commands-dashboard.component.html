@@ -12,7 +12,8 @@
           <mat-drawer #drawer mode="side" [(opened)]="openedDrawer" position="end"
             class="w-full md:w-128 bg-gray-100 border-none">
             <ng-container *ngIf="openedDrawer">
-              <app-form-commands (sendDataForm)="this.sendCommand($event)" (emitCloseForm)="openedDrawer = false"></app-form-commands>
+              <app-form-commands (sendDataForm)="this.sendCommand($event)"
+                (emitCloseForm)="openedDrawer = false"></app-form-commands>
             </ng-container>
           </mat-drawer>
 
@@ -44,7 +45,7 @@
               <button class="fuse-mat-button-rounded" mat-flat-button color="accent"
                 (click)="this.openedDrawer = true;">
                 <mat-icon>keyboard_command_key</mat-icon>
-                <span class="ml-2">{{'Enviar comando' | transloco}}</span>
+                <span class="ml-2">{{'commands.commandsSent' | transloco}}</span>
               </button>
             </div>
 

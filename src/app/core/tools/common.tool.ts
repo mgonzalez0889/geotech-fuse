@@ -22,4 +22,8 @@ export class CommonTools {
     return [...copyDataArray];
   }
 
+  // public updateItemArray<T = any>(dataArray: T[], itemId: number): T[] {
+
+  // }
+
 }

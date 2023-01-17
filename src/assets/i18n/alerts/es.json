@@ -1,0 +1,31 @@
+{
+  "titlePage": "Mis alertas",
+  "subTitlePage": "{{ value }} alertas",
+  "buttonsPage": {
+    "buttonAdd": "Crear alerta"
+  },
+  "tablePage": {
+    "color": "Color",
+    "name": "Nombre",
+    "description": "Descripción",
+    "state": "Estado"
+  },
+  "formPage": {
+    "formNameCreate": "Crear Alerta",
+    "formNameUpdate": "Editar Alerta",
+    "stepAlert": {},
+    "stepAssociation": {},
+    "stepParams": "",
+    "errorForm": {}
+  },
+  "messageAlert": {
+    "updateStateWarn": "No se puedo modificar el estado, intentelo de nuevo.",
+    "updateStateSuccess": "Estado de Usuario modificado con exito.",
+    "deleteWarn": "No se puedo eliminar el usuario, intentelo de nuevo.",
+    "deleteSuccess": "Usuario eliminado con exito.",
+    "createWarn": "No se puedo crear el usuario, intentelo de nuevo.",
+    "createSuccess": "`Usuario creado con exito.`",
+    "updateWarn": "No se puedo modificar el usuario, intentelo de nuevo.",
+    "updateSuccess": "Usuario modificado con exito."
+  }
+}

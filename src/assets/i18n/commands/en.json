@@ -4,7 +4,7 @@
   "pendingStatus": "Pending",
   "stateSent": "Sent",
   "statusExpired": "Expired",
-  "commandsSent": "Sent commands",
+  "commandsSent": "Send command",
   "tablePage": {
     "plate": "Plate",
     "dateOfShipment": "Date of shipment",
@@ -15,7 +15,7 @@
     "resendCommand": "Resend command"
   },
   "formPage": {
-    "titlePage": "Mobile selection",
+    "titlePage": "Command sends",
     "checkboxSelectAll": "Select all",
     "commandSelection": "Command selection",
     "sendCommandButton": "Send command",

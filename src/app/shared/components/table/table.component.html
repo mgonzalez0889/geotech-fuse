@@ -9,7 +9,7 @@
               {{ row[dataOption.name] || (dataOption.defaultValue | transloco) | dataTable:dataOption.typeField }}
             </span>
             <p *ngIf="!!dataOption['color']" [ngClass]="dataOption.classTailwind + ' ' + dataOption.color(row)"
-              [ngStyle]="{backgroundColor: dataOption.color(row)}" class="whitespace-nowrap" >
+              [ngStyle]="{backgroundColor: dataOption.color(row)}" class="whitespace-nowrap">
               {{ (row[dataOption.name] | transloco) || (dataOption.defaultValue | transloco) |
               dataTable:dataOption.typeField }}
             </p>
@@ -18,8 +18,8 @@
         <ng-container *ngIf="dataOption.typeField === 'switch'">
           <td mat-cell *matCellDef="let row">
             <span class="w-full h-full" *ngIf="dataOption.typeField === 'switch'">
-              <mat-slide-toggle  (change)="actionSwitch($event, row)"
-                color="primary" [checked]="row[dataOption.name]" [value]="row[dataOption.name]">
+              <mat-slide-toggle (change)="actionSwitch($event, row)" color="primary" [checked]="row[dataOption.name]"
+                [value]="row[dataOption.name]">
               </mat-slide-toggle>
             </span>
           </td>
@@ -40,15 +40,22 @@
       <tr mat-row *matRowDef="let row; columns: this.dataColumn;"></tr>
 
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="12" rowspan="12">
-          <mat-card class="text-center h-full" *ngIf="!this.dataRow.length">
-            <mat-card-title>{{'table.warningTitle' | transloco}}</mat-card-title>
-            <mat-card-content>
-              <p>{{'table.warningDescription' | transloco}}</p>
-            </mat-card-content>
-          </mat-card>
+        <td class="mat-cell text-center" colspan="6" *ngIf="!this.dataRow.length">
+          <div class="flex items-center content-center justify-center mt-7 gap-3">
+            <mat-icon svgIcon="heroicons_outline:information-circle"></mat-icon>
+            <p class="text-5xl font-semibold tracking-tight">{{'table.warningTitle' | transloco}}</p>
+          </div>
+          <p class="text-lg mb-8">{{'table.warningDescription' | transloco}}</p>
+        </td>
+        <td class="mat-cell text-center" colspan="6" *ngIf="this.dataRow.length">
+          <div class="flex items-center content-center justify-center mt-7 gap-3">
+            <mat-icon svgIcon="heroicons_outline:information-circle"></mat-icon>
+            <p class="text-xl font-semibold tracking-tight">{{'table.filterTable' | transloco }}</p>
+          </div>
+          <p class="mb-8 mt-2 text-lg text-red-600 font-medium">"{{this.dataFilter}}"</p>
         </td>
       </tr>
+
     </table>
   </div>
   <mat-paginator class="border-t border-b bg-gray-200" [pageSizeOptions]="[10,20,50]">

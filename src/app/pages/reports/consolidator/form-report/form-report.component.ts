@@ -1,24 +1,23 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { MobileService } from '../../../../core/services/api/mobile.service';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HistoriesService } from '../../../../core/services/api/histories.service';
 import moment from 'moment';
-import { MatOption } from '@angular/material/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MobileService } from '@services/api/mobile.service';
+import { HistoriesService } from '@services/api/histories.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-report',
   templateUrl: './form-report.component.html',
   styleUrls: ['./form-report.component.scss'],
 })
-export class FormReportComponent implements OnInit {
+export class FormReportComponent implements OnInit, OnDestroy {
   @Output() emitCloseForm = new EventEmitter<void>();
-  @ViewChild('allSelectedMobiles') private allSelectedMobiles: MatOption;
   public form: FormGroup = this.formBuilder.group({});
   public subcription$: Subscription;
   public editMode: boolean = false;
   public mobiles: any[] = [];
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private _mobileService: MobileService,
@@ -29,9 +28,16 @@ export class FormReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subcription$ = this._mobileService.getMobiles().subscribe(({ data }) =>
-      this.mobiles = [...data]
-    );
+    this.subcription$ = this._mobileService.selectState(state => state.mobiles)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data =>
+        this.mobiles = [...data]
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   public onSubmit(): void {
@@ -54,18 +60,6 @@ export class FormReportComponent implements OnInit {
       });
 
       this.editMode = false;
-    }
-  }
-
-  /**
-   * @description: seleccionar muchos de moviles
-   */
-  allSelectionMobiles(): void {
-    if (this.allSelectedMobiles.selected) {
-      this.form.controls['plates']
-        .patchValue([...this.mobiles.map(item => item.plate), 0]);
-    } else {
-      this.form.controls['plates'].patchValue([]);
     }
   }
 

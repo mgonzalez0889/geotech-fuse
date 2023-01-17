@@ -49,9 +49,8 @@ export class FormGeotoolMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    this.mobilesService.mobiles$
+    this.mobilesService.selectState(state => state.mobiles)
       .pipe(
-        filter(data => !!data.length),
         takeUntil(this.unsubscribe$)
       )
       .subscribe((data) => {

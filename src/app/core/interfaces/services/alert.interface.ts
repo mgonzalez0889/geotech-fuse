@@ -12,6 +12,6 @@ export interface IAlert {
   pasado: string;
   event_group_id: number;
   color: string;
-  state: number;
+  status_alert: boolean;
   event_state: number;
 }

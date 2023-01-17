@@ -30,6 +30,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FuseDrawerModule } from '@fuse/components/drawer';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   imports: [
@@ -46,6 +48,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSidenavModule,
     MatTableModule,
     MatTooltipModule,
+    MatAutocompleteModule
   ],
   exports: [
     CommonModule,
@@ -79,7 +82,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatButtonToggleModule,
     MatDialogModule,
     MatAutocompleteModule,
-    FuseDrawerModule
+    FuseDrawerModule,
+    MatStepperModule,
+    MatSliderModule
   ],
 })
 export class SharedModule { }

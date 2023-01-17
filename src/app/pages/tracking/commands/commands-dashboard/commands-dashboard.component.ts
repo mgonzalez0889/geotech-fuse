@@ -106,7 +106,6 @@ export class CommandsDashboardComponent implements OnInit, OnDestroy {
       .subscribe(() =>
         this.getSentCommands()
       );
-
     this.translocoService.langChanges$
       .pipe(takeUntil(this.unsubscribe$), delay(500))
       .subscribe(() => {

@@ -9,8 +9,47 @@ type DateFormatValidate = { converDateEnd: string; converDateInit: string };
   providedIn: 'root',
 })
 export class DateTools {
+  public weekdays: { name: string; text: string; assigned: boolean }[] = [
+    {
+      name: 'monday',
+      text: 'Lunes',
+      assigned: false
+    },
+    {
+      name: 'tuesday',
+      text: 'Martes',
+      assigned: false
+    },
+    {
+      name: 'wednesday',
+      text: 'Miercoles',
+      assigned: false
+
+    },
+    {
+      name: 'thursday',
+      text: 'Jueves',
+      assigned: false
+    },
+    {
+      name: 'friday',
+      text: 'Viernes',
+      assigned: false
+    },
+    {
+      name: 'saturday',
+      text: 'Sabado',
+      assigned: false
+    },
+    {
+      name: 'sunday',
+      text: 'Domingo',
+      assigned: false
+    },
+  ];
 
   constructor(private toastAlert: ToastAlertService) { }
+
 
   public convertDate(date: Date | string): string {
     return moment(date).format('DD/MM/YYYY');

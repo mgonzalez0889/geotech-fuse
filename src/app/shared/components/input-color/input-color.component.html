@@ -15,6 +15,11 @@
             <span class="flex w-8 h-8 m-1 rounded-full" [ngStyle]="{'background-color': color}"></span>
           </mat-option>
         </ng-container>
+        <!-- <div class="ml-1 relative flex">
+          <input type="color" [(ngModel)]="colorEdit">
+          <mat-icon class="absolute self-center ml-1 text-white" [svgIcon]="colorEdit ? 'heroicons_outline:check' : 'mat_outline:edit'">
+          </mat-icon>
+        </div> -->
       </div>
     </mat-select>
   </mat-form-field>

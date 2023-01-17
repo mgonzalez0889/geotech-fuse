@@ -44,15 +44,19 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.readMobiles();
-    }, 700);
+    this.readMobiles();
 
     this.fleetService.selectState(state => state.fleets)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((fleets) => {
         this.fleets = [...fleets || []];
         this.dataSourceFleets = new MatTableDataSource([...fleets || []]);
+      });
+
+    this.translocoService.langChanges$
+      .pipe(delay(500), takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.ref.markForCheck();
       });
 
     this.translocoService.langChanges$
@@ -166,13 +170,6 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
     this.dataSourceFleets.filter = filterValue.trim().toLowerCase();
   }
 
-  public closePanel(): void {
-    this.selectFleet = [];
-    this.selectPlates = [];
-    this.mapService.clearMap();
-    this.mapService.setMarkers(this.mobileData, true);
-  }
-
   /**
    * @description: refrescamos la data en el panel cuando llegue data por socket
    */
@@ -193,9 +190,9 @@ export class PanelMapMainComponent implements OnInit, OnDestroy {
    * @description: leemos toda la informacion de los moviles y la mostramos en el panel, y se parsea los tipos de servicios que vengan
    */
   private readMobiles(): void {
-    this.mobilesService.getMobiles()
+    this.mobilesService.selectState(state => state.mobiles)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
+      .subscribe((data) => {
         this.mobileData = [...data];
         this.dataSource = new MatTableDataSource([...data]);
         this.mobileData.forEach((valueMobile) => {

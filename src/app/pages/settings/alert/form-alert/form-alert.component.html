@@ -1,1 +1,345 @@
-<p>form-alert works!</p>
+<div class="flex flex-col w-full sm:pl-6">
+  <div class="bg-card shadow rounded-2xl min-h-auto">
+
+    <div class="rounded-t-2xl bg-gray-200 relative w-full h-40 sm:h-48 px-8 sm:px-12">
+      <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+        <button mat-icon-button [matTooltip]="'buttons.buttonClose' | transloco" (click)="this.closeForm()">
+          <mat-icon class="text-gray-600" svgIcon="heroicons_outline:x"></mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+      <div class="w-full max-w-3xl">
+        <ng-container *ngIf="!editMode">
+          <div class="flex flex-auto items-end -mt-16">
+            <!-- Avatar -->
+            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+              <div
+                class="flex items-center justify-center w-full h-full rounded overflow-hidden text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                <mat-icon svgIcon="mat_outline:add_alert" class="icon-size-14"></mat-icon>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center ml-auto mb-1">
+              <button mat-stroked-button (click)="editMode = true">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                <span class="ml-2">{{ dataUpdate ? 'buttons.buttonEdit' : 'buttons.buttonCreate' | transloco}}</span>
+              </button>
+            </div>
+          </div>
+          <div class="mt-3 text-4xl font-bold truncate">{{ titleForm | transloco}}</div>
+        </ng-container>
+        <ng-container *ngIf="editMode">
+          <mat-stepper orientation="vertical" class="mt-4" #stepper>
+            <mat-step [stepControl]="alertFormFirst">
+              <form [formGroup]="alertFormFirst" class="flex flex-col gap-2">
+                <ng-template matStepLabel>{{'Alerta' | transloco}}</ng-template>
+
+                <div class="flex justify-between gap-2 mt-2">
+                  <mat-form-field class="w-full fuse-mat-dense">
+                    <mat-label>{{'Nombre' | transloco}}</mat-label>
+                    <mat-icon class="mr-1" svgIcon="mat_outline:drive_file_rename_outline"></mat-icon>
+                    <input matInput [placeholder]="'Nombre de la alerta' | transloco" formControlName="name" required>
+                  </mat-form-field>
+
+                  <app-input-color [form]="this.alertFormFirst" labelControl="color"></app-input-color>
+                </div>
+
+                <mat-form-field class="w-full fuse-mat-dense">
+                  <mat-label>{{'Descripcion' | transloco}}</mat-label>
+                  <mat-icon class="mr-1" svgIcon="mat_outline:description"></mat-icon>
+                  <textarea formControlName="description" [placeholder]="'Descripcion de la alerta' | transloco"
+                    matInput matTextareaAutosize></textarea>
+                </mat-form-field>
+
+                <div class="w-full flex justify-evenly mb-2">
+                  <div class="flex flex-col gap-2 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">{{'Estado de la alerta' | transloco}}</mat-label>
+                    <mat-slide-toggle color="primary" formControlName="statusAlert">{{getStatusAlert ? 'Activo' :
+                      'Inactivo'}}</mat-slide-toggle>
+                  </div>
+                  <div class="flex flex-col gap-3 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">{{'¿Requiere Atención?' | transloco}}</mat-label>
+                    <mat-checkbox formControlName="page">
+                      {{'Pagina' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-2 mb-2 bg-gray-100 rounded p-2 justify-center items-center">
+                  <div class="flex">
+                    <mat-icon class="icon-size-5" svgIcon="mat_outline:notifications"></mat-icon>
+                    <mat-label class="font-medium">{{'Tipo de notificación' | transloco}}</mat-label>
+                  </div>
+                  <div class="flex gap-3">
+                    <mat-checkbox formControlName="noticeEmail">
+                      {{'Email' | transloco}}
+                    </mat-checkbox>
+                    <mat-checkbox formControlName="noticeSms">
+                      {{'SMS' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-2 mb-2 bg-gray-100 rounded p-2">
+                  <div class="flex gap-1 items-center justify-center">
+                    <mat-icon class="icon-size-5" svgIcon="mat_outline:calendar_today"></mat-icon>
+                    <mat-label class="font-medium text-center">{{'¿Cuando se ejecutara la alerta?' |
+                      transloco}}</mat-label>
+                  </div>
+                  <mat-radio-group class="flex flex-wrap gap-2 justify-center" [(ngModel)]="selectExecuteDate"
+                    [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button (change)="changeExecuteDate($event)" color="primary"
+                      *ngFor="let executeDate of optionsExecuteDate" [value]="executeDate.name">{{ executeDate.text |
+                      transloco
+                      }}</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+
+                <div class="px-4" *ngIf="selectExecuteDate === 'dateSpecify'">
+                  <mat-form-field class="w-full fuse-mat-dense">
+                    <mat-label>Verbose datepicker</mat-label>
+                    <input matInput [matDatepicker]="dp">
+                    <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="px-2" *ngIf="selectExecuteDate === 'days'">
+                  <div class="flex justify-between gap-3"
+                    *ngFor="let calendary of this.canlendarDaysControl.controls | keyvalue">
+                    <mat-form-field class="w-full fuse-mat-dense">
+                      <mat-label>{{'dias' | transloco}}</mat-label>
+                      <mat-select [value]="calendary.key">
+                        <mat-option [value]="item.name" *ngFor="let item of weekDays">{{item.text |
+                          transloco}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-20 fuse-mat-dense">
+                      <mat-label>{{'desde' | transloco}}</mat-label>
+                      <input type="time" matInput>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-20 fuse-mat-dense">
+                      <mat-label>{{'hasta' | transloco}}</mat-label>
+                      <input type="time" matInput>
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <button color="primary" mat-button (click)="addDays()">
+                      <mat-icon svgIcon="mat_outline:add_alarm"></mat-icon>
+                      Agregar</button>
+                  </div>
+                </div> -->
+
+                <div class="flex justify-end mt-2">
+                  <button color="accent" mat-flat-button matStepperNext>{{'buttons.buttonNext' | transloco}}</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [stepControl]="alertFormSecond">
+              <form [formGroup]="alertFormSecond" class="flex flex-col gap-2">
+                <ng-template matStepLabel>{{'Asociación' | transloco}}</ng-template>
+                <div class="w-full flex justify-between items-end gap-2 mt-2">
+                  <div class="w-full">
+                    <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione los eventos'"
+                      [options]="{data: events, key:'event_id', keyView:'event_name'}" labelControl="events">
+                    </app-multi-select-filter>
+                  </div>
+
+                  <mat-form-field matTooltipPosition="above" class="w-26 fuse-mat-dense">
+                    <mat-icon matTooltip="Cantidad de incidencia del evento, para generar la alerta"
+                      svgIcon="heroicons_outline:information-circle" class="mr-3"></mat-icon>
+                    <input type="number" formControlName="incidentsCount" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="flex flex-col gap-2 mb-2 bg-gray-100 rounded p-2">
+                  <mat-label class="font-medium">{{'Vehiculos para la alerta' | transloco}}</mat-label>
+                  <mat-radio-group class="flex" [(ngModel)]="selectTrasport" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button class="mr-3" *ngFor="let trasport of listTrasport"
+                      (change)="onChangeTrasport($event)" [value]="trasport.name">{{ trasport.text | transloco
+                      }}</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+
+                <ng-container *ngIf="selectTrasport === 'mobiles'">
+                  <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione vehiculos'"
+                    [options]="{data: plates, key:'plate', keyView:'plate'}" labelControl="plates">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <ng-container *ngIf="selectTrasport === 'fleet'">
+                  <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione grupos'"
+                    [options]="{data: fleets , key:'id', keyView:'name'}" labelControl="fleets">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="getControlsFormFirst['noticeEmail'].value || getControlsFormFirst['noticeSms'].value">
+                  <app-multi-select-filter [form]="this.alertFormSecond" [placeholder]="'Seleccione Contacto'"
+                    [options]="{data: contacts , key:'id', keyView:'full_name'}" labelControl="contact">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <div class="flex justify-end">
+                  <button mat-button matStepperPrevious>{{'buttons.buttonBack' | transloco}}</button>
+                  <button color="accent" mat-flat-button matStepperNext>{{'buttons.buttonNext' | transloco}}</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [stepControl]="alertFormThree">
+              <form [formGroup]="alertFormThree" class="flex flex-col gap-2 mt-2">
+                <ng-template matStepLabel>{{'Parametrizacion' | transloco}}</ng-template>
+
+                <div class="w-full">
+                  <div class="bg-gray-200 p-2 rounded mb-2">
+                    <mat-checkbox color="primary" [checked]="paramsMeasure" (change)="disabledParamsMeasure($event)"
+                      class="font-medium text-lg">
+                      {{'Habilitar parámetros de medición' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                  <div class="px-6" formGroupName="paramsMeasure" [ngClass]="{'cursor-not-allowed':!paramsMeasure}">
+                    <mat-form-field class="w-full fuse-mat-dense">
+                      <mat-label>{{'Ejecutar alarma con base de: ' | transloco}}</mat-label>
+                      <mat-select formControlName="alarmEvent" required>
+                        <mat-option [value]="item.name" *ngFor="let item of listAlarmEvent">{{item.text}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <div class="w-full flex justify-between gap-2">
+                      <mat-form-field class="w-full fuse-mat-dense">
+                        <mat-label>{{'Cuando su valor sea: ' | transloco}}</mat-label>
+                        <mat-select (selectionChange)="selectCondition($event)" formControlName="condition" required>
+                          <mat-option value=">">{{'Mas de' | transloco}}</mat-option>
+                          <mat-option value="<">{{'Menos de' | transloco}}</mat-option>
+                          <mat-option value="range">{{'En el rango' | transloco}}</mat-option>
+                          <mat-option value="=">{{'Igual a' | transloco}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <ng-container *ngIf="!this.viewRange">
+                        <mat-form-field class="w-20 fuse-mat-dense">
+                          <mat-label>Valor: </mat-label>
+                          <input type="number" formControlName="value" [ngClass]="{'cursor-not-allowed':!paramsMeasure}"
+                            required matInput>
+                        </mat-form-field>
+                      </ng-container>
+
+                      <div class="flex gap-2" *ngIf="this.viewRange">
+                        <mat-form-field class="w-20 fuse-mat-dense">
+                          <mat-label>Desde: </mat-label>
+                          <input type="number" formControlName="rangeFrom"
+                            [ngClass]="{'cursor-not-allowed':!paramsMeasure}" required matInput>
+                        </mat-form-field>
+                        <mat-form-field class="w-20 fuse-mat-dense">
+                          <mat-label>Hasta: </mat-label>
+                          <input type="number" formControlName="rangeTo"
+                            [ngClass]="{'cursor-not-allowed':!paramsMeasure}" required matInput>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-full">
+                  <div class="bg-gray-200 p-2 rounded mb-2">
+                    <mat-checkbox color="primary" [checked]="paramsGeometry" (change)="disabledParamsGeometry($event)"
+                      class="font-medium text-lg">
+                      {{'Habilitar parámetros de geometria' | transloco}}
+                    </mat-checkbox>
+                  </div>
+                  <div class="px-6" formGroupName="paramsGeometry" [ngClass]="{'cursor-not-allowed':!paramsGeometry}">
+                    <mat-form-field class="w-full fuse-mat-dense">
+                      <mat-label>{{'Tipo de geometria: ' | transloco}}</mat-label>
+                      <mat-select (selectionChange)="selectGeomtry($event)" formControlName="typeGeometry" required>
+                        <mat-option value="zones">{{'Zonas' | transloco}}</mat-option>
+                        <mat-option value="punts">{{'Puntos de control' | transloco}}</mat-option>
+                        <mat-option value="routes">{{'Rutas' | transloco}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <div class="w-full flex justify-between gap-2">
+                      <mat-form-field class="w-full fuse-mat-dense">
+                        <mat-label>{{'Ejecutar alerta cuando este: ' | transloco}}</mat-label>
+                        <mat-select formControlName="alertEvent" required>
+                          <mat-option value="inside">{{'Dentro' | transloco}}</mat-option>
+                          <mat-option value="out">{{'Fuera' | transloco}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <ng-container *ngIf="typeGeomtry === 'punts' || typeGeomtry === 'routes'">
+                        <mat-form-field class="w-24 fuse-mat-dense">
+                          <mat-label>Tolerancia: </mat-label>
+                          <input type="number" formControlName="tolerance"
+                            [ngClass]="{'cursor-not-allowed':!paramsGeometry}" required matInput>
+                        </mat-form-field>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="paramsGeometry && getControlsThreeParamGeomtry['typeGeometry'].value">
+                  <app-multi-select-filter [form]="this.alertFormThree" [placeholder]="'Seleccione Geometria'"
+                    [options]="{data: geometries , key:'id', keyView:'name'}" labelControl="geometryId">
+                  </app-multi-select-filter>
+                </ng-container>
+
+                <div class="w-full flex justify-between gap-2">
+                  <div class="flex flex-col gap-2 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">{{'Habilitar sonido de buzzer' | transloco}}</mat-label>
+                    <mat-slide-toggle color="primary" formControlName="buzzer">{{'Sonar' |
+                      transloco}}</mat-slide-toggle>
+                  </div>
+
+                  <div class="flex flex-col gap-3 bg-gray-100 rounded p-2">
+                    <div class="flex justify-between">
+                      <mat-label class="font-medium">{{'Envío comandos' | transloco}}</mat-label>
+                      <mat-icon matTooltip="Enviar comando si la alerta es generada"
+                        svgIcon="heroicons_outline:information-circle"></mat-icon>
+                    </div>
+                    <mat-slide-toggle color="primary" formControlName="sendCommand">{{getSendCommand ? 'Encedido' :
+                      'Apagado'}}</mat-slide-toggle>
+                  </div>
+
+                  <!-- <div class="flex flex-col gap-3 bg-gray-100 rounded p-2">
+                    <div class="flex justify-between">
+                      <mat-label class="font-medium">{{'Ejecutar evento' | transloco}}</mat-label>
+                      <mat-icon matTooltip="Ejecutar evento solo si el vehiculo este en una operacion o despacho."
+                        svgIcon="heroicons_outline:information-circle"></mat-icon>
+                    </div>
+                    <mat-slide-toggle color="primary" formControlName="executeVehicle">{{'Habilitar' |
+                      transloco}}</mat-slide-toggle>
+                  </div> -->
+                </div>
+
+                <div class="w-full flex justify-between gap-2 mt-2">
+                  <div class="flex flex-col gap-3 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">{{'Ejecutar alerta si esta encendido' | transloco}}</mat-label>
+                    <mat-slide-toggle color="primary" formControlName="executeAlertOn">{{getExecuteAlertOn ? 'Activo' :
+                      'Inactivo'}}</mat-slide-toggle>
+                  </div>
+                  <div class="flex flex-col gap-3 bg-gray-100 rounded p-2">
+                    <mat-label class="font-medium">{{'Ejecutar alerta si esta apagado' | transloco}}</mat-label>
+                    <mat-slide-toggle color="primary" formControlName="executeAlertOff">{{getExecuteAlertOff ? 'Activo'
+                      :
+                      'Inactivo'}}</mat-slide-toggle>
+                  </div>
+                </div>
+
+                <div class="flex justify-end">
+                  <button mat-button matStepperPrevious>{{'buttons.buttonBack' | transloco}}</button>
+                  <button color="accent" mat-flat-button [disabled]="alertFormThree.invalid"
+                    (click)="this.sendDataForms()">{{'buttons.buttonSave' | transloco}}</button>
+                </div>
+
+              </form>
+            </mat-step>
+          </mat-stepper>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

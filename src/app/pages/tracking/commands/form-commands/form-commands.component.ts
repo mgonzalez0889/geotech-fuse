@@ -31,10 +31,10 @@ export class FormCommandsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mobileService.getMobiles()
+    this.mobileService.selectState(state => state.mobiles)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ data }) => {
-        this.mobilesData = data || [];
+      .subscribe((data) => {
+        this.mobilesData = data;
       });
 
     this.fleetService.selectState(state => state.fleets)
@@ -48,6 +48,7 @@ export class FormCommandsComponent implements OnInit {
       .subscribe(({ data }) => {
         this.typeCommands = data || [];
       });
+
   }
 
   public sendCommand(): void {
@@ -78,6 +79,7 @@ export class FormCommandsComponent implements OnInit {
       validationFleet: [0],
       typeCommandId: ['', Validators.required]
     });
+    this.selectTab({ index: 0 } as MatTabChangeEvent);
   }
 
 }
